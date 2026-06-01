@@ -41,7 +41,21 @@ PAYMENT
 Amount Due:   $2,500.00
 Due By:       June 15, 2026
 
-Please remit payment by the due date above.
+Please remit payment by June 15, 2026 via one of the following:
+
+ACH Transfer:
+  Bank Name:      Chase
+  Routing Number: 021000021
+  Account Number: 813128105
+  Account Name:   Steven Barabash
+
+Zelle:
+  (914) 806-4406
+
+Check (payable to Steven Barabash):
+  7318 Texas Trail
+  Boca Raton, FL 33487
+
 Thank you for your business.
 
 Questions? Contact steven@hydrogel.us
