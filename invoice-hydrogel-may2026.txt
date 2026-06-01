@@ -43,11 +43,12 @@ Due By:       June 15, 2026
 
 Please remit payment by June 15, 2026 via one of the following:
 
-ACH Transfer:
-  Bank Name:      Chase
-  Routing Number: 021000021
-  Account Number: 813128105
-  Account Name:   Steven Barabash
+ACH / Wire Transfer:
+  Bank Name:              Chase
+  Routing Number (Wire):  021000021
+  Routing Number (ACH):   267084131
+  Account Number:         2900749774
+  Account Name:           Steven Barabash
 
 Zelle:
   (914) 806-4406
