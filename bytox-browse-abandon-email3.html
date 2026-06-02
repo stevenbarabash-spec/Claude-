@@ -54,10 +54,10 @@
         <tr>
           <td align="center" style="padding:24px 30px;">
             <p style="margin:0 0 6px;font-size:13px;color:#888888;text-transform:uppercase;letter-spacing:2px;">You were looking at</p>
-            <p style="margin:0 0 4px;font-size:20px;font-weight:900;color:#1a1a2e;">{{ event.ProductName|default:'Bytox Wellness Patch' }}</p>
+            <p style="margin:0 0 4px;font-size:20px;font-weight:900;color:#1a1a2e;">{{ event.Name|default:'Bytox Wellness Patch' }}</p>
             <p style="margin:0 0 6px;font-size:14px;color:#e8194b;font-weight:700;">{{ event.Price|default:'' }}</p>
             <p style="margin:0 0 20px;font-size:13px;color:#888888;">Use code <strong style="color:#e8194b;">TRY15</strong> to save 15% at checkout</p>
-            <a href="{{ event.ProductURL|default:'https://bytox.com' }}" style="display:inline-block;background:#e8194b;color:#ffffff;font-size:16px;font-weight:900;text-decoration:none;padding:16px 44px;border-radius:50px;">CLAIM 15% OFF →</a>
+            <a href="{{ event.URL|default:'https://bytox.com' }}" style="display:inline-block;background:#e8194b;color:#ffffff;font-size:16px;font-weight:900;text-decoration:none;padding:16px 44px;border-radius:50px;">CLAIM 15% OFF →</a>
             <p style="margin:14px 0 0;font-size:11px;color:#aaaaaa;">Code expires in 48 hours · One use per customer</p>
           </td>
         </tr>
@@ -107,7 +107,7 @@
     <td align="center" bgcolor="#1a1a2e" style="padding:28px 30px 32px;">
       <p style="margin:0 0 4px;font-size:18px;font-weight:900;color:#ffffff;">This offer won't come back.</p>
       <p style="margin:0 0 20px;font-size:13px;color:#aaaaaa;">After this email, the discount disappears. No re-sends, no extensions.</p>
-      <a href="{{ event.ProductURL|default:'https://bytox.com' }}" style="display:inline-block;background:#e8194b;color:#ffffff;font-size:16px;font-weight:900;text-decoration:none;padding:16px 44px;border-radius:50px;">USE CODE TRY15 →</a>
+      <a href="{{ event.URL|default:'https://bytox.com' }}" style="display:inline-block;background:#e8194b;color:#ffffff;font-size:16px;font-weight:900;text-decoration:none;padding:16px 44px;border-radius:50px;">USE CODE TRY15 →</a>
       <p style="margin:16px 0 0;">
         <span style="display:inline-block;background:rgba(255,255,255,0.1);border-radius:6px;padding:7px 12px;font-size:11px;font-weight:700;color:#ffffff;margin:3px;">🇺🇸 Made in USA</span>
         <span style="display:inline-block;background:rgba(255,255,255,0.1);border-radius:6px;padding:7px 12px;font-size:11px;font-weight:700;color:#ffffff;margin:3px;">Latex-Free</span>

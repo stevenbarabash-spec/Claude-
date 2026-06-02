@@ -43,7 +43,7 @@
     <td align="center" bgcolor="#ffffff" style="padding:36px 30px 24px;">
       <p style="margin:0 0 8px;font-size:11px;font-weight:700;color:#e8194b;letter-spacing:3px;text-transform:uppercase;">Still on the fence?</p>
       <h1 style="margin:0 0 14px;font-size:26px;font-weight:900;color:#1a1a2e;line-height:1.25;">Here's why thousands<br/>of people swear by Bytox.</h1>
-      <p style="margin:0;font-size:14px;color:#666666;line-height:1.7;">You checked out <strong style="color:#1a1a2e;">{{ event.ProductName|default:'one of our patches' }}</strong> — let us show you exactly why it works.</p>
+      <p style="margin:0;font-size:14px;color:#666666;line-height:1.7;">You checked out <strong style="color:#1a1a2e;">{{ event.Name|default:'one of our patches' }}</strong> — let us show you exactly why it works.</p>
     </td>
   </tr>
 
@@ -139,8 +139,8 @@
         <tr>
           <td align="center" style="padding:22px;">
             <p style="margin:0 0 4px;font-size:12px;color:#888888;text-transform:uppercase;letter-spacing:2px;">You were looking at</p>
-            <p style="margin:0 0 14px;font-size:17px;font-weight:900;color:#1a1a2e;">{{ event.ProductName|default:'Bytox Wellness Patch' }}</p>
-            <a href="{{ event.ProductURL|default:'https://bytox.com' }}" style="display:inline-block;background:#e8194b;color:#ffffff;font-size:15px;font-weight:800;text-decoration:none;padding:14px 36px;border-radius:50px;">VIEW PRODUCT →</a>
+            <p style="margin:0 0 14px;font-size:17px;font-weight:900;color:#1a1a2e;">{{ event.Name|default:'Bytox Wellness Patch' }}</p>
+            <a href="{{ event.URL|default:'https://bytox.com' }}" style="display:inline-block;background:#e8194b;color:#ffffff;font-size:15px;font-weight:800;text-decoration:none;padding:14px 36px;border-radius:50px;">VIEW PRODUCT →</a>
           </td>
         </tr>
       </table>

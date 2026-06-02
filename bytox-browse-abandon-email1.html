@@ -43,7 +43,7 @@
     <td align="center" bgcolor="#fff5f7" style="padding:40px 30px 32px;">
       <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:#e8194b;letter-spacing:3px;text-transform:uppercase;">Hey {{ first_name|default:'there' }} 👋</p>
       <h1 style="margin:0 0 16px;font-size:32px;font-weight:900;color:#1a1a2e;line-height:1.2;">You left something<br/>behind.</h1>
-      <p style="margin:0;font-size:17px;color:#555555;line-height:1.8;max-width:420px;">We noticed you were checking out <strong style="color:#1a1a2e;">{{ event.ProductName|default:'one of our patches' }}</strong> — still thinking about it?</p>
+      <p style="margin:0;font-size:17px;color:#555555;line-height:1.8;max-width:420px;">We noticed you were checking out <strong style="color:#1a1a2e;">{{ event.Name|default:'one of our patches' }}</strong> — still thinking about it?</p>
     </td>
   </tr>
 
@@ -53,12 +53,12 @@
       <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f9f9f9;border-radius:12px;overflow:hidden;border:2px solid #f0f0f0;">
         <tr>
           <td align="center" style="padding:24px;">
-            <a href="{{ event.ProductURL|default:'https://bytox.com' }}">
+            <a href="{{ event.URL|default:'https://bytox.com' }}">
               <img src="{{ event.ImageURL|default:'https://cdn.shopify.com/s/files/1/0411/8033/2191/files/Recovery-1920x1920.jpg?v=1764949288' }}" alt="{{ event.ProductName|default:'Bytox Patch' }}" width="200" style="width:200px;max-width:100%;height:auto;display:block;margin:0 auto 16px;border-radius:8px;"/>
             </a>
-            <p style="margin:0 0 4px;font-size:18px;font-weight:900;color:#1a1a2e;">{{ event.ProductName|default:'Bytox Wellness Patch' }}</p>
+            <p style="margin:0 0 4px;font-size:18px;font-weight:900;color:#1a1a2e;">{{ event.Name|default:'Bytox Wellness Patch' }}</p>
             <p style="margin:0 0 16px;font-size:16px;color:#ff6b1a;font-weight:700;">{{ event.Price|default:'' }}</p>
-            <a href="{{ event.ProductURL|default:'https://bytox.com' }}" style="display:inline-block;background:#ff6b1a;color:#ffffff;font-size:16px;font-weight:800;text-decoration:none;padding:15px 38px;border-radius:50px;">GRAB IT NOW →</a>
+            <a href="{{ event.URL|default:'https://bytox.com' }}" style="display:inline-block;background:#ff6b1a;color:#ffffff;font-size:16px;font-weight:800;text-decoration:none;padding:15px 38px;border-radius:50px;">GRAB IT NOW →</a>
           </td>
         </tr>
       </table>
@@ -114,7 +114,7 @@
           <td align="center" style="padding:30px 30px 34px;">
             <p style="margin:0 0 6px;font-size:20px;font-weight:900;color:#ffffff;">Don't talk yourself out of it.</p>
             <p style="margin:0 0 20px;font-size:15px;color:rgba(255,255,255,0.92);">Your cart is still waiting. Come back and finish what you started.</p>
-            <a href="{{ event.ProductURL|default:'https://bytox.com' }}" style="display:inline-block;background:#ffffff;color:#ff6b1a;font-size:16px;font-weight:900;text-decoration:none;padding:16px 44px;border-radius:50px;">COMPLETE MY ORDER →</a>
+            <a href="{{ event.URL|default:'https://bytox.com' }}" style="display:inline-block;background:#ffffff;color:#ff6b1a;font-size:16px;font-weight:900;text-decoration:none;padding:16px 44px;border-radius:50px;">COMPLETE MY ORDER →</a>
             <p style="margin:14px 0 0;font-size:13px;color:rgba(255,255,255,0.85);">Free shipping on orders $35+ · Made in USA · Latex-Free</p>
           </td>
         </tr>
