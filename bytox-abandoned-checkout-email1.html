@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bytox — Your Order Is Waiting</title>
+  <style>
+    body { margin:0; padding:0; background-color:#0f0f0f; font-family:Arial,Helvetica,sans-serif; -webkit-text-size-adjust:100%; }
+    * { box-sizing:border-box; }
+    img { display:block; border:0; outline:none; text-decoration:none; max-width:100%; }
+    a { text-decoration:none; }
+  </style>
+</head>
+<body>
+<center>
+<table width="100%" bgcolor="#0f0f0f" cellpadding="0" cellspacing="0" border="0">
+<tr><td align="center" style="padding:16px 10px;">
+<table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;overflow:hidden;border-radius:20px;">
+
+  <!-- ===== HERO: ORANGE GRADIENT + TRIANGLE PATTERN ===== -->
+  <tr>
+    <td align="center" style="padding:0;background-color:#ff6b1a;background-image:linear-gradient(160deg,#b83400 0%,#ff6b1a 30%,#ff9a00 60%,#c94400 100%),url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI5MiI+PHBvbHlnb24gcG9pbnRzPSIwLDkyIDQwLDAgODAsOTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjAwLDgwLDAuMjUpIiBzdHJva2Utd2lkdGg9IjEuNSIvPjxwb2x5Z29uIHBvaW50cz0iMCwwIDgwLDAgNDAsOTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjAwLDgwLDAuMjUpIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==');background-size:auto,80px 92px;font-size:0;line-height:0;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <!-- LOGO -->
+        <tr>
+          <td align="center" style="padding:20px 30px 0;">
+            <p style="margin:0;font-size:28px;font-weight:900;color:#ffffff;letter-spacing:-1px;text-shadow:0 2px 12px rgba(0,0,0,0.3);">+BYTOX</p>
+            <p style="margin:3px 0 0;font-size:8px;color:rgba(255,255,255,0.75);letter-spacing:5px;text-transform:uppercase;">Wellness Patch Collection</p>
+          </td>
+        </tr>
+        <!-- OVERSIZED HEADLINE -->
+        <tr>
+          <td align="center" style="padding:28px 24px 0;">
+            <p style="margin:0 0 10px;font-size:13px;font-weight:700;color:rgba(255,255,255,0.8);letter-spacing:4px;text-transform:uppercase;">Hey {{ first_name|default:'there' }} 👋</p>
+            <p style="margin:0;font-size:54px;font-weight:900;color:#ffffff;line-height:0.95;letter-spacing:-3px;text-shadow:0 4px 20px rgba(0,0,0,0.25);">YOUR<br/>CART IS<br/><span style="color:#1a1a1a;">WAITING.</span></p>
+          </td>
+        </tr>
+        <!-- PRODUCT IMAGE FLOATING -->
+        <tr>
+          <td align="center" style="padding:20px 40px 0;font-size:0;line-height:0;">
+            <a href="{{ checkout_url|default:'https://bytox.com' }}">
+              <img src="{{ line_items.0.product.featured_image.src|default:'https://cdn.shopify.com/s/files/1/0411/8033/2191/files/Recovery-1920x1920.jpg?v=1764949288' }}"
+                   alt="{{ line_items.0.title|default:'Bytox Patch' }}"
+                   width="520"
+                   style="width:100%;max-width:520px;height:auto;display:block;margin:0 auto;border-radius:20px 20px 0 0;"/>
+            </a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ===== CART SUMMARY: DARK BAND ===== -->
+  <tr>
+    <td align="center" style="padding:0;background:#1a1a1a;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td align="center" style="padding:28px 30px 10px;">
+            <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:#ff6b1a;letter-spacing:4px;text-transform:uppercase;">You left this in your cart</p>
+            <p style="margin:0 0 6px;font-size:26px;font-weight:900;color:#ffffff;letter-spacing:-1px;">{{ line_items.0.title|default:'Bytox Wellness Patch' }}</p>
+            <p style="margin:0 0 22px;font-size:32px;font-weight:900;color:#ff6b1a;letter-spacing:-1px;">{{ total_price|default:'' }}</p>
+            <a href="{{ checkout_url|default:'https://bytox.com' }}"
+               style="display:inline-block;background:#ff6b1a;color:#ffffff;font-size:17px;font-weight:900;text-decoration:none;padding:18px 56px;border-radius:50px;letter-spacing:0.5px;">
+              COMPLETE MY ORDER →
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:14px 30px 28px;">
+            <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.35);">🚚 Free shipping on orders $35+ &nbsp;·&nbsp; Made in USA &nbsp;·&nbsp; Since 2011</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ===== LIFESTYLE IMAGE: FULL BLEED ===== -->
+  <tr>
+    <td style="padding:0;background:#1a1a1a;font-size:0;line-height:0;">
+      <a href="{{ checkout_url|default:'https://bytox.com' }}">
+        <img src="https://cdn.shopify.com/s/files/1/0411/8033/2191/files/Untitled_design_-_2025-12-05T104453.400.jpg?v=1764949500"
+             alt="Bytox — Real People. Real Results."
+             width="600"
+             style="width:100%;max-width:600px;height:auto;display:block;"/>
+      </a>
+    </td>
+  </tr>
+
+  <!-- ===== WHY FINISH: BLACK SECTION ===== -->
+  <tr>
+    <td align="center" style="padding:0;background:#0f0f0f;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td align="center" style="padding:44px 30px 10px;">
+            <p style="margin:0 0 6px;font-size:11px;font-weight:700;color:#ff6b1a;letter-spacing:4px;text-transform:uppercase;">You were this close</p>
+            <p style="margin:0;font-size:40px;font-weight:900;color:#ffffff;line-height:0.95;letter-spacing:-2px;">Here's what<br/>you're getting.</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- BENEFIT 1 -->
+  <tr>
+    <td style="padding:12px 30px 0;background:#0f0f0f;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#1a1a1a;border-radius:16px;overflow:hidden;">
+        <tr><td style="padding:3px 0 0;background:linear-gradient(90deg,#ff6b1a,#ff9a00);font-size:0;line-height:3px;">&nbsp;</td></tr>
+        <tr>
+          <td style="padding:20px 24px 22px;">
+            <p style="margin:0 0 4px;font-size:32px;font-weight:900;color:#ff6b1a;line-height:1;">01</p>
+            <p style="margin:0 0 6px;font-size:18px;font-weight:900;color:#ffffff;line-height:1.2;">Works while you sleep.</p>
+            <p style="margin:0;font-size:15px;color:rgba(255,255,255,0.55);line-height:1.75;">Apply before bed. Wake up feeling human. The patch works all night through transdermal delivery — no pills to remember, no timing windows to hit.</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- BENEFIT 2 -->
+  <tr>
+    <td style="padding:10px 30px 0;background:#0f0f0f;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#1a1a1a;border-radius:16px;overflow:hidden;">
+        <tr><td style="padding:3px 0 0;background:linear-gradient(90deg,#ff9a00,#ffbe00);font-size:0;line-height:3px;">&nbsp;</td></tr>
+        <tr>
+          <td style="padding:20px 24px 22px;">
+            <p style="margin:0 0 4px;font-size:32px;font-weight:900;color:#ff9a00;line-height:1;">02</p>
+            <p style="margin:0 0 6px;font-size:18px;font-weight:900;color:#ffffff;line-height:1.2;">Stock up and save.</p>
+            <p style="margin:0;font-size:15px;color:rgba(255,255,255,0.55);line-height:1.75;">The 10-pack hits free shipping. The 25-pack is what regulars buy. Subscribe &amp; Save drops the price even further — most customers never go back to the 5-pack.</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- BENEFIT 3 -->
+  <tr>
+    <td style="padding:10px 30px 44px;background:#0f0f0f;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#1a1a1a;border-radius:16px;overflow:hidden;">
+        <tr><td style="padding:3px 0 0;background:linear-gradient(90deg,#c94400,#ff6b1a);font-size:0;line-height:3px;">&nbsp;</td></tr>
+        <tr>
+          <td style="padding:20px 24px 22px;">
+            <p style="margin:0 0 4px;font-size:32px;font-weight:900;color:#c94400;line-height:1;">03</p>
+            <p style="margin:0 0 6px;font-size:18px;font-weight:900;color:#ffffff;line-height:1.2;">Over a decade of proof.</p>
+            <p style="margin:0;font-size:15px;color:rgba(255,255,255,0.55);line-height:1.75;">Bytox has been the go-to since 2011. Worn at festivals, weddings, bachelorettes, and business trips worldwide. Thousands of repeat customers don't lie.</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ===== TRUST STRIP: ORANGE BAND ===== -->
+  <tr>
+    <td align="center" style="padding:0;background-color:#ff6b1a;background-image:linear-gradient(160deg,#b83400 0%,#ff6b1a 30%,#ff9a00 60%,#c94400 100%),url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI5MiI+PHBvbHlnb24gcG9pbnRzPSIwLDkyIDQwLDAgODAsOTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjAwLDgwLDAuMjUpIiBzdHJva2Utd2lkdGg9IjEuNSIvPjxwb2x5Z29uIHBvaW50cz0iMCwwIDgwLDAgNDAsOTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjAwLDgwLDAuMjUpIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==');background-size:auto,80px 92px;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td width="33%" align="center" style="padding:20px 8px;">
+            <p style="margin:0 0 4px;font-size:22px;">⭐</p>
+            <p style="margin:0 0 1px;font-size:13px;font-weight:900;color:#ffffff;">Thousands</p>
+            <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.75);">5-star reviews</p>
+          </td>
+          <td width="33%" align="center" style="padding:20px 8px;border-left:1px solid rgba(255,255,255,0.2);border-right:1px solid rgba(255,255,255,0.2);">
+            <p style="margin:0 0 6px;font-size:11px;font-weight:900;color:#ffffff;letter-spacing:2px;border:2px solid rgba(255,255,255,0.6);display:inline-block;padding:3px 8px;border-radius:4px;">U·S·A</p>
+            <p style="margin:0 0 1px;font-size:13px;font-weight:900;color:#ffffff;">Made in USA</p>
+            <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.75);">since 2011</p>
+          </td>
+          <td width="33%" align="center" style="padding:20px 8px;">
+            <p style="margin:0 0 4px;font-size:22px;">✅</p>
+            <p style="margin:0 0 1px;font-size:13px;font-weight:900;color:#ffffff;">No Rx Needed</p>
+            <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.75);">latex-free</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ===== REVIEWS: WHITE ===== -->
+  <tr>
+    <td align="center" bgcolor="#ffffff" style="padding:40px 30px 16px;">
+      <p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#ff6b1a;letter-spacing:4px;text-transform:uppercase;">Real People</p>
+      <h2 style="margin:0 0 28px;font-size:36px;font-weight:900;color:#1a1a1a;line-height:1.05;letter-spacing:-1.5px;">What Others<br/>Say.</h2>
+    </td>
+  </tr>
+
+  <!-- REVIEW 1 -->
+  <tr>
+    <td style="padding:0 30px 16px;background:#ffffff;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fff5ee;border-radius:16px;overflow:hidden;">
+        <tr><td style="padding:4px 0 0;background:#ff6b1a;font-size:0;line-height:4px;">&nbsp;</td></tr>
+        <tr>
+          <td style="padding:20px 24px 22px;">
+            <p style="margin:0 0 6px;font-size:16px;color:#ff6b1a;">★★★★★</p>
+            <p style="margin:0 0 8px;font-size:16px;font-weight:900;color:#1a1a1a;">Sarah K. — Verified Customer</p>
+            <p style="margin:0;font-size:15px;color:#555555;line-height:1.75;font-style:italic;">"I was skeptical at first but after trying it I'm completely hooked. This stuff actually works and I won't go anywhere without it now."</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- REVIEW 2 -->
+  <tr>
+    <td style="padding:0 30px 40px;background:#ffffff;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fff5ee;border-radius:16px;overflow:hidden;">
+        <tr><td style="padding:4px 0 0;background:#ff9a00;font-size:0;line-height:4px;">&nbsp;</td></tr>
+        <tr>
+          <td style="padding:20px 24px 22px;">
+            <p style="margin:0 0 6px;font-size:16px;color:#ff9a00;">★★★★★</p>
+            <p style="margin:0 0 8px;font-size:16px;font-weight:900;color:#1a1a1a;">Mike R. — Verified Customer</p>
+            <p style="margin:0;font-size:15px;color:#555555;line-height:1.75;font-style:italic;">"Best thing I've found. Easy, effective, and I noticed a real difference. I buy the big pack now and keep them stocked."</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ===== CLOSING CTA: FULL BLACK ===== -->
+  <tr>
+    <td align="center" style="padding:0;background:#0f0f0f;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td align="center" style="padding:40px 30px 44px;">
+            <p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#ff6b1a;letter-spacing:4px;text-transform:uppercase;">You started this</p>
+            <p style="margin:0 0 20px;font-size:46px;font-weight:900;color:#ffffff;line-height:0.95;letter-spacing:-2.5px;">Finish<br/>what you<br/>started.</p>
+            <p style="margin:0 0 28px;font-size:16px;color:rgba(255,255,255,0.5);line-height:1.7;">Your cart is saved and ready.<br/>One click and it's yours.</p>
+            <a href="{{ checkout_url|default:'https://bytox.com' }}"
+               style="display:inline-block;background:#ff6b1a;color:#ffffff;font-size:17px;font-weight:900;text-decoration:none;padding:18px 56px;border-radius:50px;letter-spacing:0.5px;">
+              COMPLETE MY ORDER →
+            </a>
+            <p style="margin:18px 0 0;font-size:12px;color:rgba(255,255,255,0.25);">Free shipping $35+ &nbsp;·&nbsp; Made in USA &nbsp;·&nbsp; Latex-Free</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ===== FOOTER ===== -->
+  <tr>
+    <td align="center" bgcolor="#1a1a1a" style="padding:24px 30px;">
+      <p style="margin:0 0 10px;font-size:20px;font-weight:900;color:#ff6b1a;letter-spacing:-1px;">+BYTOX</p>
+      <p style="margin:0 0 12px;font-size:11px;color:#555555;line-height:1.8;">
+        You're receiving this because you started a checkout on bytox.com<br/>
+        <a href="{{ unsubscribe_url }}" style="color:#555555;text-decoration:underline;">Unsubscribe</a> &nbsp;·&nbsp;
+        <a href="{{ view_in_browser_url }}" style="color:#555555;text-decoration:underline;">View in browser</a>
+      </p>
+      <p style="margin:0;font-size:10px;color:#333333;line-height:1.7;">
+        Bytox Patch LLC · 12 Edgeboro Rd Unit 5, East Brunswick NJ 08816<br/>
+        These statements have not been evaluated by the Food and Drug Administration.<br/>Not intended to diagnose, treat, cure, or prevent any disease.
+      </p>
+    </td>
+  </tr>
+
+</table>
+</td></tr>
+</table>
+</center>
+</body>
+</html>
