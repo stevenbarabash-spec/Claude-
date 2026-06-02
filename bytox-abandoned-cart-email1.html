@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Cart Is Waiting — Bytox</title>
+<style>
+  body { margin:0; padding:0; background-color:#0f0f0f; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; }
+  @media only screen and (max-width:600px) {
+    .email-wrapper { width:100% !important; border-radius:0 !important; }
+    .hero-headline { font-size:40px !important; }
+    .product-img { padding:16px 20px 0 !important; }
+    .dark-band-inner { padding:30px 24px 36px !important; }
+    .trust-col td { display:block !important; width:100% !important; text-align:center !important; padding:8px 0 !important; }
+    .reviews-inner { padding:40px 24px !important; }
+    .closing-inner { padding:50px 24px !important; }
+    .card-row td { display:block !important; width:100% !important; }
+    .card-cell { padding:10px 20px !important; }
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background-color:#0f0f0f;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0f0f0f;">
+<tr><td align="center" style="padding:32px 16px;">
+
+<!-- MAIN WRAPPER -->
+<table class="email-wrapper" width="600" cellpadding="0" cellspacing="0" border="0" style="border-radius:20px;overflow:hidden;background:#1a1a1a;">
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- ORANGE HERO                                  -->
+  <!-- ═══════════════════════════════════════════ -->
+  <tr>
+    <td style="background-color:#ff6b1a;background-image:linear-gradient(160deg,#b83400 0%,#ff6b1a 30%,#ff9a00 60%,#c94400 100%),url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI5MiI+PHBvbHlnb24gcG9pbnRzPSIwLDkyIDQwLDAgODAsOTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjAwLDgwLDAuMjUpIiBzdHJva2Utd2lkdGg9IjEuNSIvPjxwb2x5Z29uIHBvaW50cz0iMCwwIDgwLDAgNDAsOTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjAwLDgwLDAuMjUpIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==');background-size:auto,80px 92px;padding:44px 48px 0;">
+      <!-- Logo -->
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td>
+            <div style="font-size:28px;font-weight:900;color:#ffffff;letter-spacing:-0.5px;line-height:1;">+BYTOX</div>
+            <div style="font-size:8px;font-weight:700;color:rgba(255,255,255,0.75);letter-spacing:5px;text-transform:uppercase;margin-top:4px;">WELLNESS PATCH COLLECTION</div>
+          </td>
+        </tr>
+      </table>
+      <!-- Supertitle -->
+      <div style="margin-top:36px;font-size:13px;font-weight:700;color:#ff9a00;letter-spacing:3px;text-transform:uppercase;">Hey {{ first_name|default:'there' }} 👋</div>
+      <!-- Hero Headline -->
+      <h1 class="hero-headline" style="margin:12px 0 0;font-size:54px;font-weight:900;color:#ffffff;line-height:1.05;letter-spacing:-1px;text-transform:uppercase;">YOUR<br/>CART IS<br/><span style="color:#1a1a1a;">WAITING.</span></h1>
+      <!-- Product Image bleeding from hero into dark -->
+      <div class="product-img" style="margin-top:32px;padding:20px 40px 0;text-align:center;">
+        <img src="{{ event.extra.line_items.0.image|default:'https://cdn.shopify.com/s/files/1/0411/8033/2191/files/Recovery-1920x1920.jpg?v=1764949288' }}" alt="{{ event.extra.line_items.0.title|default:'Bytox Wellness Patch' }}" width="440" style="width:100%;max-width:440px;display:block;margin:0 auto;border-radius:20px 20px 0 0;"/>
+      </div>
+    </td>
+  </tr>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- DARK PRODUCT BAND                            -->
+  <!-- ═══════════════════════════════════════════ -->
+  <tr>
+    <td style="background:#1a1a1a;">
+      <div class="dark-band-inner" style="padding:36px 48px 44px;text-align:center;">
+        <div style="font-size:11px;font-weight:700;color:#ff6b1a;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;">You left this in your cart</div>
+        <div style="font-size:26px;font-weight:900;color:#ffffff;line-height:1.2;margin-bottom:8px;">{{ event.extra.line_items.0.title|default:'Bytox Wellness Patch' }}</div>
+        <div style="font-size:32px;font-weight:900;color:#ff6b1a;margin-bottom:28px;">{% if event.extra.line_items.0.price %}${{ event.extra.line_items.0.price }}{% endif %}</div>
+        <a href="{{ event.extra.checkout_url|default:'https://bytox.com' }}" style="display:inline-block;background:#ff6b1a;color:#ffffff;text-decoration:none;font-size:17px;font-weight:900;letter-spacing:1px;padding:18px 56px;border-radius:50px;text-transform:uppercase;">COMPLETE MY ORDER →</a>
+      </div>
+    </td>
+  </tr>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- LIFESTYLE IMAGE FULL-BLEED                   -->
+  <!-- ═══════════════════════════════════════════ -->
+  <tr>
+    <td style="background:#1a1a1a;padding:0;line-height:0;">
+      <img src="https://cdn.shopify.com/s/files/1/0411/8033/2191/files/Untitled_design_-_2025-12-05T104453.400.jpg?v=1764949500" alt="Bytox lifestyle" width="600" style="width:100%;max-width:600px;display:block;"/>
+    </td>
+  </tr>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- BLACK FEATURE CARDS                          -->
+  <!-- ═══════════════════════════════════════════ -->
+  <tr>
+    <td style="background:#000000;padding:44px 30px;">
+      <!-- Card 01 -->
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#1a1a1a;border-radius:16px;overflow:hidden;margin-bottom:16px;">
+        <tr><td style="height:4px;background:linear-gradient(90deg,#b83400,#ff6b1a,#ff9a00);font-size:0;line-height:0;">&nbsp;</td></tr>
+        <tr>
+          <td style="padding:28px 32px 30px;">
+            <div style="font-size:11px;font-weight:900;color:#ff6b1a;letter-spacing:3px;margin-bottom:10px;">01</div>
+            <div style="font-size:20px;font-weight:900;color:#ffffff;margin-bottom:10px;">It takes 30 seconds.</div>
+            <div style="font-size:15px;color:rgba(255,255,255,0.65);line-height:1.65;">Peel. Stick. Done. Apply before your next night out or before bed — the patch does the rest. No pills, no timing windows, no guessing.</div>
+          </td>
+        </tr>
+      </table>
+      <!-- Card 02 -->
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#1a1a1a;border-radius:16px;overflow:hidden;">
+        <tr><td style="height:4px;background:linear-gradient(90deg,#b86000,#ff9a00,#ffbf00);font-size:0;line-height:0;">&nbsp;</td></tr>
+        <tr>
+          <td style="padding:28px 32px 30px;">
+            <div style="font-size:11px;font-weight:900;color:#ff9a00;letter-spacing:3px;margin-bottom:10px;">02</div>
+            <div style="font-size:20px;font-weight:900;color:#ffffff;margin-bottom:10px;">It actually works.</div>
+            <div style="font-size:15px;color:rgba(255,255,255,0.65);line-height:1.65;">Transdermal delivery bypasses your digestive system entirely. Active ingredients go straight through the skin for faster, more consistent absorption.</div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- TRUST STRIP                                  -->
+  <!-- ═══════════════════════════════════════════ -->
+  <tr>
+    <td style="background-color:#ff6b1a;background-image:linear-gradient(160deg,#b83400 0%,#ff6b1a 30%,#ff9a00 60%,#c94400 100%),url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI5MiI+PHBvbHlnb24gcG9pbnRzPSIwLDkyIDQwLDAgODAsOTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjAwLDgwLDAuMjUpIiBzdHJva2Utd2lkdGg9IjEuNSIvPjxwb2x5Z29uIHBvaW50cz0iMCwwIDgwLDAgNDAsOTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjAwLDgwLDAuMjUpIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==');background-size:auto,80px 92px;padding:28px 30px;">
+      <table class="trust-col" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td width="33%" style="text-align:center;padding:8px 12px;">
+            <div style="font-size:18px;margin-bottom:4px;">⭐</div>
+            <div style="font-size:13px;font-weight:900;color:#ffffff;line-height:1.3;">Thousands of<br/>Happy Customers</div>
+          </td>
+          <td width="33%" style="text-align:center;padding:8px 12px;">
+            <div style="display:inline-block;border:2px solid rgba(255,255,255,0.6);padding:3px 8px;border-radius:4px;font-size:11px;font-weight:900;color:#ffffff;letter-spacing:2px;margin-bottom:6px;">U·S·A</div>
+            <div style="font-size:13px;font-weight:900;color:#ffffff;line-height:1.3;">Made in<br/>America</div>
+          </td>
+          <td width="33%" style="text-align:center;padding:8px 12px;">
+            <div style="font-size:18px;margin-bottom:4px;">✅</div>
+            <div style="font-size:13px;font-weight:900;color:#ffffff;line-height:1.3;">No Rx<br/>Needed</div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- REVIEWS SECTION                              -->
+  <!-- ═══════════════════════════════════════════ -->
+  <tr>
+    <td style="background:#ffffff;">
+      <div class="reviews-inner" style="padding:48px 40px;">
+        <div style="font-size:11px;font-weight:700;color:#ff6b1a;letter-spacing:4px;text-transform:uppercase;margin-bottom:10px;">Real People</div>
+        <h2 style="margin:0 0 32px;font-size:36px;font-weight:900;color:#1a1a1a;line-height:1.15;">Results that<br/>speak for themselves.</h2>
+        <!-- Review 1 -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fff5ee;border-radius:16px;overflow:hidden;margin-bottom:16px;">
+          <tr><td style="height:4px;background:linear-gradient(90deg,#b83400,#ff6b1a,#ff9a00);font-size:0;line-height:0;">&nbsp;</td></tr>
+          <tr>
+            <td style="padding:24px 28px 26px;">
+              <div style="font-size:16px;color:#ffb347;margin-bottom:8px;">★★★★★</div>
+              <div style="font-size:15px;color:#333333;line-height:1.65;margin-bottom:14px;">"I was skeptical at first but after my first use I was completely sold. Woke up the next morning feeling completely normal — no headache, no fatigue. It's become a non-negotiable for me."</div>
+              <div style="font-size:13px;font-weight:700;color:#1a1a1a;">Sarah K. <span style="font-weight:400;color:#888;">— Verified Buyer</span></div>
+            </td>
+          </tr>
+        </table>
+        <!-- Review 2 -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fff5ee;border-radius:16px;overflow:hidden;">
+          <tr><td style="height:4px;background:linear-gradient(90deg,#b86000,#ff9a00,#ffbf00);font-size:0;line-height:0;">&nbsp;</td></tr>
+          <tr>
+            <td style="padding:24px 28px 26px;">
+              <div style="font-size:16px;color:#ffb347;margin-bottom:8px;">★★★★★</div>
+              <div style="font-size:15px;color:#333333;line-height:1.65;margin-bottom:14px;">"Bought a 5-pack to try it out and immediately ordered the 25-pack. Works exactly as described. I travel for work and always have a few in my bag now. Total game changer."</div>
+              <div style="font-size:13px;font-weight:700;color:#1a1a1a;">Mike R. <span style="font-weight:400;color:#888;">— Verified Buyer</span></div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- CLOSING CTA                                  -->
+  <!-- ═══════════════════════════════════════════ -->
+  <tr>
+    <td style="background:#000000;padding:60px 48px;text-align:center;">
+      <h2 style="margin:0 0 16px;font-size:46px;font-weight:900;color:#ffffff;line-height:1.1;text-transform:uppercase;">Finish<br/>what you<br/>started.</h2>
+      <p style="margin:0 0 36px;font-size:16px;color:rgba(255,255,255,0.5);line-height:1.6;">Your cart is saved. One click and it's on its way.</p>
+      <a href="{{ event.extra.checkout_url|default:'https://bytox.com' }}" style="display:inline-block;background:#ff6b1a;color:#ffffff;text-decoration:none;font-size:17px;font-weight:900;letter-spacing:1px;padding:18px 56px;border-radius:50px;text-transform:uppercase;">COMPLETE MY ORDER →</a>
+    </td>
+  </tr>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- FOOTER                                       -->
+  <!-- ═══════════════════════════════════════════ -->
+  <tr>
+    <td bgcolor="#1a1a1a" style="padding:32px 40px;text-align:center;border-top:1px solid rgba(255,255,255,0.07);">
+      <div style="font-size:20px;font-weight:900;color:#ff6b1a;margin-bottom:14px;">+BYTOX</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.35);line-height:1.8;">
+        You're receiving this because you left items in your cart.<br/>
+        <a href="{{ unsubscribe_url }}" style="color:rgba(255,255,255,0.4);text-decoration:underline;">Unsubscribe</a> &nbsp;·&nbsp; <a href="{{ view_in_browser_url }}" style="color:rgba(255,255,255,0.4);text-decoration:underline;">View in browser</a>
+      </div>
+    </td>
+  </tr>
+
+</table>
+<!-- END MAIN WRAPPER -->
+
+</td></tr>
+</table>
+</body>
+</html>
