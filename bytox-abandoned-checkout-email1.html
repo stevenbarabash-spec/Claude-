@@ -39,8 +39,8 @@
         <tr>
           <td align="center" style="padding:20px 40px 0;font-size:0;line-height:0;">
             <a href="{{ checkout_url|default:'https://bytox.com' }}">
-              <img src="{{ event.Items.0.ImageURL|default:'https://cdn.shopify.com/s/files/1/0411/8033/2191/files/Recovery-1920x1920.jpg?v=1764949288' }}"
-                   alt="{{ event.Items.0.Title|default:'Bytox Patch' }}"
+              <img src="{{ event.Items.0.src|default:'https://cdn.shopify.com/s/files/1/0411/8033/2191/files/Recovery-1920x1920.jpg?v=1764949288' }}"
+                   alt="{{ event.Items.0.title|default:'Bytox Patch' }}"
                    width="520"
                    style="width:100%;max-width:520px;height:auto;display:block;margin:0 auto;border-radius:20px 20px 0 0;"/>
             </a>
@@ -57,8 +57,8 @@
         <tr>
           <td align="center" style="padding:28px 30px 10px;">
             <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:#ff6b1a;letter-spacing:4px;text-transform:uppercase;">You left this in your cart</p>
-            <p style="margin:0 0 6px;font-size:26px;font-weight:900;color:#ffffff;letter-spacing:-1px;">{{ event.Items.0.Title|default:'Bytox Wellness Patch' }}</p>
-            <p style="margin:0 0 22px;font-size:32px;font-weight:900;color:#ff6b1a;letter-spacing:-1px;">{{ event.Items.0.Price|default:'' }}</p>
+            <p style="margin:0 0 6px;font-size:26px;font-weight:900;color:#ffffff;letter-spacing:-1px;">{{ event.Items.0.title|default:'Bytox Wellness Patch' }}</p>
+            <p style="margin:0 0 22px;font-size:32px;font-weight:900;color:#ff6b1a;letter-spacing:-1px;">{{ event.Items.0.price|default:'' }}</p>
             <a href="{{ checkout_url|default:'https://bytox.com' }}"
                style="display:inline-block;background:#ff6b1a;color:#ffffff;font-size:17px;font-weight:900;text-decoration:none;padding:18px 56px;border-radius:50px;letter-spacing:0.5px;">
               COMPLETE MY ORDER →
