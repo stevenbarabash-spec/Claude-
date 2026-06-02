@@ -39,10 +39,10 @@
         <tr>
           <td align="center" style="padding:20px 40px 0;font-size:0;line-height:0;">
             <a href="{{ checkout_url|default:'https://bytox.com' }}">
-              <img src="{{ event.Items.0.images.0.src|default:'https://cdn.shopify.com/s/files/1/0411/8033/2191/files/Recovery-1920x1920.jpg?v=1764949288' }}"
-                   alt="{{ event.Items.0.title|default:'Bytox Patch' }}"
+              {% for item in event.Items %}{% if forloop.first %}<img src="{% if item.product.variant.images.0.src %}{{ item.product.variant.images.0.src }}{% else %}{{ item.product.images.0.src|default:'https://cdn.shopify.com/s/files/1/0411/8033/2191/files/Recovery-1920x1920.jpg?v=1764949288' }}{% endif %}"
+                   alt="{{ item.product.title }}"
                    width="520"
-                   style="width:100%;max-width:520px;height:auto;display:block;margin:0 auto;border-radius:20px 20px 0 0;"/>
+                   style="width:100%;max-width:520px;height:auto;display:block;margin:0 auto;border-radius:20px 20px 0 0;"/>{% endif %}{% endfor %}
             </a>
           </td>
         </tr>
