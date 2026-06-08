@@ -27,10 +27,9 @@ TEMPLATE_PDF = "lease_template.pdf"
 def build_addendum_page(doc: fitz.Document, tenant: str, address: str,
                          start: str, end: str, rent: str, deposit: str,
                          notes: list[str]) -> None:
-    # Match template page size
-    template_page = doc[0]
-    width = template_page.rect.width
-    height = template_page.rect.height
+    # Standard US Letter portrait (8.5" x 11" at 72dpi)
+    width = 612
+    height = 792
 
     page = doc.new_page(width=width, height=height)
 
