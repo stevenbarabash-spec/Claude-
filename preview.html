@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bytox Email Previews</title>
+  <style>
+    body { margin:0; padding:40px 20px; background:#111; font-family:Arial,sans-serif; }
+    h1 { color:#fff; font-size:22px; margin:0 0 8px; }
+    p { color:rgba(255,255,255,0.4); font-size:13px; margin:0 0 40px; }
+    .grid { display:flex; gap:24px; flex-wrap:wrap; }
+    .card { flex:1; min-width:280px; background:#1a1a1a; border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.08); }
+    .card-header { padding:20px 24px; border-bottom:1px solid rgba(255,255,255,0.06); }
+    .tag { display:inline-block; font-size:10px; font-weight:700; color:#c8102e; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
+    .card-header h2 { margin:0 0 4px; font-size:16px; color:#fff; }
+    .card-header p { margin:0; font-size:12px; color:rgba(255,255,255,0.4); }
+    .preview-frame { width:100%; height:500px; border:none; display:block; background:#080d1a; }
+    .card-footer { padding:16px 24px; display:flex; gap:10px; }
+    .btn { display:inline-block; padding:10px 20px; border-radius:50px; font-size:12px; font-weight:900; text-decoration:none; letter-spacing:0.5px; }
+    .btn-primary { background:#c8102e; color:#fff; }
+    .btn-secondary { background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.6); }
+  </style>
+</head>
+<body>
+  <h1>+BYTOX · Email Previews</h1>
+  <p>July 4th · 250th Anniversary Sale — Click "Open Full" to view in a new tab</p>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-header">
+        <span class="tag">Email #1 · Launch</span>
+        <h2>America turns 250. Bytox turns up the savings.</h2>
+        <p>Buy 1 Get 1 Free + Buy 2 Get 1 Free. Auto-applied. 1 order per customer. Don't miss it.</p>
+      </div>
+      <iframe class="preview-frame" src="bytox-july4-sale-newsletter.html"></iframe>
+      <div class="card-footer">
+        <a href="bytox-july4-sale-newsletter.html" target="_blank" class="btn btn-primary">Open Full ↗</a>
+        <a href="bytox-july4-sale-newsletter.html" download class="btn btn-secondary">Download</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="tag">Email #2 · Thursday</span>
+        <h2>The sale is still on. 1 order per customer.</h2>
+        <p>In case you missed it — BOGO hangover patch + B2G1 on 3 more. Auto discount at checkout.</p>
+      </div>
+      <iframe class="preview-frame" src="bytox-july4-sale-email2.html"></iframe>
+      <div class="card-footer">
+        <a href="bytox-july4-sale-email2.html" target="_blank" class="btn btn-primary">Open Full ↗</a>
+        <a href="bytox-july4-sale-email2.html" download class="btn btn-secondary">Download</a>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
