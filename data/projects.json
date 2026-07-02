@@ -78,6 +78,7 @@
       "deadline": "2026-07-16",
       "nextMilestone": "Site + funnel + ads live by Jul 16 → monitor through Jul 30",
       "team": ["Jaren (Google Ads)"],
+      "budget": "$5,000/mo",
       "iterations": [
         {
           "date": "2026-07-02",
@@ -90,6 +91,10 @@
         {
           "date": "2026-07-02",
           "note": "Timeline set: website + funnel to be finished within two weeks (by Jul 16), with Google Ads launching by that same date. Jaren (Google Ads) needs to complete keyword research before launch. After launch, monitor ad performance for two weeks (through ~Jul 30) before reviewing results."
+        },
+        {
+          "date": "2026-07-02",
+          "note": "Pay confirmed: $5,000/month for this engagement."
         }
       ],
       "tasks": [
