@@ -63,6 +63,20 @@
     letter-spacing: 0.04em;
   }
 
+  .calendar-link {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 5px 10px;
+    transition: border-color 0.15s;
+  }
+
+  .calendar-link:hover { border-color: var(--accent); }
+
   .header-stats {
     display: flex;
     gap: 28px;
@@ -513,6 +527,7 @@
   <div class="header-left">
     <span class="wordmark">Command</span>
     <span class="header-date" id="header-date"></span>
+    <a class="calendar-link" href="https://claude.ai/code/artifact/1fe0094f-aa31-40a5-b7c6-92cfd57b2edc" target="_blank" rel="noopener">Calendar →</a>
   </div>
   <div class="header-stats">
     <div class="stat">

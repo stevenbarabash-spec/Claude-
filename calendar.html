@@ -1,0 +1,529 @@
+<title>Calendar — Steven's Work Dashboard</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ground:  #0D1B2A;
+    --surface: #152233;
+    --surface2:#1A2B3F;
+    --rule:    #1E3048;
+    --ink:     #C9D6E3;
+    --muted:   #5E7A96;
+    --accent:  #3D8EBD;
+    --urgent:  #D47A35;
+    --done:    #38996A;
+    --warn:    #C8A228;
+
+    --radius: 6px;
+    --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+    --sans: 'SF Pro Display', -apple-system, 'Helvetica Neue', system-ui, sans-serif;
+  }
+
+  html, body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; }
+
+  /* ── HEADER ─────────────────────────────────── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--rule);
+    position: sticky;
+    top: 0;
+    background: var(--ground);
+    z-index: 10;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .wordmark {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .back-link {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 6px 12px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .back-link:hover { color: var(--accent); border-color: var(--accent); }
+
+  .month-nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .month-label {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    min-width: 160px;
+    text-align: center;
+  }
+
+  .nav-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 13px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .today-btn {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(61,142,189,0.12);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .today-btn:hover { background: rgba(61,142,189,0.2); }
+  .today-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ── LEGEND ───────────────────────────────────── */
+  .legend {
+    display: flex;
+    gap: 18px;
+    padding: 14px 32px;
+    border-bottom: 1px solid var(--rule);
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── MAIN LAYOUT ─────────────────────────────── */
+  .main {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    min-height: calc(100vh - 130px);
+  }
+
+  .cal-wrap {
+    padding: 24px 32px;
+    border-right: 1px solid var(--rule);
+    overflow-x: auto;
+  }
+
+  .weekday-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 6px;
+    min-width: 620px;
+  }
+
+  .weekday-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+    padding-bottom: 6px;
+  }
+
+  .month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: minmax(84px, auto);
+    gap: 6px;
+    min-width: 620px;
+  }
+
+  .day-cell {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 6px 6px 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    cursor: pointer;
+    text-align: left;
+    color: inherit;
+    font: inherit;
+    transition: border-color 0.15s, background 0.15s;
+    overflow: hidden;
+  }
+
+  .day-cell:hover { border-color: var(--accent); }
+  .day-cell:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+  .day-cell.empty {
+    background: transparent;
+    border-color: transparent;
+    cursor: default;
+  }
+
+  .day-cell.today { border-color: var(--accent); background: rgba(61,142,189,0.08); }
+
+  .day-cell.selected { background: rgba(61,142,189,0.16); border-color: var(--accent); }
+
+  .day-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .day-cell.today .day-num { color: var(--accent); }
+
+  .day-items {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+  }
+
+  .day-item {
+    font-size: 10px;
+    line-height: 1.3;
+    padding: 1px 4px;
+    border-radius: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-left: 2px solid var(--accent);
+    background: rgba(61,142,189,0.1);
+    color: var(--ink);
+  }
+
+  .day-item.item-urgent { border-left-color: var(--urgent); background: rgba(212,122,53,0.12); }
+  .day-item.item-warn   { border-left-color: var(--warn);   background: rgba(200,162,40,0.12); }
+
+  .day-overflow {
+    font-size: 9px;
+    color: var(--muted);
+    padding-left: 4px;
+  }
+
+  /* ── SIDE PANEL ───────────────────────────────── */
+  .side-panel {
+    padding: 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .panel-date {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .panel-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .panel-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .panel-item {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .panel-item.item-urgent { border-left-color: var(--urgent); }
+  .panel-item.item-warn   { border-left-color: var(--warn); }
+  .panel-item.item-deadline { border-left-color: var(--done); }
+
+  .panel-item-title {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  .panel-item-project {
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .panel-empty {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 8px 0;
+  }
+
+  .upcoming-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  @media (max-width: 780px) {
+    .main { grid-template-columns: 1fr; }
+    .cal-wrap { border-right: none; border-bottom: 1px solid var(--rule); }
+  }
+</style>
+
+<header class="header">
+  <div class="header-left">
+    <span class="wordmark">Command</span>
+    <a class="back-link" href="https://claude.ai/code/artifact/468a77a7-19b0-4149-9977-2436e7413801" target="_blank" rel="noopener">← Dashboard</a>
+  </div>
+  <div class="month-nav">
+    <button class="nav-btn" id="prev-month" aria-label="Previous month">‹</button>
+    <span class="month-label" id="month-label"></span>
+    <button class="nav-btn" id="next-month" aria-label="Next month">›</button>
+    <button class="today-btn" id="today-btn">Today</button>
+  </div>
+</header>
+
+<div class="legend">
+  <span class="legend-item"><span class="legend-dot" style="background:var(--accent)"></span>Task due</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--warn)"></span>Due soon (≤3d)</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--urgent)"></span>Overdue</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--done)"></span>Project deadline</span>
+</div>
+
+<div class="main">
+  <div class="cal-wrap">
+    <div class="weekday-row" id="weekday-row"></div>
+    <div class="month-grid" id="month-grid"></div>
+  </div>
+
+  <aside class="side-panel">
+    <div>
+      <div class="panel-date" id="panel-date">—</div>
+      <div class="panel-sub" id="panel-sub"></div>
+    </div>
+    <div class="panel-list" id="panel-list"></div>
+  </aside>
+</div>
+
+<script>
+const DATA = {"meta":{"owner":"Steven","lastUpdated":"2026-07-02"},"projects":[{"name":"Empire Entertainment DJ Brandon — Website","status":"active","progress":70,"phase":"Sandbox build","deadline":"2026-07-10","nextMilestone":"Domain research by Jul 4 · Go live Jul 10","team":["Jarin (web)"],"iterations":[{"date":"2026-07-02","note":"Website build underway in sandbox with Jarin. Two blockers remaining: GoHighLevel webhook setup and GoDaddy domain transfer to go live."},{"date":"2026-07-02","note":"Go-live date set: Jul 10. Jarin handling webhook build — Steven to test in GHL. Domain research task scheduled for Jul 4."},{"date":"2026-07-02","note":"Renamed project to Empire Entertainment DJ Brandon. Added task to ship scannable Google review stands (already made, need to ship today)."}],"tasks":[{"title":"Ship scannable Google review stands","done":false,"due":"2026-07-02"},{"title":"Jarin builds GoHighLevel webhook","done":false,"due":null},{"title":"Test GoHighLevel webhook in GHL","done":false,"due":null},{"title":"Verify Jarin updated photos + fixed text/copy on site","done":false,"due":"2026-07-04"},{"title":"Research GoDaddy domain transfer process","done":false,"due":"2026-07-04"},{"title":"Execute domain transfer","done":false,"due":null},{"title":"Upload & launch website on domain","done":false,"due":"2026-07-10"}]},{"name":"Greenwich Dental Group — Website Redesign & Support","status":"active","progress":5,"phase":"Awaiting deposit — not yet started","deadline":"2026-08-02","nextMilestone":"Kick off on deposit receipt → ~2-3wk build → ~1wk revisions","team":[],"budget":"$7,500 (agreed, 50% deposit pending)","iterations":[{"date":"2026-07-02","note":"Project opened: website redesign plus ongoing support engagement."},{"date":"2026-07-02","note":"Background: site was migrated from WordPress to GoHighLevel ~1 year ago due to WordPress performance issues. GDG now wants a full redesign modeled on Apa Aesthetic's site (apaaesthetic.com style — clean, minimal, editorial imagery, dark/light section contrast). Budget negotiated and agreed at $7,500 for the rebuild/redesign. Steven has a Google Doc spec covering: homepage structure modeled on Greenwich Polo Club nav, doctor bio hover-to-color interactions, team/culture/services/locations/gallery/testimonials/internship/patient-info tabs, a future 'Dental Technology' tab, B-roll footage from Jonathan for the hero, Downtown Greenwich vs Old Greenwich location landing pages with office-specific doctor lists, and consultation forms that route to the correct office email based on page/dropdown selection. Keep GDG's existing blue brand color throughout."},{"date":"2026-07-02","note":"Timeline set: waiting on 50% deposit before officially starting. Once paid — ~2-3 weeks to build to a comfortable state, then ~1 week of revisions with GDG and team, targeting ~1 month total to go live (~Aug 2)."}],"tasks":[{"title":"Receive 50% deposit from GDG","done":false,"due":null},{"title":"Finalize scope against reference Google Doc","done":false,"due":null},{"title":"Get B-roll footage from Jonathan for homepage hero","done":false,"due":null},{"title":"Get location photos for Downtown Greenwich / Old Greenwich landing pages","done":false,"due":null},{"title":"Set up office-routing logic on consultation forms (Downtown vs Old Greenwich)","done":false,"due":null},{"title":"Build phase complete — internal review-ready","done":false,"due":null},{"title":"Client/team revision round","done":false,"due":null},{"title":"Go live","done":false,"due":"2026-08-02"}]},{"name":"Get Hydrogel — Funnel","status":"active","progress":5,"phase":"Scoping","deadline":"2026-07-16","nextMilestone":"Site + funnel + ads live by Jul 16 → monitor through Jul 30","team":["Jaren (Google Ads)"],"budget":"$5,000/mo","iterations":[{"date":"2026-07-02","note":"Project opened: building a sales/marketing funnel for Get Hydrogel."},{"date":"2026-07-02","note":"Scope defined: three deliverables — (1) dedicated funnel website/landing page, (2) GoHighLevel funnel build to capture and route leads, (3) Google Ads campaign driving traffic. Flow: Google Ads -> lead signs up on landing page -> routed to a salesperson -> salesperson closes the lead on investing in hydrogel. This is a lead-gen funnel, not a direct checkout."},{"date":"2026-07-02","note":"Timeline set: website + funnel to be finished within two weeks (by Jul 16), with Google Ads launching by that same date. Jaren (Google Ads) needs to complete keyword research before launch. After launch, monitor ad performance for two weeks (through ~Jul 30) before reviewing results."},{"date":"2026-07-02","note":"Pay confirmed: $5,000/month for this engagement."}],"tasks":[{"title":"Build dedicated funnel website / landing page","done":false,"due":"2026-07-16"},{"title":"Build GoHighLevel funnel (lead capture + routing to salesperson)","done":false,"due":"2026-07-16"},{"title":"Connect landing page signups to salesperson handoff","done":false,"due":"2026-07-16"},{"title":"Jaren: Google Ads keyword research","done":false,"due":"2026-07-16"},{"title":"Jaren: launch Google Ads campaign","done":false,"due":"2026-07-16"},{"title":"Monitor ad performance (2 weeks)","done":false,"due":"2026-07-30"},{"title":"Review results with team","done":false,"due":"2026-07-30"}]},{"name":"BYTOX — Website & Newsletter","status":"active","progress":0,"phase":"Ongoing retainer","deadline":null,"nextMilestone":"2 newsletters this week","team":[],"budget":"$2,000/mo retainer (~8 hrs/wk)","iterations":[{"date":"2026-07-02","note":"Project opened: covers both the BYTOX website and their newsletter."},{"date":"2026-07-02","note":"This is an ongoing retainer, not a build project: $2,000/mo, roughly ≤8 hrs/week. Owner requests ad-hoc updates as needed. Recurring deliverables: ~2 newsletters/week, 1-2 SMS blasts/month (2 if there's a sale, 1 if not), plus maintenance of the wholesale website whenever updates are needed."}],"tasks":[{"title":"Newsletter #1 this week","done":false,"due":null},{"title":"Newsletter #2 this week","done":false,"due":null},{"title":"SMS blast(s) this month (1-2 depending on sales)","done":false,"due":null},{"title":"Wholesale site updates (as requested by owner)","done":false,"due":null}]}],"tasks":[]};
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+let viewYear = today.getFullYear();
+let viewMonth = today.getMonth();
+let selectedDateStr = today.toISOString().slice(0, 10);
+
+// ── Build a flat index of every dated item: tasks + project deadlines ──
+function buildEvents() {
+  const events = {}; // dateStr -> [{title, project, type}]
+
+  function push(dateStr, item) {
+    if (!events[dateStr]) events[dateStr] = [];
+    events[dateStr].push(item);
+  }
+
+  DATA.projects.forEach(p => {
+    (p.tasks || []).forEach(t => {
+      if (t.due && !t.done) {
+        push(t.due, { title: t.title, project: p.name, type: 'task' });
+      }
+    });
+    if (p.deadline) {
+      push(p.deadline, { title: `${p.name.split('—')[0].trim()} — project deadline`, project: p.name, type: 'deadline' });
+    }
+  });
+
+  DATA.tasks.forEach(t => {
+    if (t.due && !t.done) {
+      push(t.due, { title: t.title, project: null, type: 'task' });
+    }
+  });
+
+  return events;
+}
+
+const EVENTS = buildEvents();
+
+function daysUntil(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return Math.round((d - today) / 86400000);
+}
+
+function itemUrgencyClass(dateStr, type) {
+  if (type === 'deadline') return 'item-deadline';
+  const n = daysUntil(dateStr);
+  if (n < 0) return 'item-urgent';
+  if (n <= 3) return 'item-warn';
+  return '';
+}
+
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const WEEKDAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function renderWeekdayRow() {
+  const row = document.getElementById('weekday-row');
+  row.innerHTML = WEEKDAYS.map(d => `<div class="weekday-label">${d}</div>`).join('');
+}
+
+function renderMonth() {
+  document.getElementById('month-label').textContent = `${MONTH_NAMES[viewMonth]} ${viewYear}`;
+
+  const grid = document.getElementById('month-grid');
+  grid.innerHTML = '';
+
+  const firstDay = new Date(viewYear, viewMonth, 1);
+  const startOffset = firstDay.getDay();
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+  for (let i = 0; i < startOffset; i++) {
+    const empty = document.createElement('div');
+    empty.className = 'day-cell empty';
+    grid.appendChild(empty);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${viewYear}-${pad(viewMonth + 1)}-${pad(d)}`;
+    const isToday = dateStr === today.toISOString().slice(0, 10);
+    const isSelected = dateStr === selectedDateStr;
+    const items = EVENTS[dateStr] || [];
+
+    const cell = document.createElement('button');
+    cell.className = 'day-cell' + (isToday ? ' today' : '') + (isSelected ? ' selected' : '');
+    cell.setAttribute('data-date', dateStr);
+    cell.setAttribute('aria-label', `${MONTH_NAMES[viewMonth]} ${d}, ${items.length} item${items.length !== 1 ? 's' : ''}`);
+
+    const visibleItems = items.slice(0, 3);
+    const overflow = items.length - visibleItems.length;
+
+    cell.innerHTML = `
+      <span class="day-num">${d}</span>
+      <div class="day-items">
+        ${visibleItems.map(it => `<span class="day-item ${itemUrgencyClass(dateStr, it.type)}">${it.title}</span>`).join('')}
+        ${overflow > 0 ? `<span class="day-overflow">+${overflow} more</span>` : ''}
+      </div>
+    `;
+
+    cell.addEventListener('click', () => {
+      selectedDateStr = dateStr;
+      renderMonth();
+      renderPanel();
+    });
+
+    grid.appendChild(cell);
+  }
+}
+
+function renderPanel() {
+  const d = new Date(selectedDateStr + 'T00:00:00');
+  const label = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  document.getElementById('panel-date').textContent = label;
+
+  const n = daysUntil(selectedDateStr);
+  let sub = '';
+  if (n === 0) sub = 'Today';
+  else if (n === 1) sub = 'Tomorrow';
+  else if (n === -1) sub = '1 day ago';
+  else if (n < 0) sub = `${Math.abs(n)} days ago`;
+  else sub = `In ${n} days`;
+  document.getElementById('panel-sub').textContent = sub;
+
+  const items = EVENTS[selectedDateStr] || [];
+  const list = document.getElementById('panel-list');
+
+  if (!items.length) {
+    list.innerHTML = `<div class="panel-empty">Nothing due this day.</div>`;
+    return;
+  }
+
+  list.innerHTML = items.map(it => `
+    <div class="panel-item ${itemUrgencyClass(selectedDateStr, it.type)}">
+      <div class="panel-item-title">${it.title}</div>
+      ${it.project ? `<div class="panel-item-project">${it.project.split('—')[0].trim()}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+document.getElementById('prev-month').addEventListener('click', () => {
+  viewMonth--;
+  if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+  renderMonth();
+});
+
+document.getElementById('next-month').addEventListener('click', () => {
+  viewMonth++;
+  if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+  renderMonth();
+});
+
+document.getElementById('today-btn').addEventListener('click', () => {
+  viewYear = today.getFullYear();
+  viewMonth = today.getMonth();
+  selectedDateStr = today.toISOString().slice(0, 10);
+  renderMonth();
+  renderPanel();
+});
+
+renderWeekdayRow();
+renderMonth();
+renderPanel();
+</script>
