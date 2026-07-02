@@ -69,6 +69,22 @@
         { "title": "Client/team revision round", "done": false, "due": null },
         { "title": "Go live", "done": false, "due": "2026-08-02" }
       ]
+    },
+    {
+      "name": "Get Hydrogel — Funnel",
+      "status": "active",
+      "progress": 0,
+      "phase": "Scoping",
+      "deadline": null,
+      "nextMilestone": null,
+      "team": [],
+      "iterations": [
+        {
+          "date": "2026-07-02",
+          "note": "Project opened: building a sales/marketing funnel for Get Hydrogel."
+        }
+      ],
+      "tasks": []
     }
   ],
   "tasks": []
