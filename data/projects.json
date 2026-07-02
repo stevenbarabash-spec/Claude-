@@ -75,9 +75,9 @@
       "status": "active",
       "progress": 5,
       "phase": "Scoping",
-      "deadline": null,
-      "nextMilestone": null,
-      "team": [],
+      "deadline": "2026-07-16",
+      "nextMilestone": "Site + funnel + ads live by Jul 16 → monitor through Jul 30",
+      "team": ["Jaren (Google Ads)"],
       "iterations": [
         {
           "date": "2026-07-02",
@@ -86,13 +86,20 @@
         {
           "date": "2026-07-02",
           "note": "Scope defined: three deliverables — (1) dedicated funnel website/landing page, (2) GoHighLevel funnel build to capture and route leads, (3) Google Ads campaign driving traffic. Flow: Google Ads -> lead signs up on landing page -> routed to a salesperson -> salesperson closes the lead on investing in hydrogel. This is a lead-gen funnel, not a direct checkout."
+        },
+        {
+          "date": "2026-07-02",
+          "note": "Timeline set: website + funnel to be finished within two weeks (by Jul 16), with Google Ads launching by that same date. Jaren (Google Ads) needs to complete keyword research before launch. After launch, monitor ad performance for two weeks (through ~Jul 30) before reviewing results."
         }
       ],
       "tasks": [
-        { "title": "Build dedicated funnel website / landing page", "done": false, "due": null },
-        { "title": "Build GoHighLevel funnel (lead capture + routing to salesperson)", "done": false, "due": null },
-        { "title": "Set up Google Ads campaign", "done": false, "due": null },
-        { "title": "Connect landing page signups to salesperson handoff", "done": false, "due": null }
+        { "title": "Build dedicated funnel website / landing page", "done": false, "due": "2026-07-16" },
+        { "title": "Build GoHighLevel funnel (lead capture + routing to salesperson)", "done": false, "due": "2026-07-16" },
+        { "title": "Connect landing page signups to salesperson handoff", "done": false, "due": "2026-07-16" },
+        { "title": "Jaren: Google Ads keyword research", "done": false, "due": "2026-07-16" },
+        { "title": "Jaren: launch Google Ads campaign", "done": false, "due": "2026-07-16" },
+        { "title": "Monitor ad performance (2 weeks)", "done": false, "due": "2026-07-30" },
+        { "title": "Review results with team", "done": false, "due": "2026-07-30" }
       ]
     }
   ],
