@@ -73,7 +73,7 @@
     {
       "name": "Get Hydrogel — Funnel",
       "status": "active",
-      "progress": 0,
+      "progress": 5,
       "phase": "Scoping",
       "deadline": null,
       "nextMilestone": null,
@@ -82,9 +82,18 @@
         {
           "date": "2026-07-02",
           "note": "Project opened: building a sales/marketing funnel for Get Hydrogel."
+        },
+        {
+          "date": "2026-07-02",
+          "note": "Scope defined: three deliverables — (1) dedicated funnel website/landing page, (2) GoHighLevel funnel build to capture and route leads, (3) Google Ads campaign driving traffic. Flow: Google Ads -> lead signs up on landing page -> routed to a salesperson -> salesperson closes the lead on investing in hydrogel. This is a lead-gen funnel, not a direct checkout."
         }
       ],
-      "tasks": []
+      "tasks": [
+        { "title": "Build dedicated funnel website / landing page", "done": false, "due": null },
+        { "title": "Build GoHighLevel funnel (lead capture + routing to salesperson)", "done": false, "due": null },
+        { "title": "Set up Google Ads campaign", "done": false, "due": null },
+        { "title": "Connect landing page signups to salesperson handoff", "done": false, "due": null }
+      ]
     }
   ],
   "tasks": []
