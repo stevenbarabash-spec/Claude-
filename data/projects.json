@@ -3,6 +3,27 @@
     "owner": "Steven",
     "lastUpdated": "2026-07-02"
   },
-  "projects": [],
+  "projects": [
+    {
+      "name": "Greenwich DJ Brandon — Website",
+      "status": "active",
+      "progress": 70,
+      "phase": "Sandbox build",
+      "deadline": null,
+      "nextMilestone": "GHL webhook + domain transfer",
+      "team": ["Jarin (web)"],
+      "iterations": [
+        {
+          "date": "2026-07-02",
+          "note": "Website build underway in sandbox with Jarin. Two blockers remaining: GoHighLevel webhook setup and GoDaddy domain transfer to go live."
+        }
+      ],
+      "tasks": [
+        { "title": "Figure out GoHighLevel webhook", "done": false },
+        { "title": "Transfer GoDaddy domain", "done": false },
+        { "title": "Upload website to domain after transfer", "done": false }
+      ]
+    }
+  ],
   "tasks": []
 }
