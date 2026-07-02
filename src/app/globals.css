@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  --background: #faf9f6;
+  --foreground: #17232f;
+
+  /* GDG brand blue + supporting palette */
+  --brand: #0f2c4c;
+  --brand-light: #2c4f74;
+  --brand-pale: #eaf0f6;
+  --cream: #faf9f6;
+  --hairline: #dfe3e7;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
+  --color-brand-light: var(--brand-light);
+  --color-brand-pale: var(--brand-pale);
+  --color-cream: var(--cream);
+  --color-hairline: var(--hairline);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), Arial, Helvetica, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+}
+
+.tracking-wide-nav {
+  letter-spacing: 0.14em;
+}
+
+/* Doctor hover: grayscale -> color, name overlay */
+.doctor-photo {
+  filter: grayscale(100%);
+  transition: filter 0.5s ease;
+}
+.doctor-card:hover .doctor-photo,
+.doctor-card:focus-within .doctor-photo {
+  filter: grayscale(0%);
+}
+.doctor-overlay {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.doctor-card:hover .doctor-overlay,
+.doctor-card:focus-within .doctor-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
