@@ -101,6 +101,32 @@
         { "title": "Monitor ad performance (2 weeks)", "done": false, "due": "2026-07-30" },
         { "title": "Review results with team", "done": false, "due": "2026-07-30" }
       ]
+    },
+    {
+      "name": "BYTOX — Website & Newsletter",
+      "status": "active",
+      "progress": 0,
+      "phase": "Ongoing retainer",
+      "deadline": null,
+      "nextMilestone": "2 newsletters this week",
+      "team": [],
+      "budget": "$2,000/mo retainer (~8 hrs/wk)",
+      "iterations": [
+        {
+          "date": "2026-07-02",
+          "note": "Project opened: covers both the BYTOX website and their newsletter."
+        },
+        {
+          "date": "2026-07-02",
+          "note": "This is an ongoing retainer, not a build project: $2,000/mo, roughly ≤8 hrs/week. Owner requests ad-hoc updates as needed. Recurring deliverables: ~2 newsletters/week, 1-2 SMS blasts/month (2 if there's a sale, 1 if not), plus maintenance of the wholesale website whenever updates are needed."
+        }
+      ],
+      "tasks": [
+        { "title": "Newsletter #1 this week", "done": false, "due": null },
+        { "title": "Newsletter #2 this week", "done": false, "due": null },
+        { "title": "SMS blast(s) this month (1-2 depending on sales)", "done": false, "due": null },
+        { "title": "Wholesale site updates (as requested by owner)", "done": false, "due": null }
+      ]
     }
   ],
   "tasks": []
