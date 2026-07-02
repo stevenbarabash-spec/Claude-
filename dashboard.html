@@ -1,0 +1,831 @@
+<title>Command — Steven's Work Dashboard</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ground:  #0D1B2A;
+    --surface: #152233;
+    --surface2:#1A2B3F;
+    --rule:    #1E3048;
+    --ink:     #C9D6E3;
+    --muted:   #5E7A96;
+    --accent:  #3D8EBD;
+    --urgent:  #D47A35;
+    --done:    #38996A;
+    --warn:    #C8A228;
+
+    --radius: 6px;
+    --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+    --sans: 'SF Pro Display', -apple-system, 'Helvetica Neue', system-ui, sans-serif;
+  }
+
+  html, body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ─────────────────────────────────── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--rule);
+    position: sticky;
+    top: 0;
+    background: var(--ground);
+    z-index: 10;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .wordmark {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .header-date {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 28px;
+  }
+
+  .stat {
+    text-align: right;
+  }
+
+  .stat-num {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ── MAIN GRID ───────────────────────────────── */
+  .main {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 0;
+    min-height: calc(100vh - 65px);
+  }
+
+  .col-projects {
+    padding: 28px 32px;
+    border-right: 1px solid var(--rule);
+  }
+
+  .col-timeline {
+    padding: 28px 24px;
+  }
+
+  /* ── SECTION HEADERS ─────────────────────────── */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* ── PROJECT CARDS ───────────────────────────── */
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+
+  .project-card:hover { border-color: var(--accent); }
+
+  .project-card.urgent { border-left: 3px solid var(--urgent); }
+  .project-card.on-track { border-left: 3px solid var(--done); }
+  .project-card.at-risk { border-left: 3px solid var(--warn); }
+
+  .card-main {
+    padding: 16px 18px 14px;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .project-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+
+  .project-id {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .status-chip {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .chip-active    { background: rgba(61,142,189,0.15); color: var(--accent); }
+  .chip-on-track  { background: rgba(56,153,106,0.15); color: var(--done); }
+  .chip-at-risk   { background: rgba(200,162,40,0.15);  color: var(--warn); }
+  .chip-urgent    { background: rgba(212,122,53,0.18);  color: var(--urgent); }
+  .chip-done      { background: rgba(56,153,106,0.1);   color: var(--done); }
+  .chip-paused    { background: rgba(94,122,150,0.15);  color: var(--muted); }
+
+  /* ── PROGRESS BAR ────────────────────────────── */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: var(--rule);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+
+  .progress-fill.fill-done { background: var(--done); }
+  .progress-fill.fill-urgent { background: var(--urgent); }
+  .progress-fill.fill-warn { background: var(--warn); }
+
+  .progress-pct {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+    width: 32px;
+    text-align: right;
+  }
+
+  /* ── CARD META ROW ───────────────────────────── */
+  .card-meta {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .meta-key {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .meta-val {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+
+  .meta-val.overdue { color: var(--urgent); }
+  .meta-val.soon    { color: var(--warn); }
+
+  /* ── ITERATIONS LOG ──────────────────────────── */
+  .card-iterations {
+    border-top: 1px solid var(--rule);
+    background: var(--surface2);
+  }
+
+  .iterations-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    cursor: pointer;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    user-select: none;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    transition: color 0.1s;
+  }
+
+  .iterations-toggle:hover { color: var(--ink); }
+
+  .toggle-arrow {
+    display: inline-block;
+    transition: transform 0.2s;
+    font-style: normal;
+  }
+
+  .iterations-body {
+    padding: 0 18px 12px;
+    display: none;
+  }
+
+  .iterations-body.open { display: block; }
+
+  .iter-item {
+    display: flex;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 12px;
+  }
+
+  .iter-item:last-child { border-bottom: none; }
+
+  .iter-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .iter-note { color: var(--ink); line-height: 1.45; }
+
+  /* ── EMPTY STATE ─────────────────────────────── */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 60px 24px;
+    text-align: center;
+    border: 1px dashed var(--rule);
+    border-radius: var(--radius);
+    color: var(--muted);
+  }
+
+  .empty-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 24px);
+    gap: 5px;
+    opacity: 0.35;
+    margin-bottom: 4px;
+  }
+
+  .empty-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 3px;
+    background: var(--rule);
+  }
+
+  .empty-dot:nth-child(2) { background: var(--accent); opacity: 0.6; }
+  .empty-dot:nth-child(5) { background: var(--accent); opacity: 0.3; }
+
+  .empty-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  .empty-sub {
+    font-size: 12px;
+    color: var(--muted);
+    opacity: 0.7;
+    max-width: 280px;
+    line-height: 1.5;
+  }
+
+  /* ── TIMELINE / RIGHT COLUMN ─────────────────── */
+  .deadline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  .deadline-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    font-size: 13px;
+  }
+
+  .deadline-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-urgent { background: var(--urgent); }
+  .dot-warn   { background: var(--warn); }
+  .dot-ok     { background: var(--done); }
+
+  .deadline-name { flex: 1; color: var(--ink); font-size: 12px; }
+
+  .deadline-days {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .deadline-days.overdue { color: var(--urgent); }
+  .deadline-days.soon    { color: var(--warn); }
+
+  /* ── TASK LIST ───────────────────────────────── */
+  .task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .task-item {
+    display: grid;
+    grid-template-columns: 16px 1fr auto;
+    gap: 8px;
+    align-items: start;
+    padding: 8px 10px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    font-size: 12px;
+  }
+
+  .task-check {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--muted);
+    border-radius: 3px;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+
+  .task-check.done {
+    background: var(--done);
+    border-color: var(--done);
+  }
+
+  .task-title { color: var(--ink); line-height: 1.4; }
+  .task-title.done-text { color: var(--muted); text-decoration: line-through; }
+
+  .task-due {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .task-due.overdue { color: var(--urgent); }
+
+  /* ── WEEK STRIP ──────────────────────────────── */
+  .week-strip {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 24px;
+  }
+
+  .day-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 4px;
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--rule);
+  }
+
+  .day-cell.today {
+    background: rgba(61,142,189,0.12);
+    border-color: var(--accent);
+  }
+
+  .day-name {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .day-num {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .day-cell.today .day-num { color: var(--accent); }
+
+  .day-dot-row {
+    display: flex;
+    gap: 2px;
+    min-height: 5px;
+  }
+
+  .day-event-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .day-event-dot.dot-urgent { background: var(--urgent); }
+
+  @media (max-width: 780px) {
+    .main { grid-template-columns: 1fr; }
+    .col-projects { border-right: none; border-bottom: 1px solid var(--rule); }
+    .header { flex-wrap: wrap; gap: 12px; }
+    .header-stats { gap: 16px; }
+  }
+</style>
+
+<header class="header">
+  <div class="header-left">
+    <span class="wordmark">Command</span>
+    <span class="header-date" id="header-date"></span>
+  </div>
+  <div class="header-stats">
+    <div class="stat">
+      <div class="stat-num" id="stat-active">0</div>
+      <div class="stat-label">Active</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="stat-urgent">0</div>
+      <div class="stat-label">Urgent</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="stat-tasks">0</div>
+      <div class="stat-label">Open Tasks</div>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+  <section class="col-projects">
+    <div class="section-label">Projects</div>
+    <div class="project-list" id="project-list"></div>
+  </section>
+
+  <aside class="col-timeline">
+    <div class="section-label">This Week</div>
+    <div class="week-strip" id="week-strip"></div>
+
+    <div class="section-label">Upcoming Deadlines</div>
+    <div class="deadline-list" id="deadline-list"></div>
+
+    <div class="section-label">Open Tasks</div>
+    <div class="task-list" id="task-list"></div>
+  </aside>
+</div>
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────
+const DATA = {"meta":{"owner":"Steven","lastUpdated":"2026-07-02"},"projects":[],"tasks":[]};
+
+// ── UTILITIES ────────────────────────────────────────────────────────
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+function parseDate(str) {
+  if (!str) return null;
+  const d = new Date(str + 'T00:00:00');
+  return d;
+}
+
+function daysUntil(dateStr) {
+  const d = parseDate(dateStr);
+  if (!d) return null;
+  return Math.round((d - today) / 86400000);
+}
+
+function formatDays(n) {
+  if (n === null) return '';
+  if (n < 0)  return `${Math.abs(n)}d overdue`;
+  if (n === 0) return 'due today';
+  if (n === 1) return 'due tomorrow';
+  return `${n}d left`;
+}
+
+function deadlineClass(n) {
+  if (n === null) return '';
+  if (n < 0)  return 'overdue';
+  if (n <= 3) return 'soon';
+  return '';
+}
+
+function dotClass(n) {
+  if (n === null) return 'dot-ok';
+  if (n <= 3)  return 'dot-urgent';
+  if (n <= 7)  return 'dot-warn';
+  return 'dot-ok';
+}
+
+function cardClass(project) {
+  const n = daysUntil(project.deadline);
+  if (project.status === 'done') return '';
+  if (n !== null && n <= 3) return 'urgent';
+  if (n !== null && n <= 7) return 'at-risk';
+  return 'on-track';
+}
+
+function chipClass(status) {
+  const map = {
+    active: 'chip-active',
+    'on-track': 'chip-on-track',
+    'at-risk': 'chip-at-risk',
+    urgent: 'chip-urgent',
+    done: 'chip-done',
+    paused: 'chip-paused',
+  };
+  return map[status] || 'chip-active';
+}
+
+function fillClass(pct) {
+  if (pct >= 100) return 'fill-done';
+  if (pct < 30)   return 'fill-urgent';
+  return '';
+}
+
+function fmtDate(str) {
+  if (!str) return '—';
+  const d = parseDate(str);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+// ── WEEK STRIP ────────────────────────────────────────────────────────
+function buildWeekStrip() {
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const strip = document.getElementById('week-strip');
+  strip.innerHTML = '';
+
+  // Deadlines by date string for dots
+  const deadlineDates = {};
+  DATA.projects.forEach(p => {
+    if (p.deadline) {
+      if (!deadlineDates[p.deadline]) deadlineDates[p.deadline] = [];
+      const n = daysUntil(p.deadline);
+      deadlineDates[p.deadline].push(n !== null && n <= 3 ? 'urgent' : 'normal');
+    }
+  });
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today);
+    const dow = today.getDay();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - dow);
+    const day = new Date(startOfWeek);
+    day.setDate(startOfWeek.getDate() + i);
+
+    const dateStr = day.toISOString().slice(0, 10);
+    const isToday = day.getTime() === today.getTime();
+    const dots = deadlineDates[dateStr] || [];
+
+    const cell = document.createElement('div');
+    cell.className = 'day-cell' + (isToday ? ' today' : '');
+    cell.innerHTML = `
+      <span class="day-name">${days[day.getDay()]}</span>
+      <span class="day-num">${day.getDate()}</span>
+      <span class="day-dot-row">${dots.map(t => `<span class="day-event-dot${t === 'urgent' ? ' dot-urgent' : ''}"></span>`).join('')}</span>
+    `;
+    strip.appendChild(cell);
+  }
+}
+
+// ── HEADER DATE ───────────────────────────────────────────────────────
+document.getElementById('header-date').textContent = today.toLocaleDateString('en-US', {
+  weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+});
+
+// ── PROJECTS ──────────────────────────────────────────────────────────
+function buildProjects() {
+  const list = document.getElementById('project-list');
+  list.innerHTML = '';
+
+  if (!DATA.projects.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-grid">
+          ${[...Array(9)].map((_,i) => `<div class="empty-dot"></div>`).join('')}
+        </div>
+        <div class="empty-title">No projects yet</div>
+        <div class="empty-sub">Tell me about a project — what it is, where you're at, and when it's due — and it'll appear here.</div>
+      </div>`;
+    return;
+  }
+
+  DATA.projects.forEach((p, idx) => {
+    const n = daysUntil(p.deadline);
+    const pct = p.progress || 0;
+    const cc = cardClass(p);
+
+    const card = document.createElement('div');
+    card.className = `project-card ${cc}`;
+
+    const itersHtml = (p.iterations || []).length
+      ? `<div class="card-iterations">
+          <button class="iterations-toggle" onclick="toggleIter(this)" aria-expanded="false">
+            <span class="toggle-arrow">▶</span>
+            ${p.iterations.length} update${p.iterations.length !== 1 ? 's' : ''}
+          </button>
+          <div class="iterations-body">
+            ${p.iterations.map(it => `
+              <div class="iter-item">
+                <span class="iter-date">${fmtDate(it.date)}</span>
+                <span class="iter-note">${it.note}</span>
+              </div>`).join('')}
+          </div>
+        </div>`
+      : '';
+
+    card.innerHTML = `
+      <div class="card-main">
+        <div class="card-top">
+          <div>
+            <div class="project-name">${p.name}</div>
+            <div class="project-id">PRJ-${String(idx + 1).padStart(3, '0')}</div>
+          </div>
+          <span class="status-chip ${chipClass(p.status)}">${p.status || 'active'}</span>
+        </div>
+        <div class="progress-row">
+          <div class="progress-track">
+            <div class="progress-fill ${fillClass(pct)}" style="width:${pct}%"></div>
+          </div>
+          <span class="progress-pct">${pct}%</span>
+        </div>
+        <div class="card-meta">
+          ${p.deadline ? `<div class="meta-item">
+            <span class="meta-key">Deadline</span>
+            <span class="meta-val ${deadlineClass(n)}">${fmtDate(p.deadline)}</span>
+          </div>` : ''}
+          ${n !== null ? `<div class="meta-item">
+            <span class="meta-key">Remaining</span>
+            <span class="meta-val ${deadlineClass(n)}">${formatDays(n)}</span>
+          </div>` : ''}
+          ${p.phase ? `<div class="meta-item">
+            <span class="meta-key">Phase</span>
+            <span class="meta-val">${p.phase}</span>
+          </div>` : ''}
+          ${p.nextMilestone ? `<div class="meta-item">
+            <span class="meta-key">Next milestone</span>
+            <span class="meta-val">${p.nextMilestone}</span>
+          </div>` : ''}
+        </div>
+      </div>
+      ${itersHtml}`;
+
+    list.appendChild(card);
+  });
+}
+
+// ── DEADLINES ─────────────────────────────────────────────────────────
+function buildDeadlines() {
+  const list = document.getElementById('deadline-list');
+  list.innerHTML = '';
+
+  const sorted = DATA.projects
+    .filter(p => p.deadline && p.status !== 'done')
+    .map(p => ({ name: p.name, deadline: p.deadline, n: daysUntil(p.deadline) }))
+    .sort((a, b) => a.n - b.n);
+
+  if (!sorted.length) {
+    list.innerHTML = `<div style="font-size:12px;color:var(--muted);padding:8px 0;">No upcoming deadlines.</div>`;
+    return;
+  }
+
+  sorted.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'deadline-item';
+    el.innerHTML = `
+      <span class="deadline-dot ${dotClass(item.n)}"></span>
+      <span class="deadline-name">${item.name}</span>
+      <span class="deadline-days ${deadlineClass(item.n)}">${formatDays(item.n)}</span>`;
+    list.appendChild(el);
+  });
+}
+
+// ── TASKS ─────────────────────────────────────────────────────────────
+function buildTasks() {
+  const list = document.getElementById('task-list');
+  list.innerHTML = '';
+
+  if (!DATA.tasks.length) {
+    list.innerHTML = `<div style="font-size:12px;color:var(--muted);padding:8px 0;">No standalone tasks.</div>`;
+    return;
+  }
+
+  const open = DATA.tasks.filter(t => !t.done);
+  const done = DATA.tasks.filter(t => t.done);
+  const all = [...open, ...done];
+
+  all.forEach(t => {
+    const n = daysUntil(t.due);
+    const el = document.createElement('div');
+    el.className = 'task-item';
+    el.innerHTML = `
+      <div class="task-check ${t.done ? 'done' : ''}"></div>
+      <span class="task-title ${t.done ? 'done-text' : ''}">${t.title}</span>
+      ${t.due ? `<span class="task-due ${!t.done && n !== null && n < 0 ? 'overdue' : ''}">${fmtDate(t.due)}</span>` : ''}`;
+    list.appendChild(el);
+  });
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────
+function buildStats() {
+  const active = DATA.projects.filter(p => p.status !== 'done' && p.status !== 'paused').length;
+  const urgent = DATA.projects.filter(p => {
+    const n = daysUntil(p.deadline);
+    return p.status !== 'done' && n !== null && n <= 3;
+  }).length;
+  const openTasks = DATA.tasks.filter(t => !t.done).length;
+
+  document.getElementById('stat-active').textContent = active;
+  document.getElementById('stat-urgent').textContent = urgent;
+  document.getElementById('stat-tasks').textContent = openTasks;
+}
+
+// ── TOGGLE ────────────────────────────────────────────────────────────
+function toggleIter(btn) {
+  const body = btn.nextElementSibling;
+  const arrow = btn.querySelector('.toggle-arrow');
+  const open = body.classList.toggle('open');
+  arrow.style.transform = open ? 'rotate(90deg)' : '';
+  btn.setAttribute('aria-expanded', open);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────
+buildWeekStrip();
+buildProjects();
+buildDeadlines();
+buildTasks();
+buildStats();
+</script>
