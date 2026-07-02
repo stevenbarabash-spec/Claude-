@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { locations, doctorsForLocation } from "@/lib/data";
-import ConsultationForm from "@/components/ConsultationForm";
+import GhlFormEmbed from "@/components/GhlFormEmbed";
 
 export function generateStaticParams() {
   return locations.map((l) => ({ slug: l.slug }));
@@ -78,7 +78,9 @@ export default async function LocationPage({
           </ul>
         </div>
 
-        <ConsultationForm lockedOffice={location.slug} />
+        <GhlFormEmbed
+          title={`Schedule Your Complimentary Consultation — ${location.name}`}
+        />
       </div>
     </div>
   );
