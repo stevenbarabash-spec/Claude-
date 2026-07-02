@@ -35,6 +35,22 @@
         { "title": "Execute domain transfer", "done": false, "due": null },
         { "title": "Upload & launch website on domain", "done": false, "due": "2026-07-10" }
       ]
+    },
+    {
+      "name": "Greenwich Dental Group — Website Redesign & Support",
+      "status": "active",
+      "progress": 0,
+      "phase": "Redesign — not yet started",
+      "deadline": null,
+      "nextMilestone": null,
+      "team": [],
+      "iterations": [
+        {
+          "date": "2026-07-02",
+          "note": "Project opened: website redesign plus ongoing support engagement."
+        }
+      ],
+      "tasks": []
     }
   ],
   "tasks": []
