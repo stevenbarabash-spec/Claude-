@@ -25,6 +25,7 @@
       "tasks": [
         { "title": "Jarin builds GoHighLevel webhook", "done": false, "due": null },
         { "title": "Test GoHighLevel webhook in GHL", "done": false, "due": null },
+        { "title": "Verify Jarin updated photos + fixed text/copy on site", "done": false, "due": "2026-07-04" },
         { "title": "Research GoDaddy domain transfer process", "done": false, "due": "2026-07-04" },
         { "title": "Execute domain transfer", "done": false, "due": null },
         { "title": "Upload & launch website on domain", "done": false, "due": "2026-07-10" }
