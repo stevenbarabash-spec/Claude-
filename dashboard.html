@@ -264,6 +264,45 @@
   .meta-val.overdue { color: var(--urgent); }
   .meta-val.soon    { color: var(--warn); }
 
+  /* ── CARD TASKS (mirrors right-column done state) ────────────── */
+  .card-tasks-label {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .card-tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .card-task-row {
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    font-size: 12px;
+  }
+
+  .card-task-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+
+  .card-task-dot.done { background: var(--done); opacity: 1; }
+
+  .card-task-title { color: var(--ink); line-height: 1.4; }
+  .card-task-title.done-text { color: var(--muted); text-decoration: line-through; }
+
   /* ── ITERATIONS LOG ──────────────────────────── */
   .card-iterations {
     border-top: 1px solid var(--rule);
@@ -835,6 +874,19 @@ function buildProjects() {
     const card = document.createElement('div');
     card.className = `project-card ${cc}`;
 
+    const doneCount = (p.tasks || []).filter(t => t.done).length;
+    const taskCount = (p.tasks || []).length;
+
+    const tasksHtml = taskCount
+      ? `<div class="card-tasks">
+          ${p.tasks.map(t => `
+            <div class="card-task-row">
+              <span class="card-task-dot ${t.done ? 'done' : ''}"></span>
+              <span class="card-task-title ${t.done ? 'done-text' : ''}">${t.title}</span>
+            </div>`).join('')}
+        </div>`
+      : '';
+
     const itersHtml = (p.iterations || []).length
       ? `<div class="card-iterations">
           <button class="iterations-toggle" onclick="toggleIter(this)" aria-expanded="false">
@@ -888,6 +940,8 @@ function buildProjects() {
             <span class="meta-val">${p.budget}</span>
           </div>` : ''}
         </div>
+        ${taskCount ? `<div class="card-tasks-label">Tasks · ${doneCount}/${taskCount} done</div>` : ''}
+        ${tasksHtml}
       </div>
       ${itersHtml}`;
 
@@ -922,7 +976,8 @@ function buildDeadlines() {
 }
 
 // ── TASKS ─────────────────────────────────────────────────────────────
-const openRescheduleKeys = new Set();
+// Per-task menu state: 'closed' | 'confirm' | 'reschedule'
+const taskMenuState = new Map();
 
 function buildTasks() {
   const list = document.getElementById('task-list');
@@ -946,67 +1001,92 @@ function buildTasks() {
   all.forEach(t => {
     const n = daysUntil(t.due);
     const key = taskKey(t._project || null, t.title);
-    const isOpen = openRescheduleKeys.has(key);
+    const state = taskMenuState.get(key) || 'closed';
 
     const el = document.createElement('div');
     el.className = 'task-item' + (t.done ? ' is-done' : '');
 
-    el.innerHTML = `
-      <div class="task-row">
-        <button class="task-check ${t.done ? 'done' : ''}" data-key="${key}" aria-label="${t.done ? 'Mark incomplete' : 'Mark complete'}">${t.done ? '✓' : ''}</button>
-        <button class="task-title ${t.done ? 'done-text' : ''}" data-key="${key}">${t.title}${t._project ? `<br><span style="font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);opacity:.75">${t._project.split('—')[0].trim()}</span>` : ''}</button>
-        ${t.due ? `<button class="task-due ${!t.done && n !== null && n < 0 ? 'overdue' : ''}" data-key="${key}" data-toggle="reschedule">${fmtDate(t.due)}</button>` : `<button class="task-due" data-key="${key}" data-toggle="reschedule" style="opacity:.6">set date</button>`}
-      </div>
-      ${isOpen ? `
+    let actionsHtml = '';
+    if (state === 'confirm') {
+      actionsHtml = `
+      <div class="task-actions">
+        <button class="task-action-btn" data-key="${key}" data-action="confirm-done">${t.done ? 'Mark incomplete' : 'Mark done'}</button>
+        <button class="task-action-btn" data-key="${key}" data-action="confirm-reschedule">Reschedule…</button>
+        <button class="task-action-btn" data-key="${key}" data-action="confirm-cancel" style="opacity:.6">Cancel</button>
+      </div>`;
+    } else if (state === 'reschedule') {
+      actionsHtml = `
       <div class="task-actions">
         <button class="task-action-btn" data-key="${key}" data-shift="1">+1 day</button>
         <button class="task-action-btn" data-key="${key}" data-shift="7">+1 wk</button>
         <button class="task-action-btn" data-key="${key}" data-shift="14">+2 wk</button>
         <input type="date" class="task-action-date" data-key="${key}" data-custom-date value="${t.due || ''}">
-      </div>` : ''}
+        <button class="task-action-btn" data-key="${key}" data-action="confirm-cancel" style="opacity:.6">Cancel</button>
+      </div>`;
+    }
+
+    el.innerHTML = `
+      <div class="task-row">
+        <button class="task-check" data-key="${key}" data-action="open-menu" aria-label="Task options">${t.done ? '✓' : ''}</button>
+        <button class="task-title ${t.done ? 'done-text' : ''}" data-key="${key}" data-action="open-menu">${t.title}${t._project ? `<br><span style="font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);opacity:.75">${t._project.split('—')[0].trim()}</span>` : ''}</button>
+        ${t.due ? `<button class="task-due ${!t.done && n !== null && n < 0 ? 'overdue' : ''}" data-key="${key}" data-action="open-menu">${fmtDate(t.due)}</button>` : `<button class="task-due" data-key="${key}" data-action="open-menu" style="opacity:.6">set date</button>`}
+      </div>
+      ${actionsHtml}
     `;
 
     list.appendChild(el);
   });
 
-  // Wire up interactions
-  list.querySelectorAll('.task-check').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const t = all.find(x => taskKey(x._project || null, x.title) === btn.dataset.key);
-      setTaskOverride(t._project || null, t.title, { done: !t.done });
-    });
-  });
+  function findTask(key) {
+    return all.find(x => taskKey(x._project || null, x.title) === key);
+  }
 
-  list.querySelectorAll('.task-title').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const t = all.find(x => taskKey(x._project || null, x.title) === btn.dataset.key);
-      setTaskOverride(t._project || null, t.title, { done: !t.done });
-    });
-  });
-
-  list.querySelectorAll('[data-toggle="reschedule"]').forEach(btn => {
+  // Any click on the row (checkbox, title, or due date) opens the confirm menu —
+  // never toggles done directly, so a stray click can't silently complete a task.
+  list.querySelectorAll('[data-action="open-menu"]').forEach(btn => {
     btn.addEventListener('click', () => {
       const key = btn.dataset.key;
-      if (openRescheduleKeys.has(key)) openRescheduleKeys.delete(key);
-      else openRescheduleKeys.add(key);
+      taskMenuState.set(key, taskMenuState.get(key) === 'confirm' ? 'closed' : 'confirm');
+      buildTasks();
+    });
+  });
+
+  list.querySelectorAll('[data-action="confirm-done"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = findTask(btn.dataset.key);
+      taskMenuState.set(btn.dataset.key, 'closed');
+      setTaskOverride(t._project || null, t.title, { done: !t.done });
+    });
+  });
+
+  list.querySelectorAll('[data-action="confirm-reschedule"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      taskMenuState.set(btn.dataset.key, 'reschedule');
+      buildTasks();
+    });
+  });
+
+  list.querySelectorAll('[data-action="confirm-cancel"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      taskMenuState.set(btn.dataset.key, 'closed');
       buildTasks();
     });
   });
 
   list.querySelectorAll('[data-shift]').forEach(btn => {
     btn.addEventListener('click', () => {
-      const t = all.find(x => taskKey(x._project || null, x.title) === btn.dataset.key);
+      const t = findTask(btn.dataset.key);
       const base = t.due || today.toISOString().slice(0, 10);
       const newDate = addDays(base, parseInt(btn.dataset.shift, 10));
-      openRescheduleKeys.delete(btn.dataset.key);
+      taskMenuState.set(btn.dataset.key, 'closed');
       setTaskOverride(t._project || null, t.title, { due: newDate });
     });
   });
 
   list.querySelectorAll('[data-custom-date]').forEach(input => {
     input.addEventListener('change', () => {
-      const t = all.find(x => taskKey(x._project || null, x.title) === input.dataset.key);
-      openRescheduleKeys.delete(input.dataset.key);
+      const t = findTask(input.dataset.key);
+      taskMenuState.set(input.dataset.key, 'closed');
       setTaskOverride(t._project || null, t.title, { due: input.value });
     });
   });
