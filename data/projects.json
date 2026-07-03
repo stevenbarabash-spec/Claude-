@@ -57,6 +57,10 @@
         {
           "date": "2026-07-02",
           "note": "Timeline set: waiting on 50% deposit before officially starting. Once paid — ~2-3 weeks to build to a comfortable state, then ~1 week of revisions with GDG and team, targeting ~1 month total to go live (~Aug 2)."
+        },
+        {
+          "date": "2026-07-02",
+          "note": "Added SEO tasks: (1) set up URL redirects in GoHighLevel from old URLs to new URLs so nothing breaks/loses ranking on relaunch, and (2) add meta tags, meta descriptions, and page titles across every page for SEO."
         }
       ],
       "tasks": [
@@ -67,6 +71,8 @@
         { "title": "Set up office-routing logic on consultation forms (Downtown vs Old Greenwich)", "done": false, "due": null },
         { "title": "Build phase complete — internal review-ready", "done": false, "due": null },
         { "title": "Client/team revision round", "done": false, "due": null },
+        { "title": "Set up URL redirects in GoHighLevel (old URLs → new URLs) for SEO", "done": false, "due": null },
+        { "title": "Add meta tags, meta descriptions & page titles for SEO on every page", "done": false, "due": null },
         { "title": "Go live", "done": false, "due": "2026-08-02" }
       ]
     },
