@@ -39,12 +39,12 @@
     {
       "name": "Greenwich Dental Group — Website Redesign & Support",
       "status": "active",
-      "progress": 5,
-      "phase": "Awaiting deposit — not yet started",
+      "progress": 15,
+      "phase": "In development — build underway",
       "deadline": "2026-08-02",
-      "nextMilestone": "Kick off on deposit receipt → ~2-3wk build → ~1wk revisions",
+      "nextMilestone": "Client review-ready by Jul 20 → revisions → go live ~Aug 2",
       "team": [],
-      "budget": "$7,500 (agreed, 50% deposit pending)",
+      "budget": "$7,500 ($3,750 deposit received, $3,750 due on completion)",
       "iterations": [
         {
           "date": "2026-07-02",
@@ -61,15 +61,23 @@
         {
           "date": "2026-07-02",
           "note": "Added SEO tasks: (1) set up URL redirects in GoHighLevel from old URLs to new URLs so nothing breaks/loses ranking on relaunch, and (2) add meta tags, meta descriptions, and page titles across every page for SEO."
+        },
+        {
+          "date": "2026-07-03",
+          "note": "50% deposit ($3,750) received. Project officially started — moved from scoping into active development."
+        },
+        {
+          "date": "2026-07-03",
+          "note": "Internal target set: have something ready to show GDG for review/revisions by Jul 20."
         }
       ],
       "tasks": [
-        { "title": "Receive 50% deposit from GDG", "done": false, "due": null },
+        { "title": "Receive 50% deposit from GDG", "done": true, "due": null },
         { "title": "Finalize scope against reference Google Doc", "done": false, "due": null },
         { "title": "Get B-roll footage from Jonathan for homepage hero", "done": false, "due": null },
         { "title": "Get location photos for Downtown Greenwich / Old Greenwich landing pages", "done": false, "due": null },
         { "title": "Set up office-routing logic on consultation forms (Downtown vs Old Greenwich)", "done": false, "due": null },
-        { "title": "Build phase complete — internal review-ready", "done": false, "due": null },
+        { "title": "Build phase complete — ready to show client for revisions", "done": false, "due": "2026-07-20" },
         { "title": "Client/team revision round", "done": false, "due": null },
         { "title": "Set up URL redirects in GoHighLevel (old URLs → new URLs) for SEO", "done": false, "due": null },
         { "title": "Add meta tags, meta descriptions & page titles for SEO on every page", "done": false, "due": null },
