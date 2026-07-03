@@ -803,7 +803,7 @@
   }
   .growth-table td {
     padding: 10px 14px;
-    color: #fff;
+    color: rgba(255,255,255,0.9) !important;
     text-align: center;
     border-bottom: 1px solid rgba(255,255,255,0.06);
     background: transparent !important;
@@ -1703,29 +1703,6 @@
     </div>
   </div>
 
-  <!-- Circuit animation overlay on dark hero section -->
-  <svg id="heroCircuit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice"
-    style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.2">
-    <defs>
-      <filter id="glow1">
-        <feGaussianBlur stdDeviation="3" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-      <filter id="glow2">
-        <feGaussianBlur stdDeviation="5" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-    <path id="hcPath1" d="M 60,500 L 200,500 L 200,360 L 420,360 L 420,220 L 680,220 L 680,100 L 980,100 L 980,40 L 1380,40"
-      fill="none" stroke="#4ADE80" stroke-width="1.2" stroke-opacity="0.6"/>
-    <path id="hcPath2" d="M 0,420 L 140,420 L 140,300 L 340,300 L 340,180 L 600,180 L 600,280 L 820,280 L 820,140 L 1100,140 L 1100,240 L 1440,240"
-      fill="none" stroke="#86EFAC" stroke-width="1" stroke-opacity="0.5"/>
-    <path id="hcPath3" d="M 200,560 L 200,440 L 400,440 L 400,320 L 700,320 L 700,420 L 900,420 L 900,260 L 1200,260 L 1200,120 L 1440,120"
-      fill="none" stroke="#22C55E" stroke-width="1.5" stroke-opacity="0.4"/>
-    <circle id="hcDot1" cx="60" cy="500" r="4" fill="#4ADE80" filter="url(#glow2)"/>
-    <circle id="hcDot2" cx="0" cy="420" r="3.5" fill="#86EFAC" filter="url(#glow1)"/>
-    <circle id="hcDot3" cx="200" cy="560" r="5" fill="#22C55E" filter="url(#glow2)"/>
-  </svg>
 </section>
 
 <!-- PRESS BAR -->
@@ -1746,7 +1723,7 @@
 
 <!-- PROBLEM -->
 <section class="section bg-light" id="problem" style="background-image:url('https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68f77f406d769a8ea2d428d9.png');background-size:cover;background-position:center;position:relative">
-<div style="position:absolute;inset:0;background:rgba(244,240,230,0.93)"></div>
+<div style="position:absolute;inset:0;background:rgba(244,240,230,0.72)"></div>
 <div style="position:relative;z-index:1">
   <div class="container">
     <div class="section-divider-left"></div>
@@ -1781,8 +1758,31 @@
 </section>
 
 <!-- SOLUTION -->
-<section class="section bg-dark" id="solution">
-  <div class="container">
+<section class="section bg-dark" id="solution" style="position:relative;overflow:hidden;">
+  <!-- Circuit animation overlay -->
+  <svg id="heroCircuit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice"
+    style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.18">
+    <defs>
+      <filter id="glow1">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="glow2">
+        <feGaussianBlur stdDeviation="5" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <path id="hcPath1" d="M 60,500 L 200,500 L 200,360 L 420,360 L 420,220 L 680,220 L 680,100 L 980,100 L 980,40 L 1380,40"
+      fill="none" stroke="#4ADE80" stroke-width="1.2" stroke-opacity="0.6"/>
+    <path id="hcPath2" d="M 0,420 L 140,420 L 140,300 L 340,300 L 340,180 L 600,180 L 600,280 L 820,280 L 820,140 L 1100,140 L 1100,240 L 1440,240"
+      fill="none" stroke="#86EFAC" stroke-width="1" stroke-opacity="0.5"/>
+    <path id="hcPath3" d="M 200,560 L 200,440 L 400,440 L 400,320 L 700,320 L 700,420 L 900,420 L 900,260 L 1200,260 L 1200,120 L 1440,120"
+      fill="none" stroke="#22C55E" stroke-width="1.5" stroke-opacity="0.4"/>
+    <circle id="hcDot1" cx="60" cy="500" r="4" fill="#4ADE80" filter="url(#glow2)"/>
+    <circle id="hcDot2" cx="0" cy="420" r="3.5" fill="#86EFAC" filter="url(#glow1)"/>
+    <circle id="hcDot3" cx="200" cy="560" r="5" fill="#22C55E" filter="url(#glow2)"/>
+  </svg>
+  <div class="container" style="position:relative;z-index:1;">
     <div class="section-divider-left" style="background:var(--gold)"></div>
     <p class="eyebrow" style="color:rgba(255,255,255,0.5)">The Solution</p>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:end; margin-top:12px;">
@@ -2177,13 +2177,7 @@
       </div>
 
       <div class="map-embed-wrap">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12399808.02!2d-98.5795!3d39.8283!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54eab584e432360b%3A0x1c3bb99243deb742!2sUnited%20States!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
-          allowfullscreen=""
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          title="HydroGel Active Trial Regions — United States"
-        ></iframe>
+        <img src="https://assets.cdn.filesafe.space/kwymA6ZKPgUkxoeoTobO/media/6a0ca6a9892d6c99109d401b.png" alt="HydroGel active trial regions — American farmland" loading="lazy" style="width:100%;height:340px;object-fit:cover;display:block;">
         <div class="map-caption">
           <div>
             <div class="map-caption-label">Active Trial Regions — United States</div>
