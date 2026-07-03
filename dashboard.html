@@ -422,15 +422,24 @@
   }
 
   .task-item {
-    display: grid;
-    grid-template-columns: 16px 1fr auto;
-    gap: 8px;
-    align-items: start;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     padding: 8px 10px;
     background: var(--surface);
     border: 1px solid var(--rule);
     border-radius: var(--radius);
     font-size: 12px;
+    transition: opacity 0.15s;
+  }
+
+  .task-item.is-done { opacity: 0.55; }
+
+  .task-row {
+    display: grid;
+    grid-template-columns: 16px 1fr auto;
+    gap: 8px;
+    align-items: start;
   }
 
   .task-check {
@@ -440,14 +449,37 @@
     border-radius: 3px;
     margin-top: 1px;
     flex-shrink: 0;
+    cursor: pointer;
+    background: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ground);
+    font-size: 10px;
+    line-height: 1;
+    transition: background 0.15s, border-color 0.15s;
   }
+
+  .task-check:hover { border-color: var(--accent); }
+  .task-check:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   .task-check.done {
     background: var(--done);
     border-color: var(--done);
   }
 
-  .task-title { color: var(--ink); line-height: 1.4; }
+  .task-title {
+    color: var(--ink);
+    line-height: 1.4;
+    background: none;
+    border: none;
+    text-align: left;
+    font: inherit;
+    padding: 0;
+    cursor: pointer;
+  }
+
   .task-title.done-text { color: var(--muted); text-decoration: line-through; }
 
   .task-due {
@@ -455,9 +487,51 @@
     font-size: 10px;
     color: var(--muted);
     white-space: nowrap;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 2px;
   }
 
+  .task-due:hover { color: var(--accent); }
   .task-due.overdue { color: var(--urgent); }
+
+  .task-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding-left: 22px;
+  }
+
+  .task-action-btn {
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 3px 7px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .task-action-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .task-action-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .task-action-date {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink);
+    background: var(--surface2);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 2px 6px;
+  }
 
   /* ── WEEK STRIP ──────────────────────────────── */
   .week-strip {
@@ -566,6 +640,61 @@
 <script>
 // ── DATA ────────────────────────────────────────────────────────────
 const DATA = {"meta":{"owner":"Steven","lastUpdated":"2026-07-02"},"projects":[{"name":"Empire Entertainment DJ Brandon — Website","status":"active","progress":70,"phase":"Sandbox build","deadline":"2026-07-10","nextMilestone":"Domain research by Jul 4 · Go live Jul 10","team":["Jarin (web)"],"iterations":[{"date":"2026-07-02","note":"Website build underway in sandbox with Jarin. Two blockers remaining: GoHighLevel webhook setup and GoDaddy domain transfer to go live."},{"date":"2026-07-02","note":"Go-live date set: Jul 10. Jarin handling webhook build — Steven to test in GHL. Domain research task scheduled for Jul 4."},{"date":"2026-07-02","note":"Renamed project to Empire Entertainment DJ Brandon. Added task to ship scannable Google review stands (already made, need to ship today)."}],"tasks":[{"title":"Ship scannable Google review stands","done":false,"due":"2026-07-02"},{"title":"Jarin builds GoHighLevel webhook","done":false,"due":null},{"title":"Test GoHighLevel webhook in GHL","done":false,"due":null},{"title":"Verify Jarin updated photos + fixed text/copy on site","done":false,"due":"2026-07-04"},{"title":"Research GoDaddy domain transfer process","done":false,"due":"2026-07-04"},{"title":"Execute domain transfer","done":false,"due":null},{"title":"Upload & launch website on domain","done":false,"due":"2026-07-10"}]},{"name":"Greenwich Dental Group — Website Redesign & Support","status":"active","progress":5,"phase":"Awaiting deposit — not yet started","deadline":"2026-08-02","nextMilestone":"Kick off on deposit receipt → ~2-3wk build → ~1wk revisions","team":[],"budget":"$7,500 (agreed, 50% deposit pending)","iterations":[{"date":"2026-07-02","note":"Project opened: website redesign plus ongoing support engagement."},{"date":"2026-07-02","note":"Background: site was migrated from WordPress to GoHighLevel ~1 year ago due to WordPress performance issues. GDG now wants a full redesign modeled on Apa Aesthetic's site (apaaesthetic.com style — clean, minimal, editorial imagery, dark/light section contrast). Budget negotiated and agreed at $7,500 for the rebuild/redesign. Steven has a Google Doc spec covering: homepage structure modeled on Greenwich Polo Club nav, doctor bio hover-to-color interactions, team/culture/services/locations/gallery/testimonials/internship/patient-info tabs, a future 'Dental Technology' tab, B-roll footage from Jonathan for the hero, Downtown Greenwich vs Old Greenwich location landing pages with office-specific doctor lists, and consultation forms that route to the correct office email based on page/dropdown selection. Keep GDG's existing blue brand color throughout."},{"date":"2026-07-02","note":"Timeline set: waiting on 50% deposit before officially starting. Once paid — ~2-3 weeks to build to a comfortable state, then ~1 week of revisions with GDG and team, targeting ~1 month total to go live (~Aug 2)."}],"tasks":[{"title":"Receive 50% deposit from GDG","done":false,"due":null},{"title":"Finalize scope against reference Google Doc","done":false,"due":null},{"title":"Get B-roll footage from Jonathan for homepage hero","done":false,"due":null},{"title":"Get location photos for Downtown Greenwich / Old Greenwich landing pages","done":false,"due":null},{"title":"Set up office-routing logic on consultation forms (Downtown vs Old Greenwich)","done":false,"due":null},{"title":"Build phase complete — internal review-ready","done":false,"due":null},{"title":"Client/team revision round","done":false,"due":null},{"title":"Go live","done":false,"due":"2026-08-02"}]},{"name":"Get Hydrogel — Funnel","status":"active","progress":5,"phase":"Scoping","deadline":"2026-07-16","nextMilestone":"Site + funnel + ads live by Jul 16 → monitor through Jul 30","team":["Jaren (Google Ads)"],"budget":"$5,000/mo","iterations":[{"date":"2026-07-02","note":"Project opened: building a sales/marketing funnel for Get Hydrogel."},{"date":"2026-07-02","note":"Scope defined: three deliverables — (1) dedicated funnel website/landing page, (2) GoHighLevel funnel build to capture and route leads, (3) Google Ads campaign driving traffic. Flow: Google Ads -> lead signs up on landing page -> routed to a salesperson -> salesperson closes the lead on investing in hydrogel. This is a lead-gen funnel, not a direct checkout."},{"date":"2026-07-02","note":"Timeline set: website + funnel to be finished within two weeks (by Jul 16), with Google Ads launching by that same date. Jaren (Google Ads) needs to complete keyword research before launch. After launch, monitor ad performance for two weeks (through ~Jul 30) before reviewing results."},{"date":"2026-07-02","note":"Pay confirmed: $5,000/month for this engagement."}],"tasks":[{"title":"Build dedicated funnel website / landing page","done":false,"due":"2026-07-16"},{"title":"Build GoHighLevel funnel (lead capture + routing to salesperson)","done":false,"due":"2026-07-16"},{"title":"Connect landing page signups to salesperson handoff","done":false,"due":"2026-07-16"},{"title":"Jaren: Google Ads keyword research","done":false,"due":"2026-07-16"},{"title":"Jaren: launch Google Ads campaign","done":false,"due":"2026-07-16"},{"title":"Monitor ad performance (2 weeks)","done":false,"due":"2026-07-30"},{"title":"Review results with team","done":false,"due":"2026-07-30"}]},{"name":"BYTOX — Website & Newsletter","status":"active","progress":0,"phase":"Ongoing retainer","deadline":null,"nextMilestone":"2 newsletters this week","team":[],"budget":"$2,000/mo retainer (~8 hrs/wk)","iterations":[{"date":"2026-07-02","note":"Project opened: covers both the BYTOX website and their newsletter."},{"date":"2026-07-02","note":"This is an ongoing retainer, not a build project: $2,000/mo, roughly ≤8 hrs/week. Owner requests ad-hoc updates as needed. Recurring deliverables: ~2 newsletters/week, 1-2 SMS blasts/month (2 if there's a sale, 1 if not), plus maintenance of the wholesale website whenever updates are needed."}],"tasks":[{"title":"Newsletter #1 this week","done":false,"due":null},{"title":"Newsletter #2 this week","done":false,"due":null},{"title":"SMS blast(s) this month (1-2 depending on sales)","done":false,"due":null},{"title":"Wholesale site updates (as requested by owner)","done":false,"due":null}]}],"tasks":[]};
+
+// ── TASK STATE OVERRIDES (persisted in this browser) ──────────────────
+// Lets tasks be checked off or rescheduled without a backend. Keyed by
+// project name + task title, since the source JSON has no stable ids.
+const OVERRIDES_KEY = 'command_task_overrides_v1';
+
+function loadOverrides() {
+  try {
+    return JSON.parse(localStorage.getItem(OVERRIDES_KEY)) || {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveOverrides(overrides) {
+  localStorage.setItem(OVERRIDES_KEY, JSON.stringify(overrides));
+}
+
+function taskKey(projectName, title) {
+  return `${projectName || '_standalone'}::${title}`;
+}
+
+let overrides = loadOverrides();
+
+function applyOverrides() {
+  DATA.projects.forEach(p => {
+    (p.tasks || []).forEach(t => {
+      const key = taskKey(p.name, t.title);
+      if (overrides[key]) Object.assign(t, overrides[key]);
+    });
+  });
+  DATA.tasks.forEach(t => {
+    const key = taskKey(null, t.title);
+    if (overrides[key]) Object.assign(t, overrides[key]);
+  });
+}
+
+function setTaskOverride(projectName, title, patch) {
+  const key = taskKey(projectName, title);
+  overrides[key] = { ...(overrides[key] || {}), ...patch };
+  saveOverrides(overrides);
+  applyOverrides();
+  buildProjects();
+  buildDeadlines();
+  buildTasks();
+  buildStats();
+}
+
+function addDays(dateStr, n) {
+  const d = new Date(dateStr + 'T00:00:00');
+  d.setDate(d.getDate() + n);
+  return d.toISOString().slice(0, 10);
+}
+
+applyOverrides();
 
 // ── UTILITIES ────────────────────────────────────────────────────────
 const today = new Date();
@@ -793,33 +922,93 @@ function buildDeadlines() {
 }
 
 // ── TASKS ─────────────────────────────────────────────────────────────
+const openRescheduleKeys = new Set();
+
 function buildTasks() {
   const list = document.getElementById('task-list');
   list.innerHTML = '';
-
-  if (!DATA.tasks.length) {
-    list.innerHTML = `<div style="font-size:12px;color:var(--muted);padding:8px 0;">No standalone tasks.</div>`;
-    return;
-  }
 
   // Merge standalone tasks + project-level tasks
   const projTasks = DATA.projects.flatMap(p =>
     (p.tasks || []).map(t => ({ ...t, _project: p.name }))
   );
   const allTasks = [...DATA.tasks, ...projTasks];
+
+  if (!allTasks.length) {
+    list.innerHTML = `<div style="font-size:12px;color:var(--muted);padding:8px 0;">No tasks yet.</div>`;
+    return;
+  }
+
   const open = allTasks.filter(t => !t.done);
   const done = allTasks.filter(t => t.done);
   const all = [...open, ...done];
 
   all.forEach(t => {
     const n = daysUntil(t.due);
+    const key = taskKey(t._project || null, t.title);
+    const isOpen = openRescheduleKeys.has(key);
+
     const el = document.createElement('div');
-    el.className = 'task-item';
+    el.className = 'task-item' + (t.done ? ' is-done' : '');
+
     el.innerHTML = `
-      <div class="task-check ${t.done ? 'done' : ''}"></div>
-      <span class="task-title ${t.done ? 'done-text' : ''}">${t.title}</span>
-      ${t.due ? `<span class="task-due ${!t.done && n !== null && n < 0 ? 'overdue' : ''}">${fmtDate(t.due)}</span>` : (t._project ? `<span class="task-due" style="font-size:9px;letter-spacing:.05em;color:var(--muted);opacity:.7">${t._project.split('—')[0].trim()}</span>` : '')}`;
+      <div class="task-row">
+        <button class="task-check ${t.done ? 'done' : ''}" data-key="${key}" aria-label="${t.done ? 'Mark incomplete' : 'Mark complete'}">${t.done ? '✓' : ''}</button>
+        <button class="task-title ${t.done ? 'done-text' : ''}" data-key="${key}">${t.title}${t._project ? `<br><span style="font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);opacity:.75">${t._project.split('—')[0].trim()}</span>` : ''}</button>
+        ${t.due ? `<button class="task-due ${!t.done && n !== null && n < 0 ? 'overdue' : ''}" data-key="${key}" data-toggle="reschedule">${fmtDate(t.due)}</button>` : `<button class="task-due" data-key="${key}" data-toggle="reschedule" style="opacity:.6">set date</button>`}
+      </div>
+      ${isOpen ? `
+      <div class="task-actions">
+        <button class="task-action-btn" data-key="${key}" data-shift="1">+1 day</button>
+        <button class="task-action-btn" data-key="${key}" data-shift="7">+1 wk</button>
+        <button class="task-action-btn" data-key="${key}" data-shift="14">+2 wk</button>
+        <input type="date" class="task-action-date" data-key="${key}" data-custom-date value="${t.due || ''}">
+      </div>` : ''}
+    `;
+
     list.appendChild(el);
+  });
+
+  // Wire up interactions
+  list.querySelectorAll('.task-check').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = all.find(x => taskKey(x._project || null, x.title) === btn.dataset.key);
+      setTaskOverride(t._project || null, t.title, { done: !t.done });
+    });
+  });
+
+  list.querySelectorAll('.task-title').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = all.find(x => taskKey(x._project || null, x.title) === btn.dataset.key);
+      setTaskOverride(t._project || null, t.title, { done: !t.done });
+    });
+  });
+
+  list.querySelectorAll('[data-toggle="reschedule"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.key;
+      if (openRescheduleKeys.has(key)) openRescheduleKeys.delete(key);
+      else openRescheduleKeys.add(key);
+      buildTasks();
+    });
+  });
+
+  list.querySelectorAll('[data-shift]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = all.find(x => taskKey(x._project || null, x.title) === btn.dataset.key);
+      const base = t.due || today.toISOString().slice(0, 10);
+      const newDate = addDays(base, parseInt(btn.dataset.shift, 10));
+      openRescheduleKeys.delete(btn.dataset.key);
+      setTaskOverride(t._project || null, t.title, { due: newDate });
+    });
+  });
+
+  list.querySelectorAll('[data-custom-date]').forEach(input => {
+    input.addEventListener('change', () => {
+      const t = all.find(x => taskKey(x._project || null, x.title) === input.dataset.key);
+      openRescheduleKeys.delete(input.dataset.key);
+      setTaskOverride(t._project || null, t.title, { due: input.value });
+    });
   });
 }
 
@@ -830,7 +1019,8 @@ function buildStats() {
     const n = daysUntil(p.deadline);
     return p.status !== 'done' && n !== null && n <= 3;
   }).length;
-  const openTasks = DATA.tasks.filter(t => !t.done).length;
+  const projTaskCount = DATA.projects.reduce((sum, p) => sum + (p.tasks || []).filter(t => !t.done).length, 0);
+  const openTasks = DATA.tasks.filter(t => !t.done).length + projTaskCount;
 
   document.getElementById('stat-active').textContent = active;
   document.getElementById('stat-urgent').textContent = urgent;
