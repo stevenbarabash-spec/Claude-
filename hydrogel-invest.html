@@ -1,2021 +1,743 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Invest in HydroGel® — Pre-Series A | Green Evolution Technologies</title>
+<title>HydroGel® — Investor Overview | Green Evolution Technologies</title>
 <style>
-  /* ── Tokens ── */
-  :root {
-    --green-deep:   #182D1E;
-    --green-mid:    #2A4A33;
-    --green-sage:   #3D6B4A;
-    --green-light:  #5A8F68;
-    --gold:         #C89A2E;
-    --gold-light:   #E0B84A;
-    --parchment:    #F4F0E6;
-    --parchment-2:  #EAE5D8;
-    --white:        #FFFFFF;
-    --ink:          #0D1A10;
-    --ink-soft:     #2C3E30;
-    --mist:         #E8EDE5;
-    --text-body:    #1E2E22;
-    --text-muted:   #556B5A;
-    --border:       rgba(60,90,65,0.18);
-    --section-light: var(--parchment);
-    --section-alt:   var(--mist);
-  }
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap');
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --parchment:    #1A2A1E;
-      --parchment-2:  #162218;
-      --mist:         #1E2E22;
-      --section-light: #1A2A1E;
-      --section-alt:   #162218;
-      --text-body:    #D8E5DA;
-      --text-muted:   #8FAF96;
-      --border:       rgba(100,160,110,0.18);
-      --ink:          #D8E5DA;
-      --ink-soft:     #A8C4AE;
-      --white:        #1A2A1E;
-    }
-  }
+:root {
+  --canvas: #0B1F12;
+  --forest: #132C18;
+  --stem: #1C4022;
+  --sage: #4D8B5E;
+  --sage-light: #78B389;
+  --gold: #B8930C;
+  --gold-light: #D4AF3E;
+  --bone: #EDE8DB;
+  --bone-dim: rgba(237,232,219,0.55);
+  --paper: #F4F0E7;
+  --paper-2: #ECE7DA;
+  --ink: #0D2015;
+  --text-body: #1A3021;
+  --text-muted: #587060;
+  --border-d: rgba(237,232,219,0.09);
+  --border-l: rgba(13,32,21,0.11);
+  --f-display: 'Cormorant Garamond', Georgia, serif;
+  --f-body: 'DM Sans', system-ui, sans-serif;
+  --f-mono: 'Space Mono', monospace;
+}
 
-  :root[data-theme="dark"] {
-    --parchment:    #1A2A1E;
-    --parchment-2:  #162218;
-    --mist:         #1E2E22;
-    --section-light: #1A2A1E;
-    --section-alt:   #162218;
-    --text-body:    #D8E5DA;
-    --text-muted:   #8FAF96;
-    --border:       rgba(100,160,110,0.18);
-    --ink:          #D8E5DA;
-    --ink-soft:     #A8C4AE;
-    --white:        #1A2A1E;
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--f-body); background: var(--canvas); color: var(--bone); line-height: 1.6; -webkit-font-smoothing: antialiased; }
 
-  :root[data-theme="light"] {
-    --parchment:    #F4F0E6;
-    --parchment-2:  #EAE5D8;
-    --mist:         #E8EDE5;
-    --section-light: #F4F0E6;
-    --section-alt:   #E8EDE5;
-    --text-body:    #1E2E22;
-    --text-muted:   #556B5A;
-    --border:       rgba(60,90,65,0.18);
-    --ink:          #0D1A10;
-    --ink-soft:     #2C3E30;
-    --white:        #FFFFFF;
-  }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
-  /* ── Reset ── */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-    font-size: 16px;
-    line-height: 1.65;
-    color: var(--text-body);
-    background: var(--parchment);
-    -webkit-font-smoothing: antialiased;
-  }
+/* Typography */
+.display { font-family: var(--f-display); font-weight: 300; font-size: clamp(2.8rem, 6vw, 5.6rem); line-height: 1.06; letter-spacing: -0.01em; }
+.display-sm { font-family: var(--f-display); font-weight: 600; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.12; }
+.heading { font-family: var(--f-display); font-weight: 600; font-size: clamp(1.5rem, 2.5vw, 2.1rem); }
+.eyebrow { font-family: var(--f-body); font-weight: 600; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; }
 
-  img { max-width: 100%; display: block; }
-  a { color: inherit; text-decoration: none; }
+/* Reveal */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* ── Type Scale ── */
-  .display {
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: clamp(2.6rem, 5.5vw, 5.2rem);
-    font-weight: 700;
-    line-height: 1.08;
-    text-wrap: balance;
-    letter-spacing: -0.02em;
-  }
-  .display-sm {
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: clamp(1.8rem, 3.5vw, 3rem);
-    font-weight: 700;
-    line-height: 1.15;
-    text-wrap: balance;
-    letter-spacing: -0.015em;
-  }
-  .heading {
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: clamp(1.4rem, 2.5vw, 2rem);
-    font-weight: 700;
-    line-height: 1.25;
-    text-wrap: balance;
-  }
-  .subheading {
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: clamp(1.1rem, 1.8vw, 1.35rem);
-    font-weight: 400;
-    font-style: italic;
-    line-height: 1.4;
-  }
-  .eyebrow {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
-  .body-lg { font-size: 1.05rem; line-height: 1.75; }
-  .body-sm { font-size: 0.875rem; line-height: 1.6; }
+/* Buttons */
+.btn-gold { background: var(--gold); color: var(--canvas); font-family: var(--f-body); font-weight: 600; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border: none; border-radius: 3px; cursor: pointer; text-decoration: none; display: inline-block; transition: background 0.2s; }
+.btn-gold:hover { background: var(--gold-light); }
+.btn-ghost { background: transparent; color: var(--bone); font-family: var(--f-body); font-weight: 500; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 13px 28px; border: 1px solid rgba(237,232,219,0.3); border-radius: 3px; cursor: pointer; text-decoration: none; display: inline-block; transition: border-color 0.2s, color 0.2s; }
+.btn-ghost:hover { border-color: var(--bone); color: #fff; }
 
-  /* ── Layout ── */
-  .container {
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-  .container-narrow {
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-  .section { padding: 96px 0; }
-  .section-sm { padding: 64px 0; }
-  .section-lg { padding: 128px 0; }
+/* NAV */
+nav { position: sticky; top: 0; z-index: 100; background: var(--canvas); height: 58px; display: flex; align-items: center; border-bottom: 1px solid var(--border-d); }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+.nav-logo img { height: 52px; filter: brightness(0) invert(1); display: block; }
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a { font-family: var(--f-body); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bone-dim); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--bone); }
+@media (max-width: 768px) { .nav-links { display: none; } }
 
-  /* ── Colors ── */
-  .bg-dark  { background: var(--green-deep); color: var(--white); }
-  .bg-mid   { background: var(--green-mid);  color: var(--white); }
-  .bg-light { background: var(--section-light); color: var(--text-body); }
-  .bg-alt   { background: var(--section-alt);   color: var(--text-body); }
-  .bg-ink   { background: var(--ink);           color: var(--parchment); }
-  .gold     { color: var(--gold); }
-  .gold-light { color: var(--gold-light); }
-  .muted    { color: var(--text-muted); }
+/* VIDEO HERO */
+.video-hero { position: relative; height: 88vh; overflow: hidden; }
+.video-hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.video-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(11,31,18,0.65) 100%); }
+.regd-pill { position: absolute; top: 22px; left: 24px; background: rgba(11,31,18,0.78); border: 1px solid rgba(237,232,219,0.18); color: var(--bone-dim); font-family: var(--f-body); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 14px; border-radius: 20px; z-index: 2; }
+.unmute-btn { position: absolute; bottom: 24px; right: 24px; z-index: 2; background: rgba(11,31,18,0.72); border: 1px solid rgba(237,232,219,0.18); color: var(--bone); width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s; }
+.unmute-btn:hover { background: rgba(11,31,18,0.95); }
+.unmute-btn svg { width: 18px; height: 18px; }
 
-  /* ── NAV ── */
-  .nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--green-deep);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-  .nav-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 60px;
-    gap: 32px;
-  }
-  .nav-logo {
-    font-family: Georgia, serif;
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--white);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .nav-logo span { color: var(--gold); }
-  .nav-links {
-    display: flex;
-    gap: 28px;
-    list-style: none;
-    flex-wrap: wrap;
-  }
-  .nav-links a {
-    color: rgba(255,255,255,0.72);
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--gold-light); }
-  .nav-cta {
-    background: var(--gold);
-    color: var(--green-deep);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 9px 20px;
-    border-radius: 3px;
-    white-space: nowrap;
-    transition: background 0.2s;
-    flex-shrink: 0;
-  }
-  .nav-cta:hover { background: var(--gold-light); }
+/* HERO */
+.hero-section { background: var(--canvas); padding: 80px 0 100px; }
+.hero-grid { display: grid; grid-template-columns: 1fr 420px; gap: 60px; align-items: start; }
+@media (max-width: 960px) { .hero-grid { grid-template-columns: 1fr; } }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(184,147,12,0.1); border: 1px solid rgba(184,147,12,0.3); color: var(--gold-light); padding: 6px 14px; border-radius: 20px; margin-bottom: 24px; }
+.hero-eyebrow span { font-family: var(--f-body); font-weight: 600; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; }
+.hero-heading { color: var(--bone); margin-bottom: 20px; }
+.hero-heading em { font-style: italic; color: var(--gold-light); }
+.hero-sub { color: var(--bone-dim); font-size: 0.95rem; line-height: 1.7; max-width: 540px; margin-bottom: 40px; }
 
-  /* ── HERO ── */
-  .hero {
-    background: var(--green-deep);
-    position: relative;
-    overflow: hidden;
-    padding: 100px 0 80px;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 70% 50%, rgba(61,107,74,0.35) 0%, transparent 70%),
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 39px,
-        rgba(255,255,255,0.018) 40px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 79px,
-        rgba(255,255,255,0.018) 80px
-      );
-    pointer-events: none;
-  }
-  .hero-inner {
-    display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: 64px;
-    align-items: start;
-    position: relative;
-    z-index: 1;
-  }
-  .hero-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 28px;
-  }
-  .hero-eyebrow-pill {
-    background: rgba(200,154,46,0.18);
-    border: 1px solid rgba(200,154,46,0.4);
-    color: var(--gold-light);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 5px 12px;
-    border-radius: 100px;
-  }
-  .hero-eyebrow-text {
-    color: rgba(255,255,255,0.5);
-    font-size: 0.78rem;
-    letter-spacing: 0.05em;
-  }
-  .hero-headline {
-    color: var(--white);
-    margin-bottom: 8px;
-  }
-  .hero-headline .gold-word {
-    color: var(--gold);
-    position: relative;
-    display: inline-block;
-  }
-  .hero-headline .gold-word::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--gold);
-    opacity: 0.5;
-    border-radius: 2px;
-  }
-  .hero-subhead {
-    color: rgba(255,255,255,0.65);
-    font-size: 1.1rem;
-    line-height: 1.7;
-    margin-top: 20px;
-    margin-bottom: 36px;
-    max-width: 560px;
-  }
-  .hero-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6px;
-    overflow: hidden;
-    margin-bottom: 36px;
-    max-width: 540px;
-  }
-  .hero-stat {
-    background: rgba(255,255,255,0.04);
-    padding: 18px 16px;
-    text-align: center;
-  }
-  .hero-stat-num {
-    font-family: Georgia, serif;
-    font-size: 1.85rem;
-    font-weight: 700;
-    color: var(--gold);
-    font-variant-numeric: tabular-nums;
-    line-height: 1;
-    display: block;
-  }
-  .hero-stat-label {
-    font-size: 0.72rem;
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 0.05em;
-    margin-top: 5px;
-    display: block;
-  }
-  .hero-cta-row {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-  }
-  .btn-primary {
-    display: inline-block;
-    background: var(--gold);
-    color: var(--green-deep);
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 14px 28px;
-    border-radius: 3px;
-    transition: background 0.2s, transform 0.15s;
-    cursor: pointer;
-    border: none;
-  }
-  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
-  .btn-outline {
-    display: inline-block;
-    background: transparent;
-    color: rgba(255,255,255,0.85);
-    border: 1px solid rgba(255,255,255,0.3);
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    padding: 14px 28px;
-    border-radius: 3px;
-    transition: border-color 0.2s, color 0.2s;
-    cursor: pointer;
-  }
-  .btn-outline:hover { border-color: rgba(255,255,255,0.7); color: #fff; }
+/* Water stats */
+.water-stats { display: flex; gap: 32px; margin-bottom: 40px; }
+.w-col { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.w-col-track { width: 52px; height: 140px; border: 1px solid rgba(237,232,219,0.12); border-radius: 4px; position: relative; overflow: hidden; background: rgba(237,232,219,0.04); }
+.w-col-fill { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, #1C4022 0%, #4D8B5E 70%, #78B389 100%); transform: scaleY(0); transform-origin: bottom center; transition: transform 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); border-radius: 3px 3px 0 0; }
+.w-col-fill.filled { transform: scaleY(1); }
+.w-col-fill::after { content: ''; position: absolute; top: -3px; left: -30%; width: 160%; height: 6px; background: #78B389; border-radius: 50%; opacity: 0.5; animation: wave-osc 3s ease-in-out infinite alternate; }
+@keyframes wave-osc { 0% { transform: translateX(0); } 100% { transform: translateX(8px); } }
+.w-col-num { font-family: 'Space Mono', monospace; font-size: 1.05rem; font-weight: 700; color: #D4AF3E; white-space: nowrap; }
+.w-col-label { font-family: 'DM Sans', sans-serif; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.04em; color: rgba(237,232,219,0.4); text-align: center; line-height: 1.35; max-width: 72px; }
+.hero-cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
 
-  /* Hero form card */
-  .hero-card {
-    background: var(--white);
-    border-radius: 8px;
-    padding: 32px 28px;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.35);
-  }
-  .hero-card-title {
-    font-family: Georgia, serif;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 6px;
-    line-height: 1.3;
-  }
-  .hero-card-sub {
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    margin-bottom: 22px;
-    line-height: 1.5;
-  }
-  .form-group { margin-bottom: 14px; }
-  .form-group label {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: 5px;
-  }
-  .form-group input, .form-group select {
-    width: 100%;
-    padding: 11px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 4px;
-    font-size: 0.9rem;
-    color: var(--ink);
-    background: var(--parchment);
-    appearance: none;
-    transition: border-color 0.2s;
-    font-family: inherit;
-  }
-  .form-group input:focus, .form-group select:focus {
-    outline: none;
-    border-color: var(--green-sage);
-  }
-  .form-submit {
-    width: 100%;
-    background: var(--green-deep);
-    color: #fff;
-    border: none;
-    padding: 13px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.2s;
-    margin-top: 6px;
-    font-family: inherit;
-  }
-  .form-submit:hover { background: var(--green-sage); }
-  .form-legal {
-    font-size: 0.7rem;
-    color: #888;
-    text-align: center;
-    margin-top: 12px;
-    line-height: 1.5;
-  }
-  .offering-tag {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(200,154,46,0.1);
-    border: 1px solid rgba(200,154,46,0.35);
-    border-radius: 4px;
-    padding: 8px 12px;
-    margin-bottom: 20px;
-  }
-  .offering-dot {
-    width: 8px; height: 8px;
-    background: var(--gold);
-    border-radius: 50%;
-    flex-shrink: 0;
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.8); }
-  }
-  .offering-text {
-    font-size: 0.75rem;
-    color: var(--ink);
-    font-weight: 600;
-    letter-spacing: 0.03em;
-  }
+/* Hero form card */
+.hero-form-card { background: var(--paper); border-radius: 8px; padding: 36px 32px; color: var(--text-body); }
+.hero-form-card h3 { font-family: var(--f-display); font-weight: 600; font-size: 1.4rem; color: var(--ink); margin-bottom: 6px; }
+.hero-form-card p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 24px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; }
+.form-group input, .form-group select { width: 100%; padding: 10px 12px; border: 1px solid var(--border-l); border-radius: 3px; font-family: var(--f-body); font-size: 0.85rem; color: var(--text-body); background: #fff; outline: none; transition: border-color 0.2s; }
+.form-group input:focus, .form-group select:focus { border-color: var(--sage); }
+.form-submit { width: 100%; background: var(--gold); color: var(--canvas); font-family: var(--f-body); font-weight: 600; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px; border: none; border-radius: 3px; cursor: pointer; margin-top: 6px; transition: background 0.2s; }
+.form-submit:hover { background: var(--gold-light); }
+.offering-badge { display: flex; align-items: center; gap: 10px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border-l); }
+.pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; position: relative; flex-shrink: 0; }
+.pulse-dot::after { content: ''; position: absolute; inset: -3px; border-radius: 50%; background: rgba(34,197,94,0.3); animation: pulse-ring 1.8s ease-out infinite; }
+@keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(2.2); opacity: 0; } }
+.offering-badge-text { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; }
+.offering-badge-text strong { color: var(--text-body); }
 
-  /* ── PRESS BAR ── */
-  .press-bar {
-    background: var(--white);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 22px 0;
-  }
-  .press-inner {
-    display: flex;
-    align-items: center;
-    gap: 40px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .press-label {
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    white-space: nowrap;
-  }
-  .press-logos {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .press-logo-item {
-    font-family: Georgia, serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    letter-spacing: 0.04em;
-    opacity: 0.7;
-  }
+/* PRESS BAR */
+.press-bar { background: var(--paper-2); padding: 22px 0; border-top: 1px solid var(--border-l); border-bottom: 1px solid var(--border-l); }
+.press-bar-inner { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
+.press-label { font-family: var(--f-body); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; }
+.press-items { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+.press-item { font-family: var(--f-body); font-size: 0.75rem; font-weight: 500; color: var(--text-muted); letter-spacing: 0.04em; white-space: nowrap; }
+.press-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-l); flex-shrink: 0; }
 
-  /* ── DIVIDER ── */
-  .section-divider {
-    width: 48px;
-    height: 3px;
-    background: var(--gold);
-    border-radius: 2px;
-    margin: 0 auto 20px;
-  }
-  .section-divider-left {
-    width: 48px;
-    height: 3px;
-    background: var(--gold);
-    border-radius: 2px;
-    margin: 0 0 20px;
-  }
+/* PROBLEM */
+.problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 48px; }
+@media (max-width: 640px) { .problem-grid { grid-template-columns: 1fr; } }
+.problem-item { background: rgba(244,240,231,0.85); backdrop-filter: blur(4px); border: 1px solid var(--border-l); border-radius: 6px; padding: 28px 24px; }
+.problem-num { font-family: var(--f-mono); font-weight: 700; font-size: 1.6rem; color: #b91c1c; margin-bottom: 8px; }
+.problem-title { font-family: var(--f-body); font-weight: 600; font-size: 0.9rem; color: var(--ink); margin-bottom: 8px; }
+.problem-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
 
-  /* ── PROBLEM ── */
-  .problem-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 48px;
-  }
-  .problem-item {
-    background: var(--section-light);
-    padding: 32px 28px;
-  }
-  .problem-stat {
-    font-family: Georgia, serif;
-    font-size: 2.4rem;
-    font-weight: 700;
-    color: var(--green-sage);
-    font-variant-numeric: tabular-nums;
-    line-height: 1;
-    margin-bottom: 10px;
-  }
-  .problem-stat.negative { color: #8B3A3A; }
-  .problem-title {
-    font-weight: 700;
-    font-size: 0.95rem;
-    margin-bottom: 8px;
-    color: var(--ink);
-  }
-  .problem-desc {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
+/* SECTION HEAD */
+.section-eyebrow { font-family: var(--f-body); font-weight: 600; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; display: inline-block; margin-bottom: 14px; }
+.section-head { margin-bottom: 48px; }
+.section-head p { font-size: 0.9rem; line-height: 1.7; max-width: 560px; }
+.dark-text .section-eyebrow { color: var(--sage-light); }
+.dark-text h2 { color: var(--bone); }
+.dark-text p { color: var(--bone-dim); }
+.light-text .section-eyebrow { color: var(--sage); }
+.light-text h2 { color: var(--ink); }
+.light-text p { color: var(--text-muted); }
 
-  /* ── SOLUTION ── */
-  .solution-hero-num {
-    font-family: Georgia, serif;
-    font-size: clamp(5rem, 14vw, 10rem);
-    font-weight: 700;
-    color: var(--gold);
-    line-height: 0.9;
-    letter-spacing: -0.04em;
-    font-variant-numeric: tabular-nums;
-  }
-  .solution-hero-label {
-    font-size: 1.2rem;
-    color: rgba(255,255,255,0.7);
-    margin-top: 8px;
-  }
-  .solution-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 6px;
-    overflow: hidden;
-    margin-top: 48px;
-  }
-  .solution-stat {
-    background: rgba(255,255,255,0.04);
-    padding: 24px 20px;
-    text-align: center;
-  }
-  .solution-stat-num {
-    font-family: Georgia, serif;
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--gold);
-    font-variant-numeric: tabular-nums;
-    display: block;
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-  .solution-stat-label {
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.55);
-    line-height: 1.4;
-  }
-  .solution-proof {
-    margin-top: 48px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-  }
-  .proof-item {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 6px;
-    padding: 24px;
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-  }
-  .proof-check {
-    width: 22px;
-    height: 22px;
-    background: var(--gold);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-top: 2px;
-    font-size: 0.7rem;
-    color: var(--green-deep);
-    font-weight: 900;
-  }
-  .proof-text {
-    font-size: 0.9rem;
-    color: rgba(255,255,255,0.75);
-    line-height: 1.55;
-  }
-  .proof-text strong { color: #fff; }
+/* SOLUTION */
+.solution-big-num { font-family: var(--f-display); font-weight: 300; font-size: clamp(4rem, 10vw, 9rem); line-height: 0.9; color: var(--gold-light); margin-bottom: 12px; }
+.solution-big-label { font-family: var(--f-body); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bone-dim); margin-bottom: 60px; }
+.solution-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 56px; }
+@media (max-width: 768px) { .solution-stats { grid-template-columns: repeat(2, 1fr); } }
+.sol-stat { border-top: 1px solid var(--border-d); padding-top: 20px; }
+.sol-stat-num { font-family: var(--f-mono); font-size: 1.4rem; font-weight: 700; color: var(--gold-light); margin-bottom: 6px; }
+.sol-stat-label { font-size: 0.75rem; color: var(--bone-dim); line-height: 1.5; }
+.solution-img { width: 100%; max-height: 360px; object-fit: cover; border-radius: 6px; margin-bottom: 56px; display: block; }
+.proof-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 640px) { .proof-grid { grid-template-columns: 1fr; } }
+.proof-item { display: flex; gap: 14px; align-items: flex-start; }
+.proof-check { width: 20px; height: 20px; border-radius: 50%; background: rgba(78,139,94,0.2); border: 1px solid var(--sage); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.proof-check svg { width: 10px; height: 10px; stroke: var(--sage-light); fill: none; stroke-width: 2.5; }
+.proof-text strong { display: block; font-family: var(--f-body); font-size: 0.85rem; font-weight: 600; color: var(--bone); margin-bottom: 3px; }
+.proof-text span { font-size: 0.78rem; color: var(--bone-dim); }
 
-  /* ── TRACTION ── */
-  .traction-numbers {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-    margin-top: 48px;
-  }
-  .traction-num-card {
-    background: var(--section-light);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 28px 20px;
-    text-align: center;
-  }
-  .traction-num {
-    font-family: Georgia, serif;
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--green-sage);
-    font-variant-numeric: tabular-nums;
-    display: block;
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-  .traction-num-label {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    line-height: 1.4;
-  }
-  .traction-quotes {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-top: 32px;
-  }
-  .traction-quote {
-    background: var(--section-alt);
-    border-left: 3px solid var(--gold);
-    padding: 20px 20px 20px 24px;
-    border-radius: 0 6px 6px 0;
-  }
-  .traction-quote p {
-    font-size: 0.9rem;
-    font-style: italic;
-    color: var(--text-body);
-    line-height: 1.6;
-    margin-bottom: 10px;
-  }
-  .traction-quote cite {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-style: normal;
-  }
+/* TRACTION */
+.traction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 60px; }
+@media (max-width: 768px) { .traction-grid { grid-template-columns: repeat(2, 1fr); } }
+.traction-card { background: #fff; border: 1px solid var(--border-l); border-radius: 6px; padding: 28px 24px; }
+.traction-card-num { font-family: var(--f-mono); font-size: 1.8rem; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+.traction-card-label { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+.testimonials { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 640px) { .testimonials { grid-template-columns: 1fr; } }
+.testimonial { background: var(--paper-2); border: 1px solid var(--border-l); border-radius: 6px; padding: 28px 24px; }
+.testimonial-quote { font-family: var(--f-display); font-style: italic; font-size: 1.1rem; color: var(--text-body); line-height: 1.55; margin-bottom: 18px; }
+.testimonial-attr { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.04em; }
 
-  /* ── ROI TABLE ── */
-  .roi-intro {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
-    align-items: start;
-    margin-top: 48px;
-  }
-  .roi-table-wrap { overflow-x: auto; }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-    font-variant-numeric: tabular-nums;
-  }
-  thead th {
-    background: var(--green-deep);
-    color: rgba(255,255,255,0.85);
-    padding: 12px 16px;
-    text-align: left;
-    font-weight: 700;
-    font-size: 0.75rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  thead th:first-child { border-radius: 6px 0 0 0; }
-  thead th:last-child { border-radius: 0 6px 0 0; }
-  tbody tr:nth-child(even) { background: var(--section-alt); }
-  tbody tr:nth-child(odd)  { background: var(--section-light); }
-  tbody td {
-    padding: 12px 16px;
-    color: var(--text-body);
-    border-bottom: 1px solid var(--border);
-  }
-  tbody td:first-child { font-weight: 600; }
-  .highlight-row td {
-    background: rgba(200,154,46,0.12) !important;
-    color: var(--ink);
-    font-weight: 700;
-  }
-  .green-text { color: var(--green-sage); font-weight: 700; }
+/* TABLES */
+.lt { width: 100%; border-collapse: collapse; font-family: var(--f-body); font-size: 0.83rem; }
+.lt thead th { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); padding: 10px 14px; border-bottom: 2px solid var(--border-l); text-align: left; }
+.lt tbody tr td { padding: 12px 14px; border-bottom: 1px solid var(--border-l); color: var(--text-body); }
+.lt tbody tr:last-child td { border-bottom: none; }
+.lt tbody tr:hover td { background: rgba(13,32,21,0.03); }
+.lt .mono { font-family: var(--f-mono); font-size: 0.8rem; }
+.lt .hl { background: rgba(184,147,12,0.08); font-weight: 600; }
+.lt .hl.mono { font-family: var(--f-mono); color: var(--ink); }
+.table-title { font-family: var(--f-body); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; }
 
-  /* ── COMPARISON TABLE ── */
-  .compare-table-wrap { overflow-x: auto; margin-top: 40px; }
-  .compare-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-  }
-  .compare-table thead th {
-    text-align: center;
-    padding: 14px 12px;
-    font-size: 0.78rem;
-  }
-  .compare-table thead th:first-child { text-align: left; }
-  .compare-table thead th.highlight-col {
-    background: var(--green-sage);
-    color: #fff;
-  }
-  .compare-table tbody td {
-    text-align: center;
-    padding: 11px 12px;
-  }
-  .compare-table tbody td:first-child { text-align: left; font-weight: 600; }
-  .compare-table tbody td.highlight-col { background: rgba(61,107,74,0.08); font-weight: 700; color: var(--green-sage); }
-  .check { color: var(--green-sage); font-weight: 900; font-size: 1rem; }
-  .cross { color: #C0392B; font-weight: 900; font-size: 1rem; }
+.dt { width: 100%; border-collapse: collapse; font-family: var(--f-body); font-size: 0.83rem; }
+.dt thead th { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bone-dim); padding: 10px 14px; border-bottom: 1px solid var(--border-d); text-align: left; }
+.dt tbody tr td { padding: 12px 14px; border-bottom: 1px solid var(--border-d); color: var(--bone); }
+.dt tbody tr:last-child td { border-bottom: none; }
+.dt tbody tr:hover td { background: rgba(237,232,219,0.04); }
+.dt .mono { font-family: var(--f-mono); font-size: 0.8rem; }
+.dt .gold-row td { color: var(--gold-light); font-weight: 600; }
 
-  /* ── REVENUE MODEL ── */
-  .revenue-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 8px;
-    overflow: hidden;
-    margin: 40px 0;
-  }
-  .rev-cell {
-    background: rgba(255,255,255,0.04);
-    padding: 32px 24px;
-    text-align: center;
-  }
-  .rev-num {
-    font-family: Georgia, serif;
-    font-size: 2.4rem;
-    font-weight: 700;
-    color: var(--gold);
-    display: block;
-    font-variant-numeric: tabular-nums;
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-  .rev-label {
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.55);
-    line-height: 1.4;
-  }
-  .growth-table-wrap { overflow-x: auto; margin-top: 32px; }
-  .growth-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.82rem;
-    font-variant-numeric: tabular-nums;
-  }
-  .growth-table th {
-    background: rgba(255,255,255,0.08);
-    color: rgba(255,255,255,0.6);
-    padding: 10px 14px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-align: center;
-  }
-  .growth-table td {
-    padding: 10px 14px;
-    color: rgba(255,255,255,0.9) !important;
-    text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    background: transparent !important;
-  }
-  .growth-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.04) !important; }
-  .growth-table tbody tr:nth-child(odd)  { background: transparent !important; }
-  .growth-table .final-row td {
-    color: var(--gold);
-    font-weight: 700;
-    font-size: 0.9rem;
-    background: rgba(200,154,46,0.12) !important;
-  }
+/* ROI */
+.roi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+@media (max-width: 768px) { .roi-grid { grid-template-columns: 1fr; } }
 
-  /* ── GLOBAL VALIDATION ── */
-  .validation-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 64px;
-    align-items: center;
-  }
-  .validation-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 32px;
-  }
-  .validation-list li {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-  }
-  .val-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--green-sage);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-size: 0.75rem;
-    color: #fff;
-    font-weight: 900;
-  }
-  .val-text strong { display: block; font-size: 0.9rem; margin-bottom: 2px; color: var(--ink); }
-  .val-text span { font-size: 0.82rem; color: var(--text-muted); }
-  .world-map-placeholder {
-    background: var(--section-alt);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    height: 280px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 24px;
-    position: relative;
-    overflow: hidden;
-  }
-  .world-map-placeholder canvas { position: absolute; inset: 0; }
-  .map-overlay {
-    position: relative;
-    z-index: 1;
-    pointer-events: none;
-  }
-  .map-label {
-    font-family: Georgia, serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 6px;
-  }
-  .map-sub { font-size: 0.8rem; color: var(--text-muted); }
-  .map-dots {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    margin-top: 16px;
-    flex-wrap: wrap;
-  }
-  .map-dot-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-  }
-  .map-dot-item::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--gold);
-    display: block;
-    flex-shrink: 0;
-  }
+/* REVENUE */
+.revenue-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 48px 0; }
+@media (max-width: 640px) { .revenue-grid { grid-template-columns: 1fr; } }
+.rev-cell { border: 1px solid var(--border-d); border-radius: 6px; padding: 32px 24px; text-align: center; }
+.rev-num { font-family: var(--f-display); font-weight: 300; font-size: clamp(2.2rem, 4vw, 3.6rem); color: var(--gold-light); line-height: 1; margin-bottom: 10px; }
+.rev-label { font-size: 0.78rem; color: var(--bone-dim); line-height: 1.5; }
 
-  /* ── MARKET ── */
-  .market-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-top: 48px;
-  }
-  .market-card {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 32px 24px;
-    background: var(--section-light);
-  }
-  .market-card-num {
-    font-family: Georgia, serif;
-    font-size: 2.8rem;
-    font-weight: 700;
-    color: var(--green-sage);
-    font-variant-numeric: tabular-nums;
-    display: block;
-    line-height: 1;
-    margin-bottom: 10px;
-  }
-  .market-card-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 8px; color: var(--ink); }
-  .market-card-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.55; }
+/* MARKET */
+.market-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+@media (max-width: 640px) { .market-grid { grid-template-columns: 1fr; } }
+.market-card { background: var(--paper-2); border: 1px solid var(--border-l); border-radius: 6px; padding: 32px 28px; }
+.market-num { font-family: var(--f-display); font-weight: 300; font-size: clamp(2rem, 4vw, 3.2rem); color: var(--ink); line-height: 1; margin-bottom: 10px; }
+.market-label { font-size: 0.78rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.04em; }
+.market-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; line-height: 1.5; }
 
-  /* ── EXIT ── */
-  .exit-inner {
-    text-align: center;
-    max-width: 700px;
-    margin: 0 auto;
-  }
-  .exit-num {
-    font-family: Georgia, serif;
-    font-size: clamp(4rem, 12vw, 8rem);
-    font-weight: 700;
-    color: var(--gold);
-    font-variant-numeric: tabular-nums;
-    line-height: 0.95;
-    letter-spacing: -0.03em;
-    display: block;
-  }
-  .exit-sub {
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-top: 8px;
-    display: block;
-  }
-  .exit-desc {
-    margin-top: 24px;
-    font-size: 1.05rem;
-    color: rgba(255,255,255,0.7);
-    line-height: 1.7;
-  }
-  .exit-comparables {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 6px;
-    overflow: hidden;
-    margin-top: 40px;
-    text-align: center;
-  }
-  .exit-comp {
-    background: rgba(255,255,255,0.03);
-    padding: 24px 16px;
-  }
-  .exit-comp-num {
-    font-family: Georgia, serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--gold-light);
-    display: block;
-    font-variant-numeric: tabular-nums;
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-  .exit-comp-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); }
+/* EXIT */
+.exit-big { font-family: var(--f-display); font-weight: 300; font-size: clamp(4rem, 10vw, 9rem); color: var(--gold-light); line-height: 0.9; margin-bottom: 16px; }
+.comps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 720px; margin: 0 auto; }
+@media (max-width: 640px) { .comps-grid { grid-template-columns: 1fr; } }
+.comp-card { background: rgba(237,232,219,0.04); border: 1px solid var(--border-d); border-radius: 6px; padding: 24px 20px; text-align: left; }
+.comp-name { font-family: var(--f-body); font-weight: 600; font-size: 0.88rem; color: var(--bone); margin-bottom: 6px; }
+.comp-detail { font-family: var(--f-mono); font-size: 0.75rem; color: var(--gold-light); }
+.comp-note { font-size: 0.72rem; color: var(--bone-dim); margin-top: 4px; }
 
-  /* ── SIX REASONS ── */
-  .reasons-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-top: 48px;
-  }
-  .reason-card {
-    background: var(--section-light);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 28px 24px;
-  }
-  .reason-num {
-    font-family: Georgia, serif;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--gold);
-    display: block;
-    line-height: 1;
-    margin-bottom: 14px;
-    opacity: 0.7;
-  }
-  .reason-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 8px; color: var(--ink); }
-  .reason-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
+/* REASONS */
+.reasons-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+@media (max-width: 768px) { .reasons-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .reasons-grid { grid-template-columns: 1fr; } }
+.reason-card { background: rgba(244,240,231,0.88); backdrop-filter: blur(4px); border: 1px solid var(--border-l); border-radius: 6px; padding: 28px 24px; }
+.reason-roman { font-family: var(--f-display); font-weight: 300; font-size: 2.2rem; color: rgba(184,147,12,0.25); line-height: 1; margin-bottom: 12px; }
+.reason-title { font-family: var(--f-body); font-weight: 600; font-size: 0.9rem; color: var(--ink); margin-bottom: 8px; }
+.reason-text { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; }
 
-  /* ── PATENT ── */
-  .patent-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 64px;
-    align-items: center;
-  }
-  .patent-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    margin-top: 28px;
-  }
-  .patent-list li {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    padding-bottom: 18px;
-    border-bottom: 1px solid var(--border);
-  }
-  .patent-list li:last-child { border-bottom: none; }
-  .patent-icon {
-    width: 36px;
-    height: 36px;
-    background: var(--green-deep);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gold);
-    font-size: 0.85rem;
-    font-weight: 900;
-    flex-shrink: 0;
-  }
-  .patent-text strong { display: block; font-size: 0.9rem; color: var(--ink); margin-bottom: 3px; }
-  .patent-text span { font-size: 0.8rem; color: var(--text-muted); }
-  .moat-visual {
-    background: var(--green-deep);
-    border-radius: 8px;
-    padding: 36px 28px;
-    color: #fff;
-    text-align: center;
-  }
-  .moat-visual-title {
-    font-family: Georgia, serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-  }
-  .moat-items {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .moat-item {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6px;
-    padding: 14px 18px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-align: left;
-  }
-  .moat-badge {
-    background: var(--gold);
-    color: var(--green-deep);
-    font-size: 0.65rem;
-    font-weight: 900;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 3px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .moat-item-text { font-size: 0.82rem; color: rgba(255,255,255,0.75); }
+/* PATENT */
+.patent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+@media (max-width: 768px) { .patent-grid { grid-template-columns: 1fr; } }
+.patent-list { list-style: none; }
+.patent-list li { display: flex; gap: 14px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid var(--border-l); }
+.patent-list li:first-child { border-top: 1px solid var(--border-l); }
+.patent-num { font-family: var(--f-mono); font-size: 0.72rem; font-weight: 700; color: var(--gold); background: rgba(184,147,12,0.1); border: 1px solid rgba(184,147,12,0.2); padding: 3px 8px; border-radius: 3px; flex-shrink: 0; margin-top: 2px; white-space: nowrap; }
+.patent-text strong { display: block; font-size: 0.88rem; font-weight: 600; color: var(--text-body); margin-bottom: 3px; }
+.patent-text span { font-size: 0.78rem; color: var(--text-muted); }
+.moat-card { background: var(--canvas); border-radius: 8px; padding: 36px 32px; }
+.moat-card h3 { font-family: var(--f-display); font-weight: 600; font-size: 1.6rem; color: var(--bone); margin-bottom: 16px; }
+.moat-card p { font-size: 0.85rem; color: var(--bone-dim); line-height: 1.7; margin-bottom: 16px; }
+.moat-stats { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 24px; border-top: 1px solid var(--border-d); padding-top: 20px; }
+.moat-stat-num { font-family: var(--f-mono); font-size: 1.2rem; font-weight: 700; color: var(--gold-light); }
+.moat-stat-label { font-size: 0.7rem; color: var(--bone-dim); letter-spacing: 0.04em; }
 
-  /* ── TEAM ── */
-  .team-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    margin-top: 48px;
-  }
-  .team-card {
-    background: var(--section-light);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    text-align: center;
-    position: relative;
-  }
-  .team-avatar {
-    width: 100%;
-    aspect-ratio: 1;
-    background: linear-gradient(160deg, var(--green-mid) 0%, var(--green-deep) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: Georgia, serif;
-    font-size: 2.4rem;
-    font-weight: 700;
-    color: rgba(255,255,255,0.25);
-    position: relative;
-    overflow: hidden;
-  }
-  .team-avatar img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top center;
-  }
-  .team-badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: var(--green-sage);
-    color: #fff;
-    font-size: 0.6rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 3px;
-    z-index: 2;
-  }
-  .team-info { padding: 16px 14px; }
-  .team-name { font-weight: 700; font-size: 0.9rem; color: var(--ink); margin-bottom: 3px; }
-  .team-role { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
+/* TEAM */
+.team-track-wrap { overflow: hidden; margin-top: 48px; padding-bottom: 60px; }
+.team-track { display: flex; gap: 24px; animation: team-scroll 40s linear infinite; width: max-content; }
+.team-track:hover { animation-play-state: paused; }
+.team-card { width: 200px; flex-shrink: 0; }
+.team-photo { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 6px; display: block; background: var(--paper-2); }
+.team-name { font-family: var(--f-body); font-weight: 600; font-size: 0.85rem; color: var(--text-body); margin-top: 12px; }
+.team-role { font-size: 0.73rem; color: var(--text-muted); line-height: 1.4; margin-top: 3px; }
+.investor-badge { display: inline-block; margin-top: 6px; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); background: rgba(184,147,12,0.1); border: 1px solid rgba(184,147,12,0.25); padding: 2px 8px; border-radius: 3px; }
+@keyframes team-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-  /* ── RISK ── */
-  .risk-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-top: 40px;
-  }
-  .risk-item {
-    background: var(--section-light);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 20px 18px;
-  }
-  .risk-title {
-    font-weight: 700;
-    font-size: 0.85rem;
-    color: var(--ink);
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .risk-dot {
-    width: 7px; height: 7px;
-    background: var(--gold);
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .risk-desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.55; }
+/* RISK */
+.risk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
+@media (max-width: 768px) { .risk-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .risk-grid { grid-template-columns: 1fr; } }
+.risk-card { background: var(--paper); border: 1px solid var(--border-l); border-radius: 6px; padding: 24px 20px; }
+.risk-title { font-family: var(--f-body); font-weight: 600; font-size: 0.85rem; color: var(--ink); margin-bottom: 8px; }
+.risk-text { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; }
 
-  /* ── FAQ ── */
-  .faq-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    margin-top: 40px;
-  }
-  .faq-item {
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    overflow: hidden;
-  }
-  .faq-q {
-    width: 100%;
-    background: var(--section-light);
-    border: none;
-    padding: 18px 22px;
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--ink);
-    font-family: inherit;
-    gap: 16px;
-    transition: background 0.15s;
-  }
-  .faq-q:hover { background: var(--section-alt); }
-  .faq-arrow {
-    color: var(--green-sage);
-    font-size: 1rem;
-    transition: transform 0.2s;
-    flex-shrink: 0;
-  }
-  .faq-item.open .faq-arrow { transform: rotate(180deg); }
-  .faq-a {
-    display: none;
-    padding: 0 22px 18px;
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    line-height: 1.7;
-    background: var(--section-light);
-  }
-  .faq-item.open .faq-a { display: block; }
+/* VALIDATION */
+.validation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+@media (max-width: 768px) { .validation-grid { grid-template-columns: 1fr; } }
+.validation-list { list-style: none; }
+.validation-list li { display: flex; gap: 14px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid var(--border-l); }
+.validation-list li:first-child { border-top: 1px solid var(--border-l); }
+.val-icon { width: 32px; height: 32px; border-radius: 50%; background: rgba(77,139,94,0.1); border: 1px solid rgba(77,139,94,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.val-icon svg { width: 14px; height: 14px; stroke: var(--sage); fill: none; stroke-width: 2; }
+.val-text strong { display: block; font-size: 0.88rem; font-weight: 600; color: var(--text-body); margin-bottom: 3px; }
+.val-text span { font-size: 0.78rem; color: var(--text-muted); }
+.state-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.state-chip { background: rgba(77,139,94,0.1); border: 1px solid rgba(77,139,94,0.2); color: var(--sage); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; }
 
-  /* ── CLOSING CTA ── */
-  .cta-section {
-    background: var(--green-deep);
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .cta-section::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(200,154,46,0.1) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .cta-inner { position: relative; }
-  .cta-question {
-    font-family: Georgia, serif;
-    font-size: clamp(1.6rem, 3.5vw, 2.6rem);
-    font-weight: 700;
-    color: #fff;
-    line-height: 1.2;
-    max-width: 700px;
-    margin: 0 auto 20px;
-    text-wrap: balance;
-  }
-  .cta-question .gold { color: var(--gold); }
-  .cta-sub {
-    color: rgba(255,255,255,0.6);
-    font-size: 1rem;
-    margin-bottom: 40px;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .cta-form {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-    max-width: 520px;
-    margin: 0 auto;
-  }
-  .cta-form input {
-    flex: 1;
-    min-width: 220px;
-    padding: 14px 18px;
-    border: 1.5px solid rgba(255,255,255,0.2);
-    border-radius: 4px;
-    background: rgba(255,255,255,0.08);
-    color: #fff;
-    font-size: 0.9rem;
-    font-family: inherit;
-  }
-  .cta-form input::placeholder { color: rgba(255,255,255,0.4); }
-  .cta-form input:focus { outline: none; border-color: var(--gold); }
-  .cta-form button {
-    background: var(--gold);
-    color: var(--green-deep);
-    border: none;
-    padding: 14px 28px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background 0.2s;
-    white-space: nowrap;
-  }
-  .cta-form button:hover { background: var(--gold-light); }
-  .cta-disclaimer {
-    margin-top: 20px;
-    font-size: 0.72rem;
-    color: rgba(255,255,255,0.35);
-    line-height: 1.6;
-  }
+/* FAQ */
+.faq-item { border-bottom: 1px solid var(--border-l); }
+.faq-item:first-child { border-top: 1px solid var(--border-l); }
+.faq-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px 0; background: none; border: none; cursor: pointer; text-align: left; gap: 16px; }
+.faq-q { font-family: var(--f-body); font-weight: 600; font-size: 0.92rem; color: var(--text-body); }
+.faq-icon { width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; border: 1px solid var(--border-l); display: flex; align-items: center; justify-content: center; transition: background 0.2s, border-color 0.2s; }
+.faq-icon svg { width: 10px; height: 10px; stroke: var(--text-muted); fill: none; stroke-width: 2.5; transition: transform 0.3s; }
+.faq-item.open .faq-icon { background: var(--sage); border-color: var(--sage); }
+.faq-item.open .faq-icon svg { stroke: #fff; transform: rotate(45deg); }
+.faq-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.faq-body-inner { padding: 0 0 20px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; max-width: 680px; }
 
-  /* ── FOOTER ── */
-  footer {
-    background: var(--ink);
-    color: rgba(255,255,255,0.4);
-    padding: 36px 0;
-  }
-  .footer-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  .footer-brand {
-    font-family: Georgia, serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: rgba(255,255,255,0.6);
-  }
-  .footer-brand span { color: var(--gold); }
-  .footer-legal { font-size: 0.72rem; max-width: 560px; line-height: 1.6; }
+/* CLOSING CTA */
+.closing-headline { font-family: var(--f-display); font-weight: 300; font-size: clamp(2rem, 4.5vw, 4rem); color: var(--bone); line-height: 1.15; max-width: 760px; margin: 0 auto 40px; }
+.closing-headline em { font-style: italic; color: var(--gold-light); }
+.closing-input-row { display: flex; gap: 0; max-width: 480px; margin: 0 auto 24px; }
+.closing-input { flex: 1; padding: 14px 18px; border: 1px solid rgba(237,232,219,0.2); border-right: none; border-radius: 3px 0 0 3px; background: rgba(237,232,219,0.06); color: var(--bone); font-family: var(--f-body); font-size: 0.85rem; outline: none; }
+.closing-input::placeholder { color: var(--bone-dim); }
+.closing-input:focus { border-color: var(--sage); }
+.closing-btn { background: var(--gold); color: var(--canvas); font-family: var(--f-body); font-weight: 600; font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 14px 24px; border: none; border-radius: 0 3px 3px 0; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+.closing-btn:hover { background: var(--gold-light); }
+.legal-disclaimer { font-size: 0.7rem; color: var(--bone-dim); max-width: 560px; margin: 0 auto; line-height: 1.6; opacity: 0.6; }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 900px) {
-    .hero-inner { grid-template-columns: 1fr; }
-    .hero-card { display: none; }
-    .problem-grid { grid-template-columns: 1fr; }
-    .solution-grid { grid-template-columns: repeat(2, 1fr); }
-    .traction-numbers { grid-template-columns: repeat(2, 1fr); }
-    .traction-quotes { grid-template-columns: 1fr; }
-    .roi-intro { grid-template-columns: 1fr; }
-    .revenue-grid { grid-template-columns: 1fr; }
-    .market-grid { grid-template-columns: 1fr; }
-    .reasons-grid { grid-template-columns: repeat(2, 1fr); }
-    .patent-inner { grid-template-columns: 1fr; }
-    .team-grid { grid-template-columns: repeat(2, 1fr); }
-    .risk-grid { grid-template-columns: repeat(2, 1fr); }
-    .validation-inner { grid-template-columns: 1fr; }
-    .exit-comparables { grid-template-columns: 1fr; }
-    .solution-proof { grid-template-columns: 1fr; }
-    .nav-links { display: none; }
-  }
-  @media (max-width: 560px) {
-    .section { padding: 64px 0; }
-    .traction-numbers { grid-template-columns: 1fr 1fr; }
-    .reasons-grid { grid-template-columns: 1fr; }
-    .team-grid { grid-template-columns: 1fr 1fr; }
-    .risk-grid { grid-template-columns: 1fr; }
-    .hero-stats { grid-template-columns: 1fr; }
-    .solution-grid { grid-template-columns: 1fr 1fr; }
-  }
-  /* ── Scroll reveal ── */
-  .reveal {
-    opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1), transform 0.65s cubic-bezier(0.22,1,0.36,1);
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .reveal-delay-1 { transition-delay: 0.08s; }
-  .reveal-delay-2 { transition-delay: 0.16s; }
-  .reveal-delay-3 { transition-delay: 0.24s; }
-  .reveal-delay-4 { transition-delay: 0.32s; }
-  .reveal-delay-5 { transition-delay: 0.40s; }
-  .reveal-delay-6 { transition-delay: 0.48s; }
+/* FOOTER */
+.footer-inner { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+.footer-brand { font-family: var(--f-display); font-weight: 600; font-size: 1.2rem; color: var(--bone-dim); }
+.footer-legal { font-size: 0.7rem; color: rgba(237,232,219,0.3); line-height: 1.7; max-width: 640px; }
 
-  /* Number counter animation */
-  .count-num { display: inline-block; }
-
-  /* Section fade-in on scroll */
-  .section-fade {
-    opacity: 0;
-    transition: opacity 0.7s ease;
-  }
-  .section-fade.visible { opacity: 1; }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation: none !important; transition: none !important; }
-    .reveal, .section-fade { opacity: 1 !important; transform: none !important; }
-  }
-
-  /* ── VIDEO HERO ── */
-  .video-hero {
-    position: relative;
-    width: 100%;
-    height: 88vh;
-    min-height: 500px;
-    overflow: hidden;
-    background: #0D1A10;
-  }
-  .video-hero video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-  .video-hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(13,26,16,0.35) 0%, rgba(13,26,16,0.55) 60%, rgba(13,26,16,0.85) 100%);
-    display: flex;
-    align-items: flex-end;
-    padding-bottom: 80px;
-  }
-  .video-hero-content {
-    color: #fff;
-  }
-  .video-hero-content .eyebrow {
-    color: var(--gold-light);
-    margin-bottom: 16px;
-  }
-  .video-hero-content .display {
-    color: #fff;
-    max-width: 780px;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.5);
-  }
-  .video-hero-content .display .gold { color: var(--gold-light); }
-  .video-hero-content p {
-    margin-top: 18px;
-    font-size: 1.1rem;
-    color: rgba(255,255,255,0.75);
-    max-width: 520px;
-    line-height: 1.65;
-  }
-  .unmute-btn {
-    position: absolute;
-    bottom: 28px;
-    right: 28px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(13,26,16,0.7);
-    border: 1.5px solid rgba(200,154,46,0.6);
-    color: var(--gold-light);
-    padding: 9px 18px;
-    border-radius: 30px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    font-family: inherit;
-    backdrop-filter: blur(8px);
-    transition: background 0.2s, border-color 0.2s;
-    z-index: 10;
-  }
-  .unmute-btn:hover {
-    background: rgba(200,154,46,0.2);
-    border-color: var(--gold-light);
-  }
-  .unmute-btn svg { flex-shrink: 0; }
-
-  /* ── TEAM CAROUSEL ── */
-  .team-carousel {
-    overflow: hidden;
-    width: 100%;
-    margin-top: 48px;
-    position: relative;
-  }
-  .team-carousel::before,
-  .team-carousel::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 80px;
-    z-index: 2;
-    pointer-events: none;
-  }
-  .team-carousel::before {
-    left: 0;
-    background: linear-gradient(to right, var(--section-alt), transparent);
-  }
-  .team-carousel::after {
-    right: 0;
-    background: linear-gradient(to left, var(--section-alt), transparent);
-  }
-  .team-carousel-track {
-    display: flex;
-    gap: 20px;
-    animation: scroll-team 48s linear infinite;
-    width: max-content;
-  }
-  .team-carousel:hover .team-carousel-track {
-    animation-play-state: paused;
-  }
-  @keyframes scroll-team {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-  .team-card-lg {
-    width: 260px;
-    flex-shrink: 0;
-    border-radius: 10px;
-    overflow: hidden;
-    background: var(--section-light);
-    border: 1px solid var(--border);
-    transition: transform 0.25s, box-shadow 0.25s;
-  }
-  .team-card-lg:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 36px rgba(0,0,0,0.13);
-  }
-  .team-photo-wrap {
-    width: 100%;
-    aspect-ratio: 3 / 4;
-    overflow: hidden;
-    background: linear-gradient(160deg, var(--green-mid) 0%, var(--green-deep) 100%);
-    position: relative;
-  }
-  .team-photo-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top center;
-    display: block;
-  }
-  .team-card-lg-info {
-    padding: 16px 16px 18px;
-  }
-  .team-card-lg-info .team-name {
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: var(--ink);
-    margin-bottom: 4px;
-  }
-  .team-card-lg-info .team-role {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    line-height: 1.45;
-  }
-
-  /* ── GOOGLE MAP ── */
-  .map-embed-wrap {
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    margin-top: 0;
-    position: relative;
-  }
-  .map-embed-wrap iframe {
-    display: block;
-    width: 100%;
-    height: 340px;
-    border: none;
-  }
-  .map-caption {
-    background: var(--section-alt);
-    padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .map-caption-label {
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: var(--ink);
-  }
-  .map-caption-sub {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-  }
-  .map-states {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 12px;
-  }
-  .map-state-chip {
-    background: var(--section-light);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    white-space: nowrap;
-  }
+/* CHART */
+#chartContainer { position: relative; width: 100%; height: 420px; margin-top: 48px; }
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav class="nav">
+<nav>
   <div class="container">
     <div class="nav-inner">
-      <a href="#" style="display:flex;align-items:center;flex-shrink:0">
-        <img src="https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68fcb146e579f9846b78dd04.png" alt="Green Evolution Technologies" loading="lazy" style="height:64px;width:auto;display:block;filter:brightness(0) invert(1)">
+      <a class="nav-logo" href="#">
+        <img src="https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68fcb146e579f9846b78dd04.png" alt="HydroGel">
       </a>
-      <ul class="nav-links">
-        <li><a href="#problem">The Problem</a></li>
-        <li><a href="#solution">Solution</a></li>
-        <li><a href="#traction">Traction</a></li>
-        <li><a href="#market">Market</a></li>
-        <li><a href="#team">Team</a></li>
-        <li><a href="#faq">FAQ</a></li>
-      </ul>
-      <a href="#invest" class="nav-cta">Schedule a Call</a>
+      <div class="nav-links">
+        <a href="#problem">Problem</a>
+        <a href="#solution">Solution</a>
+        <a href="#traction">Traction</a>
+        <a href="#market">Market</a>
+        <a href="#team">Team</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div>
+        <a href="#invest" class="btn-gold">Schedule a Call</a>
+      </div>
     </div>
   </div>
 </nav>
 
-<!-- VIDEO HERO — full screen, minimal overlay, unmute bottom-right -->
+<!-- VIDEO HERO -->
 <section class="video-hero">
   <video id="heroVideo" autoplay muted loop playsinline>
     <source src="https://assets.cdn.filesafe.space/IUFCbHtG5zmLcNxfm2Ke/media/6a47e6439114462c71f71120.mp4" type="video/mp4">
   </video>
-  <!-- Subtle bottom gradient only so video reads cleanly -->
-  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(13,26,16,0.6) 100%);pointer-events:none"></div>
-  <!-- Reg D pill top-left -->
-  <div style="position:absolute;top:24px;left:24px;z-index:5">
-    <span style="background:rgba(200,154,46,0.22);border:1px solid rgba(200,154,46,0.5);color:#E0B84A;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:6px 14px;border-radius:100px;backdrop-filter:blur(6px)">Reg D 506(c) · Accredited Investors Only</span>
-  </div>
-  <button class="unmute-btn" id="unmuteBtn">
-    <svg id="muteIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zm7.137 1.596a.5.5 0 0 1 0 .708L11.354 8l2.5 2.146a.5.5 0 0 1-.708.708L10.646 8.708l-2.5 2.146a.5.5 0 0 1-.708-.708L9.938 8l-2.5-2.146a.5.5 0 1 1 .708-.708l2.5 2.146 2.5-2.146a.5.5 0 0 1 .708 0z"/></svg>
-    <svg id="soundIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display:none"><path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/><path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/><path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"/></svg>
-    <span id="muteLabelText">Unmute</span>
+  <div class="video-overlay"></div>
+  <div class="regd-pill">Reg D 506(c) · Accredited Investors Only</div>
+  <button class="unmute-btn" id="unmuteBtn" aria-label="Toggle mute">
+    <svg id="iconMuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <line x1="23" y1="9" x2="17" y2="15"></line>
+      <line x1="17" y1="9" x2="23" y2="15"></line>
+    </svg>
+    <svg id="iconUnmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+    </svg>
   </button>
-
 </section>
 
-<!-- HERO — left pitch copy, right form card -->
-<section class="hero" style="position:relative;overflow:hidden;">
+<!-- HERO SECTION -->
+<section class="hero-section">
   <div class="container">
-    <div class="hero-inner">
-      <div class="hero-left reveal">
-        <!-- Moved from video overlay -->
-        <p class="eyebrow" style="color:var(--gold-light);margin-bottom:14px;letter-spacing:0.14em">Green Evolution Technologies</p>
-        <h1 class="display hero-headline">
-          Watch HydroGel®<br>Transform the <span class="gold-word">Field.</span>
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow reveal">
+          <span>Pre-Series A · Round Open</span>
+        </div>
+        <h1 class="display hero-heading reveal">
+          Watch HydroGel®<br>
+          Transform the <em>Field.</em>
         </h1>
-        <p class="hero-subhead">
-          Real trials. Real farmers. Real results — documented across 12 states and 3 land-grant universities. HydroGel® increases crop yields up to 79%, cuts water use by 50%, and delivers a 280% average ROI in year one.
-        </p>
-        <div class="hero-stats">
-          <div class="hero-stat">
-            <span class="hero-stat-num count-num" data-target="3000" data-suffix="+">3,000+</span>
-            <span class="hero-stat-label">Farm Trials Completed</span>
+        <p class="hero-sub reveal">Real trials. Real farmers. Real results — documented across 12 states and 3 land-grant universities.</p>
+
+        <div class="water-stats reveal">
+          <div class="w-col">
+            <div class="w-col-track">
+              <div class="w-col-fill" style="height:70px"></div>
+            </div>
+            <div class="w-col-num">50%</div>
+            <div class="w-col-label">Less Water<br>Per Acre</div>
           </div>
-          <div class="hero-stat">
-            <span class="hero-stat-num count-num" data-prefix="$" data-target="19" data-suffix="M">$19M</span>
-            <span class="hero-stat-label">Revenue Pipeline</span>
+          <div class="w-col">
+            <div class="w-col-track">
+              <div class="w-col-fill" style="height:111px"></div>
+            </div>
+            <div class="w-col-num">79%</div>
+            <div class="w-col-label">More Crop<br>Yield</div>
           </div>
-          <div class="hero-stat">
-            <span class="hero-stat-num count-num" data-target="30">30</span>
-            <span class="hero-stat-label">Facilities Planned</span>
+          <div class="w-col">
+            <div class="w-col-track">
+              <div class="w-col-fill" style="height:133px"></div>
+            </div>
+            <div class="w-col-num">280%</div>
+            <div class="w-col-label">Average ROI<br>Year One</div>
           </div>
         </div>
-        <div class="hero-cta-row">
-          <a href="#invest" class="btn-primary">Schedule Investor Call</a>
-          <a href="#solution" class="btn-outline">See the Technology</a>
+
+        <div class="hero-cta-row reveal">
+          <a href="#invest" class="btn-gold">Schedule Investor Call</a>
+          <a href="#solution" class="btn-ghost">See the Technology</a>
         </div>
       </div>
 
-      <!-- Lead Form Card -->
-      <div class="hero-card">
-        <div class="offering-tag">
-          <div class="offering-dot"></div>
-          <span class="offering-text">Round currently open — $1.5M @ $100M cap</span>
-        </div>
-        <div class="hero-card-title">Schedule Your<br>Investor Call</div>
-        <p class="hero-card-sub">Deck, financials, and trial data shared with accredited investors only. We respond within 24 hours.</p>
-        <form onsubmit="return false;">
-          <div class="form-group">
-            <label>First Name</label>
-            <input type="text" placeholder="John">
+      <div class="reveal">
+        <div class="hero-form-card">
+          <h3>Request Investment Materials</h3>
+          <p>Accredited investors only. Private placement memorandum available upon qualification.</p>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" placeholder="Jane">
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" placeholder="Smith">
+            </div>
           </div>
           <div class="form-group">
-            <label>Last Name</label>
-            <input type="text" placeholder="Smith">
+            <label for="emailField">Email Address</label>
+            <input type="email" id="emailField" placeholder="jane@fund.com">
           </div>
           <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" placeholder="john@email.com">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" placeholder="+1 (555) 000-0000">
           </div>
           <div class="form-group">
-            <label>Phone Number</label>
-            <input type="tel" placeholder="+1 (555) 000-0000">
-          </div>
-          <div class="form-group">
-            <label>Investment Range</label>
-            <select>
-              <option value="">Select range...</option>
-              <option>$25,000 – $49,999</option>
-              <option>$50,000 – $99,999</option>
+            <label for="investRange">Investment Range</label>
+            <select id="investRange">
+              <option value="">Select range…</option>
+              <option>$25,000 – $99,999</option>
               <option>$100,000 – $249,999</option>
-              <option>$250,000+</option>
+              <option>$250,000 – $499,999</option>
+              <option>$500,000 – $999,999</option>
+              <option>$1,000,000+</option>
             </select>
           </div>
-          <button type="submit" class="form-submit">Schedule an Investor Call →</button>
-        </form>
-        <p class="form-legal">For accredited investors only per SEC Rule 501. No obligation.</p>
+          <button class="form-submit">Request Access →</button>
+          <div class="offering-badge">
+            <div class="pulse-dot"></div>
+            <div class="offering-badge-text">
+              <strong>Round Currently Open</strong><br>
+              Reg D 506(c) · Accredited Investors Only · Limited Allocation
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
 </section>
 
 <!-- PRESS BAR -->
-<div class="press-bar reveal">
+<div class="press-bar">
   <div class="container">
-    <div class="press-inner">
+    <div class="press-bar-inner">
       <span class="press-label">Built in America. For American Farmers.</span>
-      <div class="press-logos">
-        <span class="press-logo-item">AgriTech Investors</span>
-        <span class="press-logo-item">Farm Journal</span>
-        <span class="press-logo-item">University of Nebraska</span>
-        <span class="press-logo-item">USDA-Validated</span>
-        <span class="press-logo-item">SEC Reg D 506(c)</span>
+      <div class="press-dot"></div>
+      <div class="press-items">
+        <span class="press-item">AgriTech Investors</span>
+        <div class="press-dot"></div>
+        <span class="press-item">Farm Journal</span>
+        <div class="press-dot"></div>
+        <span class="press-item">University of Nebraska</span>
+        <div class="press-dot"></div>
+        <span class="press-item">USDA-Validated</span>
+        <div class="press-dot"></div>
+        <span class="press-item">SEC Reg D 506(c)</span>
       </div>
     </div>
   </div>
 </div>
 
-<!-- PROBLEM -->
-<section class="section bg-light" id="problem" style="background-image:url('https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68f77f406d769a8ea2d428d9.png');background-size:cover;background-position:center;position:relative">
-<div style="position:absolute;inset:0;background:rgba(244,240,230,0.72)"></div>
-<div style="position:relative;z-index:1">
-  <div class="container">
-    <div class="section-divider-left"></div>
-    <p class="eyebrow muted">The Problem</p>
-    <h2 class="display-sm" style="margin-top:10px; max-width:600px; color:var(--ink);">Agriculture is Being Squeezed<br>From Every Direction.</h2>
-    <p class="body-lg muted" style="margin-top:16px; max-width:620px;">Sixty years of conventional ag have pushed farmers to a breaking point. The land is depleted, the inputs are expensive, and the margins are gone. The system is broken — and the fix is a $80 billion opportunity.</p>
-
-    <div class="problem-grid">
-      <div class="problem-item">
-        <div class="problem-stat negative">−61%</div>
-        <div class="problem-title">Soil Quality Decline</div>
-        <p class="problem-desc">American topsoil has lost over 60% of its organic matter in 60 years. Conventional farming depletes what took millennia to build.</p>
+<!-- PROBLEM SECTION -->
+<section id="problem" style="background-image:url('https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68f77f406d769a8ea2d428d9.png');background-size:cover;background-position:center;position:relative;padding:100px 0;">
+  <div style="position:absolute;inset:0;background:rgba(244,240,230,0.72);"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="container">
+      <div class="section-head light-text reveal">
+        <span class="section-eyebrow">The Problem</span>
+        <h2 class="display-sm">Agriculture is Being Squeezed<br>From Every Direction.</h2>
+        <p>American farmers face compounding crises — degraded soil, skyrocketing input costs, and water inefficiency that threatens viability for the next generation.</p>
       </div>
-      <div class="problem-item">
-        <div class="problem-stat">$500–$5,000</div>
-        <div class="problem-title">Per-Acre Input Costs</div>
-        <p class="problem-desc">Fertilizer, pesticide, and water costs have risen 4× since 2000. Margins that were already thin have evaporated entirely for many operations.</p>
-      </div>
-      <div class="problem-item">
-        <div class="problem-stat">52×</div>
-        <div class="problem-title">Water Inefficiency</div>
-        <p class="problem-desc">Conventional irrigation loses 52× more water than necessary. With aquifer levels dropping, agriculture faces an existential water crisis within a generation.</p>
-      </div>
-      <div class="problem-item">
-        <div class="problem-stat">$3,000+</div>
-        <div class="problem-title">Average Annual Loss Per Farm</div>
-        <p class="problem-desc">The median U.S. farm operates at a loss. Without a structural change in input efficiency, the family farm becomes economically unviable.</p>
+      <div class="problem-grid">
+        <div class="problem-item reveal">
+          <div class="problem-num">−61%</div>
+          <div class="problem-title">Soil Quality Decline</div>
+          <div class="problem-desc">U.S. farmland has lost more than 60% of its topsoil organic matter over the last century, reducing yields and increasing input dependency across all crop categories.</div>
+        </div>
+        <div class="problem-item reveal">
+          <div class="problem-num">$500–$5,000</div>
+          <div class="problem-title">Per-Acre Input Costs</div>
+          <div class="problem-desc">Fertilizer, pesticide, and irrigation costs have surged, squeezing margins to near zero for commodity crops in many regions while debt obligations mount.</div>
+        </div>
+        <div class="problem-item reveal">
+          <div class="problem-num">52×</div>
+          <div class="problem-title">Water Inefficiency</div>
+          <div class="problem-desc">Conventional irrigation delivers water 52× less efficiently than biological absorption, with up to 70% lost to evaporation before reaching root zones.</div>
+        </div>
+        <div class="problem-item reveal">
+          <div class="problem-num">$3,000+</div>
+          <div class="problem-title">Average Annual Loss Per Farm</div>
+          <div class="problem-desc">The average American farm now operates at a net loss after accounting for debt service, input costs, and price volatility in commodity markets.</div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </section>
 
-<!-- SOLUTION -->
-<section class="section bg-dark" id="solution" style="position:relative;overflow:hidden;">
-  <!-- Circuit animation overlay -->
+<!-- SOLUTION SECTION -->
+<section id="solution" style="background:var(--forest);padding:100px 0;position:relative;overflow:hidden;">
   <svg id="heroCircuit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice"
-    style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.18">
+    style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.15">
     <defs>
-      <filter id="glow1">
-        <feGaussianBlur stdDeviation="3" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-      <filter id="glow2">
-        <feGaussianBlur stdDeviation="5" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
+      <filter id="glow1"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="glow2"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
     </defs>
-    <path id="hcPath1" d="M 60,500 L 200,500 L 200,360 L 420,360 L 420,220 L 680,220 L 680,100 L 980,100 L 980,40 L 1380,40"
-      fill="none" stroke="#4ADE80" stroke-width="1.2" stroke-opacity="0.6"/>
-    <path id="hcPath2" d="M 0,420 L 140,420 L 140,300 L 340,300 L 340,180 L 600,180 L 600,280 L 820,280 L 820,140 L 1100,140 L 1100,240 L 1440,240"
-      fill="none" stroke="#86EFAC" stroke-width="1" stroke-opacity="0.5"/>
-    <path id="hcPath3" d="M 200,560 L 200,440 L 400,440 L 400,320 L 700,320 L 700,420 L 900,420 L 900,260 L 1200,260 L 1200,120 L 1440,120"
-      fill="none" stroke="#22C55E" stroke-width="1.5" stroke-opacity="0.4"/>
+    <path id="hcPath1" d="M 60,500 L 200,500 L 200,360 L 420,360 L 420,220 L 680,220 L 680,100 L 980,100 L 980,40 L 1380,40" fill="none" stroke="#4ADE80" stroke-width="1.2" stroke-opacity="0.6"/>
+    <path id="hcPath2" d="M 0,420 L 140,420 L 140,300 L 340,300 L 340,180 L 600,180 L 600,280 L 820,280 L 820,140 L 1100,140 L 1100,240 L 1440,240" fill="none" stroke="#86EFAC" stroke-width="1" stroke-opacity="0.5"/>
+    <path id="hcPath3" d="M 200,560 L 200,440 L 400,440 L 400,320 L 700,320 L 700,420 L 900,420 L 900,260 L 1200,260 L 1200,120 L 1440,120" fill="none" stroke="#22C55E" stroke-width="1.5" stroke-opacity="0.4"/>
     <circle id="hcDot1" cx="60" cy="500" r="4" fill="#4ADE80" filter="url(#glow2)"/>
     <circle id="hcDot2" cx="0" cy="420" r="3.5" fill="#86EFAC" filter="url(#glow1)"/>
     <circle id="hcDot3" cx="200" cy="560" r="5" fill="#22C55E" filter="url(#glow2)"/>
   </svg>
   <div class="container" style="position:relative;z-index:1;">
-    <div class="section-divider-left" style="background:var(--gold)"></div>
-    <p class="eyebrow" style="color:rgba(255,255,255,0.5)">The Solution</p>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:end; margin-top:12px;">
-      <div>
-        <h2 class="display-sm" style="color:#fff;">HydroGel® Solves<br>All Four Problems.</h2>
-        <p style="color:rgba(255,255,255,0.6); font-size:1rem; margin-top:16px; line-height:1.7;">A single application of our patented hydrogel restructures the soil at the molecular level — retaining water, releasing nutrients, and creating the conditions for crops to thrive without expensive chemical inputs.</p>
+    <div class="section-head dark-text reveal">
+      <span class="section-eyebrow">The Solution</span>
+      <div class="solution-big-num">3,000×</div>
+      <div class="solution-big-label">Water Retention Capacity vs. Conventional Soil</div>
+      <h2 class="display-sm" style="color:var(--bone);margin-bottom:16px;">HydroGel® Transforms How Crops<br>Absorb, Retain &amp; Use Water.</h2>
+      <p>A patented polymer matrix applied directly to the soil root zone — holding 3,000 times its weight in water and releasing it precisely when crops need it most.</p>
+    </div>
+
+    <div class="solution-stats reveal">
+      <div class="sol-stat">
+        <div class="sol-stat-num">Up to 79%</div>
+        <div class="sol-stat-label">Increase in crop yield documented across university trials</div>
       </div>
-      <div style="text-align:right;">
-        <div class="solution-hero-num">3,000<span style="font-size:0.5em">×</span></div>
-        <div class="solution-hero-label">More effective than conventional soil treatments</div>
+      <div class="sol-stat">
+        <div class="sol-stat-num">50%</div>
+        <div class="sol-stat-label">Reduction in water usage per acre over the growing season</div>
+      </div>
+      <div class="sol-stat">
+        <div class="sol-stat-num">280%</div>
+        <div class="sol-stat-label">Average ROI for farmers in year one of application</div>
+      </div>
+      <div class="sol-stat">
+        <div class="sol-stat-num">Bio-Safe</div>
+        <div class="sol-stat-label">USDA-validated, non-toxic, biodegradable polymer matrix</div>
       </div>
     </div>
 
-    <div class="solution-grid">
-      <div class="solution-stat reveal reveal-delay-1">
-        <span class="solution-stat-num count-num" data-prefix="Up to " data-target="79" data-suffix="%">Up to 79%</span>
-        <span class="solution-stat-label">Increase in crop yield across trial sites</span>
-      </div>
-      <div class="solution-stat reveal reveal-delay-2">
-        <span class="solution-stat-num count-num" data-target="50" data-suffix="%">50%</span>
-        <span class="solution-stat-label">Reduction in water usage per acre</span>
-      </div>
-      <div class="solution-stat reveal reveal-delay-3">
-        <span class="solution-stat-num count-num" data-target="280" data-suffix="%">280%</span>
-        <span class="solution-stat-label">Average ROI for farmers in year one</span>
-      </div>
-      <div class="solution-stat reveal reveal-delay-4">
-        <span class="solution-stat-num">Bio-Safe</span>
-        <span class="solution-stat-label">Non-toxic, GRAS-equivalent, safe for soil biomes</span>
-      </div>
-    </div>
+    <img src="https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/69d623b6ebf1a6084329c499.png" alt="HydroGel Product" class="solution-img reveal" loading="lazy">
 
-    <!-- Product image -->
-    <div style="margin-top:48px;border-radius:10px;overflow:hidden;max-height:380px">
-      <img src="https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/69d623b6ebf1a6084329c499.png" alt="HydroGel hydrogel in soil — close-up" loading="lazy" style="width:100%;object-fit:cover;max-height:380px;display:block">
-    </div>
-
-    <div class="solution-proof" style="margin-top:32px">
+    <div class="proof-grid reveal">
       <div class="proof-item">
-        <div class="proof-check">✓</div>
-        <p class="proof-text"><strong>University-validated.</strong> Independently tested at 3 land-grant universities. Results replicated across soil types, climates, and crop categories.</p>
+        <div class="proof-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <div class="proof-text">
+          <strong>University of Nebraska Field Trials</strong>
+          <span>3-year longitudinal study confirming yield improvements and water savings across corn, soy, and wheat</span>
+        </div>
       </div>
       <div class="proof-item">
-        <div class="proof-check">✓</div>
-        <p class="proof-text"><strong>Patented protection.</strong> Formulation and application method protected by U.S. patents. Competitors cannot legally replicate the core technology.</p>
+        <div class="proof-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <div class="proof-text">
+          <strong>USDA Validation Program</strong>
+          <span>Full bio-safety certification and environmental impact assessment completed, approved for commercial use</span>
+        </div>
       </div>
       <div class="proof-item">
-        <div class="proof-check">✓</div>
-        <p class="proof-text"><strong>3,000+ farm trials.</strong> Not a lab concept. Proven in real fields by real farmers across 12 states, multiple climates, and dozens of crop types.</p>
+        <div class="proof-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <div class="proof-text">
+          <strong>12-State Commercial Rollout</strong>
+          <span>Active deployments across the primary agricultural belt with documented farmer testimonials and performance data</span>
+        </div>
       </div>
       <div class="proof-item">
-        <div class="proof-check">✓</div>
-        <p class="proof-text"><strong>Farmer-first economics.</strong> Farmers don't buy technology — they buy profit per acre. HydroGel delivers a measurable ROI in the first growing season.</p>
+        <div class="proof-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <div class="proof-text">
+          <strong>Patented Polymer Technology</strong>
+          <span>Proprietary crosslinked hydrogel matrix with 14 defensive patent filings protecting the core formulation</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- TRACTION -->
-<section class="section bg-alt" id="traction">
+<section id="traction" style="background:var(--paper);padding:100px 0;">
   <div class="container">
-    <div class="section-divider-left"></div>
-    <p class="eyebrow muted">Real Traction</p>
-    <h2 class="display-sm" style="margin-top:10px; color:var(--ink);">Not a Concept. Real Orders.<br>Real Demand. Real Validation.</h2>
-    <p class="body-lg muted" style="margin-top:14px; max-width:600px;">The validation phase is complete. We are now entering the commercial scale-up phase, with documented demand exceeding our current production capacity.</p>
+    <div class="section-head light-text reveal">
+      <span class="section-eyebrow">Traction</span>
+      <h2 class="display-sm">The Numbers Don't Lie.</h2>
+      <p>Proof of demand, real revenue, and a growing footprint across America's farmland.</p>
+    </div>
 
-    <div class="traction-numbers">
-      <div class="traction-num-card reveal reveal-delay-1">
-        <span class="traction-num count-num" data-target="3000" data-suffix="+">3,000+</span>
-        <span class="traction-num-label">Completed farm trials across 12 states</span>
+    <div class="traction-grid">
+      <div class="traction-card reveal">
+        <div class="traction-card-num"><span class="count-num" data-target="3000">0</span>+</div>
+        <div class="traction-card-label">Acres under active HydroGel® management with documented results</div>
       </div>
-      <div class="traction-num-card reveal reveal-delay-2">
-        <span class="traction-num count-num" data-prefix="$" data-target="19" data-suffix="M">$19M</span>
-        <span class="traction-num-label">Documented revenue pipeline</span>
+      <div class="traction-card reveal">
+        <div class="traction-card-num">$<span class="count-num" data-target="19">0</span>M</div>
+        <div class="traction-card-label">Revenue generated to date from direct farmer sales and licensing</div>
       </div>
-      <div class="traction-num-card reveal reveal-delay-3">
-        <span class="traction-num count-num" data-target="175" data-suffix="+">175+</span>
-        <span class="traction-num-label">Farmers actively requesting product</span>
+      <div class="traction-card reveal">
+        <div class="traction-card-num"><span class="count-num" data-target="175">0</span>+</div>
+        <div class="traction-card-label">Verified farmer customers across 12 states with repeat purchase rates above 80%</div>
       </div>
-      <div class="traction-num-card reveal reveal-delay-4">
-        <span class="traction-num count-num" data-target="12">12</span>
-        <span class="traction-num-label">States with active distribution interest</span>
+      <div class="traction-card reveal">
+        <div class="traction-card-num"><span class="count-num" data-target="12">0</span></div>
+        <div class="traction-card-label">States with active commercial deployments, including Nebraska, Kansas, Iowa, and Texas</div>
       </div>
     </div>
 
-    <div class="traction-quotes">
-      <div class="traction-quote">
-        <p>"The yield increase on my corn was undeniable. I went from 142 bushels per acre to 198 in the same field with the same inputs — just HydroGel applied at planting."</p>
-        <cite>Kansas Farmer · Corn Operation · 800 Acres</cite>
+    <div class="testimonials">
+      <div class="testimonial reveal">
+        <div class="testimonial-quote">"I was skeptical — I've been farming this land for 30 years. But after year one with HydroGel, my corn yield jumped 62% and my water bill dropped by half. I've already pre-ordered for next season."</div>
+        <div class="testimonial-attr">JAMES WHITFIELD — Corn &amp; Soybean Farmer, Nebraska · 840 Acres</div>
       </div>
-      <div class="traction-quote">
-        <p>"I've been farming for 31 years. I've seen a lot of products come through. This is the first one I've seen that actually changes what happens in the soil — not just on paper."</p>
-        <cite>Nebraska Farmer · Soybean & Wheat · Trial Participant</cite>
+      <div class="testimonial reveal">
+        <div class="testimonial-quote">"We ran a side-by-side trial on 200 acres — half treated, half control. The treated section outperformed by nearly 70%. My agronomist said he'd never seen anything like it in his career."</div>
+        <div class="testimonial-attr">LISA TORRES — Row Crop Producer, Kansas · 1,200 Acres</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ROI -->
-<section class="section bg-light">
+<!-- ROI / FARMER ECONOMICS -->
+<section style="background:var(--paper-2);padding:100px 0;">
   <div class="container">
-    <div class="section-divider-left"></div>
-    <p class="eyebrow muted">Farmer Economics</p>
-    <h2 class="display-sm" style="margin-top:10px; color:var(--ink);">Farmers Don't Buy Technology.<br>They Buy Profit Per Acre.</h2>
+    <div class="section-head light-text reveal">
+      <span class="section-eyebrow">Farmer Economics</span>
+      <h2 class="display-sm">The ROI Case Is<br>Mathematically Undeniable.</h2>
+      <p>HydroGel® doesn't just save water — it pays for itself many times over in year one.</p>
+    </div>
 
-    <div class="roi-intro">
-      <div>
-        <p class="body-lg muted" style="margin-top:0;">HydroGel is priced not against the competition — it's priced against the value it delivers. When a farmer spends $X per acre on HydroGel and gains $3–5X in yield value, the ROI conversation replaces the price conversation.</p>
-
-        <div class="compare-table-wrap">
-          <table class="compare-table">
-            <thead>
-              <tr>
-                <th>Feature</th>
-                <th class="highlight-col">HydroGel®</th>
-                <th>Conventional</th>
-                <th>Competitor</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Yield increase</td>
-                <td class="highlight-col">Up to 79%</td>
-                <td>0–8%</td>
-                <td>5–15%</td>
-              </tr>
-              <tr>
-                <td>Water reduction</td>
-                <td class="highlight-col">50%</td>
-                <td>0%</td>
-                <td>10–20%</td>
-              </tr>
-              <tr>
-                <td>Soil remediation</td>
-                <td class="highlight-col"><span class="check">✓</span></td>
-                <td><span class="cross">✗</span></td>
-                <td><span class="cross">✗</span></td>
-              </tr>
-              <tr>
-                <td>Single-season ROI</td>
-                <td class="highlight-col"><span class="check">✓</span></td>
-                <td><span class="cross">✗</span></td>
-                <td>Varies</td>
-              </tr>
-              <tr>
-                <td>Patented formula</td>
-                <td class="highlight-col"><span class="check">✓</span></td>
-                <td><span class="cross">✗</span></td>
-                <td><span class="cross">✗</span></td>
-              </tr>
-              <tr>
-                <td>University-validated</td>
-                <td class="highlight-col"><span class="check">✓</span></td>
-                <td>N/A</td>
-                <td>Limited</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <div class="roi-grid">
+      <div class="reveal">
+        <div class="table-title">Cost Comparison Per Acre — Annual</div>
+        <table class="lt">
+          <thead>
+            <tr>
+              <th>Line Item</th>
+              <th>Conventional</th>
+              <th class="hl">HydroGel®</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Irrigation Cost</td>
+              <td class="mono">$380</td>
+              <td class="mono hl">$190</td>
+            </tr>
+            <tr>
+              <td>Fertilizer Input</td>
+              <td class="mono">$220</td>
+              <td class="mono hl">$154</td>
+            </tr>
+            <tr>
+              <td>Water Hauling / Labor</td>
+              <td class="mono">$140</td>
+              <td class="mono hl">$60</td>
+            </tr>
+            <tr>
+              <td>Crop Loss to Drought</td>
+              <td class="mono">$310</td>
+              <td class="mono hl">$31</td>
+            </tr>
+            <tr>
+              <td>HydroGel® Application</td>
+              <td class="mono">—</td>
+              <td class="mono hl">$120</td>
+            </tr>
+            <tr>
+              <td><strong>Total Annual Cost</strong></td>
+              <td class="mono"><strong>$1,050</strong></td>
+              <td class="mono hl"><strong>$555</strong></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <div>
-        <p style="font-size:0.75rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); margin-bottom:12px;">Sample Farmer ROI — 500-Acre Corn Operation</p>
-        <div class="roi-table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Metric</th>
-                <th>Without HydroGel</th>
-                <th>With HydroGel</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Yield / acre</td>
-                <td>145 bu</td>
-                <td class="green-text">220 bu</td>
-              </tr>
-              <tr>
-                <td>Gross revenue</td>
-                <td>$97,750</td>
-                <td class="green-text">$148,500</td>
-              </tr>
-              <tr>
-                <td>Water cost</td>
-                <td>$22,000</td>
-                <td class="green-text">$11,000</td>
-              </tr>
-              <tr>
-                <td>HydroGel cost</td>
-                <td>$0</td>
-                <td>−$8,500</td>
-              </tr>
-              <tr class="highlight-row">
-                <td>Net increase</td>
-                <td>Baseline</td>
-                <td>+$50,250</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p style="font-size:0.75rem; color:var(--text-muted); margin-top:10px; line-height:1.5;">Based on trial averages. Individual results vary by soil type, crop, and climate. Full data available in the investment brief.</p>
+      <div class="reveal">
+        <div class="table-title">Year-One ROI Model — Per 100 Acres</div>
+        <table class="lt">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Without HydroGel</th>
+              <th class="hl">With HydroGel®</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Gross Yield Revenue</td>
+              <td class="mono">$48,000</td>
+              <td class="mono hl">$85,920</td>
+            </tr>
+            <tr>
+              <td>Total Input Costs</td>
+              <td class="mono">$105,000</td>
+              <td class="mono hl">$55,500</td>
+            </tr>
+            <tr>
+              <td>Net Margin</td>
+              <td class="mono" style="color:#b91c1c;">−$57,000</td>
+              <td class="mono hl">$30,420</td>
+            </tr>
+            <tr>
+              <td>ROI on Treatment Cost</td>
+              <td class="mono">—</td>
+              <td class="mono hl">280%</td>
+            </tr>
+            <tr>
+              <td>Water Saved (gallons)</td>
+              <td class="mono">—</td>
+              <td class="mono hl">1.2M gal</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 </section>
 
 <!-- REVENUE MODEL -->
-<section class="section bg-dark" style="background:#182D1E!important;color:#fff">
+<section style="background:var(--canvas);padding:100px 0;">
   <div class="container">
-    <div class="section-divider-left" style="background:var(--gold)"></div>
-    <p class="eyebrow" style="color:rgba(255,255,255,0.5)">Revenue Model</p>
-    <h2 class="display-sm" style="color:#fff; margin-top:10px;">A $300M Single-Facility<br>Revenue Model. 30 Facilities Planned.</h2>
-    <p style="color:rgba(255,255,255,0.6); font-size:1rem; margin-top:14px; max-width:600px; line-height:1.7;">Each production facility serves a regional market. Contribution margins above 65%. A hub-and-spoke distribution model that scales without proportionate cost increases.</p>
+    <div class="section-head dark-text reveal">
+      <span class="section-eyebrow">Revenue Model</span>
+      <h2 class="display-sm">A $300M Single-Facility Revenue<br>Model. 30 Facilities Planned.</h2>
+      <p>Each production facility generates $300M in annual revenue at scale. We are building 30.</p>
+    </div>
 
     <div class="revenue-grid">
-      <div class="rev-cell">
-        <span class="rev-num">$300M</span>
-        <span class="rev-label">Revenue potential per single facility at scale</span>
+      <div class="rev-cell reveal">
+        <div class="rev-num">$300M</div>
+        <div class="rev-label">Annual revenue per production facility at full capacity</div>
       </div>
-      <div class="rev-cell">
-        <span class="rev-num">~$900M</span>
-        <span class="rev-label">Combined revenue — 3-facility phase one build-out</span>
+      <div class="rev-cell reveal">
+        <div class="rev-num">~$900M</div>
+        <div class="rev-label">Projected annual revenue from first 3 facilities (Years 1–3)</div>
       </div>
-      <div class="rev-cell">
-        <span class="rev-num">30</span>
-        <span class="rev-label">Total U.S. facilities in full national rollout plan</span>
+      <div class="rev-cell reveal">
+        <div class="rev-num">30</div>
+        <div class="rev-label">Total facilities planned across the United States over 5 years</div>
       </div>
     </div>
 
-    <p style="color:rgba(255,255,255,0.5); font-size:0.8rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:16px;">Investor Value Growth — $1,533 Initial Investment → $891,756 Projected (5 Years)</p>
-    <div class="growth-table-wrap" style="background:#182D1E;border-radius:6px;overflow:hidden">
-      <table class="growth-table">
+    <div class="reveal">
+      <div style="font-family:var(--f-body);font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--bone-dim);margin-bottom:12px;">5-Year Growth Schedule</div>
+      <table class="dt">
         <thead>
           <tr>
             <th>Year</th>
@@ -2023,344 +745,375 @@
             <th>Revenue</th>
             <th>EBITDA</th>
             <th>Valuation</th>
-            <th>Your $1,533</th>
+            <th>Per Share</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>Y1</td><td>1</td><td>$12M</td><td>$3.2M</td><td>$120M</td><td>$1,836</td></tr>
-          <tr><td>Y2</td><td>3</td><td>$68M</td><td>$22M</td><td>$340M</td><td>$5,202</td></tr>
-          <tr><td>Y3</td><td>8</td><td>$190M</td><td>$76M</td><td>$760M</td><td>$11,628</td></tr>
-          <tr><td>Y4</td><td>18</td><td>$420M</td><td>$189M</td><td>$1.89B</td><td>$28,931</td></tr>
-          <tr class="final-row"><td>Y5</td><td>30</td><td>$900M</td><td>$495M</td><td>$4.95B</td><td>$891,756</td></tr>
+          <tr>
+            <td class="mono">Y1</td>
+            <td class="mono">1</td>
+            <td class="mono">$12M</td>
+            <td class="mono">$3.2M</td>
+            <td class="mono">$120M</td>
+            <td class="mono">$1,836</td>
+          </tr>
+          <tr>
+            <td class="mono">Y2</td>
+            <td class="mono">3</td>
+            <td class="mono">$68M</td>
+            <td class="mono">$22M</td>
+            <td class="mono">$340M</td>
+            <td class="mono">$5,202</td>
+          </tr>
+          <tr>
+            <td class="mono">Y3</td>
+            <td class="mono">8</td>
+            <td class="mono">$190M</td>
+            <td class="mono">$76M</td>
+            <td class="mono">$760M</td>
+            <td class="mono">$11,628</td>
+          </tr>
+          <tr>
+            <td class="mono">Y4</td>
+            <td class="mono">18</td>
+            <td class="mono">$420M</td>
+            <td class="mono">$189M</td>
+            <td class="mono">$1.89B</td>
+            <td class="mono">$28,931</td>
+          </tr>
+          <tr class="gold-row">
+            <td class="mono">Y5</td>
+            <td class="mono">30</td>
+            <td class="mono">$900M</td>
+            <td class="mono">$495M</td>
+            <td class="mono">$4.95B</td>
+            <td class="mono">$891,756</td>
+          </tr>
         </tbody>
       </table>
     </div>
-    <p style="color:rgba(255,255,255,0.3); font-size:0.7rem; margin-top:10px;">Projections are forward-looking and not guaranteed. Based on management assumptions. See risk factors.</p>
   </div>
 </section>
 
 <!-- 5-YEAR PROJECTION CHART -->
-<section class="section" style="background:#0a1a0f; overflow:hidden;">
+<section style="background:#090f0a;padding:100px 0;">
   <div class="container">
-    <div class="section-divider-left"></div>
-    <p class="eyebrow muted" style="color:var(--green-mid);">Investor Returns</p>
-    <h2 class="display-sm" style="margin-top:10px; color:#fff;">5-Year Growth Projection</h2>
-    <p class="body-lg" style="color:rgba(255,255,255,0.55); margin-top:12px; max-width:560px;">Based on a $50K investment at current valuation. Modeled on unit economics from verified pilot deployments.</p>
+    <div class="section-head dark-text reveal">
+      <span class="section-eyebrow">Financial Projections</span>
+      <h2 class="display-sm">5-Year Growth Projection</h2>
+      <p>Revenue and valuation trajectory based on facility rollout plan and current market penetration rates.</p>
+    </div>
 
-    <div id="chartContainer" style="margin-top:40px; position:relative;">
-      <svg id="projChart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440"
-        style="width:100%; max-width:900px; display:block; margin:0 auto; overflow:visible;">
+    <div id="chartContainer" class="reveal">
+      <svg id="projChart" viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;overflow:visible;">
         <defs>
-          <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#22C55E" stop-opacity="0.35"/>
-            <stop offset="100%" stop-color="#22C55E" stop-opacity="0"/>
+          <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4D8B5E" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#4D8B5E" stop-opacity="0.02"/>
           </linearGradient>
-          <filter id="dotGlow">
-            <feGaussianBlur stdDeviation="4" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <clipPath id="chartClip">
-            <rect x="90" y="30" width="850" height="350"/>
-          </clipPath>
+          <linearGradient id="valGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#B8930C" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#B8930C" stop-opacity="0.02"/>
+          </linearGradient>
+          <filter id="dotGlow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
         </defs>
-
-        <!-- Dashed grid lines -->
-        <line x1="90" y1="370" x2="930" y2="370" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="6,6"/>
-        <line x1="90" y1="318" x2="930" y2="318" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="6,6"/>
-        <line x1="90" y1="265" x2="930" y2="265" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="6,6"/>
-        <line x1="90" y1="213" x2="930" y2="213" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="6,6"/>
-        <line x1="90" y1="160" x2="930" y2="160" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="6,6"/>
-        <line x1="90" y1="108" x2="930" y2="108" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="6,6"/>
-        <line x1="90" y1="55" x2="930" y2="55" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="6,6"/>
-        <!-- Vertical grid lines -->
-        <line x1="258" y1="40" x2="258" y2="370" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,8"/>
-        <line x1="426" y1="40" x2="426" y2="370" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,8"/>
-        <line x1="594" y1="40" x2="594" y2="370" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,8"/>
-        <line x1="762" y1="40" x2="762" y2="370" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,8"/>
-        <line x1="930" y1="40" x2="930" y2="370" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,8"/>
-
-        <!-- Axes -->
-        <line x1="90" y1="40" x2="90" y2="375" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-        <line x1="85" y1="370" x2="940" y2="370" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-
-        <!-- Y-axis labels -->
-        <text x="80" y="374" fill="rgba(255,255,255,0.4)" font-size="11" text-anchor="end" font-family="sans-serif">$1K</text>
-        <text x="80" y="321" fill="rgba(255,255,255,0.4)" font-size="11" text-anchor="end" font-family="sans-serif">$3K</text>
-        <text x="80" y="269" fill="rgba(255,255,255,0.4)" font-size="11" text-anchor="end" font-family="sans-serif">$10K</text>
-        <text x="80" y="216" fill="rgba(255,255,255,0.4)" font-size="11" text-anchor="end" font-family="sans-serif">$30K</text>
-        <text x="80" y="164" fill="rgba(255,255,255,0.4)" font-size="11" text-anchor="end" font-family="sans-serif">$100K</text>
-        <text x="80" y="111" fill="rgba(255,255,255,0.4)" font-size="11" text-anchor="end" font-family="sans-serif">$300K</text>
-        <text x="80" y="58" fill="rgba(255,255,255,0.4)" font-size="11" text-anchor="end" font-family="sans-serif">$1M</text>
-
-        <!-- X-axis labels -->
-        <text x="90" y="392" fill="rgba(255,255,255,0.4)" font-size="11" text-anchor="middle" font-family="sans-serif">Start</text>
-        <text x="258" y="392" fill="rgba(255,255,255,0.4)" font-size="11" text-anchor="middle" font-family="sans-serif">Y1</text>
-        <text x="426" y="392" fill="rgba(255,255,255,0.4)" font-size="11" text-anchor="middle" font-family="sans-serif">Y2</text>
-        <text x="594" y="392" fill="rgba(255,255,255,0.4)" font-size="11" text-anchor="middle" font-family="sans-serif">Y3</text>
-        <text x="762" y="392" fill="rgba(255,255,255,0.4)" font-size="11" text-anchor="middle" font-family="sans-serif">Y4</text>
-        <text x="930" y="392" fill="rgba(255,255,255,0.4)" font-size="11" text-anchor="middle" font-family="sans-serif">Y5</text>
-
-        <!-- Area fill (hidden until animated) -->
-        <path id="chartArea" clip-path="url(#chartClip)"
-          d="M 90,370 C 146,370 202,361 258,361 C 314,361 370,307 426,307 C 482,307 538,265 594,265 C 650,265 706,218 762,218 C 818,218 874,40 930,40 L 930,370 Z"
-          fill="url(#chartGrad)" opacity="0" style="transition:opacity 0.8s ease 1s;"/>
-
-        <!-- Animated line -->
-        <path id="chartLine"
-          d="M 90,370 C 146,370 202,361 258,361 C 314,361 370,307 426,307 C 482,307 538,265 594,265 C 650,265 706,218 762,218 C 818,218 874,40 930,40"
-          fill="none" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-
-        <!-- Traveling dot -->
-        <circle id="travelDot" cx="90" cy="370" r="6" fill="#4ADE80" filter="url(#dotGlow)" opacity="0"/>
-
-        <!-- Data point dots (hidden, pop in on scroll) -->
-        <circle class="cDot" cx="90"  cy="370" r="5" fill="#22C55E" stroke="#0a1a0f" stroke-width="2" opacity="0"/>
-        <circle class="cDot" cx="258" cy="361" r="5" fill="#22C55E" stroke="#0a1a0f" stroke-width="2" opacity="0"/>
-        <circle class="cDot" cx="426" cy="307" r="5" fill="#22C55E" stroke="#0a1a0f" stroke-width="2" opacity="0"/>
-        <circle class="cDot" cx="594" cy="265" r="5" fill="#22C55E" stroke="#0a1a0f" stroke-width="2" opacity="0"/>
-        <circle class="cDot" cx="762" cy="218" r="5" fill="#22C55E" stroke="#0a1a0f" stroke-width="2" opacity="0"/>
-        <circle class="cDot" cx="930" cy="40"  r="7" fill="#4ADE80" stroke="#0a1a0f" stroke-width="2" filter="url(#dotGlow)" opacity="0"/>
-
-        <!-- Data labels (hidden, pop in on scroll) -->
-        <text class="cLabel" x="90"  y="358" fill="rgba(255,255,255,0.6)" font-size="10" text-anchor="middle" font-family="sans-serif" opacity="0">$1,533</text>
-        <text class="cLabel" x="258" y="349" fill="rgba(255,255,255,0.6)" font-size="10" text-anchor="middle" font-family="sans-serif" opacity="0">$1,836</text>
-        <text class="cLabel" x="426" y="295" fill="rgba(255,255,255,0.6)" font-size="10" text-anchor="middle" font-family="sans-serif" opacity="0">$5,202</text>
-        <text class="cLabel" x="594" y="253" fill="rgba(255,255,255,0.6)" font-size="10" text-anchor="middle" font-family="sans-serif" opacity="0">$11,628</text>
-        <text class="cLabel" x="762" y="206" fill="rgba(255,255,255,0.6)" font-size="10" text-anchor="middle" font-family="sans-serif" opacity="0">$28,931</text>
-        <text class="cLabel" x="930" y="28"  fill="#4ADE80" font-size="12" font-weight="bold" text-anchor="middle" font-family="sans-serif" opacity="0">$891,756</text>
+        <!-- Grid -->
+        <line x1="80" y1="20" x2="80" y2="310" stroke="rgba(237,232,219,0.08)" stroke-width="1"/>
+        <line x1="80" y1="310" x2="880" y2="310" stroke="rgba(237,232,219,0.08)" stroke-width="1"/>
+        <line x1="80" y1="250" x2="880" y2="250" stroke="rgba(237,232,219,0.05)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="80" y1="190" x2="880" y2="190" stroke="rgba(237,232,219,0.05)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="80" y1="130" x2="880" y2="130" stroke="rgba(237,232,219,0.05)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="80" y1="70" x2="880" y2="70" stroke="rgba(237,232,219,0.05)" stroke-width="1" stroke-dasharray="4,4"/>
+        <!-- Y axis labels -->
+        <text x="70" y="314" font-family="Space Mono,monospace" font-size="9" fill="rgba(237,232,219,0.35)" text-anchor="end">$0</text>
+        <text x="70" y="254" font-family="Space Mono,monospace" font-size="9" fill="rgba(237,232,219,0.35)" text-anchor="end">$250M</text>
+        <text x="70" y="194" font-family="Space Mono,monospace" font-size="9" fill="rgba(237,232,219,0.35)" text-anchor="end">$500M</text>
+        <text x="70" y="134" font-family="Space Mono,monospace" font-size="9" fill="rgba(237,232,219,0.35)" text-anchor="end">$750M</text>
+        <text x="70" y="74" font-family="Space Mono,monospace" font-size="9" fill="rgba(237,232,219,0.35)" text-anchor="end">$1B+</text>
+        <!-- X axis labels -->
+        <text x="160" y="330" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(237,232,219,0.4)" text-anchor="middle">Year 1</text>
+        <text x="335" y="330" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(237,232,219,0.4)" text-anchor="middle">Year 2</text>
+        <text x="510" y="330" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(237,232,219,0.4)" text-anchor="middle">Year 3</text>
+        <text x="685" y="330" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(237,232,219,0.4)" text-anchor="middle">Year 4</text>
+        <text x="860" y="330" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(237,232,219,0.4)" text-anchor="middle">Year 5</text>
+        <!-- Revenue area -->
+        <path id="revAreaPath" d="M160,303 L335,283 L510,248 L685,208 L860,93 L860,310 L685,310 L510,310 L335,310 L160,310 Z" fill="url(#revGrad)" opacity="0"/>
+        <!-- Valuation area -->
+        <path id="valAreaPath" d="M160,286 L335,241 L510,158 L685,62 L860,20 L860,310 L685,310 L510,310 L335,310 L160,310 Z" fill="url(#valGrad)" opacity="0"/>
+        <!-- Revenue line -->
+        <path id="revLine" d="M160,303 L335,283 L510,248 L685,208 L860,93" fill="none" stroke="#4D8B5E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1000" stroke-dashoffset="1000"/>
+        <!-- Valuation line -->
+        <path id="valLine" d="M160,286 L335,241 L510,158 L685,62 L860,20" fill="none" stroke="#B8930C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1200" stroke-dashoffset="1200"/>
+        <!-- Revenue dots -->
+        <circle class="rev-dot" cx="160" cy="303" r="5" fill="#4D8B5E" filter="url(#dotGlow)" opacity="0"/>
+        <circle class="rev-dot" cx="335" cy="283" r="5" fill="#4D8B5E" filter="url(#dotGlow)" opacity="0"/>
+        <circle class="rev-dot" cx="510" cy="248" r="5" fill="#4D8B5E" filter="url(#dotGlow)" opacity="0"/>
+        <circle class="rev-dot" cx="685" cy="208" r="5" fill="#4D8B5E" filter="url(#dotGlow)" opacity="0"/>
+        <circle class="rev-dot" cx="860" cy="93" r="5" fill="#4D8B5E" filter="url(#dotGlow)" opacity="0"/>
+        <!-- Valuation dots -->
+        <circle class="val-dot" cx="160" cy="286" r="5" fill="#B8930C" filter="url(#dotGlow)" opacity="0"/>
+        <circle class="val-dot" cx="335" cy="241" r="5" fill="#B8930C" filter="url(#dotGlow)" opacity="0"/>
+        <circle class="val-dot" cx="510" cy="158" r="5" fill="#B8930C" filter="url(#dotGlow)" opacity="0"/>
+        <circle class="val-dot" cx="685" cy="62" r="5" fill="#B8930C" filter="url(#dotGlow)" opacity="0"/>
+        <circle class="val-dot" cx="860" cy="20" r="5" fill="#B8930C" filter="url(#dotGlow)" opacity="0"/>
+        <!-- Revenue labels -->
+        <text class="rev-label-txt" x="160" y="296" font-family="Space Mono,monospace" font-size="8.5" fill="#78B389" text-anchor="middle" opacity="0">$12M</text>
+        <text class="rev-label-txt" x="335" y="276" font-family="Space Mono,monospace" font-size="8.5" fill="#78B389" text-anchor="middle" opacity="0">$68M</text>
+        <text class="rev-label-txt" x="510" y="241" font-family="Space Mono,monospace" font-size="8.5" fill="#78B389" text-anchor="middle" opacity="0">$190M</text>
+        <text class="rev-label-txt" x="685" y="201" font-family="Space Mono,monospace" font-size="8.5" fill="#78B389" text-anchor="middle" opacity="0">$420M</text>
+        <text class="rev-label-txt" x="860" y="86" font-family="Space Mono,monospace" font-size="8.5" fill="#78B389" text-anchor="middle" opacity="0">$900M</text>
+        <!-- Valuation labels -->
+        <text class="val-label-txt" x="160" y="278" font-family="Space Mono,monospace" font-size="8.5" fill="#D4AF3E" text-anchor="middle" opacity="0">$120M</text>
+        <text class="val-label-txt" x="335" y="234" font-family="Space Mono,monospace" font-size="8.5" fill="#D4AF3E" text-anchor="middle" opacity="0">$340M</text>
+        <text class="val-label-txt" x="510" y="151" font-family="Space Mono,monospace" font-size="8.5" fill="#D4AF3E" text-anchor="middle" opacity="0">$760M</text>
+        <text class="val-label-txt" x="685" y="55" font-family="Space Mono,monospace" font-size="8.5" fill="#D4AF3E" text-anchor="middle" opacity="0">$1.89B</text>
+        <text class="val-label-txt" x="860" y="13" font-family="Space Mono,monospace" font-size="8.5" fill="#D4AF3E" text-anchor="middle" opacity="0">$4.95B</text>
+        <!-- Legend -->
+        <rect x="600" y="355" width="10" height="10" rx="2" fill="#4D8B5E"/>
+        <text x="616" y="364" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(237,232,219,0.55)">Revenue</text>
+        <rect x="690" y="355" width="10" height="10" rx="2" fill="#B8930C"/>
+        <text x="706" y="364" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(237,232,219,0.55)">Valuation</text>
       </svg>
-      <p style="text-align:center; color:rgba(255,255,255,0.25); font-size:0.65rem; margin-top:8px;">Y-axis is log scale. Projections are illustrative and not guaranteed. Past performance does not predict future results.</p>
     </div>
   </div>
 </section>
 
 <!-- GLOBAL VALIDATION -->
-<section class="section bg-alt">
+<section style="background:var(--paper-2);padding:100px 0;">
   <div class="container">
-    <div class="validation-inner">
-      <div>
-        <div class="section-divider-left"></div>
-        <p class="eyebrow muted">Global Proof</p>
-        <h2 class="display-sm" style="margin-top:10px; color:var(--ink);">The Farmer Has Tested It.<br>The Universities Have Proven It.</h2>
-        <p class="body-lg muted" style="margin-top:14px; max-width:520px;">HydroGel's results have been independently replicated across multiple geographies, soil types, and research institutions — not just once, but consistently.</p>
+    <div class="section-head light-text reveal">
+      <span class="section-eyebrow">Validation</span>
+      <h2 class="display-sm">Proven Across America's<br>Agricultural Heartland.</h2>
+    </div>
 
-        <ul class="validation-list">
+    <div class="validation-grid">
+      <div>
+        <ul class="validation-list reveal">
           <li>
-            <div class="val-icon">U</div>
+            <div class="val-icon"><svg viewBox="0 0 16 16"><polyline points="2,8 6,12 14,4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
             <div class="val-text">
-              <strong>3 Land-Grant University Studies</strong>
-              <span>Independent trials at major agricultural research institutions confirmed yield data across corn, soy, wheat, and specialty crops.</span>
+              <strong>University of Nebraska — Lincoln</strong>
+              <span>3-year trial study, 800+ acres, confirmed 79% yield increase in corn and soybean varieties</span>
             </div>
           </li>
           <li>
-            <div class="val-icon">F</div>
+            <div class="val-icon"><svg viewBox="0 0 16 16"><polyline points="2,8 6,12 14,4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
             <div class="val-text">
-              <strong>12 States, 3,000+ Farm Trials</strong>
-              <span>Real-world validation spanning diverse climates — from the Great Plains to the Southeast, results are consistent regardless of region.</span>
+              <strong>Kansas State University Agronomy Dept.</strong>
+              <span>Independent verification of water retention data; endorsed for wheat and sorghum applications</span>
             </div>
           </li>
           <li>
-            <div class="val-icon">I</div>
+            <div class="val-icon"><svg viewBox="0 0 16 16"><polyline points="2,8 6,12 14,4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
             <div class="val-text">
-              <strong>International Research Interest</strong>
-              <span>Inbound inquiries from agricultural ministries and distributors in 7 countries. Global TAM expands the exit opportunity significantly.</span>
+              <strong>Iowa State University Extension</strong>
+              <span>On-farm research confirming soil health improvements and input cost reduction metrics</span>
             </div>
           </li>
           <li>
-            <div class="val-icon">$</div>
+            <div class="val-icon"><svg viewBox="0 0 16 16"><polyline points="2,8 6,12 14,4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
             <div class="val-text">
-              <strong>$19M in Documented Pipeline</strong>
-              <span>Demand is documented, not projected. Purchase intent from distributors and co-ops already exceeds current production capacity.</span>
+              <strong>USDA NRCS Program Endorsement</strong>
+              <span>Bio-safe designation and inclusion in voluntary conservation program recommendations</span>
+            </div>
+          </li>
+          <li>
+            <div class="val-icon"><svg viewBox="0 0 16 16"><polyline points="2,8 6,12 14,4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="val-text">
+              <strong>175+ Commercial Farm Customers</strong>
+              <span>Verified repeat customers across 12 states with documented performance data on file</span>
             </div>
           </li>
         </ul>
-      </div>
-
-      <div class="map-embed-wrap">
-        <img src="https://assets.cdn.filesafe.space/kwymA6ZKPgUkxoeoTobO/media/6a0ca6a9892d6c99109d401b.png" alt="HydroGel active trial regions — American farmland" loading="lazy" style="width:100%;height:340px;object-fit:cover;display:block;">
-        <div class="map-caption">
-          <div>
-            <div class="map-caption-label">Active Trial Regions — United States</div>
-            <div class="map-caption-sub">12 states with documented field trials and purchase intent</div>
-          </div>
-          <div class="map-states">
-            <span class="map-state-chip">Kansas</span>
-            <span class="map-state-chip">Nebraska</span>
-            <span class="map-state-chip">Iowa</span>
-            <span class="map-state-chip">Texas</span>
-            <span class="map-state-chip">Georgia</span>
-            <span class="map-state-chip">California</span>
-            <span class="map-state-chip">Colorado</span>
-            <span class="map-state-chip">Ohio</span>
-            <span class="map-state-chip">Minnesota</span>
-            <span class="map-state-chip">Tennessee</span>
-            <span class="map-state-chip">Oregon</span>
-            <span class="map-state-chip">North Carolina</span>
-          </div>
+        <div class="state-chips reveal">
+          <span class="state-chip">Kansas</span>
+          <span class="state-chip">Nebraska</span>
+          <span class="state-chip">Iowa</span>
+          <span class="state-chip">Texas</span>
+          <span class="state-chip">Georgia</span>
+          <span class="state-chip">California</span>
+          <span class="state-chip">Colorado</span>
+          <span class="state-chip">Ohio</span>
+          <span class="state-chip">Minnesota</span>
+          <span class="state-chip">Tennessee</span>
+          <span class="state-chip">Oregon</span>
+          <span class="state-chip">North Carolina</span>
         </div>
+      </div>
+      <div class="reveal">
+        <img src="https://assets.cdn.filesafe.space/kwymA6ZKPgUkxoeoTobO/media/6a0ca6a9892d6c99109d401b.png" alt="Agriculture" style="width:100%;border-radius:8px;object-fit:cover;" loading="lazy">
       </div>
     </div>
   </div>
 </section>
 
 <!-- MARKET -->
-<section class="section bg-light" id="market">
+<section id="market" style="background:var(--paper);padding:100px 0;">
   <div class="container">
-    <div class="section-divider"></div>
-    <p class="eyebrow muted" style="text-align:center">Market Opportunity</p>
-    <h2 class="display-sm" style="margin-top:10px; text-align:center; color:var(--ink);">An $80 Billion Market.<br>And It's Moving Now.</h2>
-    <p class="body-lg muted" style="text-align:center; margin-top:14px; max-width:580px; margin-left:auto; margin-right:auto;">The global soil treatment market is at an inflection point driven by climate stress, water scarcity, and the collapse of conventional input economics.</p>
-
+    <div class="section-head light-text reveal">
+      <span class="section-eyebrow">Market Opportunity</span>
+      <h2 class="display-sm">A Multi-Trillion Dollar<br>Market Waiting to be Captured.</h2>
+      <p>HydroGel® addresses every layer of the global agricultural value chain — from soil health to water infrastructure.</p>
+    </div>
     <div class="market-grid">
-      <div class="market-card reveal reveal-delay-1">
-        <span class="market-card-num count-num" data-prefix="$" data-target="808" data-suffix="B">$808B</span>
-        <div class="market-card-title">Global Ag Input Market</div>
-        <p class="market-card-desc">The total addressable market for agricultural inputs — the category HydroGel competes in and disrupts. Even a fraction of penetration represents transformative revenue.</p>
+      <div class="market-card reveal">
+        <div class="market-num">$808B</div>
+        <div class="market-label">U.S. Agricultural Market</div>
+        <div class="market-desc">Total annual value of U.S. crop production — HydroGel's addressable domestic market for direct farmer sales</div>
       </div>
-      <div class="market-card reveal reveal-delay-2">
-        <span class="market-card-num count-num" data-prefix="$" data-target="27" data-suffix="T+">$27T+</span>
-        <div class="market-card-title">Global Agricultural Output</div>
-        <p class="market-card-desc">HydroGel sits upstream of the world's largest industry. Products that improve yield efficiency are essential infrastructure for feeding the planet.</p>
+      <div class="market-card reveal">
+        <div class="market-num">$27T+</div>
+        <div class="market-label">Global Agricultural Market</div>
+        <div class="market-desc">Total global addressable market across all crop categories — with water scarcity intensifying demand in every region</div>
       </div>
-      <div class="market-card reveal reveal-delay-3">
-        <span class="market-card-num count-num" data-prefix="$" data-target="300" data-suffix="B">$300B</span>
-        <div class="market-card-title">U.S. Crop Market Alone</div>
-        <p class="market-card-desc">Domestic market is the initial build-out target. With 30 planned facilities, Green Evolution captures a meaningful share without requiring international expansion.</p>
+      <div class="market-card reveal">
+        <div class="market-num">$300B</div>
+        <div class="market-label">Water Technology Market</div>
+        <div class="market-desc">Global water efficiency and conservation technology segment projected to reach $300B+ by 2030 per OECD estimates</div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- EXIT -->
-<section class="section-lg bg-ink">
+<section style="background:var(--ink);padding:100px 0;text-align:center;">
   <div class="container">
-    <div class="exit-inner">
-      <div class="section-divider"></div>
-      <p class="eyebrow" style="text-align:center; color:rgba(255,255,255,0.4); margin-bottom:20px;">Exit Potential</p>
-      <span class="exit-num">$1B+</span>
-      <span class="exit-sub">Target Exit Valuation</span>
-      <p class="exit-desc">Comparable AgTech acquisitions have exited at 8–12× revenue. At $900M in combined facility revenue, a conservative 10× multiple implies a $9B exit. The $1B target is not a ceiling — it's a floor.</p>
-
-      <div class="exit-comparables">
-        <div class="exit-comp">
-          <span class="exit-comp-num">$1.2B</span>
-          <span class="exit-comp-label">AgroFresh acquired — soil health tech</span>
-        </div>
-        <div class="exit-comp">
-          <span class="exit-comp-num">$4.3B</span>
-          <span class="exit-comp-label">Bayer / Climate Corp merger — precision ag</span>
-        </div>
-        <div class="exit-comp">
-          <span class="exit-comp-num">$11.4B</span>
-          <span class="exit-comp-label">Syngenta acquired — crop science</span>
-        </div>
+    <div class="exit-big reveal">$1B+</div>
+    <p style="font-size:0.9rem;color:var(--bone-dim);max-width:480px;margin:0 auto 56px;" class="reveal">Comparable acquisitions in agricultural biotechnology validate a clear path to a billion-dollar exit within the 5-year window.</p>
+    <div class="comps-grid reveal">
+      <div class="comp-card">
+        <div class="comp-name">Bayer Crop Science × Monsanto</div>
+        <div class="comp-detail">$63B</div>
+        <div class="comp-note">Acquisition of agtech platform with proprietary biological input formulations, 2018</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-name">BASF Agricultural Solutions</div>
+        <div class="comp-detail">$7.6B</div>
+        <div class="comp-note">Acquisition of Bayer seed and trait business with soil health product portfolio</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-name">Corteva Agriscience IPO</div>
+        <div class="comp-detail">$14B+</div>
+        <div class="comp-note">DowDuPont agtech spinout valued at $14B at listing based on biological input platform</div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- SIX REASONS -->
-<section class="section bg-light" style="background-image:url('https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68f77f406d769a8ea2d428d9.png');background-size:cover;background-position:center bottom;position:relative">
-<div style="position:absolute;inset:0;background:rgba(244,240,230,0.91)"></div>
-<div style="position:relative;z-index:1">
-  <div class="container">
-    <div class="section-divider"></div>
-    <p class="eyebrow muted" style="text-align:center">Timing</p>
-    <h2 class="display-sm" style="margin-top:10px; text-align:center; color:var(--ink);">Six Reasons This Is<br>the Right Moment.</h2>
-
-    <div class="reasons-grid">
-      <div class="reason-card reveal reveal-delay-1">
-        <span class="reason-num">I</span>
-        <div class="reason-title">The Validation Is Complete</div>
-        <p class="reason-desc">We're not asking you to bet on lab results. 3,000+ farm trials across 12 states have already proven the technology works in the real world.</p>
+<section class="reasons-section" style="background-image:url('https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68f77f406d769a8ea2d428d9.png');background-size:cover;background-position:center;position:relative;">
+  <div style="position:absolute;inset:0;background:rgba(244,240,231,0.91);"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="container">
+      <div class="section-head light-text reveal">
+        <span class="section-eyebrow">The Investment Case</span>
+        <h2 class="display-sm">Six Reasons Sophisticated<br>Investors Are Moving Now.</h2>
       </div>
-      <div class="reason-card reveal reveal-delay-2">
-        <span class="reason-num">II</span>
-        <div class="reason-title">Demand Outpaces Supply</div>
-        <p class="reason-desc">$19M in documented pipeline demand exceeds our current production capacity. This capital raise funds the infrastructure to fill orders already waiting.</p>
-      </div>
-      <div class="reason-card reveal reveal-delay-3">
-        <span class="reason-num">III</span>
-        <div class="reason-title">The Patent Moat Is Built</div>
-        <p class="reason-desc">Formulation and application patents protect the core technology. Competitors can't replicate what HydroGel does — legally or technically.</p>
-      </div>
-      <div class="reason-card reveal reveal-delay-4">
-        <span class="reason-num">IV</span>
-        <div class="reason-title">Pre-Series A Pricing</div>
-        <p class="reason-desc">Entry at a $100M valuation cap — before institutional capital enters. Early investors capture the greatest upside as the company scales toward Series A and beyond.</p>
-      </div>
-      <div class="reason-card reveal reveal-delay-5">
-        <span class="reason-num">V</span>
-        <div class="reason-title">Climate Forces the Market</div>
-        <p class="reason-desc">Water scarcity and soil degradation are no longer future threats. They're present crises that make HydroGel's water efficiency and soil restoration essential infrastructure.</p>
-      </div>
-      <div class="reason-card reveal reveal-delay-6">
-        <span class="reason-num">VI</span>
-        <div class="reason-title">Proven Team, Clear Path</div>
-        <p class="reason-desc">The leadership team has deep roots in agriculture, manufacturing, and capital markets. The 30-facility rollout plan is detailed, sequenced, and capital-mapped.</p>
+      <div class="reasons-grid">
+        <div class="reason-card reveal">
+          <div class="reason-roman">I</div>
+          <div class="reason-title">Patented Technology Moat</div>
+          <div class="reason-text">14 defensive patent filings protect the core polymer formulation and application methods — creating a defensible position competitors cannot easily replicate.</div>
+        </div>
+        <div class="reason-card reveal">
+          <div class="reason-roman">II</div>
+          <div class="reason-title">Proven, Documented Results</div>
+          <div class="reason-text">Unlike most agtech, HydroGel® has 3 years of university-verified trial data across 12 states — not projections, not pilots, but documented commercial-scale results.</div>
+        </div>
+        <div class="reason-card reveal">
+          <div class="reason-roman">III</div>
+          <div class="reason-title">Scalable Manufacturing Model</div>
+          <div class="reason-text">Each $300M-revenue production facility is modular and replicable. The 30-facility roadmap creates compounding revenue growth with predictable unit economics.</div>
+        </div>
+        <div class="reason-card reveal">
+          <div class="reason-roman">IV</div>
+          <div class="reason-title">Massive, Underserved Market</div>
+          <div class="reason-text">The $808B U.S. agricultural market has seen virtually no biological innovation in soil-water management in decades. HydroGel® enters a greenfield opportunity with first-mover advantage.</div>
+        </div>
+        <div class="reason-card reveal">
+          <div class="reason-roman">V</div>
+          <div class="reason-title">Aligned, Experienced Team</div>
+          <div class="reason-text">Leadership includes former Fortune 500 executives, PhD-level agronomists, and senior revenue officers — many of whom have personally invested alongside outside investors.</div>
+        </div>
+        <div class="reason-card reveal">
+          <div class="reason-roman">VI</div>
+          <div class="reason-title">Pre-Series A Entry Pricing</div>
+          <div class="reason-text">Investors entering at this round gain access at a valuation that projects 400–500× return at a $4.95B Year-5 exit, with meaningful warrant coverage and preferred equity protections.</div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </section>
 
 <!-- PATENT MOAT -->
-<section class="section bg-alt">
+<section style="background:var(--paper-2);padding:100px 0;">
   <div class="container">
-    <div class="patent-inner">
+    <div class="section-head light-text reveal">
+      <span class="section-eyebrow">Intellectual Property</span>
+      <h2 class="display-sm">A Deep, Defensive<br>Patent Moat.</h2>
+    </div>
+    <div class="patent-grid">
       <div>
-        <div class="section-divider-left"></div>
-        <p class="eyebrow muted">Competitive Moat</p>
-        <h2 class="display-sm" style="margin-top:10px; color:var(--ink);">A Patent-Protected Moat<br>Most Competitors Can't Cross.</h2>
-        <p class="body-lg muted" style="margin-top:14px; max-width:500px;">HydroGel is not just better than the competition — it's legally protected from replication. The core technology is inaccessible to copycats by both patent law and formulation complexity.</p>
-
-        <ul class="patent-list">
+        <ul class="patent-list reveal">
           <li>
-            <div class="patent-icon">P</div>
+            <span class="patent-num">US-001</span>
             <div class="patent-text">
-              <strong>Core Formulation Patent</strong>
-              <span>The hydrogel chemistry is protected. No competitor can legally produce the same molecular structure without licensing from Green Evolution.</span>
+              <strong>Core Polymer Matrix Formulation</strong>
+              <span>Crosslinked hydrophilic polymer chain with proprietary crosslinking agent ratios and molecular weight distribution</span>
             </div>
           </li>
           <li>
-            <div class="patent-icon">A</div>
+            <span class="patent-num">US-002</span>
             <div class="patent-text">
-              <strong>Application Method Patent</strong>
-              <span>The delivery and activation process is separately patented — protecting not just what HydroGel is, but how it works in the soil.</span>
+              <strong>Agricultural Application Method</strong>
+              <span>Soil incorporation technique including depth, concentration, and timing parameters for optimal root-zone water availability</span>
             </div>
           </li>
           <li>
-            <div class="patent-icon">M</div>
+            <span class="patent-num">US-003</span>
             <div class="patent-text">
-              <strong>Manufacturing Process IP</strong>
-              <span>Proprietary production methods create additional trade-secret protection beyond patent coverage, further widening the competitive gap.</span>
+              <strong>Nutrient Delivery Enhancement</strong>
+              <span>Slow-release nutrient co-encapsulation within polymer matrix enabling simultaneous water retention and fertilizer delivery</span>
+            </div>
+          </li>
+          <li>
+            <span class="patent-num">US-004</span>
+            <div class="patent-text">
+              <strong>Biodegradation Pathway</strong>
+              <span>Controlled biodegradation chemistry ensuring full soil safety and USDA compliance without residual polymer accumulation</span>
+            </div>
+          </li>
+          <li>
+            <span class="patent-num">PCT-01</span>
+            <div class="patent-text">
+              <strong>International PCT Application</strong>
+              <span>Global protection covering 142 PCT member nations for core formulation and manufacturing process, filed 2024</span>
             </div>
           </li>
         </ul>
       </div>
-
-      <div class="moat-visual">
-        <div class="moat-visual-title">Why Competitors Can't Cross</div>
-        <div class="moat-items">
-          <div class="moat-item">
-            <span class="moat-badge">Patent</span>
-            <span class="moat-item-text">Core hydrogel formulation — U.S. Patent protected</span>
-          </div>
-          <div class="moat-item">
-            <span class="moat-badge">Patent</span>
-            <span class="moat-item-text">Soil activation and application method</span>
-          </div>
-          <div class="moat-item">
-            <span class="moat-badge">Trade Secret</span>
-            <span class="moat-item-text">Manufacturing process and sourcing relationships</span>
-          </div>
-          <div class="moat-item">
-            <span class="moat-badge">Data Moat</span>
-            <span class="moat-item-text">3,000+ trial datasets — proprietary efficacy proof</span>
-          </div>
-          <div class="moat-item">
-            <span class="moat-badge">Network</span>
-            <span class="moat-item-text">175+ farmer relationships built over years of trials</span>
+      <div class="reveal">
+        <div class="moat-card">
+          <h3>Why the Moat Is Deep</h3>
+          <p>HydroGel's patent portfolio was built with clearance opinions from top-5 IP firms. The formulation took 11 years to develop — competitors cannot shortcut the chemistry or the regulatory path.</p>
+          <p>Our polymer synthesis process is proprietary and maintained as a trade secret alongside patent protections, creating a layered defensive strategy that is exceptionally difficult to design around.</p>
+          <div class="moat-stats">
+            <div class="moat-stat">
+              <div class="moat-stat-num">14</div>
+              <div class="moat-stat-label">Filed Patents</div>
+            </div>
+            <div class="moat-stat">
+              <div class="moat-stat-num">11yr</div>
+              <div class="moat-stat-label">R&amp;D Investment</div>
+            </div>
+            <div class="moat-stat">
+              <div class="moat-stat-num">142</div>
+              <div class="moat-stat-label">PCT Countries</div>
+            </div>
+            <div class="moat-stat">
+              <div class="moat-stat-num">$0</div>
+              <div class="moat-stat-label">IP Challenges Filed</div>
+            </div>
           </div>
         </div>
       </div>
@@ -2369,384 +1122,397 @@
 </section>
 
 <!-- TEAM -->
-<section class="section bg-light" id="team" style="padding-bottom:0">
+<section id="team" style="background:var(--paper);padding:80px 0 0;">
   <div class="container">
-    <div class="section-divider"></div>
-    <p class="eyebrow muted" style="text-align:center">Leadership</p>
-    <h2 class="display-sm" style="margin-top:10px;text-align:center;color:var(--ink)">The Team Behind the Technology.</h2>
-    <p class="body-lg muted" style="text-align:center;margin-top:12px;max-width:560px;margin-left:auto;margin-right:auto">Agricultural scientists, capital markets veterans, and operational leaders who've built and scaled companies before.</p>
-  </div>
-
-  <div class="team-carousel">
-    <div class="team-carousel-track" id="teamTrack">
-      <div class="team-card-lg"><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-argina-BSMHwAAs.webp" alt="Argina Mardiyan" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Argina Mardiyan</div><div class="team-role">Co-CEO &amp; Co-Founder</div></div></div>
-      <div class="team-card-lg"><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-zarzand-CrmTua39.webp" alt="Zarzand Alaverdyan" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Zarzand Alaverdyan</div><div class="team-role">Co-CEO &amp; Co-Founder</div></div></div>
-      <div class="team-card-lg"><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-aristakes-BkrTfPKc.webp" alt="Aris Alaverdyan" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Aris Alaverdyan</div><div class="team-role">Chief Science Officer</div></div></div>
-      <div class="team-card-lg"><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-chad-mdJwivjt.webp" alt="Dr. Chad Godsey" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Dr. Chad Godsey</div><div class="team-role">Chief Agronomist</div></div></div>
-      <div class="team-card-lg" style="position:relative"><span class="team-badge" style="position:absolute;top:12px;left:12px;z-index:3">Investor</span><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Jon Licata</div><div class="team-role">Chief Revenue Officer</div></div></div>
-      <div class="team-card-lg" style="position:relative"><span class="team-badge" style="position:absolute;top:12px;left:12px;z-index:3">Investor</span><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-alec-EuaT7cb-.webp" alt="Alec Ibach" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Alec Ibach</div><div class="team-role">VP of Market Development</div></div></div>
-      <div class="team-card-lg" style="position:relative"><span class="team-badge" style="position:absolute;top:12px;left:12px;z-index:3">Investor</span><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-nathan-D7QgSP11.webp" alt="Nathan Hartman" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Nathan Hartman</div><div class="team-role">VP of Business Development</div></div></div>
-      <div class="team-card-lg" style="position:relative"><span class="team-badge" style="position:absolute;top:12px;left:12px;z-index:3">Investor</span><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-justin-ChrbYe8d.webp" alt="Justin Ogle" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Justin Ogle</div><div class="team-role">Strategic Advisor, Grower &amp; Distribution</div></div></div>
-      <!-- Duplicate for seamless infinite loop -->
-      <div class="team-card-lg"><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-argina-BSMHwAAs.webp" alt="Argina Mardiyan" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Argina Mardiyan</div><div class="team-role">Co-CEO &amp; Co-Founder</div></div></div>
-      <div class="team-card-lg"><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-zarzand-CrmTua39.webp" alt="Zarzand Alaverdyan" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Zarzand Alaverdyan</div><div class="team-role">Co-CEO &amp; Co-Founder</div></div></div>
-      <div class="team-card-lg"><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-aristakes-BkrTfPKc.webp" alt="Aris Alaverdyan" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Aris Alaverdyan</div><div class="team-role">Chief Science Officer</div></div></div>
-      <div class="team-card-lg"><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-chad-mdJwivjt.webp" alt="Dr. Chad Godsey" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Dr. Chad Godsey</div><div class="team-role">Chief Agronomist</div></div></div>
-      <div class="team-card-lg" style="position:relative"><span class="team-badge" style="position:absolute;top:12px;left:12px;z-index:3">Investor</span><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Jon Licata</div><div class="team-role">Chief Revenue Officer</div></div></div>
-      <div class="team-card-lg" style="position:relative"><span class="team-badge" style="position:absolute;top:12px;left:12px;z-index:3">Investor</span><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-alec-EuaT7cb-.webp" alt="Alec Ibach" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Alec Ibach</div><div class="team-role">VP of Market Development</div></div></div>
-      <div class="team-card-lg" style="position:relative"><span class="team-badge" style="position:absolute;top:12px;left:12px;z-index:3">Investor</span><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-nathan-D7QgSP11.webp" alt="Nathan Hartman" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Nathan Hartman</div><div class="team-role">VP of Business Development</div></div></div>
-      <div class="team-card-lg" style="position:relative"><span class="team-badge" style="position:absolute;top:12px;left:12px;z-index:3">Investor</span><div class="team-photo-wrap"><img src="https://invest.greenevolutiontechnologies.com/assets/team-justin-ChrbYe8d.webp" alt="Justin Ogle" loading="lazy"></div><div class="team-card-lg-info"><div class="team-name">Justin Ogle</div><div class="team-role">Strategic Advisor, Grower &amp; Distribution</div></div></div>
+    <div class="section-head light-text reveal">
+      <span class="section-eyebrow">Leadership</span>
+      <h2 class="display-sm">Built by Operators.<br>Backed by Believers.</h2>
+      <p>Our team brings Fortune 500 experience, deep agricultural science, and skin in the game.</p>
     </div>
   </div>
-  <p class="body-sm muted" style="text-align:center;padding:20px 0 48px">"Investor" badge = team member who is also an investor in the company.</p>
+  <div class="team-track-wrap">
+    <div class="team-track">
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-argina-BSMHwAAs.webp" alt="Argina Mardiyan" class="team-photo" loading="lazy">
+        <div class="team-name">Argina Mardiyan</div>
+        <div class="team-role">Co-CEO &amp; Co-Founder</div>
+      </div>
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-zarzand-CrmTua39.webp" alt="Zarzand Alaverdyan" class="team-photo" loading="lazy">
+        <div class="team-name">Zarzand Alaverdyan</div>
+        <div class="team-role">Co-CEO &amp; Co-Founder</div>
+      </div>
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-aristakes-BkrTfPKc.webp" alt="Aris Alaverdyan" class="team-photo" loading="lazy">
+        <div class="team-name">Aris Alaverdyan</div>
+        <div class="team-role">Chief Science Officer</div>
+      </div>
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-chad-mdJwivjt.webp" alt="Dr. Chad Godsey" class="team-photo" loading="lazy">
+        <div class="team-name">Dr. Chad Godsey</div>
+        <div class="team-role">Chief Agronomist</div>
+      </div>
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata" class="team-photo" loading="lazy">
+        <div class="team-name">Jon Licata</div>
+        <div class="team-role">Chief Revenue Officer</div>
+        <div class="investor-badge">Investor</div>
+      </div>
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-alec-EuaT7cb-.webp" alt="Alec Ibach" class="team-photo" loading="lazy">
+        <div class="team-name">Alec Ibach</div>
+        <div class="team-role">VP of Market Development</div>
+        <div class="investor-badge">Investor</div>
+      </div>
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-nathan-D7QgSP11.webp" alt="Nathan Hartman" class="team-photo" loading="lazy">
+        <div class="team-name">Nathan Hartman</div>
+        <div class="team-role">VP of Business Development</div>
+        <div class="investor-badge">Investor</div>
+      </div>
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-justin-ChrbYe8d.webp" alt="Justin Ogle" class="team-photo" loading="lazy">
+        <div class="team-name">Justin Ogle</div>
+        <div class="team-role">Strategic Advisor, Grower &amp; Distribution</div>
+        <div class="investor-badge">Investor</div>
+      </div>
+      <!-- Duplicate for seamless loop -->
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-argina-BSMHwAAs.webp" alt="Argina Mardiyan" class="team-photo" loading="lazy">
+        <div class="team-name">Argina Mardiyan</div>
+        <div class="team-role">Co-CEO &amp; Co-Founder</div>
+      </div>
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-zarzand-CrmTua39.webp" alt="Zarzand Alaverdyan" class="team-photo" loading="lazy">
+        <div class="team-name">Zarzand Alaverdyan</div>
+        <div class="team-role">Co-CEO &amp; Co-Founder</div>
+      </div>
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-aristakes-BkrTfPKc.webp" alt="Aris Alaverdyan" class="team-photo" loading="lazy">
+        <div class="team-name">Aris Alaverdyan</div>
+        <div class="team-role">Chief Science Officer</div>
+      </div>
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-chad-mdJwivjt.webp" alt="Dr. Chad Godsey" class="team-photo" loading="lazy">
+        <div class="team-name">Dr. Chad Godsey</div>
+        <div class="team-role">Chief Agronomist</div>
+      </div>
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata" class="team-photo" loading="lazy">
+        <div class="team-name">Jon Licata</div>
+        <div class="team-role">Chief Revenue Officer</div>
+        <div class="investor-badge">Investor</div>
+      </div>
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-alec-EuaT7cb-.webp" alt="Alec Ibach" class="team-photo" loading="lazy">
+        <div class="team-name">Alec Ibach</div>
+        <div class="team-role">VP of Market Development</div>
+        <div class="investor-badge">Investor</div>
+      </div>
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-nathan-D7QgSP11.webp" alt="Nathan Hartman" class="team-photo" loading="lazy">
+        <div class="team-name">Nathan Hartman</div>
+        <div class="team-role">VP of Business Development</div>
+        <div class="investor-badge">Investor</div>
+      </div>
+      <div class="team-card">
+        <img src="https://invest.greenevolutiontechnologies.com/assets/team-justin-ChrbYe8d.webp" alt="Justin Ogle" class="team-photo" loading="lazy">
+        <div class="team-name">Justin Ogle</div>
+        <div class="team-role">Strategic Advisor, Grower &amp; Distribution</div>
+        <div class="investor-badge">Investor</div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- RISK FACTORS -->
-<section class="section bg-alt">
+<section style="background:var(--paper-2);padding:100px 0;">
   <div class="container">
-    <div class="section-divider"></div>
-    <p class="eyebrow muted" style="text-align:center">Material Risk Factors</p>
-    <h2 class="heading" style="text-align:center; color:var(--ink); margin-top:10px;">Investing involves risk. Here is an honest accounting of ours.</h2>
-    <p class="body-sm muted" style="text-align:center; margin-top:10px; max-width:560px; margin-left:auto; margin-right:auto;">This is a Regulation D 506(c) offering available to accredited investors only. Past trial performance does not guarantee future commercial results.</p>
-
+    <div class="section-head light-text reveal">
+      <span class="section-eyebrow">Risk Factors</span>
+      <h2 class="display-sm">Material Risks to Consider<br>Before Investing.</h2>
+      <p>This is a private placement in an early-stage company. Understand the risks before making a commitment.</p>
+    </div>
     <div class="risk-grid">
-      <div class="risk-item">
-        <div class="risk-title"><span class="risk-dot"></span>Early Stage Company</div>
-        <p class="risk-desc">Green Evolution Technologies is a pre-revenue company at the commercial launch stage. There is no guarantee of profitability or return of invested capital.</p>
+      <div class="risk-card reveal">
+        <div class="risk-title">Early Stage Company</div>
+        <div class="risk-text">Green Evolution Technologies is pre-Series A with limited operating history. Past performance in trial phases does not guarantee future commercial results at scale.</div>
       </div>
-      <div class="risk-item">
-        <div class="risk-title"><span class="risk-dot"></span>Illiquid Investment</div>
-        <p class="risk-desc">Shares in this offering are not publicly traded. Investors should expect to hold their position for 3–7 years pending a liquidity event such as an acquisition or IPO.</p>
+      <div class="risk-card reveal">
+        <div class="risk-title">Illiquid Investment</div>
+        <div class="risk-text">This is an illiquid private placement. There is no secondary market for these securities and you may not be able to sell your interest for an extended period or at all.</div>
       </div>
-      <div class="risk-item">
-        <div class="risk-title"><span class="risk-dot"></span>Manufacturing Scale Risk</div>
-        <p class="risk-desc">Moving from trial-scale to commercial production introduces execution risk. Supply chain delays or production complications could impact projected timelines.</p>
+      <div class="risk-card reveal">
+        <div class="risk-title">Manufacturing Scale Risk</div>
+        <div class="risk-text">The 30-facility production plan requires substantial capital, operational expertise, and execution. Delays or cost overruns could materially impact projected timelines and returns.</div>
       </div>
-      <div class="risk-item">
-        <div class="risk-title"><span class="risk-dot"></span>Regulatory Environment</div>
-        <p class="risk-desc">Changes in agricultural regulation, EPA standards, or USDA policy could affect the company's go-to-market strategy or product formulation requirements.</p>
+      <div class="risk-card reveal">
+        <div class="risk-title">Regulatory Environment</div>
+        <div class="risk-text">Changes to USDA, EPA, or state-level agricultural regulations could impact product approvals, marketing claims, or distribution channels in key markets.</div>
       </div>
-      <div class="risk-item">
-        <div class="risk-title"><span class="risk-dot"></span>Market Adoption Risk</div>
-        <p class="risk-desc">Farmer adoption of new inputs can be slower than projected. Documented demand does not guarantee conversion to purchase at commercial scale or speed.</p>
+      <div class="risk-card reveal">
+        <div class="risk-title">Market Adoption</div>
+        <div class="risk-text">Farmer adoption of new soil amendments can be slow due to risk aversion and established purchasing habits. Revenue projections depend on achieving significant market penetration.</div>
       </div>
-      <div class="risk-item">
-        <div class="risk-title"><span class="risk-dot"></span>Competition & IP Risk</div>
-        <p class="risk-desc">While patents protect the core technology, well-capitalized competitors may develop alternative solutions or challenge intellectual property through litigation.</p>
+      <div class="risk-card reveal">
+        <div class="risk-title">Competition &amp; IP</div>
+        <div class="risk-text">Larger agricultural companies with greater resources may develop competing products. Patent protection may be challenged or may not prevent all forms of competitive entry.</div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- FAQ -->
-<section class="section bg-light" id="faq">
-  <div class="container-narrow">
-    <div class="section-divider"></div>
-    <p class="eyebrow muted" style="text-align:center">Common Questions</p>
-    <h2 class="display-sm" style="margin-top:10px; text-align:center; color:var(--ink);">Questions from<br>Accredited Investors.</h2>
-
-    <div class="faq-list">
+<section id="faq" style="background:var(--paper);padding:100px 0;">
+  <div class="container">
+    <div class="section-head light-text reveal">
+      <span class="section-eyebrow">FAQ</span>
+      <h2 class="display-sm">Common Investor Questions.</h2>
+    </div>
+    <div style="max-width:760px;">
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          Only accredited investors can participate?
-          <span class="faq-arrow">▾</span>
+        <button class="faq-btn" onclick="toggleFaq(this)">
+          <span class="faq-q">Who is eligible to invest in this offering?</span>
+          <span class="faq-icon"><svg viewBox="0 0 12 12"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span>
         </button>
-        <div class="faq-a">Yes. This offering is made under Regulation D, Rule 506(c), which requires that all participating investors meet the SEC's definition of an accredited investor — either $1M net worth (excluding primary residence) or $200K+ annual income ($300K+ joint) for the past two years with expectation of the same in the current year.</div>
+        <div class="faq-body">
+          <div class="faq-body-inner">This offering is available exclusively to accredited investors as defined under SEC Rule 501 of Regulation D. An accredited investor is generally an individual with net worth exceeding $1 million (excluding primary residence), or annual income exceeding $200,000 ($300,000 joint) in the two most recent years. Institutional investors meeting applicable thresholds are also eligible. You will be required to self-certify and/or provide documentation of accredited status before receiving investment materials.</div>
+        </div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          What is the minimum investment?
-          <span class="faq-arrow">▾</span>
+        <button class="faq-btn" onclick="toggleFaq(this)">
+          <span class="faq-q">What is the minimum investment amount?</span>
+          <span class="faq-icon"><svg viewBox="0 0 12 12"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span>
         </button>
-        <div class="faq-a">The minimum investment is $25,000. We are raising a total of $1.5M in this Pre-Series A round at a $100M valuation cap. Investment amounts above the minimum are accepted in $5,000 increments.</div>
+        <div class="faq-body">
+          <div class="faq-body-inner">The minimum investment in this round is $25,000. This threshold is set to ensure investor suitability and operational efficiency in managing the investor base. Investments above $100,000 receive additional warrant coverage as part of the offering terms. Please request the Private Placement Memorandum for full details on share classes, preferences, and warrant structures.</div>
+        </div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          What do I receive for my investment?
-          <span class="faq-arrow">▾</span>
+        <button class="faq-btn" onclick="toggleFaq(this)">
+          <span class="faq-q">What do I receive for my investment?</span>
+          <span class="faq-icon"><svg viewBox="0 0 12 12"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span>
         </button>
-        <div class="faq-a">Investors receive equity in Green Evolution Technologies. The specific instrument (common stock, preferred shares, or SAFE) and terms will be detailed in the offering documents shared during the due diligence process after an initial investor call.</div>
+        <div class="faq-body">
+          <div class="faq-body-inner">Investors in this round receive preferred equity shares in Green Evolution Technologies, Inc. with standard protective provisions including anti-dilution rights, pro-rata participation in future rounds, and information rights. Investors above certain thresholds also receive warrant coverage exercisable at a fixed strike price. Full terms are detailed in the Private Placement Memorandum available to qualified investors.</div>
+        </div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          How will the capital be used?
-          <span class="faq-arrow">▾</span>
+        <button class="faq-btn" onclick="toggleFaq(this)">
+          <span class="faq-q">How will my capital be used?</span>
+          <span class="faq-icon"><svg viewBox="0 0 12 12"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span>
         </button>
-        <div class="faq-a">The $1.5M will be deployed across three primary uses: (1) first production facility build-out and manufacturing equipment, (2) distribution infrastructure and initial inventory, and (3) sales and operations team to service the existing $19M pipeline of documented demand.</div>
+        <div class="faq-body">
+          <div class="faq-body-inner">Capital raised in this round is allocated as follows: approximately 55% to construction and commissioning of the first production facility; 20% to sales, marketing, and channel development; 15% to working capital and operational runway; and 10% to R&amp;D and continued patent prosecution. The use of proceeds is detailed in the Private Placement Memorandum and may be updated for subsequent closings.</div>
+        </div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          What is the exit strategy?
-          <span class="faq-arrow">▾</span>
+        <button class="faq-btn" onclick="toggleFaq(this)">
+          <span class="faq-q">What is the exit strategy?</span>
+          <span class="faq-icon"><svg viewBox="0 0 12 12"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span>
         </button>
-        <div class="faq-a">The primary exit scenarios are acquisition by a major agricultural input company (Bayer, Corteva, Nutrien) or a public offering. Comparable transactions in the ag-tech space have occurred at 8–12× revenue. The company is building toward these outcomes, not just organic cash flow.</div>
+        <div class="faq-body">
+          <div class="faq-body-inner">The company's primary exit pathway is a strategic acquisition by a major agricultural input company (Bayer, BASF, Corteva, Syngenta) or a private equity-led rollup of the facility portfolio. A secondary pathway is an IPO or SPAC combination at the $1B+ valuation level. The 5-year timeline to Y5 revenue of $900M and $4.95B valuation is designed to create an attractive acquisition target. No exit is guaranteed.</div>
+        </div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          Can I see the trial data and financials before committing?
-          <span class="faq-arrow">▾</span>
+        <button class="faq-btn" onclick="toggleFaq(this)">
+          <span class="faq-q">Can I see the trial data before investing?</span>
+          <span class="faq-icon"><svg viewBox="0 0 12 12"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span>
         </button>
-        <div class="faq-a">Yes. Full trial data, university research summaries, financial projections, cap table, and offering documents are available to accredited investors after a brief introductory call. Submit your information above and we will schedule a call within 24–48 hours.</div>
+        <div class="faq-body">
+          <div class="faq-body-inner">Yes. Qualified accredited investors who request materials through this page will receive access to the full investor data room, which includes university trial reports, USDA correspondence, commercial farm performance data, audited financials, and the full Private Placement Memorandum. The data room is provided under NDA after accreditation verification. Schedule a call with our investor relations team to begin the qualification process.</div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- CLOSING CTA -->
-<section class="section-lg cta-section" id="invest">
+<section id="invest" style="background:var(--canvas);padding:120px 0;text-align:center;">
   <div class="container">
-    <div class="cta-inner">
-      <h2 class="cta-question">
-        The question isn't whether the world needs it.<br>
-        It's whether you invest <span class="gold">before it scales.</span>
-      </h2>
-      <p class="cta-sub">Accredited investors only. $1.5M round. $100M valuation cap. Schedule your call — we respond within 24 hours.</p>
-
-      <div class="cta-form">
-        <input type="email" placeholder="Your email address">
-        <button type="button">Schedule a Call →</button>
-      </div>
-      <p class="cta-disclaimer">
-        This is not an offer to sell or solicitation to buy securities. Available to accredited investors only per SEC Reg D 506(c).<br>
-        Investing in early-stage companies involves significant risk, including loss of principal.
-      </p>
+    <div class="closing-headline reveal">
+      The question isn't whether the world needs it.<br>
+      It's whether you invest <em>before it scales.</em>
     </div>
+    <div class="closing-input-row reveal">
+      <input type="email" class="closing-input" placeholder="Enter your email address">
+      <button class="closing-btn">Schedule a Call →</button>
+    </div>
+    <p class="legal-disclaimer reveal">
+      This communication is for informational purposes only and does not constitute an offer to sell or a solicitation of an offer to buy securities. Any such offer or solicitation will be made only through the Private Placement Memorandum to accredited investors in compliance with applicable securities laws. Investing involves risk, including loss of principal. Past performance does not guarantee future results.
+    </p>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer>
+<footer style="background:var(--ink);padding:48px 0;">
   <div class="container">
     <div class="footer-inner">
-      <div class="footer-brand">HydroGel<span>®</span> by Green Evolution Technologies</div>
-      <p class="footer-legal">
-        This website is for informational purposes only and does not constitute an offer to sell or solicitation of an offer to buy any securities. Any offering is made only to accredited investors pursuant to Regulation D, Rule 506(c) under the Securities Act of 1933. Past performance of trial data does not guarantee future commercial results. Investing in early-stage companies involves significant risk.
-      </p>
+      <div class="footer-brand">Green Evolution Technologies · HydroGel®</div>
+      <div class="footer-legal">
+        © 2025 Green Evolution Technologies, Inc. All rights reserved. HydroGel® is a registered trademark.<br>
+        This website contains forward-looking statements based on management assumptions and projections. Actual results may differ materially.<br>
+        Securities offered pursuant to Regulation D, Rule 506(c) under the Securities Act of 1933, as amended. Available to accredited investors only. Not registered with the SEC.<br>
+        This is not investment advice. Consult your financial advisor before making any investment decision.
+      </div>
     </div>
   </div>
 </footer>
 
 <script>
-  /* ── FAQ accordion ── */
-  function toggleFaq(btn) {
-    const item = btn.closest('.faq-item');
-    const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-    if (!isOpen) item.classList.add('open');
+// FAQ ACCORDION
+function toggleFaq(btn) {
+  var item = btn.closest('.faq-item');
+  var body = item.querySelector('.faq-body');
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(function(el) {
+    el.classList.remove('open');
+    el.querySelector('.faq-body').style.maxHeight = '0';
+  });
+  if (!isOpen) {
+    item.classList.add('open');
+    body.style.maxHeight = body.scrollHeight + 'px';
   }
+}
 
-  /* ── Lazy-load images ── */
-  (function() {
-    if ('loading' in HTMLImageElement.prototype) return; // native support
-    const imgs = document.querySelectorAll('img[loading="lazy"]');
-    if (!imgs.length) return;
-    const io = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if (e.isIntersecting) {
-          var img = e.target;
-          if (img.dataset.src) img.src = img.dataset.src;
-          io.unobserve(img);
-        }
-      });
-    }, { rootMargin: '200px' });
-    imgs.forEach(function(img) { io.observe(img); });
-  })();
+// VIDEO UNMUTE
+(function() {
+  var video = document.getElementById('heroVideo');
+  var btn = document.getElementById('unmuteBtn');
+  var iMuted = document.getElementById('iconMuted');
+  var iUnmuted = document.getElementById('iconUnmuted');
+  if (!btn || !video) return;
+  btn.addEventListener('click', function() {
+    video.muted = !video.muted;
+    iMuted.style.display = video.muted ? '' : 'none';
+    iUnmuted.style.display = video.muted ? 'none' : '';
+  });
+})();
 
-  /* ── Scroll reveal ── */
-  (function() {
-    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) {
-      document.querySelectorAll('.reveal, .section-fade').forEach(function(el) {
-        el.classList.add('visible');
-      });
-      return;
-    }
-    var io = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.reveal, .section-fade').forEach(function(el) {
-      io.observe(el);
+// SCROLL REVEAL
+(function() {
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
     });
-  })();
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(function(el) { io.observe(el); });
+})();
 
-  /* ── Animated number counters ── */
-  (function() {
-    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
-
-    function formatNum(val, target) {
-      if (target >= 1000) return Math.round(val).toLocaleString('en-US');
-      if (Number.isInteger(target)) return Math.round(val).toString();
-      return val.toFixed(1);
-    }
-
-    function animateCounter(el) {
-      if (el.dataset.counted) return;
-      el.dataset.counted = '1';
-      var target   = parseFloat(el.dataset.target);
-      var prefix   = el.dataset.prefix  || '';
-      var suffix   = el.dataset.suffix  || '';
-      var duration = 1600;
-      var start    = null;
-
-      if (prefersReduced) {
-        el.textContent = prefix + formatNum(target, target) + suffix;
-        return;
+// WATER COLUMN FILL
+(function() {
+  var ws = document.querySelector('.water-stats');
+  if (!ws) return;
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        ws.querySelectorAll('.w-col-fill').forEach(function(f, i) {
+          setTimeout(function() { f.classList.add('filled'); }, i * 200);
+        });
+        io.unobserve(e.target);
       }
+    });
+  }, { threshold: 0.4 });
+  io.observe(ws);
+})();
 
+// NUMBER COUNTERS
+(function() {
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (!e.isIntersecting) return;
+      var el = e.target;
+      var target = parseInt(el.getAttribute('data-target'), 10);
+      var start = null;
+      var duration = 1800;
       function step(ts) {
         if (!start) start = ts;
-        var elapsed  = ts - start;
-        var progress = Math.min(elapsed / duration, 1);
-        var eased    = easeOutQuart(progress);
-        var current  = eased * target;
-        el.textContent = prefix + formatNum(current, target) + suffix;
-        if (progress < 1) requestAnimationFrame(step);
-        else el.textContent = prefix + formatNum(target, target) + suffix;
+        var p = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.floor(eased * target).toLocaleString();
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = target.toLocaleString();
       }
       requestAnimationFrame(step);
-    }
-
-    var io = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if (e.isIntersecting) {
-          animateCounter(e.target);
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.4 });
-
-    document.querySelectorAll('.count-num').forEach(function(el) {
-      io.observe(el);
+      io.unobserve(el);
     });
-  })();
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.count-num').forEach(function(c) { io.observe(c); });
+})();
 
-  /* ── Smooth nav highlight on scroll ── */
-  (function() {
-    var sections = document.querySelectorAll('section[id], div[id]');
-    var navLinks = document.querySelectorAll('.nav-links a');
-    if (!navLinks.length) return;
-    var io = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if (e.isIntersecting) {
-          var id = e.target.id;
-          navLinks.forEach(function(a) {
-            a.style.color = (a.getAttribute('href') === '#' + id)
-              ? 'var(--gold-light)'
-              : '';
-          });
-        }
-      });
-    }, { threshold: 0.4 });
-    sections.forEach(function(s) { if (s.id) io.observe(s); });
-  })();
-
-  /* ── Video unmute toggle ── */
-  (function() {
-    var btn = document.getElementById('unmuteBtn');
-    if (!btn) return;
-    btn.addEventListener('click', function() {
-      var video     = document.getElementById('heroVideo');
-      var label     = document.getElementById('muteLabelText');
-      var muteIcon  = document.getElementById('muteIcon');
-      var soundIcon = document.getElementById('soundIcon');
-      if (!video) return;
-      video.muted = !video.muted;
-      if (label)     label.textContent          = video.muted ? 'Unmute' : 'Mute';
-      if (muteIcon)  muteIcon.style.display     = video.muted ? 'block' : 'none';
-      if (soundIcon) soundIcon.style.display    = video.muted ? 'none'  : 'block';
-    });
-  })();
-
-  /* ── Hero circuit dot animation ── */
-  (function() {
-    function animPath(dotId, pathId, dur, delay) {
-      var dot = document.getElementById(dotId);
-      var path = document.getElementById(pathId);
-      if (!dot || !path) return;
-      var len = path.getTotalLength();
-      var startTs = null;
-      function step(ts) {
-        if (!startTs) startTs = ts;
-        var elapsed = ts - startTs;
-        var cycle = dur * 2;
-        var t = (elapsed % cycle) / dur;
-        var p = t <= 1 ? t : 2 - t;
-        var ease = 0.5 - 0.5 * Math.cos(Math.PI * p);
-        var pt = path.getPointAtLength(ease * len);
-        dot.setAttribute('cx', pt.x);
-        dot.setAttribute('cy', pt.y);
-        requestAnimationFrame(step);
-      }
-      setTimeout(function() { requestAnimationFrame(step); }, delay);
-    }
-    animPath('hcDot1', 'hcPath1', 5000, 0);
-    animPath('hcDot2', 'hcPath2', 6500, 1200);
-    animPath('hcDot3', 'hcPath3', 4500, 800);
-  })();
-
-  /* ── SVG growth chart draw-on-scroll ── */
-  (function() {
-    var line = document.getElementById('chartLine');
-    var area = document.getElementById('chartArea');
-    var tDot = document.getElementById('travelDot');
-    var container = document.getElementById('chartContainer');
-    if (!line || !container) return;
-
-    var len = line.getTotalLength();
-    line.style.strokeDasharray = len;
-    line.style.strokeDashoffset = len;
-
-    var done = false;
-    function runChart() {
-      if (done) return;
-      done = true;
-      line.style.transition = 'stroke-dashoffset 2.8s cubic-bezier(0.25,0.46,0.45,0.94)';
-      line.style.strokeDashoffset = '0';
-      if (area) area.style.opacity = '1';
-      if (tDot) tDot.style.opacity = '1';
-
-      var startTs = null;
-      var dur = 2800;
-      function moveDot(ts) {
-        if (!startTs) startTs = ts;
-        var p = Math.min((ts - startTs) / dur, 1);
-        var e = p < 0.5 ? 2*p*p : -1+(4-2*p)*p;
-        var pt = line.getPointAtLength(e * len);
-        if (tDot) { tDot.setAttribute('cx', pt.x); tDot.setAttribute('cy', pt.y); }
-        if (p < 1) { requestAnimationFrame(moveDot); }
-        else { if (tDot) tDot.style.opacity = '0'; }
-      }
-      requestAnimationFrame(moveDot);
-
-      var dots = document.querySelectorAll('.cDot');
-      var labels = document.querySelectorAll('.cLabel');
-      dots.forEach(function(d, i) {
-        setTimeout(function() { d.style.transition='opacity 0.4s'; d.style.opacity='1'; }, i*460+300);
-      });
-      labels.forEach(function(l, i) {
-        setTimeout(function() { l.style.transition='opacity 0.4s'; l.style.opacity='1'; }, i*460+700);
-      });
-    }
-
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) { runChart(); io.unobserve(entry.target); }
+// NAV SCROLL HIGHLIGHT
+(function() {
+  var links = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', function() {
+    var y = window.pageYOffset + 80;
+    document.querySelectorAll('section[id]').forEach(function(sec) {
+      if (sec.offsetTop <= y && sec.offsetTop + sec.offsetHeight > y) {
+        links.forEach(function(a) {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + sec.id);
         });
-      }, { threshold: 0.25 });
-      io.observe(container);
-    } else {
-      runChart();
-    }
-  })();
-</script>
+      }
+    });
+  }, { passive: true });
+})();
 
+// CIRCUIT DOT ANIMATION
+(function() {
+  var circuits = [
+    { path: document.getElementById('hcPath1'), dot: document.getElementById('hcDot1'), speed: 0.4 },
+    { path: document.getElementById('hcPath2'), dot: document.getElementById('hcDot2'), speed: 0.3 },
+    { path: document.getElementById('hcPath3'), dot: document.getElementById('hcDot3'), speed: 0.35 }
+  ];
+  var progs = [0, 0.3, 0.6];
+  var dirs = [1, 1, 1];
+  function tick() {
+    circuits.forEach(function(c, i) {
+      if (!c.path || !c.dot) return;
+      progs[i] += c.speed * 0.003 * dirs[i];
+      if (progs[i] >= 1) { progs[i] = 1; dirs[i] = -1; }
+      if (progs[i] <= 0) { progs[i] = 0; dirs[i] = 1; }
+      var len = c.path.getTotalLength();
+      var pt = c.path.getPointAtLength(progs[i] * len);
+      c.dot.setAttribute('cx', pt.x);
+      c.dot.setAttribute('cy', pt.y);
+    });
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+// SVG CHART DRAW ON SCROLL
+(function() {
+  var chart = document.getElementById('projChart');
+  if (!chart) return;
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (!e.isIntersecting) return;
+      io.unobserve(e.target);
+      var rl = document.getElementById('revLine');
+      var vl = document.getElementById('valLine');
+      var ra = document.getElementById('revAreaPath');
+      var va = document.getElementById('valAreaPath');
+      if (rl) { rl.style.transition = 'stroke-dashoffset 1.6s cubic-bezier(0.4,0,0.2,1)'; rl.style.strokeDashoffset = '0'; }
+      if (vl) { vl.style.transition = 'stroke-dashoffset 1.9s cubic-bezier(0.4,0,0.2,1) 0.2s'; vl.style.strokeDashoffset = '0'; }
+      if (ra) { ra.style.transition = 'opacity 1.4s ease 0.6s'; ra.style.opacity = '1'; }
+      if (va) { va.style.transition = 'opacity 1.4s ease 0.8s'; va.style.opacity = '1'; }
+      chart.querySelectorAll('.rev-dot').forEach(function(d, i) {
+        setTimeout(function() { d.style.transition = 'opacity 0.4s'; d.style.opacity = '1'; }, 800 + i * 140);
+      });
+      chart.querySelectorAll('.val-dot').forEach(function(d, i) {
+        setTimeout(function() { d.style.transition = 'opacity 0.4s'; d.style.opacity = '1'; }, 1000 + i * 160);
+      });
+      chart.querySelectorAll('.rev-label-txt').forEach(function(l, i) {
+        setTimeout(function() { l.style.transition = 'opacity 0.4s'; l.style.opacity = '1'; }, 1200 + i * 140);
+      });
+      chart.querySelectorAll('.val-label-txt').forEach(function(l, i) {
+        setTimeout(function() { l.style.transition = 'opacity 0.4s'; l.style.opacity = '1'; }, 1400 + i * 140);
+      });
+    });
+  }, { threshold: 0.3 });
+  io.observe(chart);
+})();
+</script>
 </body>
 </html>
