@@ -365,6 +365,213 @@ nav.scrolled {
 
 /* CHART */
 #chartContainer { position: relative; width: 100%; height: 420px; margin-top: 48px; }
+
+/* =====================================================
+   MOBILE — comprehensive overrides (max 640px)
+   ===================================================== */
+@media (max-width: 640px) {
+
+  /* Global section padding */
+  section[style*="padding:100px"] { padding-top: 64px !important; padding-bottom: 64px !important; }
+  section[style*="padding:120px"] { padding-top: 80px !important; padding-bottom: 80px !important; }
+  section[style*="padding:80px"]  { padding-top: 56px !important; padding-bottom: 0 !important; }
+
+  /* Nav: tighter logo on mobile */
+  .nav-logo img { height: 52px; }
+
+  /* Floating pill: smaller, lower on mobile */
+  .float-cta { bottom: 16px; right: 16px; padding: 12px 20px; font-size: 0.72rem; gap: 8px; }
+
+  /* Hero: add top breathing room for fixed nav */
+  .hero-section { padding: 52px 0 64px; }
+  .hero-sub { font-size: 0.88rem; margin-bottom: 28px; }
+
+  /* Water columns: scale down so they fit on small screen */
+  .water-stats { gap: 16px; margin-bottom: 28px; }
+  .w-col-track { width: 44px; height: 120px; }
+  .w-col-num { font-size: 0.95rem; }
+  .w-col-label { font-size: 0.6rem; max-width: 56px; }
+
+  /* Hero CTA buttons: stack vertically */
+  .hero-cta-row { flex-direction: column; gap: 10px; }
+  .hero-cta-row .btn-gold,
+  .hero-cta-row .btn-ghost { width: 100%; text-align: center; }
+
+  /* Hero form: compact padding */
+  .hero-form-card { padding: 24px 20px; }
+  .form-row { grid-template-columns: 1fr; }
+
+  /* Section heads: tighter */
+  .section-head { margin-bottom: 32px; }
+  .section-head p { font-size: 0.85rem; }
+  .display-sm { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+
+  /* Press bar: wrap items neatly */
+  .press-bar { padding: 16px 0; }
+  .press-bar-inner { gap: 12px; }
+  .press-label { font-size: 0.62rem; }
+  .press-items { gap: 14px; }
+  .press-item { font-size: 0.68rem; }
+  .press-dot { display: none; }
+
+  /* Problem grid: 1 col already set, tighten padding */
+  .problem-item { padding: 20px 18px; }
+  .problem-num { font-size: 2rem; }
+
+  /* Solution big number */
+  .solution-big-num { font-size: clamp(3rem, 14vw, 5rem); }
+  .solution-big-label { margin-bottom: 36px; font-size: 0.72rem; }
+  .sol-stat-num { font-size: 1.1rem; }
+
+  /* Traction grid: 2 col already but tighten padding */
+  .traction-card { padding: 20px 16px; }
+  .traction-card-num { font-size: 2rem; }
+
+  /* Tables: horizontal scroll */
+  .lt, .dt { font-size: 0.75rem; }
+  .lt thead th, .dt thead th { padding: 8px 10px; font-size: 0.6rem; }
+  .lt tbody tr td, .dt tbody tr td { padding: 10px 10px; }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Revenue grid: tighter */
+  .rev-cell { padding: 24px 16px; }
+
+  /* Comps grid: already 1-col */
+  .comps-grid { max-width: 100%; }
+
+  /* Reasons: already 1-col at 480 */
+  .reason-card { padding: 20px 18px; }
+
+  /* Patent grid: already 1-col */
+  .moat-card { padding: 24px 20px; }
+  .moat-stats { gap: 16px; }
+
+  /* Team track: smaller cards */
+  .team-card { width: 148px; }
+  .team-track-wrap::before,
+  .team-track-wrap::after { width: 48px; }
+
+  /* Validation: image hidden on mobile to reduce scroll */
+  .validation-grid > div:last-child { display: none; }
+
+  /* Chart: shorter on mobile */
+  #chartContainer { height: 260px; }
+
+  /* Closing CTA: stack input + button */
+  .closing-headline { font-size: clamp(1.6rem, 6.5vw, 2.8rem); margin-bottom: 28px; }
+  .closing-input-row { flex-direction: column; max-width: 100%; gap: 10px; }
+  .closing-input { border-right: 1px solid rgba(237,232,219,0.2); border-radius: 3px; }
+  .closing-btn { border-radius: 3px; text-align: center; }
+
+  /* FAQ: tighter */
+  .faq-q { font-size: 0.85rem; }
+  .faq-btn { padding: 16px 0; }
+}
+
+/* Extra small: 390px and below */
+@media (max-width: 390px) {
+  .container { padding: 0 16px; }
+  .water-stats { gap: 10px; }
+  .w-col-track { width: 38px; height: 100px; }
+  .traction-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+}
+
+/* =====================================================
+   MOBILE NAV — full redesign (max 768px)
+   Logo: centered hero overlay, large
+   Nav bar: hidden
+   Bottom tab bar: 4 key sections
+   ===================================================== */
+@media (max-width: 768px) {
+  /* Hide desktop nav bar entirely on mobile */
+  nav { display: none; }
+
+  /* Mobile logo: centered overlay on the video hero */
+  .mobile-logo-hero {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    pointer-events: none;
+  }
+  .mobile-logo-hero img {
+    width: min(72vw, 280px);
+    filter: brightness(0) invert(1) drop-shadow(0 4px 20px rgba(0,0,0,0.5));
+  }
+  .mobile-logo-pill {
+    background: rgba(184,147,12,0.15);
+    border: 1px solid rgba(184,147,12,0.4);
+    color: rgba(237,232,219,0.9);
+    font-family: var(--f-body);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+  }
+
+  /* Floating pill: left-center on mobile (not bottom-right, avoids tab bar conflict) */
+  .float-cta { bottom: 80px; right: 16px; padding: 12px 20px; font-size: 0.72rem; }
+
+  /* BOTTOM TAB BAR */
+  .mobile-tab-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 400;
+    background: rgba(11,31,18,0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(237,232,219,0.08);
+    padding: 10px 0 max(10px, env(safe-area-inset-bottom));
+  }
+  .tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: rgba(237,232,219,0.45);
+    font-family: var(--f-body);
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tab-item.active, .tab-item:hover { color: var(--gold-light); }
+  .tab-item svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .tab-item.cta-tab {
+    color: var(--canvas);
+    background: var(--gold);
+    margin: -8px 8px;
+    border-radius: 12px;
+    padding: 6px 4px 10px;
+    flex: 1.2;
+  }
+  .tab-item.cta-tab svg { stroke: var(--canvas); }
+
+  /* Add bottom padding to page content so tab bar doesn't cover it */
+  body { padding-bottom: 64px; }
+}
+
+/* Desktop: hide mobile-only elements */
+@media (min-width: 769px) {
+  .mobile-logo-hero { display: none; }
+  .mobile-tab-bar { display: none; }
+  #regdPill { display: block !important; }
+}
+
+/* table horizontal scroll wrapper */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 6px; }
 </style>
 </head>
 <body>
@@ -397,13 +604,44 @@ nav.scrolled {
   Schedule a Call
 </a>
 
+<!-- MOBILE BOTTOM TAB BAR -->
+<nav class="mobile-tab-bar">
+  <a href="#problem" class="tab-item">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Problem
+  </a>
+  <a href="#solution" class="tab-item">
+    <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 3.5-2.5 6-4 8H9c-1.5-2-4-4.5-4-8a7 7 0 0 1 7-7z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
+    Solution
+  </a>
+  <a href="#invest" class="tab-item cta-tab">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    Book Call
+  </a>
+  <a href="#traction" class="tab-item">
+    <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Traction
+  </a>
+  <a href="#faq" class="tab-item">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    FAQ
+  </a>
+</nav>
+
 <!-- VIDEO HERO -->
 <section class="video-hero">
   <video id="heroVideo" autoplay muted loop playsinline>
     <source src="https://assets.cdn.filesafe.space/IUFCbHtG5zmLcNxfm2Ke/media/6a47e6439114462c71f71120.mp4" type="video/mp4">
   </video>
   <div class="video-overlay"></div>
-  <div class="regd-pill">Reg D 506(c) · Accredited Investors Only</div>
+
+  <!-- Mobile: big centered logo over video -->
+  <div class="mobile-logo-hero">
+    <img src="https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68fcb146e579f9846b78dd04.png" alt="HydroGel by Green Evolution Technologies">
+    <span class="mobile-logo-pill">Reg D 506(c) · Investor Overview</span>
+  </div>
+
+  <div class="regd-pill" style="display:none;" id="regdPill">Reg D 506(c) · Accredited Investors Only</div>
   <button class="unmute-btn" id="unmuteBtn" aria-label="Toggle mute">
     <svg id="iconMuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
@@ -697,7 +935,7 @@ nav.scrolled {
     <div class="roi-grid">
       <div class="reveal">
         <div class="table-title">Cost Comparison Per Acre — Annual</div>
-        <table class="lt">
+        <div class="table-wrap"><table class="lt">
           <thead>
             <tr>
               <th>Line Item</th>
@@ -737,12 +975,12 @@ nav.scrolled {
               <td class="mono hl"><strong>$555</strong></td>
             </tr>
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       <div class="reveal">
         <div class="table-title">Year-One ROI Model — Per 100 Acres</div>
-        <table class="lt">
+        <div class="table-wrap"><table class="lt">
           <thead>
             <tr>
               <th>Metric</th>
@@ -777,7 +1015,7 @@ nav.scrolled {
               <td class="mono hl">1.2M gal</td>
             </tr>
           </tbody>
-        </table>
+        </table></div>
       </div>
     </div>
   </div>
@@ -809,7 +1047,7 @@ nav.scrolled {
 
     <div class="reveal">
       <div style="font-family:var(--f-body);font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--bone-dim);margin-bottom:12px;">5-Year Growth Schedule</div>
-      <table class="dt">
+      <div class="table-wrap"><table class="dt">
         <thead>
           <tr>
             <th>Year</th>
@@ -862,7 +1100,7 @@ nav.scrolled {
             <td class="mono">$891,756</td>
           </tr>
         </tbody>
-      </table>
+      </table></div>
     </div>
   </div>
 </section>
