@@ -812,6 +812,23 @@ nav.scrolled {
   /* Faster ticker on mobile */
   .ticker-track { animation-duration: 6s; }
 
+  /* Tighter container gutter on mobile */
+  .container { padding: 0 16px; }
+
+  /* Water-stats bar chart: full-bleed, equal columns */
+  .water-stats {
+    width: calc(100% + 32px);
+    margin-left: -16px;
+    padding: 0 16px;
+    gap: 0;
+    justify-content: stretch;
+    box-sizing: border-box;
+  }
+  .w-col { flex: 1; padding: 0 6px; }
+  .w-col-track { width: 100%; }
+  .w-col-num { font-size: 1.05rem; }
+  .w-col-label { font-size: 0.62rem; max-width: none; }
+
   /* Hide desktop nav */
   nav { display: none; }
 
@@ -1071,21 +1088,21 @@ nav.scrolled {
         <div class="water-stats reveal">
           <div class="w-col">
             <div class="w-col-track">
-              <div class="w-col-fill" style="height:90px"></div>
+              <div class="w-col-fill" style="height:32px"></div>
             </div>
             <div class="w-col-num">50%</div>
             <div class="w-col-label">Less Water<br>Per Acre</div>
           </div>
           <div class="w-col">
             <div class="w-col-track">
-              <div class="w-col-fill" style="height:142px"></div>
+              <div class="w-col-fill" style="height:51px"></div>
             </div>
             <div class="w-col-num">79%</div>
             <div class="w-col-label">More Crop<br>Yield</div>
           </div>
           <div class="w-col">
             <div class="w-col-track">
-              <div class="w-col-fill" style="height:171px"></div>
+              <div class="w-col-fill" style="height:180px"></div>
             </div>
             <div class="w-col-num">280%</div>
             <div class="w-col-label">Average ROI<br>Year One</div>
