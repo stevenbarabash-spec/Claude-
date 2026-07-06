@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EMPIRE Entertainment Connecticut | Event DJ &amp; Entertainment Services</title>
+  <meta name="description" content="Empire Entertainment CT — premier DJ and event entertainment serving Connecticut and New York. Weddings, mitzvahs, corporate events, proms and more." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://empireentertainmentct.com/" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Empire Entertainment Connecticut | Event DJ & Entertainment Services" />
+<meta property="og:description" content="Premier DJ and event entertainment serving Connecticut and New York. Weddings, mitzvahs, corporate events and more." />
+<meta property="og:image" content="assets/imgz/empire_logo.png" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" href="assets/imgz/favicon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Space+Mono:wght@400;700&family=Montserrat:wght@700;900&display=swap" rel="stylesheet" />
+
+<!-- Your CSS -->
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+   
+
+.hero_h2 {
+  font-family: 'Montserrat', 'Arial Black', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, #ff00cc, #ff6600, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  position: relative;
+  margin-top: 0;
+  margin-bottom: 20px;
+  line-height: 1.2;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+.hero_h2::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #ff00cc, #ff6600);
+  margin-top: 10px;
+  border-radius: 2px;
+  animation: expandLine 1.5s ease forwards;
+}
+
+/* ===== P STYLES ===== */
+.hero_p {
+  font-family: 'Montserrat', 'Arial', sans-serif;
+  font-size: 1.2rem;
+  line-height: 1.9;
+  color: #e0e0e0;
+  letter-spacing: 0.5px;
+  max-width: 720px;
+  text-align:center;
+  margin-bottom: 18px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  border-left: 3px solid #ff00cc;
+  padding-left: 14px;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.hero_h2:hover {
+  border-left-color: #ff6600;
+  color: #ffffff;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes glowPulse {
+  0%, 100% { filter: brightness(1); }
+  50%       { filter: brightness(1.3) drop-shadow(0 0 8px #ff00cc); }
+}
+
+@keyframes expandLine {
+  from { width: 0; }
+  to   { width: 60px; }
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 767px) {
+  .hero-content {
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+  .hero_h2 {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    text-align: center;
+    width: 100%;
+  }
+  .hero_p {
+    font-size: 1rem;
+    border-left: none;
+    padding-left: 0;
+    text-align: center;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero_h2 {
+    font-size: 1rem;
+    letter-spacing: 1px;
+  }
+  .hero_p {
+    font-size: 0.9rem;
+  }
+}
+
+  </style>
+  
+</head>
+<body>
+
+
+<!-- CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- GRAIN -->
+<canvas id="grain"></canvas>
+
+<nav class="nav-bar">
+  <a href="#Home" class="nav-logo">
+   
+    <img  class="header-logo" src="assets/imgz/empire_logo.png" alt="Empire Entertainment Connecticut logo" />
+  </a>
+
+  <ul class="nav-links">
+    <li class="nav-menu-logo"><img src="assets/imgz/empire_logo.png" alt="Empire Entertainment CT" /></li>
+    <li><a href="#Home">HOME</a></li>
+   
+    <li><a href="#services">What We Do</a></li>
+    <li><a href="#showcase">SHOWCASE</a></li>
+    <li><a href="#testimonials">TESTIMONIALS</a></li>
+    <li><a href="#ef">Book Your Event</a></li>
+  </ul>
+
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- Mobile Overlay -->
+<div class="nav-overlay" id="navOverlay"></div>
+
+
+
+<section class="scroll-container" id="Home">
+  <div class="sticky-container">
+
+    <!-- Layer 1: Background — STATIC, never moves -->
+    <div class="bg-main"></div>
+
+    <!-- Layer 2: SINNER spray-paint — scrolls UPWARD -->
+    <div class="sinner-scroll"></div>
+
+    <!-- Layer 3: Artist portrait — scrolls DOWNWARD -->
+    <div class="mandy-scroll">
+      <div class="bottom-fade"></div>
+    </div>
+
+    <!-- Layer 4: Dark overlay — fades IN -->
+    <div class="overlay"></div>
+
+    <!-- Layer 5: EP cover + button — fades OUT -->
+    <div class="hero-content">
+      <!--<img-->
+      <!--  src=""-->
+        
+      <!--  width="300"-->
+      <!--  height="300"-->
+      <!--/>-->
+      <h1 class="hero_h2">We Don't Just Play Songs. We Build Momentum.</h1>
+      <p class="hero_p">Connecticut and New York's Premier DJ & Entertainment Company</p>
+      <a
+        href="#ef"
+        class="rsvp-button"
+      >Get In Touch</a>
+    </div>
+
+  </div>
+</section>
+
+<section id="about">
+
+ <div class="ef-logo-stripe">
+    <img
+      src="https://static.wixstatic.com/media/8bfafc_5ba0e508bc1548d2922c2f000d9fe18f~mv2.png"
+      alt="EMPIRE Entertainment CT"
+      id="ef-logo"
+    />
+  </div>
+
+ <h4 id="typing"></h4>
+ 
+ 
+  <p>
+    "EmpireEntertainmentCT is a DJ Entertainment company, based in Greenwich, CT.  We create a high ENERGY atmosphere and ENGAGE your guests in an EXTRAORDINARY experience.
+  </p>
+  
+  
+<a href="#ef" class="cta-strip-btn">
+  Get In Touch
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="5" y1="12" x2="19" y2="12"/>
+    <polyline points="12 5 19 12 12 19"/>
+  </svg>
+</a>
+
+</section>
+
+<div class="local-success-track">
+  <div class="local-success-sticky">
+    <div class="ls-content">
+      <div class="chapter-heading">
+        <span class="line line-1" data-dir="left">Celebrating Weddings & Events</span>
+        <span class="line line-2" data-dir="right">Across the Northeas</span>
+      </div>
+      <div class="chapter-year">L'escale/Greenwich CT  &nbsp;/&nbsp; March 2026</div>
+      <div class="gold-line"></div>
+      <div class="chapter-text">
+        <p>
+         If you want your dance floor taken to a whole new level, you have to go with DJ Brandon. 
+        </p>
+        <p>
+          Empire Entertainment CT brings unmatched energy, seamless execution, and a passion for music that turns every event into an unforgettable experience.
+
+        </p>
+        <a href="#ef" class="cta-strip-btn">
+          Get In Touch
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="photo-wrapper">
+      <div class="ls-photo" id="ls-img1">
+        <img src="assets/imgz/local_1.webp" alt="Newspaper article" />
+      </div>
+      <div class="ls-photo" id="ls-img2">
+        <img src="assets/imgz/local_2.webp" alt="Album cover" />
+      </div>
+      <div class="ls-photo" id="ls-img3">
+        <img src="assets/imgz/local_3.webp" alt="Live show" />
+      </div>
+      <div class="ls-photo" id="ls-img4">
+        <img src="assets/imgz/et_2.jpg" alt="Band photo" />
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<section id="music">
+  <div class="music-inner">
+
+    <!-- Section Heading — unchanged, uses existing CSS -->
+    <div class="section-heading">
+      <span class="line line-1" data-dir="left">MEET OUR LEAD DJ</span>
+      <span class="line line-2" data-dir="right">BRANDON</span>
+    </div>
+
+    <!-- DJ Cards — redesigned -->
+    <div class="dj-cards">
+
+      <!-- CARD 1: DJ Brandon -->
+      <div class="album-card dj-card" id="djCard1">
+        <div class="dj-card-inner dj-card--left">
+
+          <!-- Text Side -->
+          <div class="dj-text-side">
+            <div class="dj-card-num">01</div>
+            <div class="dj-gold-line"></div>
+            <div class="dj-tagline">
+              <span>ENGAGING.</span>
+              <span>ENERGIZING.</span>
+              <span>EXTRAORDINARY.</span>
+            </div>
+            <p class="dj-para">
+              If you are looking for a DJ to get in the mix and inspire your guests, Brandon is your DJ. He engages the room so you have the time of your life! If you prefer laid back, that's also cool — enjoy the tunes and transitions between songs and genres of your taste. DJ Brandon brings out your inner child and makes each person feel energized on the dance floor. He's far from your ordinary DJ — with him your party will be extraordinary!
+            </p>
+            <a href="https://www.instagram.com/empireentertainmentct/" target="_blank" class="dj-cta">
+              <span>VIEW ON INSTAGRAM</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </a>
+          </div>
+
+          <!-- Image Side -->
+          <div class="dj-img-side" style="position: relative;">
+            <div class="dj-img-wrap">
+              <img src="assets/imgz/dj_brandon.webp" alt="DJ Brandon" />
+              <div class="dj-img-overlay"></div>
+              <div class="dj-img-tag">DJ, BRANDON</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- CARD 2: Empire Entertainment -->
+      <div class="album-card dj-card" id="djCard2">
+        <div class="dj-card-inner dj-card--right">
+
+          <!-- Image Side -->
+          <div class="dj-img-side">
+    <div class="dj-img-wrap">
+        <video
+            class="dj-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto">
+            <source src="assets/imgz/empire-vdo.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <div class="dj-img-overlay"></div>
+        <div class="dj-img-tag">EMPIRE ENT. CT</div>
+    </div>
+</div>
+
+          
+        </div>
+      </div>
+
+    </div><!-- /dj-cards -->
+  </div>
+</section>
+
+
+
+<div class="reality-tv-track">
+  <div class="reality-tv-sticky">
+    <div class="rtv-content">
+      <div class="chapter-heading">
+        <span class="line line-1" data-dir="left">Meet The Team </span>
+        <span class="line line-2" data-dir="right">Behind The Music</span>
+      </div>
+       
+      <div class="chapter-text">
+        <p>
+          Empire Entertainment CT was built on one simple belief — every event deserves more than just background music. Led by DJ Brandon,
+        </p>
+        <p>
+          our incredibly talented team of entertainment professionals brings passion, precision, and personality to every event we touch. From intimate celebrations to massive productions, we show up ready to make your night legendary.
+
+
+        </p>
+      </div>
+    </div>
+    <div class="rtv-photo" id="rtv-img1">
+      <img src="assets/imgz/empire_music_1.webp" alt="Battle round" />
+    </div>
+    <div class="rtv-photo" id="rtv-img2">
+      <img src="assets/imgz/empire_music_2.webp" alt="Blind auditions" />
+    </div>
+    <div class="rtv-photo" id="rtv-img3">
+      <img src="assets/imgz/et_3.jpg" alt="Team Gwen" />
+    </div>
+    
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SERVICE SECTION — UPDATED (Weddings · Corporate · Private)
+     Three panels, new icons, counter 01/03.
+     ════════════════════════════════════════════════════════════════ -->
+
+<style>
+  :root {
+    --emp-magenta: rgb(255, 0, 255);
+    --emp-magenta-soft: rgba(255, 0, 255, 0.15);
+    --emp-magenta-glow: rgba(255, 0, 255, 0.4);
+    --emp-bg: #000000;
+    --emp-bg-2: #0a0a0a;
+    --emp-text: #ffffff;
+    --emp-text-dim: rgba(255, 255, 255, 0.5);
+    --emp-text-mid: rgba(255, 255, 255, 0.75);
+    --emp-border: rgba(255, 255, 255, 0.1);
+  }
+
+  /* INTRO BLOCK */
+  .emp-services-intro {
+    position: relative;
+    padding: 70px 24px 40px;
+    background: var(--emp-bg);
+    text-align: center;
+  }
+  .emp-chapter-label {
+    font-family: 'JetBrains Mono', 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--emp-magenta);
+    margin-bottom: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    opacity: 0;
+  }
+  .emp-chapter-label::before,
+  .emp-chapter-label::after {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: var(--emp-magenta);
+  }
+  .emp-services-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(48px, 7vw, 110px);
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    margin: 0;
+    color: var(--cream);
+  }
+  .emp-services-title .word {
+    display: inline-block;
+    overflow: hidden;
+    padding-bottom: 0.05em;
+  }
+  .emp-services-title .char {
+    display: inline-block;
+    transform: translateY(110%);
+    will-change: transform;
+  }
+  .emp-services-title .word { color: var(--cream); }
+  .emp-services-title .outline {
+    display: block;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(240,232,216,0.35);
+  }
+  .emp-services-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 2vw, 22px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.7;
+    color: var(--emp-text-mid);
+    max-width: 600px;
+    margin: 28px auto 0;
+    opacity: 0;
+  }
+
+  /* HORIZONTAL PINNED SCROLL */
+  .emp-horizontal-wrap {
+    position: relative;
+    overflow: hidden;
+    background: var(--emp-bg);
+  }
+  .emp-horizontal-track {
+    display: flex;
+    width: max-content;
+    height: 100vh;
+  }
+  .emp-panel {
+    width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border-right: 1px solid var(--emp-border);
+  }
+  .emp-panel-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 70px 70px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  }
+  .emp-panel-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,0,255,0.18) 0%, transparent 60%);
+    filter: blur(90px);
+    pointer-events: none;
+    will-change: transform;
+  }
+  .emp-panel:nth-child(1) .emp-panel-glow { top: -150px; right: -150px; }
+  .emp-panel:nth-child(2) .emp-panel-glow { bottom: -250px; left: -150px; }
+  .emp-panel:nth-child(3) .emp-panel-glow { top: 50%; right: -250px; transform: translateY(-50%); }
+  .emp-panel-noise {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.3;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+  .emp-panel-inner {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    padding: 60px clamp(40px, 7vw, 100px);
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+    gap: 50px;
+  }
+
+  /* TEXT */
+  .emp-panel-content { max-width: 540px; }
+  .emp-panel-num {
+    font-family: 'JetBrains Mono', 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--emp-magenta);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .emp-panel-num::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--emp-magenta) 0%, transparent 100%);
+    max-width: 160px;
+  }
+  .emp-panel-title {
+    font-family: 'Anton', 'Montserrat', sans-serif;
+    font-weight: 400;
+    font-size: clamp(48px, 6vw, 88px);
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    margin: 0 0 24px;
+    color: var(--emp-text);
+    position: relative;
+  }
+  .emp-panel-bignum {
+    position: absolute;
+    bottom: 40px;
+    right: clamp(30px, 6vw, 80px);
+    font-family: 'Anton', 'Montserrat', sans-serif;
+    font-size: clamp(180px, 26vw, 380px);
+    line-height: 0.8;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.05);
+    letter-spacing: -0.04em;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+    font-weight: 400;
+  }
+  .emp-panel-rule {
+    width: 60px;
+    height: 2px;
+    background: var(--emp-magenta);
+    box-shadow: 0 0 10px var(--emp-magenta-glow);
+    margin-bottom: 24px;
+  }
+  .emp-panel-desc {
+    font-family: 'Inter', 'Cormorant Garamond', sans-serif;
+    font-size: clamp(14px, 1.05vw, 16px);
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--emp-text-mid);
+    margin-bottom: 28px;
+  }
+  .emp-panel-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    border: 1px solid var(--emp-border);
+    background: rgba(255,255,255,0.02);
+    font-family: 'JetBrains Mono', 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--emp-text-dim);
+  }
+  .emp-panel-tag::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--emp-magenta);
+    box-shadow: 0 0 6px var(--emp-magenta);
+    animation: emp-pulse 2s ease-in-out infinite;
+  }
+  @keyframes emp-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* VISUAL */
+  .emp-panel-visual {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 360px;
+    justify-self: center;
+  }
+  .emp-panel-visual svg {
+    width: 100%;
+    height: 100%;
+  }
+  .emp-bracket {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-color: var(--emp-magenta);
+    border-style: solid;
+    border-width: 0;
+    z-index: 3;
+  }
+  .emp-bracket.tl { top: 16px; left: 16px; border-top-width: 1.5px; border-left-width: 1.5px; }
+  .emp-bracket.tr { top: 16px; right: 16px; border-top-width: 1.5px; border-right-width: 1.5px; }
+  .emp-bracket.bl { bottom: 16px; left: 16px; border-bottom-width: 1.5px; border-left-width: 1.5px; }
+  .emp-bracket.br { bottom: 16px; right: 16px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+
+  /* ICON ANIMATIONS */
+  @keyframes emp-spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes emp-spin-rev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+  @keyframes emp-float-y { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes emp-pulse-scale { 0%,100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.08); opacity: 0.8; } }
+  @keyframes emp-twinkle { 0%,100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
+  @keyframes emp-heartbeat { 0%,100% { transform: scale(1); } 25% { transform: scale(1.08); } 50% { transform: scale(0.96); } 75% { transform: scale(1.04); } }
+  @keyframes emp-rise { 0%,100% { transform: translateY(0); opacity: 0.6; } 50% { transform: translateY(-12px); opacity: 1; } }
+
+  .emp-ring-rotate { animation: emp-spin-slow 18s linear infinite; transform-origin: 200px 200px; }
+  .emp-ring-rotate-rev { animation: emp-spin-rev 24s linear infinite; transform-origin: 200px 200px; }
+  .emp-heart-beat { animation: emp-heartbeat 1.8s ease-in-out infinite; transform-origin: 200px 200px; }
+  .emp-float { animation: emp-float-y 3.5s ease-in-out infinite; }
+  .emp-pulse-glow { animation: emp-pulse-scale 2.5s ease-in-out infinite; transform-origin: 200px 200px; }
+  .emp-twinkle-1 { animation: emp-twinkle 2s ease-in-out infinite; }
+  .emp-twinkle-2 { animation: emp-twinkle 2.4s ease-in-out infinite 0.4s; }
+  .emp-twinkle-3 { animation: emp-twinkle 2.8s ease-in-out infinite 0.8s; }
+  .emp-twinkle-4 { animation: emp-twinkle 2.2s ease-in-out infinite 1.2s; }
+  .emp-rise-1 { animation: emp-rise 3s ease-in-out infinite; }
+  .emp-rise-2 { animation: emp-rise 3.4s ease-in-out infinite 0.5s; }
+  .emp-rise-3 { animation: emp-rise 2.8s ease-in-out infinite 1s; }
+
+  /* SCROLL UI */
+  .emp-scroll-ui {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 12px 24px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--emp-border);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .emp-scroll-ui.active { opacity: 1; }
+  .emp-scroll-counter {
+    font-family: 'JetBrains Mono', 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    color: var(--emp-text);
+  }
+  .emp-scroll-counter .current { color: var(--emp-magenta); }
+  .emp-scroll-bar {
+    width: 200px;
+    height: 2px;
+    background: rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .emp-scroll-bar-fill {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 0%;
+    background: var(--emp-magenta);
+    box-shadow: 0 0 8px var(--emp-magenta);
+  }
+  .emp-scroll-hint {
+    font-family: 'JetBrains Mono', 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--emp-text-dim);
+    text-transform: uppercase;
+  }
+
+  /* MOBILE */
+  @media (max-width: 900px) {
+    .emp-services-intro { padding: 70px 24px 30px; }
+    .emp-horizontal-wrap { height: auto !important; }
+    .emp-horizontal-track {
+      flex-direction: column;
+      width: 100%;
+      height: auto;
+      transform: none !important;
+    }
+    .emp-panel {
+      width: 100%;
+      height: auto;
+      min-height: auto;
+      padding: 60px 0;
+      border-right: none;
+      border-bottom: 1px solid var(--emp-border);
+    }
+    .emp-panel-inner {
+      grid-template-columns: 1fr;
+      padding: 40px 24px;
+      gap: 32px;
+    }
+    .emp-panel-bignum {
+      font-size: clamp(80px, 22vw, 160px);
+      bottom: 20px;
+      right: 24px;
+    }
+    .emp-panel-visual {
+      max-width: 260px;
+      order: -1;
+    }
+    .emp-panel-title { font-size: clamp(36px, 10vw, 64px); }
+    .emp-bracket.tl { top: 12px; left: 12px; }
+    .emp-bracket.tr { top: 12px; right: 12px; }
+    .emp-bracket.bl { bottom: 12px; left: 12px; }
+    .emp-bracket.br { bottom: 12px; right: 12px; }
+    .emp-scroll-ui { display: none; }
+  }
+  @media (max-width: 480px) {
+    .emp-services-intro { padding: 50px 16px 24px; }
+    .emp-panel-inner { padding: 32px 16px; gap: 24px; }
+    .emp-panel-bignum { font-size: clamp(60px, 20vw, 100px); }
+    .emp-panel-title { font-size: clamp(32px, 11vw, 52px); }
+    .emp-panel-visual { max-width: 200px; }
+    .emp-services-title { font-size: clamp(36px, 12vw, 80px); }
+  }
+</style>
+
+
+<section class="emp-services-intro" id="services">
+  <div class="container">
+    <div class="emp-chapter-label" id="empChapterLabel">CHAPTER · SERVICES</div>
+    <h2 class="emp-services-title" id="empServicesTitle">
+      <span class="word">What</span>
+      <span class="word">We</span>
+      <span class="word outline">Do.</span>
+    </h2>
+    <p class="emp-services-sub" id="empServicesSub">
+      Three signature experiences — engineered around your moment. Weddings, corporate gatherings,
+      and private celebrations across Connecticut, New York, and the Northeast.
+    </p>
+  </div>
+</section>
+
+
+<div class="emp-horizontal-wrap" id="empHorizontalWrap">
+  <div class="emp-horizontal-track" id="empHorizontalTrack">
+
+    <!-- PANEL 01 — UNFORGETTABLE WEDDINGS -->
+    <section class="emp-panel" data-panel="1">
+      <div class="emp-panel-bg-grid"></div>
+      <div class="emp-panel-glow"></div>
+      <div class="emp-panel-noise"></div>
+      <span class="emp-bracket tl"></span>
+      <span class="emp-bracket tr"></span>
+      <span class="emp-bracket bl"></span>
+      <span class="emp-bracket br"></span>
+      <div class="emp-panel-bignum">01</div>
+      <div class="emp-panel-inner">
+        <div class="emp-panel-content">
+          <div class="emp-panel-num">Service 01 / Three</div>
+          <h3 class="emp-panel-title">Unforgettable Weddings</h3>
+          <div class="emp-panel-rule"></div>
+          <p class="emp-panel-desc">
+            Your wedding reception deserves more than just music — it deserves an atmosphere
+            your guests will remember forever. DJ Brandon and the Empire Entertainment CT team
+            specialize in weddings across Connecticut and New York, reading the room, mixing the
+            right songs at the right moment, and keeping the dance floor packed from the first
+            dance to the final song. Every wedding is unique, and we take the time to understand
+            your vision, your music preferences, and the energy you want so the night truly
+            reflects your story.
+          </p>
+          <div class="emp-panel-tag">First Dance · Reception · Ceremony</div>
+        </div>
+        <div class="emp-panel-visual">
+          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="ringShine">
+                <stop offset="0%" stop-color="rgb(255,255,255)" stop-opacity="0.4"/>
+                <stop offset="50%" stop-color="rgb(255,0,255)" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="rgb(255,0,255)" stop-opacity="0.2"/>
+              </radialGradient>
+              <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="rgb(255,0,255)" stop-opacity="1"/>
+                <stop offset="100%" stop-color="rgb(180,0,180)" stop-opacity="0.8"/>
+              </linearGradient>
+              <filter id="ringGlow">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- Outer pulse rings -->
+            <g class="emp-pulse-glow">
+              <circle cx="200" cy="200" r="170" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.15"/>
+            </g>
+            <circle cx="200" cy="200" r="150" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.2" stroke-dasharray="2 8"/>
+
+            <!-- Rotating outer ring -->
+            <g class="emp-ring-rotate">
+              <circle cx="200" cy="200" r="130" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.3" stroke-dasharray="4 10"/>
+            </g>
+
+            <!-- Two interlocking wedding rings -->
+            <g filter="url(#ringGlow)">
+              <circle cx="165" cy="200" r="60" fill="none" stroke="url(#ringShine)" stroke-width="6"/>
+              <circle cx="165" cy="200" r="60" fill="none" stroke="rgb(255,0,255)" stroke-width="2"/>
+              <circle cx="235" cy="200" r="60" fill="none" stroke="url(#ringShine)" stroke-width="6"/>
+              <circle cx="235" cy="200" r="60" fill="none" stroke="rgb(255,0,255)" stroke-width="2"/>
+              <!-- Diamond on top ring -->
+              <g transform="translate(165, 140)">
+                <path d="M 0 -12 L 8 -4 L 0 12 L -8 -4 Z" fill="rgb(255,255,255)" stroke="rgb(255,0,255)" stroke-width="1"/>
+                <path d="M 0 -12 L 8 -4 L -8 -4 Z" fill="rgba(255,0,255,0.4)"/>
+              </g>
+            </g>
+
+            <!-- Floating hearts -->
+            <g class="emp-heart-beat">
+              <path d="M 200 320 C 200 320 175 305 175 290 C 175 280 183 275 190 275 C 195 275 200 280 200 285 C 200 280 205 275 210 275 C 217 275 225 280 225 290 C 225 305 200 320 200 320 Z" fill="url(#heartGrad)" opacity="0.9"/>
+            </g>
+
+            <!-- Sparkles -->
+            <g class="emp-twinkle-1">
+              <path d="M 90 100 L 94 110 L 104 114 L 94 118 L 90 128 L 86 118 L 76 114 L 86 110 Z" fill="rgb(255,0,255)"/>
+            </g>
+            <g class="emp-twinkle-2">
+              <path d="M 310 95 L 313 103 L 321 106 L 313 109 L 310 117 L 307 109 L 299 106 L 307 103 Z" fill="rgb(255,0,255)"/>
+            </g>
+            <g class="emp-twinkle-3">
+              <path d="M 80 310 L 83 318 L 91 321 L 83 324 L 80 332 L 77 324 L 69 321 L 77 318 Z" fill="rgb(255,0,255)"/>
+            </g>
+            <g class="emp-twinkle-4">
+              <path d="M 320 305 L 324 315 L 334 319 L 324 323 L 320 333 L 316 323 L 306 319 L 316 315 Z" fill="rgb(255,0,255)"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 02 — ELEVATED CORPORATE EVENTS -->
+    <section class="emp-panel" data-panel="2">
+      <div class="emp-panel-bg-grid"></div>
+      <div class="emp-panel-glow"></div>
+      <div class="emp-panel-noise"></div>
+      <span class="emp-bracket tl"></span>
+      <span class="emp-bracket tr"></span>
+      <span class="emp-bracket bl"></span>
+      <span class="emp-bracket br"></span>
+      <div class="emp-panel-bignum">02</div>
+      <div class="emp-panel-inner">
+        <div class="emp-panel-content">
+          <div class="emp-panel-num">Service 02 / Three</div>
+          <h3 class="emp-panel-title">Elevated Corporate Events</h3>
+          <div class="emp-panel-rule"></div>
+          <p class="emp-panel-desc">
+            Corporate events should feel professional and engaging at the same time. Empire
+            Entertainment CT provides the perfect musical backdrop for company parties, holiday
+            celebrations, galas, and corporate gatherings across the Northeast. Whether it's
+            ambient background music during networking or a full dance floor experience during
+            the evening celebration, we dial in the right tone for every moment and leave a
+            lasting impression on every guest in the room.
+          </p>
+          <div class="emp-panel-tag">Galas · Holiday Parties · Networking</div>
+        </div>
+        <div class="emp-panel-visual">
+          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bldgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="rgb(40,40,40)"/>
+                <stop offset="100%" stop-color="rgb(15,15,15)"/>
+              </linearGradient>
+              <linearGradient id="winGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="rgb(255,0,255)" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="rgb(255,0,255)" stop-opacity="0.4"/>
+              </linearGradient>
+              <filter id="bldgGlow">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- Background grid pulse -->
+            <g class="emp-pulse-glow">
+              <circle cx="200" cy="200" r="170" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.12"/>
+            </g>
+            <circle cx="200" cy="200" r="150" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.2" stroke-dasharray="3 9"/>
+
+            <!-- Ground line -->
+            <line x1="60" y1="330" x2="340" y2="330" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.5"/>
+            <line x1="80" y1="335" x2="320" y2="335" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.2"/>
+
+            <!-- Left building -->
+            <g filter="url(#bldgGlow)">
+              <rect x="105" y="180" width="60" height="150" fill="url(#bldgGrad)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
+              <!-- Windows -->
+              <rect x="115" y="195" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-1"/>
+              <rect x="135" y="195" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="115" y="220" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="135" y="220" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-2"/>
+              <rect x="115" y="245" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-3"/>
+              <rect x="135" y="245" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="115" y="270" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="135" y="270" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-4"/>
+              <rect x="115" y="295" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="135" y="295" width="12" height="14" fill="url(#winGrad)"/>
+            </g>
+
+            <!-- Center tower (tallest) -->
+            <g filter="url(#bldgGlow)">
+              <rect x="170" y="100" width="60" height="230" fill="url(#bldgGrad)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
+              <!-- Antenna -->
+              <line x1="200" y1="100" x2="200" y2="70" stroke="rgb(255,0,255)" stroke-width="2"/>
+              <circle cx="200" cy="68" r="4" fill="rgb(255,0,255)" class="emp-twinkle-1"/>
+              <!-- Windows -->
+              <rect x="180" y="115" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="200" y="115" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-2"/>
+              <rect x="180" y="140" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-3"/>
+              <rect x="200" y="140" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="180" y="165" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="200" y="165" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-4"/>
+              <rect x="180" y="190" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-1"/>
+              <rect x="200" y="190" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="180" y="215" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="200" y="215" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-2"/>
+              <rect x="180" y="240" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-3"/>
+              <rect x="200" y="240" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="180" y="265" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="200" y="265" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="180" y="290" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-4"/>
+              <rect x="200" y="290" width="12" height="14" fill="url(#winGrad)"/>
+            </g>
+
+            <!-- Right building -->
+            <g filter="url(#bldgGlow)">
+              <rect x="235" y="155" width="60" height="175" fill="url(#bldgGrad)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
+              <!-- Windows -->
+              <rect x="245" y="170" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-2"/>
+              <rect x="265" y="170" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="245" y="195" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="265" y="195" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-1"/>
+              <rect x="245" y="220" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-4"/>
+              <rect x="265" y="220" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="245" y="245" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="265" y="245" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-3"/>
+              <rect x="245" y="270" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="265" y="270" width="12" height="14" fill="url(#winGrad)"/>
+              <rect x="245" y="295" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-2"/>
+              <rect x="265" y="295" width="12" height="14" fill="url(#winGrad)"/>
+            </g>
+
+            <!-- Floating champagne bubbles -->
+            <g class="emp-rise-1">
+              <circle cx="75" cy="240" r="4" fill="rgb(255,0,255)" opacity="0.7"/>
+            </g>
+            <g class="emp-rise-2">
+              <circle cx="325" cy="220" r="3" fill="rgb(255,0,255)" opacity="0.6"/>
+            </g>
+            <g class="emp-rise-3">
+              <circle cx="65" cy="280" r="3" fill="rgb(255,0,255)" opacity="0.5"/>
+            </g>
+            <g class="emp-rise-1" style="animation-delay: 1.5s">
+              <circle cx="335" cy="270" r="4" fill="rgb(255,0,255)" opacity="0.6"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 03 — EXCEPTIONAL PRIVATE EVENTS -->
+    <section class="emp-panel" data-panel="3">
+      <div class="emp-panel-bg-grid"></div>
+      <div class="emp-panel-glow"></div>
+      <div class="emp-panel-noise"></div>
+      <span class="emp-bracket tl"></span>
+      <span class="emp-bracket tr"></span>
+      <span class="emp-bracket bl"></span>
+      <span class="emp-bracket br"></span>
+      <div class="emp-panel-bignum">03</div>
+      <div class="emp-panel-inner">
+        <div class="emp-panel-content">
+          <div class="emp-panel-num">Service 03 / Three</div>
+          <h3 class="emp-panel-title">Exceptional Private Events</h3>
+          <div class="emp-panel-rule"></div>
+          <p class="emp-panel-desc">
+            Every private celebration deserves great music and even greater energy. From birthday
+            parties and anniversaries to graduations and everything in between, Empire
+            Entertainment CT brings the same passion and professionalism to every event. We tailor
+            the music to your guests, your style, and your vibe — keeping the energy high, the
+            dance floor active, and the memories flowing all night long.
+          </p>
+          <div class="emp-panel-tag">Birthdays · Anniversaries · Graduations</div>
+        </div>
+        <div class="emp-panel-visual">
+          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="cakeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="rgb(255,0,255)" stop-opacity="1"/>
+                <stop offset="100%" stop-color="rgb(140,0,140)" stop-opacity="0.8"/>
+              </linearGradient>
+              <linearGradient id="cakeGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="rgb(255,0,255)" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="rgb(120,0,120)" stop-opacity="0.7"/>
+              </linearGradient>
+              <radialGradient id="flameGrad">
+                <stop offset="0%" stop-color="rgb(255,255,255)" stop-opacity="1"/>
+                <stop offset="40%" stop-color="rgb(255,0,255)" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="rgb(255,0,255)" stop-opacity="0"/>
+              </radialGradient>
+              <filter id="cakeGlow">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- Backdrop pulse rings -->
+            <g class="emp-pulse-glow">
+              <circle cx="200" cy="200" r="165" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.15"/>
+            </g>
+            <g class="emp-ring-rotate-rev">
+              <circle cx="200" cy="200" r="140" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.25" stroke-dasharray="3 9"/>
+            </g>
+
+            <!-- Confetti streamers -->
+            <g class="emp-rise-1">
+              <rect x="80" y="100" width="3" height="14" fill="rgb(255,0,255)" transform="rotate(20 81 107)"/>
+            </g>
+            <g class="emp-rise-2">
+              <rect x="320" y="90" width="3" height="14" fill="rgb(255,0,255)" transform="rotate(-25 321 97)"/>
+            </g>
+            <g class="emp-rise-3">
+              <rect x="70" y="180" width="3" height="12" fill="rgb(255,0,255)" transform="rotate(40 71 186)"/>
+            </g>
+            <g class="emp-rise-1" style="animation-delay: 0.8s">
+              <rect x="330" y="170" width="3" height="12" fill="rgb(255,0,255)" transform="rotate(-30 331 176)"/>
+            </g>
+
+            <!-- Cake plate -->
+            <ellipse cx="200" cy="325" rx="120" ry="14" fill="rgba(255,255,255,0.08)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
+            <ellipse cx="200" cy="322" rx="120" ry="14" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.5"/>
+
+            <!-- Cake bottom tier -->
+            <g filter="url(#cakeGlow)">
+              <rect x="120" y="245" width="160" height="80" fill="url(#cakeGrad)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
+              <!-- Bottom tier decoration -->
+              <path d="M 120 260 Q 140 250 160 260 T 200 260 T 240 260 T 280 260" fill="none" stroke="rgb(255,255,255)" stroke-width="1.5" opacity="0.6"/>
+              <circle cx="140" cy="290" r="4" fill="rgb(255,255,255)" opacity="0.7"/>
+              <circle cx="170" cy="295" r="3" fill="rgb(255,255,255)" opacity="0.6"/>
+              <circle cx="200" cy="290" r="4" fill="rgb(255,255,255)" opacity="0.7"/>
+              <circle cx="230" cy="295" r="3" fill="rgb(255,255,255)" opacity="0.6"/>
+              <circle cx="260" cy="290" r="4" fill="rgb(255,255,255)" opacity="0.7"/>
+            </g>
+
+            <!-- Cake middle tier -->
+            <g filter="url(#cakeGlow)">
+              <rect x="145" y="180" width="110" height="65" fill="url(#cakeGrad2)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
+              <path d="M 145 195 Q 165 185 185 195 T 225 195 T 255 195" fill="none" stroke="rgb(255,255,255)" stroke-width="1.5" opacity="0.6"/>
+              <circle cx="170" cy="220" r="3" fill="rgb(255,255,255)" opacity="0.7"/>
+              <circle cx="200" cy="225" r="3" fill="rgb(255,255,255)" opacity="0.6"/>
+              <circle cx="230" cy="220" r="3" fill="rgb(255,255,255)" opacity="0.7"/>
+            </g>
+
+            <!-- Cake top tier -->
+            <g filter="url(#cakeGlow)">
+              <rect x="170" y="130" width="60" height="50" fill="url(#cakeGrad)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
+              <path d="M 170 142 Q 185 135 200 142 T 230 142" fill="none" stroke="rgb(255,255,255)" stroke-width="1.5" opacity="0.6"/>
+            </g>
+
+            <!-- Candles -->
+            <rect x="183" y="105" width="4" height="25" fill="rgb(255,255,255)" opacity="0.9"/>
+            <rect x="198" y="100" width="4" height="30" fill="rgb(255,255,255)" opacity="0.9"/>
+            <rect x="213" y="105" width="4" height="25" fill="rgb(255,255,255)" opacity="0.9"/>
+
+            <!-- Flames -->
+            <g class="emp-float">
+              <ellipse cx="185" cy="100" rx="6" ry="10" fill="url(#flameGrad)"/>
+              <circle cx="185" cy="100" r="2" fill="rgb(255,255,255)"/>
+            </g>
+            <g class="emp-float" style="animation-delay: 0.3s">
+              <ellipse cx="200" cy="94" rx="7" ry="12" fill="url(#flameGrad)"/>
+              <circle cx="200" cy="95" r="2" fill="rgb(255,255,255)"/>
+            </g>
+            <g class="emp-float" style="animation-delay: 0.6s">
+              <ellipse cx="215" cy="100" rx="6" ry="10" fill="url(#flameGrad)"/>
+              <circle cx="215" cy="100" r="2" fill="rgb(255,255,255)"/>
+            </g>
+
+            <!-- Sparkles around cake -->
+            <g class="emp-twinkle-1">
+              <path d="M 95 215 L 98 223 L 106 226 L 98 229 L 95 237 L 92 229 L 84 226 L 92 223 Z" fill="rgb(255,0,255)"/>
+            </g>
+            <g class="emp-twinkle-2">
+              <path d="M 305 215 L 308 223 L 316 226 L 308 229 L 305 237 L 302 229 L 294 226 L 302 223 Z" fill="rgb(255,0,255)"/>
+            </g>
+            <g class="emp-twinkle-3">
+              <path d="M 110 140 L 112 146 L 118 148 L 112 150 L 110 156 L 108 150 L 102 148 L 108 146 Z" fill="rgb(255,0,255)"/>
+            </g>
+            <g class="emp-twinkle-4">
+              <path d="M 290 140 L 292 146 L 298 148 L 292 150 L 290 156 L 288 150 L 282 148 L 288 146 Z" fill="rgb(255,0,255)"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+
+<div class="emp-scroll-ui" id="empScrollUI">
+  <div class="emp-scroll-counter">
+    <span class="current" id="empCurrent">01</span> <span style="opacity:0.4"> / </span> <span>03</span>
+  </div>
+  <div class="emp-scroll-bar">
+    <div class="emp-scroll-bar-fill" id="empBarFill"></div>
+  </div>
+  <div class="emp-scroll-hint">Scroll →</div>
+</div>
+<section class="emp-showcase" id="showcase">
+  <div class="sc-bg-grid"></div>
+  <div class="sc-blob b1"></div>
+  <div class="sc-blob b2"></div>
+
+  <div class="container-fluid px-0">
+
+    <!-- HEADING -->
+    <div class="sc-head container">
+      <div class="sc-chap" id="scChap">Chapter · Showcase / Our Work</div>
+      <h2 class="sc-title section-heading" id="scTitle">
+        <span class="line line-1" id="scLine1" data-dir="left">THE</span>
+        <span class="line line-2" id="scLine2" data-dir="right">SHOWCASE</span>
+      </h2>
+      <p class="sc-sub" id="scSub">The Moments We Create &nbsp;/&nbsp; Greenwich · CT</p>
+    </div>
+
+    <!-- ==========================================
+         SLIDER
+         ==========================================
+         TO ADD YOUR OWN IMAGES:
+         Replace src="..." in each .sc-slide img
+         and update data-tag / data-caption
+    ========================================== -->
+    <div class="sc-stage" id="scStage">
+      <div class="sc-track" id="scTrack">
+
+        <div class="sc-slide" data-tag="Wedding" data-caption="The First Dance">
+          <img src="assets/imgz/gl_1.jpeg" alt="Wedding">
+          <div class="sc-slide-overlay"><div class="sc-slide-tag">Wedding</div><div class="sc-slide-caption">The First Dance</div></div>
+          <div class="sc-side-arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" fill="none"/></svg></div>
+        </div>
+
+        <div class="sc-slide" data-tag="Mitzvah" data-caption="Dance Floor Energy">
+          <img src="assets/imgz/gl_2.jpeg" alt="Mitzvah">
+          <div class="sc-slide-overlay"><div class="sc-slide-tag">Mitzvah</div><div class="sc-slide-caption">Dance Floor Energy</div></div>
+          <div class="sc-side-arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" fill="none"/></svg></div>
+        </div>
+
+        <div class="sc-slide" data-tag="Corporate" data-caption="Gala Night">
+          <img src="assets/imgz/gl_3.jpeg" alt="Corporate">
+          <div class="sc-slide-overlay"><div class="sc-slide-tag">Corporate</div><div class="sc-slide-caption">Gala Night</div></div>
+          <div class="sc-side-arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" fill="none"/></svg></div>
+        </div>
+
+        <div class="sc-slide" data-tag="Wedding" data-caption="Golden Hour Celebration">
+          <img src="assets/imgz/gl_4.jpeg" alt="Wedding">
+          <div class="sc-slide-overlay"><div class="sc-slide-tag">Wedding</div><div class="sc-slide-caption">Golden Hour Celebration</div></div>
+          <div class="sc-side-arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" fill="none"/></svg></div>
+        </div>
+
+        <div class="sc-slide" data-tag="Prom" data-caption="Night of a Lifetime">
+          <img src="assets/imgz/gl_5.jpeg" alt="Prom">
+          <div class="sc-slide-overlay"><div class="sc-slide-tag">Prom</div><div class="sc-slide-caption">Night of a Lifetime</div></div>
+          <div class="sc-side-arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" fill="none"/></svg></div>
+        </div>
+
+        <div class="sc-slide" data-tag="Sweet 16" data-caption="Sweet 16 Magic">
+          <img src="assets/imgz/gl_6.jpeg" alt="Birthday">
+          <div class="sc-slide-overlay"><div class="sc-slide-tag">Sweet 16</div><div class="sc-slide-caption">Sweet 16 Magic</div></div>
+          <div class="sc-side-arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" fill="none"/></svg></div>
+        </div>
+
+        <div class="sc-slide" data-tag="Mitzvah" data-caption="Lights & Celebration">
+          <img src="assets/imgz/gl_7.jpeg" alt="Mitzvah">
+          <div class="sc-slide-overlay"><div class="sc-slide-tag">Mitzvah</div><div class="sc-slide-caption">Lights & Celebration</div></div>
+          <div class="sc-side-arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" fill="none"/></svg></div>
+        </div>
+
+        <div class="sc-slide" data-tag="Corporate" data-caption="Annual Awards Night">
+          <img src="assets/imgz/gl_8.jpeg" alt="Corporate">
+          <div class="sc-slide-overlay"><div class="sc-slide-tag">Corporate</div><div class="sc-slide-caption">Annual Awards Night</div></div>
+          <div class="sc-side-arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" fill="none"/></svg></div>
+        </div>
+
+        <div class="sc-slide" data-tag="Wedding" data-caption="Reception in Full Swing">
+          <img src="assets/imgz/gl_9.jpeg" alt="Wedding">
+          <div class="sc-slide-overlay"><div class="sc-slide-tag">Wedding</div><div class="sc-slide-caption">Reception in Full Swing</div></div>
+          <div class="sc-side-arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" fill="none"/></svg></div>
+        </div>
+
+        <div class="sc-slide" data-tag="Quinceañera" data-caption="Quinceañera Glow">
+          <img src="assets/imgz/gl_10.jpeg" alt="Birthday">
+          <div class="sc-slide-overlay"><div class="sc-slide-tag">Quinceañera</div><div class="sc-slide-caption">Quinceañera Glow</div></div>
+          <div class="sc-side-arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" fill="none"/></svg></div>
+        </div>
+
+        <div class="sc-slide" data-tag="Prom" data-caption="Graduation Celebration">
+          <img src="assets/imgz/gl_11.jpeg" alt="Prom">
+          <div class="sc-slide-overlay"><div class="sc-slide-tag">Prom</div><div class="sc-slide-caption">Graduation Celebration</div></div>
+          <div class="sc-side-arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" fill="none"/></svg></div>
+        </div>
+
+        <div class="sc-slide" data-tag="NYE" data-caption="New Year's Eve Party">
+          <img src="assets/imgz/gl_12.jpeg" alt="NYE">
+          <div class="sc-slide-overlay"><div class="sc-slide-tag">NYE</div><div class="sc-slide-caption">New Year's Eve Party</div></div>
+          <div class="sc-side-arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" fill="none"/></svg></div>
+        </div>
+          <div class="sc-slide" data-tag="NYE" data-caption="New Year's Eve Party">
+          <img src="assets/imgz/gl_13.jpeg" alt="NYE">
+          <div class="sc-slide-overlay"><div class="sc-slide-tag">NYE</div><div class="sc-slide-caption">New Year's Eve Party</div></div>
+          <div class="sc-side-arrow"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" fill="none"/></svg></div>
+        </div>
+      </div><!-- /track -->
+    </div><!-- /stage -->
+
+    <!-- CONTROLS -->
+    <div class="sc-controls container" id="scControls">
+      <div class="sc-counter"><em id="scCurNum">01</em> / <span id="scTotNum">12</span></div>
+      <div class="sc-progress"><div class="sc-progress-fill" id="scProgFill"></div></div>
+      <div class="sc-nav-btns">
+        <button class="sc-btn" id="scPrev" aria-label="Previous">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="sc-btn" id="scNext" aria-label="Next">
+          <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+      <button class="sc-auto-btn playing" id="scAutoBtn">
+        <span class="sc-auto-dot"></span>Autoplay
+      </button>
+    </div>
+
+    <!-- FILMSTRIP -->
+    <div class="sc-film-wrap container">
+      <div class="sc-film" id="scFilm">
+        <!-- thumbs injected by JS -->
+      </div>
+    </div>
+
+  </div><!-- /container-fluid -->
+</section>
+
+<section id="testimonials">
+  <div class="t-container">
+
+    <!-- HEADER -->
+    <div class="t-header">
+      <div class="t-chapter-tag" id="tChapterTag">04 — Testimonials</div>
+      <div class="t-title-block">
+        <p class="t-eyebrow" id="tEyebrow">★ They Talk We Deliver</p>
+        <div class="t-title" id="tMainTitle">
+          <span class="line line-1" data-dir="left">What Our </span>
+          <span class="line line-2" data-dir="right">Clients Are Saying</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TICKER -->
+    <div class="t-marquee-wrap" id="tTicker">
+      <div class="t-marquee-track">
+        <span class="t-marquee-item"><span class="t-dot"></span> Born to DJ</span>
+        <span class="t-marquee-item"><span class="t-dot"></span> Greenwich, CT</span>
+        <span class="t-marquee-item"><span class="t-dot"></span> DJ Brandon Mubuuke</span>
+        <span class="t-marquee-item"><span class="t-dot"></span> Extraordinary Energy</span>
+        <span class="t-marquee-item"><span class="t-dot"></span> Mitzvahs · Weddings · Corporate</span>
+        <span class="t-marquee-item"><span class="t-dot"></span> Empire Entertainment CT</span>
+        <span class="t-marquee-item"><span class="t-dot"></span> Everyone on the floor</span>
+        <span class="t-marquee-item"><span class="t-dot"></span> Born to DJ</span>
+        <span class="t-marquee-item"><span class="t-dot"></span> Greenwich, CT</span>
+        <span class="t-marquee-item"><span class="t-dot"></span> DJ Brandon Mubuuke</span>
+        <span class="t-marquee-item"><span class="t-dot"></span> Extraordinary Energy</span>
+        <span class="t-marquee-item"><span class="t-dot"></span> Mitzvahs · Weddings · Corporate</span>
+        <span class="t-marquee-item"><span class="t-dot"></span> Empire Entertainment CT</span>
+        <span class="t-marquee-item"><span class="t-dot"></span> Everyone on the floor</span>
+      </div>
+    </div>
+
+    <!-- CARDS GRID -->
+    <div class="t-grid">
+
+      <!-- FEATURED -->
+      <div class="t-card t-card--featured" data-tcard>
+        <div class="t-quote-mark">"</div>
+        <div class="t-event-tag">★ Bar Mitzvah · Greenwich</div>
+        <p class="t-quote">
+          Empire Entertainment really does a <mark>fantastic job on all fronts</mark>: fits the music to the crowd, has great lighting effects, brings a personal touch and ton of energy to the occasion. The lead DJ Brandon Mubuuke is <mark>born to do this</mark> — he gets everyone on the floor and ensures they have a great time. Definitely recommended.
+        </p>
+        <div class="t-author">
+          <div class="t-avatar">S</div>
+          <div class="t-author-info">
+            <div class="t-author-name">S.R.</div>
+            <div class="t-author-event">Bar Mitzvah Guest</div>
+          </div>
+          <div class="t-author-stars">★★★★★</div>
+        </div>
+      </div>
+
+      <!-- STAT -->
+      <div class="t-card t-card--stat" data-tcard>
+        <span class="t-stat-num" id="tCounterEvents">0</span>
+        <span class="t-stat-label">Events Delivered</span>
+        <div style="margin-top:30px; border-top:1px solid rgba(255,255,255,0.06); padding-top:28px; width:100%;">
+          <span class="t-stat-num" style="font-size:48px; color:#f5c842;">100%</span>
+          <span class="t-stat-label">5-Star Reviews</span>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="t-card" data-tcard>
+        <div class="t-quote-mark">"</div>
+        <div class="t-event-tag">★ Sweet 16 · CT</div>
+        <p class="t-quote">
+          Brandon made my daughter's Sweet 16 absolutely <mark>unforgettable</mark>. He read the crowd perfectly, kept the energy high all night and had every teenager on the dance floor.
+        </p>
+        <div class="t-author">
+          <div class="t-avatar">M</div>
+          <div class="t-author-info">
+            <div class="t-author-name">M.T.</div>
+            <div class="t-author-event">Sweet 16 — Parent</div>
+          </div>
+          <div class="t-author-stars">★★★★★</div>
+        </div>
+      </div>
+ 
+      <!-- CARD 4 -->
+      <div class="t-card" data-tcard>
+        <div class="t-quote-mark">"</div>
+        <div class="t-event-tag">★ Corporate Event · Greenwich</div>
+        <p class="t-quote">
+          We hired Empire for our annual company gala and were <mark>blown away</mark>. Professional, seamless, and the lighting transformed the entire venue. Our employees are still talking about it.
+        </p>
+        <div class="t-author">
+          <div class="t-avatar">J</div>
+          <div class="t-author-info">
+            <div class="t-author-name">J.K.</div>
+            <div class="t-author-event">Corporate Gala · HR Director</div>
+          </div>
+          <div class="t-author-stars">★★★★★</div>
+        </div>
+      </div>
+
+      <!-- CARD 5 -->
+      <div class="t-card" data-tcard>
+        <div class="t-quote-mark">"</div>
+        <div class="t-event-tag">★ Wedding · Stamford</div>
+        <p class="t-quote">
+          Our wedding reception was <mark>pure magic</mark>. DJ Brandon was incredibly attentive during planning, played every request and kept the dance floor packed from first song to last.
+        </p>
+        <div class="t-author">
+          <div class="t-avatar">A</div>
+          <div class="t-author-info">
+            <div class="t-author-name">A. & D.P.</div>
+            <div class="t-author-event">Wedding · Stamford, CT</div>
+          </div>
+          <div class="t-author-stars">★★★★★</div>
+        </div>
+      </div>
+
+      <!-- WIDE PULLQUOTE -->
+      <div class="t-card t-card--wide" data-tcard>
+        <div class="t-author" style="flex-direction:column;align-items:center;text-align:center;min-width:160px;">
+          <div class="t-avatar" style="width:64px;height:64px;font-size:22px;">L</div>
+          <div style="margin-top:12px;">
+            <div class="t-author-name">L.M.</div>
+            <div class="t-author-event">Quinceañera · Norwalk</div>
+            <div class="t-author-stars" style="margin-top:6px;">★★★★★</div>
+          </div>
+        </div>
+        <div class="t-vdivider"></div>
+        <p class="t-quote">
+          "He doesn't just play music — he <mark>conducts the room</mark>. My daughter's Quinceañera was beyond anything we imagined. Brandon made sure every generation on that dance floor felt included and energized. Truly extraordinary."
+        </p>
+      </div>
+
+    </div><!-- /t-grid -->
+
+    <!-- BOTTOM BAR -->
+    <div class="t-bottom-bar" id="tBottomBar">
+      <span class="t-bottom-text">Every event. Every memory. Every time.</span>
+      <a href="#contact" class="t-bottom-cta">Book Your Event</a>
+    </div>
+
+  </div><!-- /t-container -->
+</section>
+
+
+<section class="empire-cta" id="empire-cta">
+
+  <!-- Background glows -->
+  <div class="ecta-glow ecta-glow--left"></div>
+  <div class="ecta-glow ecta-glow--right"></div>
+  <div class="ecta-scanlines"></div>
+
+  <!-- Top border line -->
+  <div class="ecta-topline">
+    <span class="ecta-topline-dot"></span>
+    <span class="ecta-topline-bar"></span>
+    <span class="ecta-topline-dot"></span>
+  </div>
+
+  <div class="container">
+    <div class="ecta-inner">
+
+      <!-- Eyebrow label -->
+      <p class="ecta-eyebrow">Empire Entertainment CT</p>
+
+      <!-- Headline -->
+      <h2 class="ecta-headline">
+        Ready To Make Your<br>
+        <em>Event Unforgettable?</em>
+      </h2>
+
+      <!-- Divider -->
+      <div class="ecta-divider">
+        <span></span>
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="6" height="6" stroke="#ff00ff" stroke-width="1.2" transform="rotate(45 5 5)"/>
+        </svg>
+        <span></span>
+      </div>
+
+      <!-- Body text -->
+      <p class="ecta-body">
+        Let's talk about your event. Whether it's a wedding, corporate party, or private
+        celebration, Empire Entertainment CT is ready to bring the energy, the music,
+        and the moment you've been imagining.
+      </p>
+
+      <!-- Button -->
+      <a href="#ef" class="ecta-btn">
+        Get In Touch Today
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+
+      <!-- Bottom label -->
+      <p class="ecta-footnote">Connecticut &amp; New York's Premier DJ &amp; Entertainment Company</p>
+
+    </div>
+  </div>
+
+  <!-- Bottom border line -->
+  <div class="ecta-topline ecta-bottomline">
+    <span class="ecta-topline-dot"></span>
+    <span class="ecta-topline-bar"></span>
+    <span class="ecta-topline-dot"></span>
+  </div>
+
+</section>
+
+<footer class="ef" id="ef">
+
+  <!-- Ambient glow blobs -->
+  <div class="ef-glow-1"></div>
+  <div class="ef-glow-2"></div> 
+
+  <!-- Background giant word -->
+  <div class="ef-bg-word" aria-hidden="true">EMPIRE™</div>
+
+  
+  <!-- Logo stripe -->
+  <div class="ef-logo-stripe">
+    <img
+      src="https://static.wixstatic.com/media/8bfafc_5ba0e508bc1548d2922c2f000d9fe18f~mv2.png"
+      alt="EMPIRE Entertainment CT"
+      id="ef-logo"
+    />
+  </div>
+
+  <!-- Main two-col body -->
+  <div class="ef-body">
+
+    <!-- LEFT ── Contact -->
+    <div class="ef-left">
+
+      <h2 class="ef-tagline" id="ef-tagline">
+        Empire Entertainment CT Connecticut <br />& New York's Premier DJ <br /><span class="ef-mg">& Entertainment Company</span> 
+      </h2>
+
+      <div class="ef-info-block" id="ef-info">
+        <div class="ef-info-row">
+          <div class="ef-info-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg>
+          </div>
+          <div class="ef-info-txt">
+            <span class="ef-info-label">Phone</span>
+            <a href="tel:4753357030" class="ef-info-val">475-335-7030</a>
+          </div>
+        </div>
+        <div class="ef-info-row">
+          <div class="ef-info-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="ef-info-txt">
+            <span class="ef-info-label">Location</span>
+            <span class="ef-info-val">Serving CT, NY, NJ & the Tri-State Area</span>
+          </div>
+        </div>
+        <div class="ef-info-row">
+          <div class="ef-info-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div class="ef-info-txt">
+            <span class="ef-info-label">Email</span>
+            <a href="mailto:brandon@empireentertainmentct.com" class="ef-info-val">brandon@empireentertainmentct.com</a>
+          </div>
+        </div>
+      </div>
+
+      <p class="ef-social-head" id="ef-soc-head">Follow Along</p>
+      <div class="ef-social-row">
+        <a href="https://www.instagram.com/empireentertainmentct/" target="_blank" rel="noopener" class="ef-soc-btn" id="ef-ig">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+          <span>Instagram</span>
+        </a>
+        <a href="https://www.facebook.com/Empire-Entertainment-1889998804643519/" target="_blank" rel="noopener" class="ef-soc-btn" id="ef-fb">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          <span>Facebook</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- RIGHT ── Form -->
+    <div class="ef-right">
+
+      <div class="ef-form-head" id="ef-fhead">
+        <span class="ef-form-title">Book <span class="ef-mg">Your</span><br />Event.</span>
+        <span class="ef-form-caption">Let's make it extraordinary</span>
+      </div>
+
+      <div id="ef-form-wrap">
+        <div class="ef-form" id="ef-form-anim">
+          <form class="ef-grid" id="ef-form" novalidate>
+
+            <div class="ef-field">
+              <label for="ef-name">Name *</label>
+              <input type="text" id="ef-name" name="name" autocomplete="name" required />
+            </div>
+
+            <div class="ef-field">
+              <label for="ef-email">Email *</label>
+              <input type="email" id="ef-email" name="email" autocomplete="email" required />
+            </div>
+
+            <div class="ef-field">
+              <label for="ef-phone">Phone</label>
+              <input type="tel" id="ef-phone" name="phone" autocomplete="tel" />
+            </div>
+
+            <div class="ef-field ef-sel-wrap">
+              <label for="ef-type">Type of Event *</label>
+              <select id="ef-type" name="event_type" required>
+                <option value="" disabled selected></option>
+                <option>Mitzvah</option>
+                <option>Sweet 16</option>
+                <option>Quinceañera</option>
+                <option>Wedding</option>
+                <option>Prom / Graduation</option>
+                <option>Corporate Event</option>
+                <option>Holiday Party</option>
+                <option>NYE Celebration</option>
+                <option>Birthday Party</option>
+                <option>Gala / Fundraiser</option>
+                <option>Father-Daughter Dance</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="ef-field">
+              <label for="ef-date">Date of Event</label>
+              <input type="date" id="ef-date" name="event_date" />
+            </div>
+
+            <div class="ef-field">
+              <label for="ef-guests">Est. Guests</label>
+              <input type="number" id="ef-guests" name="guests" min="1" />
+            </div>
+
+            <div class="ef-field ef-full">
+              <label for="ef-msg">Tell Us More</label>
+              <textarea id="ef-msg" name="message" rows="4"></textarea>
+            </div>
+
+            <div class="ef-field ef-send-row">
+              <button type="submit" class="ef-send-btn">
+                <span class="ef-send-btn-inner">
+                  Send Enquiry
+                  <span class="ef-arrow-circle">
+                    <svg viewBox="0 0 10 10"><path d="M2 8L8 2M8 2H3M8 2v5"/></svg>
+                  </span>
+                </span>
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- Success -->
+        <div class="ef-success" id="ef-ok">
+          <div class="ef-success-ring">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <p>Message received.</p>
+          <small>We'll be in touch shortly</small>
+        </div>
+
+        <p class="ef-consent">
+          By messaging, you agree to receive messages related to your booking at the provided number.
+          Message frequency varies. Standard rates may apply. Reply STOP to opt-out. Reply HELP for assistance.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Magenta rule -->
+  <div class="ef-rule" id="ef-rule"></div>
+
+  <!-- Bottom bar -->
+  <div class="ef-bottom">
+    <span class="ef-copy">© 2026 EMPIRE™ EntertainmentCT &nbsp;|&nbsp; All Rights Reserved</span>
+    <nav class="ef-bottom-nav">
+      <a href="mailto:brandon@empireentertainmentct.com">Contact</a>
+      <a href="https://www.instagram.com/empireentertainmentct/" target="_blank">Instagram</a>
+      <a href="https://www.facebook.com/Empire-Entertainment-1889998804643519/" target="_blank">Facebook</a>
+    </nav>
+  </div>
+
+</footer>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+
+<!-- Your JS -->
+<script src="assets/js/script.js"></script>
+
+</body>
+</html>
