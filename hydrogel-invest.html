@@ -375,24 +375,24 @@ nav.scrolled {
   #cursor-glow {
     position: fixed;
     top: 0; left: 0;
-    width: 140px; height: 140px;
+    width: 520px; height: 520px;
     border-radius: 50%;
     pointer-events: none;
     z-index: 9990;
     transform: translate(-50%, -50%);
     background: radial-gradient(circle,
-      rgba(0,229,180,0.18) 0%,
-      rgba(0,201,167,0.08) 45%,
-      transparent 70%);
+      rgba(212,175,62,0.11) 0%,
+      rgba(184,147,12,0.055) 30%,
+      rgba(120,179,137,0.025) 60%,
+      transparent 75%);
     mix-blend-mode: screen;
     will-change: transform;
-    transition: background 0.5s ease;
+    /* slow bloom in, fast dismiss */
+    opacity: 0;
+    transition: opacity 1.2s ease, background 0.6s ease;
   }
-  #cursor-glow.on-gold {
-    background: radial-gradient(circle,
-      rgba(212,175,62,0.20) 0%,
-      rgba(184,147,12,0.08) 45%,
-      transparent 70%);
+  #cursor-glow.visible {
+    opacity: 1;
   }
   #cursor-trail {
     position: fixed;
@@ -409,17 +409,13 @@ nav.scrolled {
     width: 20px; height: 24px;
     pointer-events: none;
     z-index: 9999;
-    /* hotspot: tip of arrow at top-left */
     transform: translate(0, 0);
     will-change: transform;
-    filter: drop-shadow(0 0 4px rgba(0,229,180,0.7));
+    filter: drop-shadow(0 0 5px rgba(212,175,62,0.75));
     transition: filter 0.3s ease, opacity 0.2s;
   }
   #cursor-drop.hovering {
-    filter: drop-shadow(0 0 8px rgba(0,229,180,0.95)) brightness(1.15);
-  }
-  #cursor-drop.on-gold {
-    filter: drop-shadow(0 0 10px rgba(212,175,62,0.9)) brightness(1.2);
+    filter: drop-shadow(0 0 9px rgba(212,175,62,1)) brightness(1.15);
   }
 }
 
@@ -667,22 +663,22 @@ nav.scrolled {
 <svg id="cursor-drop" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="arrowFill" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1A4A3A"/>
-      <stop offset="100%" stop-color="#0D2E24"/>
+      <stop offset="0%" stop-color="#1C3A28"/>
+      <stop offset="100%" stop-color="#0D2015"/>
     </linearGradient>
     <filter id="arrowGlow" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="1.2" result="blur"/>
+      <feGaussianBlur stdDeviation="1.4" result="blur"/>
       <feComposite in="SourceGraphic" in2="blur" operator="over"/>
     </filter>
   </defs>
-  <!-- Arrow body (classic pointer shape) -->
+  <!-- Arrow body -->
   <path d="M2 2 L2 17 L6 13 L9.5 21 L11.5 20 L8 12 L13.5 12 Z"
         fill="url(#arrowFill)"
-        stroke="#00E5B4" stroke-width="1.2"
+        stroke="#D4AF3E" stroke-width="1.2"
         stroke-linejoin="round" stroke-linecap="round"
         filter="url(#arrowGlow)"/>
   <!-- Left-edge inner highlight -->
-  <line x1="3" y1="4" x2="3" y2="14" stroke="#4DFFD8" stroke-width="0.7" stroke-opacity="0.45" stroke-linecap="round"/>
+  <line x1="3" y1="4" x2="3" y2="14" stroke="#EDD875" stroke-width="0.7" stroke-opacity="0.4" stroke-linecap="round"/>
 </svg>
 
 <!-- MOBILE BOTTOM TAB BAR -->
@@ -1945,6 +1941,7 @@ function toggleFaq(btn) {
     arrow.style.left = mx + 'px';
     arrow.style.top  = my + 'px';
     trail.push({ x: mx, y: my, t: performance.now() });
+    glow.classList.add('visible');
   }, { passive: true });
 
   (function loop() {
@@ -1966,9 +1963,9 @@ function toggleFaq(btn) {
         trail[i].x, trail[i].y, 0,
         trail[i].x, trail[i].y, radius
       );
-      grad.addColorStop(0,   'rgba(0,229,180,' + (alpha * 0.9).toFixed(3) + ')');
-      grad.addColorStop(0.4, 'rgba(0,201,167,' + (alpha * 0.45).toFixed(3) + ')');
-      grad.addColorStop(1,   'rgba(0,180,150,0)');
+      grad.addColorStop(0,   'rgba(212,175,62,' + (alpha * 0.85).toFixed(3) + ')');
+      grad.addColorStop(0.4, 'rgba(184,147,12,' + (alpha * 0.4).toFixed(3) + ')');
+      grad.addColorStop(1,   'rgba(120,179,137,0)');
 
       ctx.beginPath();
       ctx.arc(trail[i].x, trail[i].y, radius, 0, Math.PI * 2);
@@ -1990,11 +1987,9 @@ function toggleFaq(btn) {
     document.querySelectorAll(sel).forEach(function(el) {
       el.addEventListener('mouseenter', function() {
         arrow.classList.add('hovering');
-        if (gold) { glow.classList.add('on-gold'); arrow.classList.add('on-gold'); }
       });
       el.addEventListener('mouseleave', function() {
-        arrow.classList.remove('hovering', 'on-gold');
-        glow.classList.remove('on-gold');
+        arrow.classList.remove('hovering');
       });
     });
   }
