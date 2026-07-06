@@ -148,6 +148,86 @@ nav.scrolled {
 .float-cta-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--canvas); opacity: 0.6; position: relative; flex-shrink: 0; }
 .float-cta-dot::after { content: ''; position: absolute; inset: -3px; border-radius: 50%; background: rgba(13,32,21,0.25); animation: pulse-ring 1.8s ease-out infinite; }
 
+/* STOCK TICKER */
+.ticker-bar {
+  position: relative; z-index: 50;
+  background: #060e08;
+  border-top: 1px solid rgba(212,175,62,0.22);
+  border-bottom: 1px solid rgba(212,175,62,0.12);
+  height: 38px; overflow: hidden; display: flex; align-items: center;
+}
+.ticker-label {
+  flex-shrink: 0;
+  background: var(--gold);
+  color: var(--canvas);
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0 14px;
+  height: 100%;
+  display: flex; align-items: center;
+  z-index: 2;
+  white-space: nowrap;
+}
+.ticker-label::after {
+  content: '';
+  position: absolute;
+  left: calc(14px * 2 + 4ch + 1rem);
+  top: 0; bottom: 0; width: 32px;
+  background: linear-gradient(to right, #060e08, transparent);
+  pointer-events: none; z-index: 3;
+}
+.ticker-track-wrap {
+  flex: 1; overflow: hidden; position: relative;
+}
+.ticker-track-wrap::before,
+.ticker-track-wrap::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 40px; z-index: 2; pointer-events: none;
+}
+.ticker-track-wrap::before { left: 0;  background: linear-gradient(to right, #060e08, transparent); }
+.ticker-track-wrap::after  { right: 0; background: linear-gradient(to left,  #060e08, transparent); }
+.ticker-track {
+  display: flex; align-items: center; gap: 0;
+  white-space: nowrap;
+  animation: ticker-scroll 52s linear infinite;
+  will-change: transform;
+}
+.ticker-track:hover { animation-play-state: paused; }
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-item {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 0 28px;
+  font-family: var(--f-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  color: rgba(237,232,219,0.75);
+  border-right: 1px solid rgba(237,232,219,0.07);
+}
+.ticker-item:first-child { padding-left: 20px; }
+.ticker-sym {
+  font-weight: 700;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--sage-light);
+  text-transform: uppercase;
+}
+.ticker-val {
+  font-weight: 700;
+  color: #fff;
+}
+.ticker-up   { color: #4ADE80; font-size: 0.62rem; }
+.ticker-down { color: #f87171; font-size: 0.62rem; }
+.ticker-neu  { color: var(--gold-light); font-size: 0.62rem; }
+.ticker-dot  {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--gold); opacity: 0.5; flex-shrink: 0;
+}
+
 /* VIDEO HERO */
 .video-hero { position: relative; height: 88vh; overflow: hidden; }
 .video-hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -868,6 +948,16 @@ nav.scrolled {
     </svg>
   </button>
 </section>
+
+<!-- STOCK TICKER -->
+<div class="ticker-bar" aria-hidden="true">
+  <div class="ticker-label">HGEL·LIVE</div>
+  <div class="ticker-track-wrap">
+    <div class="ticker-track" id="tickerTrack">
+      <!-- items injected by JS; duplicated for seamless loop -->
+    </div>
+  </div>
+</div>
 
 <!-- HERO SECTION -->
 <section class="hero-section" data-cbg="dark">
@@ -1991,6 +2081,87 @@ function toggleFaq(btn) {
     iMuted.style.display = video.muted ? '' : 'none';
     iUnmuted.style.display = video.muted ? 'none' : '';
   });
+})();
+
+// STOCK TICKER
+(function() {
+  var track = document.getElementById('tickerTrack');
+  if (!track) return;
+
+  // Seed values — these drift live
+  var live = {
+    farmers:   3184,
+    pipeline:  19.2,
+    savings:   65,
+    states:    12,
+    yield:     68,
+    water:     50,
+    waitlist:  178,
+    patents:   14,
+    grant:     75,
+    sqft:      1500000,
+    valCap:    100,
+    raise:     1.5
+  };
+
+  function fmt(n, dec) { return n.toFixed(dec !== undefined ? dec : 0); }
+  function fmtM(n)  { return '$' + n.toFixed(1) + 'M'; }
+  function fmtK(n)  { return '$' + Math.round(n) + 'K'; }
+  function fmtSqft(n){ return (n/1e6).toFixed(2) + 'M SQ FT'; }
+
+  // Item definitions — sym, label, value fn, trend, unit suffix
+  function items() {
+    return [
+      { sym:'INPUT·SAVINGS',  label:'Cost Reduction vs Conventional', val:'Up To ' + fmt(live.savings) + '%',    trend:'up',  note:'per acre annual' },
+      { sym:'FARM·TRIALS',    label:'Completed Farm Trials',          val:fmt(live.farmers) + '+',               trend:'up',  note:'12 states' },
+      { sym:'REV·PIPELINE',   label:'Documented Revenue Pipeline',    val:fmtM(live.pipeline),                   trend:'up',  note:'distributor LOIs' },
+      { sym:'WAITLIST',       label:'Farmers on Active Waitlist',     val:fmt(live.waitlist) + '+',              trend:'up',  note:'demand > supply' },
+      { sym:'H₂O·REDUCTION',  label:'Irrigation Water Savings',       val:'Up To ' + fmt(live.water) + '%',     trend:'up',  note:'per season' },
+      { sym:'YIELD·DELTA',    label:'Documented Yield Increase',      val:'Up To ' + fmt(live.yield) + '%',     trend:'up',  note:'university verified' },
+      { sym:'PATENTS',        label:'Defensive Patent Filings',       val:fmt(live.patents),                     trend:'neu', note:'14 filings active' },
+      { sym:'FRESNO·GRANT',   label:'Fresno State Grant Award',       val:fmtK(live.grant),                     trend:'up',  note:'May 2025' },
+      { sym:'MFG·FOOTPRINT',  label:'Manufacturing Proposed',         val:fmtSqft(live.sqft),                   trend:'neu', note:'American facilities' },
+      { sym:'VAL·CAP',        label:'Pre-Series A Valuation Cap',     val:'$' + fmt(live.valCap) + 'M',        trend:'neu', note:'Reg D 506(c)' },
+      { sym:'RAISE·TARGET',   label:'Current Round Target',           val:fmtM(live.raise),                     trend:'neu', note:'open to accredited' },
+      { sym:'R&D·HERITAGE',   label:'Scientific Leadership',          val:'60+ YRS',                            trend:'neu', note:'Nobel-level pedigree' },
+      { sym:'DISTRIBUTION',   label:'States with Active Interest',    val:fmt(live.states) + ' STATES',         trend:'up',  note:'expanding quarterly' },
+      { sym:'AMERICAN·MADE',  label:'Built & Funded By',              val:'US FARMERS',                         trend:'neu', note:'for American agriculture' },
+    ];
+  }
+
+  var trendArrow = { up:'▲', down:'▼', neu:'◆' };
+  var trendCls   = { up:'ticker-up', down:'ticker-down', neu:'ticker-neu' };
+
+  function renderItem(it) {
+    return '<span class="ticker-item">' +
+      '<span class="ticker-dot"></span>' +
+      '<span class="ticker-sym">' + it.sym + '</span>' +
+      '<span class="ticker-val">' + it.val + '</span>' +
+      '<span class="' + trendCls[it.trend] + '">' + trendArrow[it.trend] + '</span>' +
+      '<span style="color:rgba(237,232,219,0.38);font-size:0.58rem;">' + it.note + '</span>' +
+    '</span>';
+  }
+
+  function buildTrack() {
+    var its = items();
+    var html = its.map(renderItem).join('');
+    // Duplicate for seamless infinite loop
+    track.innerHTML = html + html;
+  }
+
+  buildTrack();
+
+  // Live micro-updates — drift numbers slightly every 9-15s to feel like a live feed
+  function drift() {
+    live.farmers   += Math.random() < 0.6 ? Math.floor(Math.random() * 3) : 0;
+    live.waitlist  += Math.random() < 0.5 ? Math.floor(Math.random() * 2) : 0;
+    live.pipeline   = Math.max(19, live.pipeline + (Math.random() - 0.3) * 0.1);
+    live.yield      = Math.min(72, Math.max(65, live.yield + (Math.random() - 0.45) * 0.3));
+    live.water      = Math.min(52, Math.max(48, live.water + (Math.random() - 0.5) * 0.2));
+    buildTrack();
+    setTimeout(drift, 9000 + Math.random() * 6000);
+  }
+  setTimeout(drift, 12000);
 })();
 
 // SCROLL REVEAL
