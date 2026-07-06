@@ -3896,6 +3896,45 @@ button:hover * {
     .emp-services-title { font-size: clamp(36px, 12vw, 80px); }
   }
 
+/* ─── FLOATING CALL BUTTON ─── */
+.floating-call-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  background: #ff6600;
+  color: #ffffff !important;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  text-transform: uppercase;
+  border-radius: 50px;
+  animation: floatCallGlow 2s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+.floating-call-btn:hover {
+  transform: scale(1.06);
+}
+.floating-call-btn svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+@keyframes floatCallGlow {
+  0%, 100% { box-shadow: 0 0 14px rgba(255, 102, 0, 0.55), 0 4px 14px rgba(0, 0, 0, 0.4); }
+  50%      { box-shadow: 0 0 30px rgba(255, 102, 0, 0.95), 0 4px 20px rgba(0, 0, 0, 0.5); }
+}
+@media (max-width: 480px) {
+  .floating-call-btn span { display: none; }
+  .floating-call-btn { padding: 14px; border-radius: 50%; bottom: 16px; right: 16px; }
+}
+
 </style>
 </head>
 <body>
@@ -5478,6 +5517,12 @@ button:hover * {
   </div>
 
 </footer>
+
+<!-- FLOATING CALL BUTTON -->
+<a href="tel:4753357030" class="floating-call-btn" aria-label="Call Empire Entertainment CT now">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg>
+  <span>Call Now</span>
+</a>
 
 
 

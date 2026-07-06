@@ -3291,3 +3291,42 @@ button:hover * {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important; /* override gradient-clip text */
 }
+
+/* ─── FLOATING CALL BUTTON ─── */
+.floating-call-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  background: #ff6600;
+  color: #ffffff !important;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  text-transform: uppercase;
+  border-radius: 50px;
+  animation: floatCallGlow 2s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+.floating-call-btn:hover {
+  transform: scale(1.06);
+}
+.floating-call-btn svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+@keyframes floatCallGlow {
+  0%, 100% { box-shadow: 0 0 14px rgba(255, 102, 0, 0.55), 0 4px 14px rgba(0, 0, 0, 0.4); }
+  50%      { box-shadow: 0 0 30px rgba(255, 102, 0, 0.95), 0 4px 20px rgba(0, 0, 0, 0.5); }
+}
+@media (max-width: 480px) {
+  .floating-call-btn span { display: none; }
+  .floating-call-btn { padding: 14px; border-radius: 50%; bottom: 16px; right: 16px; }
+}
