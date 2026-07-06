@@ -404,35 +404,44 @@ nav.scrolled {
 @media (pointer: fine) {
   * { cursor: none !important; }
 
+  /* Ambient shadow pool — soft ellipse under cursor, simulates elevation */
   #cursor-glow {
     position: fixed;
     top: 0; left: 0;
-    width: 340px; height: 340px;
+    width: 56px; height: 20px;
     border-radius: 50%;
     pointer-events: none;
     z-index: 9990;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle,
-      rgba(0,229,180,0.13) 0%,
-      rgba(0,201,167,0.055) 40%,
-      transparent 70%);
-    mix-blend-mode: screen;
+    /* offset downward so it sits under the arrow tip */
+    transform: translate(-30%, 14px);
+    background: radial-gradient(ellipse,
+      rgba(0,0,0,0.38) 0%,
+      rgba(0,0,0,0.14) 50%,
+      transparent 80%);
+    filter: blur(4px);
     will-change: transform;
-    transition: background 0.5s ease;
+    transition: opacity 0.2s;
   }
   #cursor-drop {
     position: fixed;
     top: 0; left: 0;
-    width: 20px; height: 24px;
+    width: 22px; height: 26px;
     pointer-events: none;
     z-index: 9999;
     transform: translate(0, 0);
     will-change: transform;
-    filter: drop-shadow(0 0 5px rgba(0,229,180,0.75));
-    transition: filter 0.3s ease, opacity 0.2s;
+    /* elevation: offset shadow down-right + soft ambient halo */
+    filter:
+      drop-shadow(2px 5px 5px rgba(0,0,0,0.55))
+      drop-shadow(1px 2px 2px rgba(0,0,0,0.35))
+      drop-shadow(0 0 14px rgba(255,255,255,0.08));
+    transition: filter 0.25s ease, opacity 0.2s;
   }
   #cursor-drop.hovering {
-    filter: drop-shadow(0 0 9px rgba(0,229,180,1)) brightness(1.15);
+    filter:
+      drop-shadow(2px 6px 7px rgba(0,0,0,0.6))
+      drop-shadow(1px 3px 3px rgba(0,0,0,0.4))
+      drop-shadow(0 0 18px rgba(255,255,255,0.13));
   }
 }
 
@@ -679,22 +688,17 @@ nav.scrolled {
 <svg id="cursor-drop" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="arrowFill" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1C3A28"/>
-      <stop offset="100%" stop-color="#0D2015"/>
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#D8D8D8"/>
     </linearGradient>
-    <filter id="arrowGlow" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="1.4" result="blur"/>
-      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-    </filter>
   </defs>
-  <!-- Arrow body -->
+  <!-- Arrow body: white fill, dark outline = classic system cursor look -->
   <path d="M2 2 L2 17 L6 13 L9.5 21 L11.5 20 L8 12 L13.5 12 Z"
         fill="url(#arrowFill)"
-        stroke="#00E5B4" stroke-width="1.2"
-        stroke-linejoin="round" stroke-linecap="round"
-        filter="url(#arrowGlow)"/>
-  <!-- Left-edge inner highlight -->
-  <line x1="3" y1="4" x2="3" y2="14" stroke="#4DFFD8" stroke-width="0.7" stroke-opacity="0.4" stroke-linecap="round"/>
+        stroke="#1A1A1A" stroke-width="1.1"
+        stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- Left-edge specular — makes it feel solid/3D -->
+  <line x1="3" y1="4" x2="3" y2="14" stroke="white" stroke-width="0.8" stroke-opacity="0.6" stroke-linecap="round"/>
 </svg>
 
 <!-- MOBILE BOTTOM TAB BAR -->
