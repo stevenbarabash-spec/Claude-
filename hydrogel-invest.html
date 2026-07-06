@@ -429,8 +429,9 @@ nav.scrolled {
 .faq-body-inner { padding: 0 0 20px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; max-width: 680px; }
 
 /* AS FEATURED IN */
-.press-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin-top: 56px; }
-@media (max-width: 700px) { .press-grid { grid-template-columns: 1fr; } }
+.press-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 56px; }
+@media (max-width: 900px) { .press-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .press-grid { grid-template-columns: 1fr; } }
 .press-card {
   display: flex; flex-direction: column;
   border: 1px solid var(--border-l); border-radius: 10px; overflow: hidden;
@@ -1142,6 +1143,28 @@ nav.scrolled {
             Authority Magazine · Medium
           </div>
           <div class="press-quote">Don't ask investors to believe in you. Show them something they can verify independently.</div>
+          <span class="press-read">
+            Read the Article
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Morning Ag Clips -->
+      <a class="press-card reveal d3" href="https://www.morningagclips.com/beyond-fertilizer-how-better-water-and-root-management-can-help-protect-yield/" target="_blank" rel="noopener noreferrer">
+        <img
+          data-src="https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68fa39cb3b0ac6582c7c0375.png"
+          class="press-thumb lazy-img"
+          alt="Morning Ag Clips — Beyond Fertilizer"
+        >
+        <div class="press-body">
+          <div class="press-outlet">
+            <span class="press-outlet-dot"></span>
+            Morning Ag Clips
+          </div>
+          <div class="press-quote">Water management is no longer just a drought issue. It is a profit issue.</div>
           <span class="press-read">
             Read the Article
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
