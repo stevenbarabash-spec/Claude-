@@ -412,7 +412,6 @@ nav.scrolled {
     border-radius: 50%;
     pointer-events: none;
     z-index: 9990;
-    /* offset downward so it sits under the arrow tip */
     transform: translate(-30%, 14px);
     background: radial-gradient(ellipse,
       rgba(0,0,0,0.38) 0%,
@@ -420,7 +419,16 @@ nav.scrolled {
       transparent 80%);
     filter: blur(4px);
     will-change: transform;
-    transition: opacity 0.2s;
+    transition: background 0.35s ease, filter 0.35s ease;
+  }
+  /* On dark/green sections — glow pool turns gold */
+  #cursor-glow.on-dark {
+    width: 80px; height: 28px;
+    background: radial-gradient(ellipse,
+      rgba(212,175,62,0.55) 0%,
+      rgba(184,147,12,0.22) 50%,
+      transparent 80%);
+    filter: blur(6px);
   }
   #cursor-drop {
     position: fixed;
@@ -430,18 +438,31 @@ nav.scrolled {
     z-index: 9999;
     transform: translate(0, 0);
     will-change: transform;
-    /* elevation: offset shadow down-right + soft ambient halo */
     filter:
       drop-shadow(2px 5px 5px rgba(0,0,0,0.55))
       drop-shadow(1px 2px 2px rgba(0,0,0,0.35))
       drop-shadow(0 0 14px rgba(255,255,255,0.08));
-    transition: filter 0.25s ease, opacity 0.2s;
+    transition: filter 0.35s ease, opacity 0.2s;
+  }
+  /* On dark sections — arrow gets a warm gold shadow-glow */
+  #cursor-drop.on-dark {
+    filter:
+      drop-shadow(2px 5px 6px rgba(0,0,0,0.7))
+      drop-shadow(1px 2px 2px rgba(0,0,0,0.5))
+      drop-shadow(0 0 12px rgba(212,175,62,0.65))
+      drop-shadow(0 0 5px rgba(212,175,62,0.4));
   }
   #cursor-drop.hovering {
     filter:
       drop-shadow(2px 6px 7px rgba(0,0,0,0.6))
       drop-shadow(1px 3px 3px rgba(0,0,0,0.4))
       drop-shadow(0 0 18px rgba(255,255,255,0.13));
+  }
+  #cursor-drop.on-dark.hovering {
+    filter:
+      drop-shadow(2px 6px 7px rgba(0,0,0,0.7))
+      drop-shadow(0 0 16px rgba(212,175,62,0.85))
+      drop-shadow(0 0 6px rgba(212,175,62,0.55));
   }
 }
 
@@ -726,7 +747,7 @@ nav.scrolled {
 </nav>
 
 <!-- VIDEO HERO -->
-<section class="video-hero">
+<section class="video-hero" data-cbg="dark">
   <video id="heroVideo" autoplay muted loop playsinline>
     <source src="https://assets.cdn.filesafe.space/IUFCbHtG5zmLcNxfm2Ke/media/6a47e6439114462c71f71120.mp4" type="video/mp4">
   </video>
@@ -754,7 +775,7 @@ nav.scrolled {
 </section>
 
 <!-- HERO SECTION -->
-<section class="hero-section">
+<section class="hero-section" data-cbg="dark">
   <div class="container">
     <div class="hero-grid">
       <div>
@@ -866,7 +887,7 @@ nav.scrolled {
 </div>
 
 <!-- PROBLEM SECTION -->
-<section id="problem" style="background-image:url('https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68f77f406d769a8ea2d428d9.png');background-size:cover;background-position:center;position:relative;padding:100px 0;">
+<section id="problem" data-cbg="dark" style="background-image:url('https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68f77f406d769a8ea2d428d9.png');background-size:cover;background-position:center;position:relative;padding:100px 0;">
   <div style="position:absolute;inset:0;background:rgba(244,240,230,0.72);"></div>
   <div style="position:relative;z-index:1;">
     <div class="container">
@@ -902,7 +923,7 @@ nav.scrolled {
 </section>
 
 <!-- SOLUTION SECTION -->
-<section id="solution" style="background:var(--forest);padding:100px 0;position:relative;overflow:hidden;">
+<section id="solution" data-cbg="dark" style="background:var(--forest);padding:100px 0;position:relative;overflow:hidden;">
   <svg id="heroCircuit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice"
     style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.15">
     <defs>
@@ -1119,7 +1140,7 @@ nav.scrolled {
 </section>
 
 <!-- REVENUE MODEL -->
-<section style="background:var(--canvas);padding:100px 0;">
+<section data-cbg="dark" style="background:var(--canvas);padding:100px 0;">
   <div class="container">
     <div class="section-head dark-text reveal">
       <span class="section-eyebrow">Revenue Model</span>
@@ -1203,7 +1224,7 @@ nav.scrolled {
 </section>
 
 <!-- 5-YEAR PROJECTION CHART -->
-<section style="background:#090f0a;padding:100px 0;">
+<section data-cbg="dark" style="background:#090f0a;padding:100px 0;">
   <div class="container">
     <div class="section-head dark-text reveal">
       <span class="section-eyebrow">Financial Projections</span>
@@ -1383,7 +1404,7 @@ nav.scrolled {
 </section>
 
 <!-- EXIT -->
-<section style="background:var(--ink);padding:100px 0;text-align:center;">
+<section data-cbg="dark" style="background:var(--ink);padding:100px 0;text-align:center;">
   <div class="container">
     <div class="exit-big reveal">$1B+</div>
     <p style="font-size:0.9rem;color:var(--bone-dim);max-width:480px;margin:0 auto 56px;" class="reveal">Comparable acquisitions in agricultural biotechnology validate a clear path to a billion-dollar exit within the 5-year window.</p>
@@ -1408,7 +1429,7 @@ nav.scrolled {
 </section>
 
 <!-- SIX REASONS -->
-<section class="reasons-section" style="background-image:url('https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68f77f406d769a8ea2d428d9.png');background-size:cover;background-position:center;position:relative;">
+<section class="reasons-section" data-cbg="dark" style="background-image:url('https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68f77f406d769a8ea2d428d9.png');background-size:cover;background-position:center;position:relative;">
   <div style="position:absolute;inset:0;background:rgba(244,240,231,0.91);"></div>
   <div style="position:relative;z-index:1;">
     <div class="container">
@@ -1736,7 +1757,7 @@ nav.scrolled {
 </section>
 
 <!-- CLOSING CTA -->
-<section id="invest" style="background:var(--canvas);padding:120px 0;text-align:center;">
+<section id="invest" data-cbg="dark" style="background:var(--canvas);padding:120px 0;text-align:center;">
   <div class="container">
     <div class="closing-headline reveal">
       The question isn't whether the world needs it.<br>
@@ -1961,10 +1982,22 @@ function toggleFaq(btn) {
   var glow  = document.getElementById('cursor-glow');
   if (!arrow || !glow) return;
   var mx = -400, my = -400, gx = -400, gy = -400;
+  var onDark = false;
   function lerp(a, b, t) { return a + (b - a) * t; }
+  function checkBg(x, y) {
+    var el = document.elementFromPoint(x, y);
+    var sec = el && el.closest('[data-cbg]');
+    var dark = !!(sec && sec.getAttribute('data-cbg') === 'dark');
+    if (dark !== onDark) {
+      onDark = dark;
+      arrow.classList.toggle('on-dark', dark);
+      glow.classList.toggle('on-dark', dark);
+    }
+  }
   document.addEventListener('mousemove', function(e) {
     mx = e.clientX; my = e.clientY;
     arrow.style.left = mx + 'px'; arrow.style.top = my + 'px';
+    checkBg(mx, my);
   }, { passive: true });
   (function loop() {
     gx = lerp(gx, mx, 0.07); gy = lerp(gy, my, 0.07);
