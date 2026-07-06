@@ -2684,99 +2684,6 @@
   .dj-img-side { height: 260px; }
 }
 
-/* services → JS swipe carousel on mobile (overrides GSAP pin) */
-@media (max-width: 900px) {
-  #empHorizontalWrap {
-    height: auto !important;       /* not the pinned tall height */
-    overflow: hidden;
-    position: relative;
-  }
-  #empHorizontalTrack {
-    display: flex;
-    flex-direction: row;
-    width: auto;
-    height: auto;
-    overflow: visible;
-    /* transform driven by JS (translateX(-index*100%)) */
-  }
-  .emp-panel {
-    flex: 0 0 100% !important;
-    width: 100% !important;
-    height: auto !important;
-    min-height: 100vh;
-    border-right: none !important;
-  }
-  #empScrollUI {
-    display: none !important;
-  }
-
-  /* ── carousel arrows ── */
-  .ec-prev,
-  .ec-next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 20;
-    width: 46px;
-    height: 46px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 26px;
-    line-height: 1;
-    color: #fff;
-    background: rgba(10, 10, 10, 0.55);
-    border: 1px solid rgba(255, 0, 255, 0.4);
-    border-radius: 50%;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    cursor: pointer;
-    transition: border-color .25s ease, background .25s ease, box-shadow .25s ease, opacity .25s ease;
-  }
-  .ec-prev { left: 14px; }
-  .ec-next { right: 14px; }
-  .ec-prev:active,
-  .ec-next:active,
-  .ec-prev:hover,
-  .ec-next:hover {
-    border-color: #d4af37;
-    box-shadow: 0 0 16px rgba(212, 175, 55, 0.5);
-  }
-  .ec-prev.ec-disabled,
-  .ec-next.ec-disabled {
-    opacity: 0.3;
-    pointer-events: none;
-  }
-
-  /* ── dot indicators ── */
-  .ec-dots {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 22px;
-    z-index: 20;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  }
-  .ec-dot {
-    width: 9px;
-    height: 9px;
-    padding: 0;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    background: transparent;
-    cursor: pointer;
-    transition: background .3s ease, border-color .3s ease, transform .3s ease, box-shadow .3s ease;
-  }
-  .ec-dot--active {
-    background: var(--emp-magenta, rgb(255, 0, 255));
-    border-color: #d4af37;
-    transform: scale(1.25);
-    box-shadow: 0 0 10px rgba(255, 0, 255, 0.6);
-  }
-}
 
 
 
@@ -3180,18 +3087,6 @@ body {
   will-change: transform, opacity;
 }
 
-/* Services panels */
-.emp-panel,
-.emp-panel-inner,
-.emp-panel-num,
-.emp-panel-title,
-.emp-panel-desc,
-.emp-panel-tag,
-.emp-panel-visual {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
 /* Showcase slider */
 .sc-slide {
   backface-visibility: hidden;
@@ -3449,7 +3344,7 @@ button:hover * {
   /* INTRO BLOCK */
   .emp-services-intro {
     position: relative;
-    padding: 70px 24px 40px;
+    padding: 90px 24px 40px;
     background: var(--emp-bg);
     text-align: center;
   }
@@ -3464,7 +3359,6 @@ button:hover * {
     display: inline-flex;
     align-items: center;
     gap: 14px;
-    opacity: 0;
   }
   .emp-chapter-label::before,
   .emp-chapter-label::after {
@@ -3476,28 +3370,14 @@ button:hover * {
   .emp-services-title {
     font-family: 'Playfair Display', serif;
     font-weight: 900;
-    font-size: clamp(48px, 7vw, 110px);
-    line-height: 0.9;
+    font-size: clamp(40px, 6vw, 90px);
+    line-height: 1;
     letter-spacing: -0.01em;
-    text-transform: none;
     margin: 0;
     color: var(--cream);
-  }
-  .emp-services-title .word {
-    display: inline-block;
-    overflow: hidden;
-    padding-bottom: 0.05em;
-  }
-  .emp-services-title .char {
-    display: inline-block;
-    transform: translateY(110%);
-    will-change: transform;
-  }
-  .emp-services-title .word { color: var(--cream); }
-  .emp-services-title .outline {
-    display: block;
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(240,232,216,0.35);
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
   }
   .emp-services-sub {
     font-family: 'Cormorant Garamond', serif;
@@ -3508,140 +3388,102 @@ button:hover * {
     color: var(--emp-text-mid);
     max-width: 600px;
     margin: 28px auto 0;
-    opacity: 0;
   }
 
-  /* HORIZONTAL PINNED SCROLL */
-  .emp-horizontal-wrap {
-    position: relative;
-    overflow: hidden;
+  /* SERVICES GRID (replaces the old horizontal-scroll-pinned panels) */
+  .emp-services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    max-width: 1280px;
+    margin: 60px auto 0;
+    padding: 0 24px 110px;
     background: var(--emp-bg);
   }
-  .emp-horizontal-track {
-    display: flex;
-    width: max-content;
-    height: 100vh;
-  }
-  .emp-panel {
-    width: 100vw;
-    height: 100vh;
-    flex-shrink: 0;
+  .emp-card {
     position: relative;
-    display: flex;
-    align-items: center;
+    background: var(--emp-bg-2);
+    border: 1px solid var(--emp-border);
+    border-radius: 20px;
+    padding: 44px 32px 36px;
     overflow: hidden;
-    border-right: 1px solid var(--emp-border);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
-  .emp-panel-bg-grid {
+  .emp-card.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .emp-card:hover {
+    border-color: rgba(255,0,255,0.35);
+    box-shadow: 0 14px 44px rgba(255,0,255,0.14);
+  }
+  .emp-card-bignum {
     position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-    background-size: 70px 70px;
+    top: 6px;
+    right: 20px;
+    font-family: 'Anton', 'Montserrat', sans-serif;
+    font-size: 100px;
+    line-height: 1;
+    font-weight: 400;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.07);
     pointer-events: none;
-    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
-    -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+    user-select: none;
+    z-index: 0;
   }
-  .emp-panel-glow {
-    position: absolute;
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,0,255,0.18) 0%, transparent 60%);
-    filter: blur(90px);
-    pointer-events: none;
-    will-change: transform;
-  }
-  .emp-panel:nth-child(1) .emp-panel-glow { top: -150px; right: -150px; }
-  .emp-panel:nth-child(2) .emp-panel-glow { bottom: -250px; left: -150px; }
-  .emp-panel:nth-child(3) .emp-panel-glow { top: 50%; right: -250px; transform: translateY(-50%); }
-  .emp-panel-noise {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.3;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    mix-blend-mode: overlay;
-  }
-  .emp-panel-inner {
+  .emp-card-visual {
     position: relative;
-    z-index: 2;
+    z-index: 1;
     width: 100%;
-    height: 100%;
-    padding: 60px clamp(40px, 7vw, 100px);
-    display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    align-items: center;
-    gap: 50px;
+    max-width: 170px;
+    aspect-ratio: 1;
+    margin: 0 auto 28px;
   }
-
-  /* TEXT */
-  .emp-panel-content { max-width: 540px; }
-  .emp-panel-num {
+  .emp-card-visual svg { width: 100%; height: 100%; }
+  .emp-card-num {
+    position: relative; z-index: 1;
     font-family: 'JetBrains Mono', 'Space Mono', monospace;
     font-size: 10px;
     font-weight: 500;
-    letter-spacing: 0.35em;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--emp-magenta);
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    margin-bottom: 16px;
   }
-  .emp-panel-num::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, var(--emp-magenta) 0%, transparent 100%);
-    max-width: 160px;
-  }
-  .emp-panel-title {
+  .emp-card-title {
+    position: relative; z-index: 1;
     font-family: 'Anton', 'Montserrat', sans-serif;
     font-weight: 400;
-    font-size: clamp(48px, 6vw, 88px);
-    line-height: 0.92;
-    letter-spacing: -0.02em;
+    font-size: clamp(24px, 2.4vw, 30px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
     text-transform: uppercase;
-    margin: 0 0 24px;
+    margin: 0 0 16px;
     color: var(--emp-text);
-    position: relative;
     overflow-wrap: normal;
     word-break: normal;
     hyphens: none;
   }
-  .emp-panel-bignum {
-    position: absolute;
-    bottom: 40px;
-    right: clamp(30px, 6vw, 80px);
-    font-family: 'Anton', 'Montserrat', sans-serif;
-    font-size: clamp(180px, 26vw, 380px);
-    line-height: 0.8;
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(255,255,255,0.05);
-    letter-spacing: -0.04em;
-    pointer-events: none;
-    user-select: none;
-    z-index: 1;
-    font-weight: 400;
-  }
-  .emp-panel-rule {
-    width: 60px;
-    height: 2px;
+  .emp-card-rule {
+    position: relative; z-index: 1;
+    width: 48px; height: 2px;
     background: var(--emp-magenta);
     box-shadow: 0 0 10px var(--emp-magenta-glow);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
-  .emp-panel-desc {
+  .emp-card-desc {
+    position: relative; z-index: 1;
     font-family: 'Inter', 'Cormorant Garamond', sans-serif;
-    font-size: clamp(14px, 1.05vw, 16px);
+    font-size: 15px;
     font-weight: 300;
     line-height: 1.7;
     color: var(--emp-text-mid);
-    margin-bottom: 28px;
+    margin-bottom: 24px;
   }
-  .emp-panel-tag {
+  .emp-card-tag {
+    position: relative; z-index: 1;
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -3651,14 +3493,13 @@ button:hover * {
     font-family: 'JetBrains Mono', 'Space Mono', monospace;
     font-size: 10px;
     font-weight: 500;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--emp-text-dim);
   }
-  .emp-panel-tag::before {
+  .emp-card-tag::before {
     content: '';
-    width: 5px;
-    height: 5px;
+    width: 5px; height: 5px;
     border-radius: 50%;
     background: var(--emp-magenta);
     box-shadow: 0 0 6px var(--emp-magenta);
@@ -3669,33 +3510,7 @@ button:hover * {
     50% { opacity: 0.3; }
   }
 
-  /* VISUAL */
-  .emp-panel-visual {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1;
-    max-width: 360px;
-    justify-self: center;
-  }
-  .emp-panel-visual svg {
-    width: 100%;
-    height: 100%;
-  }
-  .emp-bracket {
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    border-color: var(--emp-magenta);
-    border-style: solid;
-    border-width: 0;
-    z-index: 3;
-  }
-  .emp-bracket.tl { top: 16px; left: 16px; border-top-width: 1.5px; border-left-width: 1.5px; }
-  .emp-bracket.tr { top: 16px; right: 16px; border-top-width: 1.5px; border-right-width: 1.5px; }
-  .emp-bracket.bl { bottom: 16px; left: 16px; border-bottom-width: 1.5px; border-left-width: 1.5px; }
-  .emp-bracket.br { bottom: 16px; right: 16px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
-
-  /* ICON ANIMATIONS */
+  /* ICON ANIMATIONS (pure CSS -- no GSAP dependency) */
   @keyframes emp-spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
   @keyframes emp-spin-rev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
   @keyframes emp-float-y { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
@@ -3717,101 +3532,13 @@ button:hover * {
   .emp-rise-2 { animation: emp-rise 3.4s ease-in-out infinite 0.5s; }
   .emp-rise-3 { animation: emp-rise 2.8s ease-in-out infinite 1s; }
 
-  /* SCROLL UI */
-  .emp-scroll-ui {
-    position: fixed;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 50;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 12px 24px;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--emp-border);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s ease;
-  }
-  .emp-scroll-ui.active { opacity: 1; }
-  .emp-scroll-counter {
-    font-family: 'JetBrains Mono', 'Space Mono', monospace;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.25em;
-    color: var(--emp-text);
-  }
-  .emp-scroll-counter .current { color: var(--emp-magenta); }
-  .emp-scroll-bar {
-    width: 200px;
-    height: 2px;
-    background: rgba(255,255,255,0.1);
-    position: relative;
-    overflow: hidden;
-  }
-  .emp-scroll-bar-fill {
-    position: absolute;
-    top: 0; left: 0;
-    height: 100%;
-    width: 0%;
-    background: var(--emp-magenta);
-    box-shadow: 0 0 8px var(--emp-magenta);
-  }
-  .emp-scroll-hint {
-    font-family: 'JetBrains Mono', 'Space Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.25em;
-    color: var(--emp-text-dim);
-    text-transform: uppercase;
-  }
-
   /* MOBILE */
   @media (max-width: 900px) {
-    .emp-services-intro { padding: 70px 24px 30px; }
-    .emp-horizontal-wrap { height: auto !important; }
-    .emp-horizontal-track {
-      flex-direction: column;
-      width: 100%;
-      height: auto;
-      transform: none !important;
-    }
-    .emp-panel {
-      width: 100%;
-      height: auto;
-      min-height: auto;
-      padding: 60px 0;
-      border-right: none;
-      border-bottom: 1px solid var(--emp-border);
-    }
-    .emp-panel-inner {
+    .emp-services-grid {
       grid-template-columns: 1fr;
-      padding: 40px 24px;
-      gap: 32px;
+      gap: 24px;
+      padding: 0 20px 70px;
+      margin-top: 44px;
     }
-    .emp-panel-bignum {
-      font-size: clamp(80px, 22vw, 160px);
-      bottom: 20px;
-      right: 24px;
-    }
-    .emp-panel-visual {
-      max-width: 260px;
-      order: -1;
-    }
-    .emp-panel-title { font-size: clamp(36px, 10vw, 64px); }
-    .emp-bracket.tl { top: 12px; left: 12px; }
-    .emp-bracket.tr { top: 12px; right: 12px; }
-    .emp-bracket.bl { bottom: 12px; left: 12px; }
-    .emp-bracket.br { bottom: 12px; right: 12px; }
-    .emp-scroll-ui { display: none; }
-  }
-  @media (max-width: 480px) {
-    .emp-services-intro { padding: 50px 16px 24px; }
-    .emp-panel-inner { padding: 32px 16px; gap: 24px; }
-    .emp-panel-bignum { font-size: clamp(60px, 20vw, 100px); }
-    .emp-panel-title { font-size: clamp(32px, 11vw, 52px); }
-    .emp-panel-visual { max-width: 200px; }
-    .emp-services-title { font-size: clamp(36px, 12vw, 80px); }
+    .emp-card-bignum { font-size: 76px; }
   }

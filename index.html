@@ -410,7 +410,7 @@
   /* INTRO BLOCK */
   .emp-services-intro {
     position: relative;
-    padding: 70px 24px 40px;
+    padding: 90px 24px 40px;
     background: var(--emp-bg);
     text-align: center;
   }
@@ -425,7 +425,6 @@
     display: inline-flex;
     align-items: center;
     gap: 14px;
-    opacity: 0;
   }
   .emp-chapter-label::before,
   .emp-chapter-label::after {
@@ -437,28 +436,14 @@
   .emp-services-title {
     font-family: 'Playfair Display', serif;
     font-weight: 900;
-    font-size: clamp(48px, 7vw, 110px);
-    line-height: 0.9;
+    font-size: clamp(40px, 6vw, 90px);
+    line-height: 1;
     letter-spacing: -0.01em;
-    text-transform: none;
     margin: 0;
     color: var(--cream);
-  }
-  .emp-services-title .word {
-    display: inline-block;
-    overflow: hidden;
-    padding-bottom: 0.05em;
-  }
-  .emp-services-title .char {
-    display: inline-block;
-    transform: translateY(110%);
-    will-change: transform;
-  }
-  .emp-services-title .word { color: var(--cream); }
-  .emp-services-title .outline {
-    display: block;
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(240,232,216,0.35);
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
   }
   .emp-services-sub {
     font-family: 'Cormorant Garamond', serif;
@@ -469,140 +454,102 @@
     color: var(--emp-text-mid);
     max-width: 600px;
     margin: 28px auto 0;
-    opacity: 0;
   }
 
-  /* HORIZONTAL PINNED SCROLL */
-  .emp-horizontal-wrap {
-    position: relative;
-    overflow: hidden;
+  /* SERVICES GRID (replaces the old horizontal-scroll-pinned panels) */
+  .emp-services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    max-width: 1280px;
+    margin: 60px auto 0;
+    padding: 0 24px 110px;
     background: var(--emp-bg);
   }
-  .emp-horizontal-track {
-    display: flex;
-    width: max-content;
-    height: 100vh;
-  }
-  .emp-panel {
-    width: 100vw;
-    height: 100vh;
-    flex-shrink: 0;
+  .emp-card {
     position: relative;
-    display: flex;
-    align-items: center;
+    background: var(--emp-bg-2);
+    border: 1px solid var(--emp-border);
+    border-radius: 20px;
+    padding: 44px 32px 36px;
     overflow: hidden;
-    border-right: 1px solid var(--emp-border);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
-  .emp-panel-bg-grid {
+  .emp-card.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .emp-card:hover {
+    border-color: rgba(255,0,255,0.35);
+    box-shadow: 0 14px 44px rgba(255,0,255,0.14);
+  }
+  .emp-card-bignum {
     position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-    background-size: 70px 70px;
+    top: 6px;
+    right: 20px;
+    font-family: 'Anton', 'Montserrat', sans-serif;
+    font-size: 100px;
+    line-height: 1;
+    font-weight: 400;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.07);
     pointer-events: none;
-    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
-    -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+    user-select: none;
+    z-index: 0;
   }
-  .emp-panel-glow {
-    position: absolute;
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,0,255,0.18) 0%, transparent 60%);
-    filter: blur(90px);
-    pointer-events: none;
-    will-change: transform;
-  }
-  .emp-panel:nth-child(1) .emp-panel-glow { top: -150px; right: -150px; }
-  .emp-panel:nth-child(2) .emp-panel-glow { bottom: -250px; left: -150px; }
-  .emp-panel:nth-child(3) .emp-panel-glow { top: 50%; right: -250px; transform: translateY(-50%); }
-  .emp-panel-noise {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.3;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    mix-blend-mode: overlay;
-  }
-  .emp-panel-inner {
+  .emp-card-visual {
     position: relative;
-    z-index: 2;
+    z-index: 1;
     width: 100%;
-    height: 100%;
-    padding: 60px clamp(40px, 7vw, 100px);
-    display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    align-items: center;
-    gap: 50px;
+    max-width: 170px;
+    aspect-ratio: 1;
+    margin: 0 auto 28px;
   }
-
-  /* TEXT */
-  .emp-panel-content { max-width: 540px; }
-  .emp-panel-num {
+  .emp-card-visual svg { width: 100%; height: 100%; }
+  .emp-card-num {
+    position: relative; z-index: 1;
     font-family: 'JetBrains Mono', 'Space Mono', monospace;
     font-size: 10px;
     font-weight: 500;
-    letter-spacing: 0.35em;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--emp-magenta);
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    margin-bottom: 16px;
   }
-  .emp-panel-num::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, var(--emp-magenta) 0%, transparent 100%);
-    max-width: 160px;
-  }
-  .emp-panel-title {
+  .emp-card-title {
+    position: relative; z-index: 1;
     font-family: 'Anton', 'Montserrat', sans-serif;
     font-weight: 400;
-    font-size: clamp(48px, 6vw, 88px);
-    line-height: 0.92;
-    letter-spacing: -0.02em;
+    font-size: clamp(24px, 2.4vw, 30px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
     text-transform: uppercase;
-    margin: 0 0 24px;
+    margin: 0 0 16px;
     color: var(--emp-text);
-    position: relative;
     overflow-wrap: normal;
     word-break: normal;
     hyphens: none;
   }
-  .emp-panel-bignum {
-    position: absolute;
-    bottom: 40px;
-    right: clamp(30px, 6vw, 80px);
-    font-family: 'Anton', 'Montserrat', sans-serif;
-    font-size: clamp(180px, 26vw, 380px);
-    line-height: 0.8;
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(255,255,255,0.05);
-    letter-spacing: -0.04em;
-    pointer-events: none;
-    user-select: none;
-    z-index: 1;
-    font-weight: 400;
-  }
-  .emp-panel-rule {
-    width: 60px;
-    height: 2px;
+  .emp-card-rule {
+    position: relative; z-index: 1;
+    width: 48px; height: 2px;
     background: var(--emp-magenta);
     box-shadow: 0 0 10px var(--emp-magenta-glow);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
-  .emp-panel-desc {
+  .emp-card-desc {
+    position: relative; z-index: 1;
     font-family: 'Inter', 'Cormorant Garamond', sans-serif;
-    font-size: clamp(14px, 1.05vw, 16px);
+    font-size: 15px;
     font-weight: 300;
     line-height: 1.7;
     color: var(--emp-text-mid);
-    margin-bottom: 28px;
+    margin-bottom: 24px;
   }
-  .emp-panel-tag {
+  .emp-card-tag {
+    position: relative; z-index: 1;
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -612,14 +559,13 @@
     font-family: 'JetBrains Mono', 'Space Mono', monospace;
     font-size: 10px;
     font-weight: 500;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--emp-text-dim);
   }
-  .emp-panel-tag::before {
+  .emp-card-tag::before {
     content: '';
-    width: 5px;
-    height: 5px;
+    width: 5px; height: 5px;
     border-radius: 50%;
     background: var(--emp-magenta);
     box-shadow: 0 0 6px var(--emp-magenta);
@@ -630,33 +576,7 @@
     50% { opacity: 0.3; }
   }
 
-  /* VISUAL */
-  .emp-panel-visual {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1;
-    max-width: 360px;
-    justify-self: center;
-  }
-  .emp-panel-visual svg {
-    width: 100%;
-    height: 100%;
-  }
-  .emp-bracket {
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    border-color: var(--emp-magenta);
-    border-style: solid;
-    border-width: 0;
-    z-index: 3;
-  }
-  .emp-bracket.tl { top: 16px; left: 16px; border-top-width: 1.5px; border-left-width: 1.5px; }
-  .emp-bracket.tr { top: 16px; right: 16px; border-top-width: 1.5px; border-right-width: 1.5px; }
-  .emp-bracket.bl { bottom: 16px; left: 16px; border-bottom-width: 1.5px; border-left-width: 1.5px; }
-  .emp-bracket.br { bottom: 16px; right: 16px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
-
-  /* ICON ANIMATIONS */
+  /* ICON ANIMATIONS (pure CSS -- no GSAP dependency) */
   @keyframes emp-spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
   @keyframes emp-spin-rev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
   @keyframes emp-float-y { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
@@ -678,503 +598,313 @@
   .emp-rise-2 { animation: emp-rise 3.4s ease-in-out infinite 0.5s; }
   .emp-rise-3 { animation: emp-rise 2.8s ease-in-out infinite 1s; }
 
-  /* SCROLL UI */
-  .emp-scroll-ui {
-    position: fixed;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 50;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 12px 24px;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--emp-border);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s ease;
-  }
-  .emp-scroll-ui.active { opacity: 1; }
-  .emp-scroll-counter {
-    font-family: 'JetBrains Mono', 'Space Mono', monospace;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.25em;
-    color: var(--emp-text);
-  }
-  .emp-scroll-counter .current { color: var(--emp-magenta); }
-  .emp-scroll-bar {
-    width: 200px;
-    height: 2px;
-    background: rgba(255,255,255,0.1);
-    position: relative;
-    overflow: hidden;
-  }
-  .emp-scroll-bar-fill {
-    position: absolute;
-    top: 0; left: 0;
-    height: 100%;
-    width: 0%;
-    background: var(--emp-magenta);
-    box-shadow: 0 0 8px var(--emp-magenta);
-  }
-  .emp-scroll-hint {
-    font-family: 'JetBrains Mono', 'Space Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.25em;
-    color: var(--emp-text-dim);
-    text-transform: uppercase;
-  }
-
   /* MOBILE */
   @media (max-width: 900px) {
-    .emp-services-intro { padding: 70px 24px 30px; }
-    .emp-horizontal-wrap { height: auto !important; }
-    .emp-horizontal-track {
-      flex-direction: column;
-      width: 100%;
-      height: auto;
-      transform: none !important;
-    }
-    .emp-panel {
-      width: 100%;
-      height: auto;
-      min-height: auto;
-      padding: 60px 0;
-      border-right: none;
-      border-bottom: 1px solid var(--emp-border);
-    }
-    .emp-panel-inner {
+    .emp-services-grid {
       grid-template-columns: 1fr;
-      padding: 40px 24px;
-      gap: 32px;
+      gap: 24px;
+      padding: 0 20px 70px;
+      margin-top: 44px;
     }
-    .emp-panel-bignum {
-      font-size: clamp(80px, 22vw, 160px);
-      bottom: 20px;
-      right: 24px;
-    }
-    .emp-panel-visual {
-      max-width: 260px;
-      order: -1;
-    }
-    .emp-panel-title { font-size: clamp(36px, 10vw, 64px); }
-    .emp-bracket.tl { top: 12px; left: 12px; }
-    .emp-bracket.tr { top: 12px; right: 12px; }
-    .emp-bracket.bl { bottom: 12px; left: 12px; }
-    .emp-bracket.br { bottom: 12px; right: 12px; }
-    .emp-scroll-ui { display: none; }
-  }
-  @media (max-width: 480px) {
-    .emp-services-intro { padding: 50px 16px 24px; }
-    .emp-panel-inner { padding: 32px 16px; gap: 24px; }
-    .emp-panel-bignum { font-size: clamp(60px, 20vw, 100px); }
-    .emp-panel-title { font-size: clamp(32px, 11vw, 52px); }
-    .emp-panel-visual { max-width: 200px; }
-    .emp-services-title { font-size: clamp(36px, 12vw, 80px); }
+    .emp-card-bignum { font-size: 76px; }
   }
 </style>
 
 
 <section class="emp-services-intro" id="services">
   <div class="container">
-    <div class="emp-chapter-label" id="empChapterLabel">CHAPTER · SERVICES</div>
-    <h2 class="emp-services-title" id="empServicesTitle">
-      <span class="word">What</span>
-      <span class="word">We</span>
-      <span class="word outline">Do.</span>
-    </h2>
-    <p class="emp-services-sub" id="empServicesSub">
+    <div class="emp-chapter-label">CHAPTER · SERVICES</div>
+    <h2 class="emp-services-title">What We Do.</h2>
+    <p class="emp-services-sub">
       Three signature experiences — engineered around your moment. Weddings, corporate gatherings,
       and private celebrations across Connecticut, New York, and the Northeast.
     </p>
   </div>
 </section>
 
+<div class="emp-services-grid">
 
-<div class="emp-horizontal-wrap" id="empHorizontalWrap">
-  <div class="emp-horizontal-track" id="empHorizontalTrack">
-
-    <!-- PANEL 01 — UNFORGETTABLE WEDDINGS -->
-    <section class="emp-panel" data-panel="1">
-      <div class="emp-panel-bg-grid"></div>
-      <div class="emp-panel-glow"></div>
-      <div class="emp-panel-noise"></div>
-      <span class="emp-bracket tl"></span>
-      <span class="emp-bracket tr"></span>
-      <span class="emp-bracket bl"></span>
-      <span class="emp-bracket br"></span>
-      <div class="emp-panel-bignum">01</div>
-      <div class="emp-panel-inner">
-        <div class="emp-panel-content">
-          <div class="emp-panel-num">Service 01 / Three</div>
-          <h3 class="emp-panel-title">Unforgettable Weddings</h3>
-          <div class="emp-panel-rule"></div>
-          <p class="emp-panel-desc">
-            Your wedding reception deserves more than just music — it deserves an atmosphere
-            your guests will remember forever. DJ Brandon and the Empire Entertainment CT team
-            specialize in weddings across Connecticut and New York, reading the room, mixing the
-            right songs at the right moment, and keeping the dance floor packed from the first
-            dance to the final song. Every wedding is unique, and we take the time to understand
-            your vision, your music preferences, and the energy you want so the night truly
-            reflects your story.
-          </p>
-          <div class="emp-panel-tag">First Dance · Reception · Ceremony</div>
-        </div>
-        <div class="emp-panel-visual">
-          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <radialGradient id="ringShine">
-                <stop offset="0%" stop-color="rgb(255,255,255)" stop-opacity="0.4"/>
-                <stop offset="50%" stop-color="rgb(255,0,255)" stop-opacity="0.6"/>
-                <stop offset="100%" stop-color="rgb(255,0,255)" stop-opacity="0.2"/>
-              </radialGradient>
-              <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="rgb(255,0,255)" stop-opacity="1"/>
-                <stop offset="100%" stop-color="rgb(180,0,180)" stop-opacity="0.8"/>
-              </linearGradient>
-              <filter id="ringGlow">
-                <feGaussianBlur stdDeviation="4" result="blur"/>
-                <feMerge>
-                  <feMergeNode in="blur"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-            </defs>
-
-            <!-- Outer pulse rings -->
-            <g class="emp-pulse-glow">
-              <circle cx="200" cy="200" r="170" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.15"/>
-            </g>
-            <circle cx="200" cy="200" r="150" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.2" stroke-dasharray="2 8"/>
-
-            <!-- Rotating outer ring -->
-            <g class="emp-ring-rotate">
-              <circle cx="200" cy="200" r="130" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.3" stroke-dasharray="4 10"/>
-            </g>
-
-            <!-- Two interlocking wedding rings -->
-            <g filter="url(#ringGlow)">
-              <circle cx="165" cy="200" r="60" fill="none" stroke="url(#ringShine)" stroke-width="6"/>
-              <circle cx="165" cy="200" r="60" fill="none" stroke="rgb(255,0,255)" stroke-width="2"/>
-              <circle cx="235" cy="200" r="60" fill="none" stroke="url(#ringShine)" stroke-width="6"/>
-              <circle cx="235" cy="200" r="60" fill="none" stroke="rgb(255,0,255)" stroke-width="2"/>
-              <!-- Diamond on top ring -->
-              <g transform="translate(165, 140)">
-                <path d="M 0 -12 L 8 -4 L 0 12 L -8 -4 Z" fill="rgb(255,255,255)" stroke="rgb(255,0,255)" stroke-width="1"/>
-                <path d="M 0 -12 L 8 -4 L -8 -4 Z" fill="rgba(255,0,255,0.4)"/>
-              </g>
-            </g>
-
-            <!-- Floating hearts -->
-            <g class="emp-heart-beat">
-              <path d="M 200 320 C 200 320 175 305 175 290 C 175 280 183 275 190 275 C 195 275 200 280 200 285 C 200 280 205 275 210 275 C 217 275 225 280 225 290 C 225 305 200 320 200 320 Z" fill="url(#heartGrad)" opacity="0.9"/>
-            </g>
-
-            <!-- Sparkles -->
-            <g class="emp-twinkle-1">
-              <path d="M 90 100 L 94 110 L 104 114 L 94 118 L 90 128 L 86 118 L 76 114 L 86 110 Z" fill="rgb(255,0,255)"/>
-            </g>
-            <g class="emp-twinkle-2">
-              <path d="M 310 95 L 313 103 L 321 106 L 313 109 L 310 117 L 307 109 L 299 106 L 307 103 Z" fill="rgb(255,0,255)"/>
-            </g>
-            <g class="emp-twinkle-3">
-              <path d="M 80 310 L 83 318 L 91 321 L 83 324 L 80 332 L 77 324 L 69 321 L 77 318 Z" fill="rgb(255,0,255)"/>
-            </g>
-            <g class="emp-twinkle-4">
-              <path d="M 320 305 L 324 315 L 334 319 L 324 323 L 320 333 L 316 323 L 306 319 L 316 315 Z" fill="rgb(255,0,255)"/>
-            </g>
-          </svg>
-        </div>
-      </div>
-    </section>
-
-    <!-- PANEL 02 — ELEVATED CORPORATE EVENTS -->
-    <section class="emp-panel" data-panel="2">
-      <div class="emp-panel-bg-grid"></div>
-      <div class="emp-panel-glow"></div>
-      <div class="emp-panel-noise"></div>
-      <span class="emp-bracket tl"></span>
-      <span class="emp-bracket tr"></span>
-      <span class="emp-bracket bl"></span>
-      <span class="emp-bracket br"></span>
-      <div class="emp-panel-bignum">02</div>
-      <div class="emp-panel-inner">
-        <div class="emp-panel-content">
-          <div class="emp-panel-num">Service 02 / Three</div>
-          <h3 class="emp-panel-title">Elevated Corporate Events</h3>
-          <div class="emp-panel-rule"></div>
-          <p class="emp-panel-desc">
-            Corporate events should feel professional and engaging at the same time. Empire
-            Entertainment CT provides the perfect musical backdrop for company parties, holiday
-            celebrations, galas, and corporate gatherings across the Northeast. Whether it's
-            ambient background music during networking or a full dance floor experience during
-            the evening celebration, we dial in the right tone for every moment and leave a
-            lasting impression on every guest in the room.
-          </p>
-          <div class="emp-panel-tag">Galas · Holiday Parties · Networking</div>
-        </div>
-        <div class="emp-panel-visual">
-          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bldgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="rgb(40,40,40)"/>
-                <stop offset="100%" stop-color="rgb(15,15,15)"/>
-              </linearGradient>
-              <linearGradient id="winGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="rgb(255,0,255)" stop-opacity="0.9"/>
-                <stop offset="100%" stop-color="rgb(255,0,255)" stop-opacity="0.4"/>
-              </linearGradient>
-              <filter id="bldgGlow">
-                <feGaussianBlur stdDeviation="3" result="blur"/>
-                <feMerge>
-                  <feMergeNode in="blur"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-            </defs>
-
-            <!-- Background grid pulse -->
-            <g class="emp-pulse-glow">
-              <circle cx="200" cy="200" r="170" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.12"/>
-            </g>
-            <circle cx="200" cy="200" r="150" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.2" stroke-dasharray="3 9"/>
-
-            <!-- Ground line -->
-            <line x1="60" y1="330" x2="340" y2="330" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.5"/>
-            <line x1="80" y1="335" x2="320" y2="335" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.2"/>
-
-            <!-- Left building -->
-            <g filter="url(#bldgGlow)">
-              <rect x="105" y="180" width="60" height="150" fill="url(#bldgGrad)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
-              <!-- Windows -->
-              <rect x="115" y="195" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-1"/>
-              <rect x="135" y="195" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="115" y="220" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="135" y="220" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-2"/>
-              <rect x="115" y="245" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-3"/>
-              <rect x="135" y="245" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="115" y="270" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="135" y="270" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-4"/>
-              <rect x="115" y="295" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="135" y="295" width="12" height="14" fill="url(#winGrad)"/>
-            </g>
-
-            <!-- Center tower (tallest) -->
-            <g filter="url(#bldgGlow)">
-              <rect x="170" y="100" width="60" height="230" fill="url(#bldgGrad)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
-              <!-- Antenna -->
-              <line x1="200" y1="100" x2="200" y2="70" stroke="rgb(255,0,255)" stroke-width="2"/>
-              <circle cx="200" cy="68" r="4" fill="rgb(255,0,255)" class="emp-twinkle-1"/>
-              <!-- Windows -->
-              <rect x="180" y="115" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="200" y="115" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-2"/>
-              <rect x="180" y="140" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-3"/>
-              <rect x="200" y="140" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="180" y="165" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="200" y="165" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-4"/>
-              <rect x="180" y="190" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-1"/>
-              <rect x="200" y="190" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="180" y="215" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="200" y="215" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-2"/>
-              <rect x="180" y="240" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-3"/>
-              <rect x="200" y="240" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="180" y="265" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="200" y="265" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="180" y="290" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-4"/>
-              <rect x="200" y="290" width="12" height="14" fill="url(#winGrad)"/>
-            </g>
-
-            <!-- Right building -->
-            <g filter="url(#bldgGlow)">
-              <rect x="235" y="155" width="60" height="175" fill="url(#bldgGrad)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
-              <!-- Windows -->
-              <rect x="245" y="170" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-2"/>
-              <rect x="265" y="170" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="245" y="195" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="265" y="195" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-1"/>
-              <rect x="245" y="220" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-4"/>
-              <rect x="265" y="220" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="245" y="245" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="265" y="245" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-3"/>
-              <rect x="245" y="270" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="265" y="270" width="12" height="14" fill="url(#winGrad)"/>
-              <rect x="245" y="295" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-2"/>
-              <rect x="265" y="295" width="12" height="14" fill="url(#winGrad)"/>
-            </g>
-
-            <!-- Floating champagne bubbles -->
-            <g class="emp-rise-1">
-              <circle cx="75" cy="240" r="4" fill="rgb(255,0,255)" opacity="0.7"/>
-            </g>
-            <g class="emp-rise-2">
-              <circle cx="325" cy="220" r="3" fill="rgb(255,0,255)" opacity="0.6"/>
-            </g>
-            <g class="emp-rise-3">
-              <circle cx="65" cy="280" r="3" fill="rgb(255,0,255)" opacity="0.5"/>
-            </g>
-            <g class="emp-rise-1" style="animation-delay: 1.5s">
-              <circle cx="335" cy="270" r="4" fill="rgb(255,0,255)" opacity="0.6"/>
-            </g>
-          </svg>
-        </div>
-      </div>
-    </section>
-
-    <!-- PANEL 03 — EXCEPTIONAL PRIVATE EVENTS -->
-    <section class="emp-panel" data-panel="3">
-      <div class="emp-panel-bg-grid"></div>
-      <div class="emp-panel-glow"></div>
-      <div class="emp-panel-noise"></div>
-      <span class="emp-bracket tl"></span>
-      <span class="emp-bracket tr"></span>
-      <span class="emp-bracket bl"></span>
-      <span class="emp-bracket br"></span>
-      <div class="emp-panel-bignum">03</div>
-      <div class="emp-panel-inner">
-        <div class="emp-panel-content">
-          <div class="emp-panel-num">Service 03 / Three</div>
-          <h3 class="emp-panel-title">Exceptional Private Events</h3>
-          <div class="emp-panel-rule"></div>
-          <p class="emp-panel-desc">
-            Every private celebration deserves great music and even greater energy. From birthday
-            parties and anniversaries to graduations and everything in between, Empire
-            Entertainment CT brings the same passion and professionalism to every event. We tailor
-            the music to your guests, your style, and your vibe — keeping the energy high, the
-            dance floor active, and the memories flowing all night long.
-          </p>
-          <div class="emp-panel-tag">Birthdays · Anniversaries · Graduations</div>
-        </div>
-        <div class="emp-panel-visual">
-          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="cakeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="rgb(255,0,255)" stop-opacity="1"/>
-                <stop offset="100%" stop-color="rgb(140,0,140)" stop-opacity="0.8"/>
-              </linearGradient>
-              <linearGradient id="cakeGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="rgb(255,0,255)" stop-opacity="0.9"/>
-                <stop offset="100%" stop-color="rgb(120,0,120)" stop-opacity="0.7"/>
-              </linearGradient>
-              <radialGradient id="flameGrad">
-                <stop offset="0%" stop-color="rgb(255,255,255)" stop-opacity="1"/>
-                <stop offset="40%" stop-color="rgb(255,0,255)" stop-opacity="0.9"/>
-                <stop offset="100%" stop-color="rgb(255,0,255)" stop-opacity="0"/>
-              </radialGradient>
-              <filter id="cakeGlow">
-                <feGaussianBlur stdDeviation="3" result="blur"/>
-                <feMerge>
-                  <feMergeNode in="blur"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-            </defs>
-
-            <!-- Backdrop pulse rings -->
-            <g class="emp-pulse-glow">
-              <circle cx="200" cy="200" r="165" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.15"/>
-            </g>
-            <g class="emp-ring-rotate-rev">
-              <circle cx="200" cy="200" r="140" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.25" stroke-dasharray="3 9"/>
-            </g>
-
-            <!-- Confetti streamers -->
-            <g class="emp-rise-1">
-              <rect x="80" y="100" width="3" height="14" fill="rgb(255,0,255)" transform="rotate(20 81 107)"/>
-            </g>
-            <g class="emp-rise-2">
-              <rect x="320" y="90" width="3" height="14" fill="rgb(255,0,255)" transform="rotate(-25 321 97)"/>
-            </g>
-            <g class="emp-rise-3">
-              <rect x="70" y="180" width="3" height="12" fill="rgb(255,0,255)" transform="rotate(40 71 186)"/>
-            </g>
-            <g class="emp-rise-1" style="animation-delay: 0.8s">
-              <rect x="330" y="170" width="3" height="12" fill="rgb(255,0,255)" transform="rotate(-30 331 176)"/>
-            </g>
-
-            <!-- Cake plate -->
-            <ellipse cx="200" cy="325" rx="120" ry="14" fill="rgba(255,255,255,0.08)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
-            <ellipse cx="200" cy="322" rx="120" ry="14" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.5"/>
-
-            <!-- Cake bottom tier -->
-            <g filter="url(#cakeGlow)">
-              <rect x="120" y="245" width="160" height="80" fill="url(#cakeGrad)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
-              <!-- Bottom tier decoration -->
-              <path d="M 120 260 Q 140 250 160 260 T 200 260 T 240 260 T 280 260" fill="none" stroke="rgb(255,255,255)" stroke-width="1.5" opacity="0.6"/>
-              <circle cx="140" cy="290" r="4" fill="rgb(255,255,255)" opacity="0.7"/>
-              <circle cx="170" cy="295" r="3" fill="rgb(255,255,255)" opacity="0.6"/>
-              <circle cx="200" cy="290" r="4" fill="rgb(255,255,255)" opacity="0.7"/>
-              <circle cx="230" cy="295" r="3" fill="rgb(255,255,255)" opacity="0.6"/>
-              <circle cx="260" cy="290" r="4" fill="rgb(255,255,255)" opacity="0.7"/>
-            </g>
-
-            <!-- Cake middle tier -->
-            <g filter="url(#cakeGlow)">
-              <rect x="145" y="180" width="110" height="65" fill="url(#cakeGrad2)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
-              <path d="M 145 195 Q 165 185 185 195 T 225 195 T 255 195" fill="none" stroke="rgb(255,255,255)" stroke-width="1.5" opacity="0.6"/>
-              <circle cx="170" cy="220" r="3" fill="rgb(255,255,255)" opacity="0.7"/>
-              <circle cx="200" cy="225" r="3" fill="rgb(255,255,255)" opacity="0.6"/>
-              <circle cx="230" cy="220" r="3" fill="rgb(255,255,255)" opacity="0.7"/>
-            </g>
-
-            <!-- Cake top tier -->
-            <g filter="url(#cakeGlow)">
-              <rect x="170" y="130" width="60" height="50" fill="url(#cakeGrad)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
-              <path d="M 170 142 Q 185 135 200 142 T 230 142" fill="none" stroke="rgb(255,255,255)" stroke-width="1.5" opacity="0.6"/>
-            </g>
-
-            <!-- Candles -->
-            <rect x="183" y="105" width="4" height="25" fill="rgb(255,255,255)" opacity="0.9"/>
-            <rect x="198" y="100" width="4" height="30" fill="rgb(255,255,255)" opacity="0.9"/>
-            <rect x="213" y="105" width="4" height="25" fill="rgb(255,255,255)" opacity="0.9"/>
-
-            <!-- Flames -->
-            <g class="emp-float">
-              <ellipse cx="185" cy="100" rx="6" ry="10" fill="url(#flameGrad)"/>
-              <circle cx="185" cy="100" r="2" fill="rgb(255,255,255)"/>
-            </g>
-            <g class="emp-float" style="animation-delay: 0.3s">
-              <ellipse cx="200" cy="94" rx="7" ry="12" fill="url(#flameGrad)"/>
-              <circle cx="200" cy="95" r="2" fill="rgb(255,255,255)"/>
-            </g>
-            <g class="emp-float" style="animation-delay: 0.6s">
-              <ellipse cx="215" cy="100" rx="6" ry="10" fill="url(#flameGrad)"/>
-              <circle cx="215" cy="100" r="2" fill="rgb(255,255,255)"/>
-            </g>
-
-            <!-- Sparkles around cake -->
-            <g class="emp-twinkle-1">
-              <path d="M 95 215 L 98 223 L 106 226 L 98 229 L 95 237 L 92 229 L 84 226 L 92 223 Z" fill="rgb(255,0,255)"/>
-            </g>
-            <g class="emp-twinkle-2">
-              <path d="M 305 215 L 308 223 L 316 226 L 308 229 L 305 237 L 302 229 L 294 226 L 302 223 Z" fill="rgb(255,0,255)"/>
-            </g>
-            <g class="emp-twinkle-3">
-              <path d="M 110 140 L 112 146 L 118 148 L 112 150 L 110 156 L 108 150 L 102 148 L 108 146 Z" fill="rgb(255,0,255)"/>
-            </g>
-            <g class="emp-twinkle-4">
-              <path d="M 290 140 L 292 146 L 298 148 L 292 150 L 290 156 L 288 150 L 282 148 L 288 146 Z" fill="rgb(255,0,255)"/>
-            </g>
-          </svg>
-        </div>
-      </div>
-    </section>
-
+  <!-- CARD 01 — UNFORGETTABLE WEDDINGS -->
+  <div class="emp-card" data-emp-card>
+    <div class="emp-card-bignum">01</div>
+    <div class="emp-card-visual">
+      <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="ringShine">
+            <stop offset="0%" stop-color="rgb(255,255,255)" stop-opacity="0.4"/>
+            <stop offset="50%" stop-color="rgb(255,0,255)" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="rgb(255,0,255)" stop-opacity="0.2"/>
+          </radialGradient>
+          <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="rgb(255,0,255)" stop-opacity="1"/>
+            <stop offset="100%" stop-color="rgb(180,0,180)" stop-opacity="0.8"/>
+          </linearGradient>
+          <filter id="ringGlow">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <g class="emp-pulse-glow">
+          <circle cx="200" cy="200" r="170" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.15"/>
+        </g>
+        <circle cx="200" cy="200" r="150" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.2" stroke-dasharray="2 8"/>
+        <g class="emp-ring-rotate">
+          <circle cx="200" cy="200" r="130" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.3" stroke-dasharray="4 10"/>
+        </g>
+        <g filter="url(#ringGlow)">
+          <circle cx="165" cy="200" r="60" fill="none" stroke="url(#ringShine)" stroke-width="6"/>
+          <circle cx="165" cy="200" r="60" fill="none" stroke="rgb(255,0,255)" stroke-width="2"/>
+          <circle cx="235" cy="200" r="60" fill="none" stroke="url(#ringShine)" stroke-width="6"/>
+          <circle cx="235" cy="200" r="60" fill="none" stroke="rgb(255,0,255)" stroke-width="2"/>
+          <g transform="translate(165, 140)">
+            <path d="M 0 -12 L 8 -4 L 0 12 L -8 -4 Z" fill="rgb(255,255,255)" stroke="rgb(255,0,255)" stroke-width="1"/>
+            <path d="M 0 -12 L 8 -4 L -8 -4 Z" fill="rgba(255,0,255,0.4)"/>
+          </g>
+        </g>
+        <g class="emp-heart-beat">
+          <path d="M 200 320 C 200 320 175 305 175 290 C 175 280 183 275 190 275 C 195 275 200 280 200 285 C 200 280 205 275 210 275 C 217 275 225 280 225 290 C 225 305 200 320 200 320 Z" fill="url(#heartGrad)" opacity="0.9"/>
+        </g>
+        <g class="emp-twinkle-1">
+          <path d="M 90 100 L 94 110 L 104 114 L 94 118 L 90 128 L 86 118 L 76 114 L 86 110 Z" fill="rgb(255,0,255)"/>
+        </g>
+        <g class="emp-twinkle-2">
+          <path d="M 310 95 L 313 103 L 321 106 L 313 109 L 310 117 L 307 109 L 299 106 L 307 103 Z" fill="rgb(255,0,255)"/>
+        </g>
+        <g class="emp-twinkle-3">
+          <path d="M 80 310 L 83 318 L 91 321 L 83 324 L 80 332 L 77 324 L 69 321 L 77 318 Z" fill="rgb(255,0,255)"/>
+        </g>
+        <g class="emp-twinkle-4">
+          <path d="M 320 305 L 324 315 L 334 319 L 324 323 L 320 333 L 316 323 L 306 319 L 316 315 Z" fill="rgb(255,0,255)"/>
+        </g>
+      </svg>
+    </div>
+    <div class="emp-card-num">Service 01 / Three</div>
+    <h3 class="emp-card-title">Unforgettable Weddings</h3>
+    <div class="emp-card-rule"></div>
+    <p class="emp-card-desc">
+      Your wedding reception deserves more than just music — it deserves an atmosphere
+      your guests will remember forever. DJ Brandon and the Empire Entertainment CT team
+      specialize in weddings across Connecticut and New York, reading the room, mixing the
+      right songs at the right moment, and keeping the dance floor packed from the first
+      dance to the final song.
+    </p>
+    <div class="emp-card-tag">First Dance · Reception · Ceremony</div>
   </div>
-</div>
 
+  <!-- CARD 02 — ELEVATED CORPORATE EVENTS -->
+  <div class="emp-card" data-emp-card>
+    <div class="emp-card-bignum">02</div>
+    <div class="emp-card-visual">
+      <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bldgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="rgb(40,40,40)"/>
+            <stop offset="100%" stop-color="rgb(15,15,15)"/>
+          </linearGradient>
+          <linearGradient id="winGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="rgb(255,0,255)" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="rgb(255,0,255)" stop-opacity="0.4"/>
+          </linearGradient>
+          <filter id="bldgGlow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <g class="emp-pulse-glow">
+          <circle cx="200" cy="200" r="170" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.12"/>
+        </g>
+        <circle cx="200" cy="200" r="150" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.2" stroke-dasharray="3 9"/>
+        <line x1="60" y1="330" x2="340" y2="330" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.5"/>
+        <line x1="80" y1="335" x2="320" y2="335" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.2"/>
+        <g filter="url(#bldgGlow)">
+          <rect x="105" y="180" width="60" height="150" fill="url(#bldgGrad)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
+          <rect x="115" y="195" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-1"/>
+          <rect x="135" y="195" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="115" y="220" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="135" y="220" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-2"/>
+          <rect x="115" y="245" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-3"/>
+          <rect x="135" y="245" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="115" y="270" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="135" y="270" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-4"/>
+          <rect x="115" y="295" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="135" y="295" width="12" height="14" fill="url(#winGrad)"/>
+        </g>
+        <g filter="url(#bldgGlow)">
+          <rect x="170" y="100" width="60" height="230" fill="url(#bldgGrad)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
+          <line x1="200" y1="100" x2="200" y2="70" stroke="rgb(255,0,255)" stroke-width="2"/>
+          <circle cx="200" cy="68" r="4" fill="rgb(255,0,255)" class="emp-twinkle-1"/>
+          <rect x="180" y="115" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="200" y="115" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-2"/>
+          <rect x="180" y="140" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-3"/>
+          <rect x="200" y="140" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="180" y="165" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="200" y="165" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-4"/>
+          <rect x="180" y="190" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-1"/>
+          <rect x="200" y="190" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="180" y="215" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="200" y="215" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-2"/>
+          <rect x="180" y="240" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-3"/>
+          <rect x="200" y="240" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="180" y="265" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="200" y="265" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="180" y="290" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-4"/>
+          <rect x="200" y="290" width="12" height="14" fill="url(#winGrad)"/>
+        </g>
+        <g filter="url(#bldgGlow)">
+          <rect x="235" y="155" width="60" height="175" fill="url(#bldgGrad)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
+          <rect x="245" y="170" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-2"/>
+          <rect x="265" y="170" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="245" y="195" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="265" y="195" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-1"/>
+          <rect x="245" y="220" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-4"/>
+          <rect x="265" y="220" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="245" y="245" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="265" y="245" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-3"/>
+          <rect x="245" y="270" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="265" y="270" width="12" height="14" fill="url(#winGrad)"/>
+          <rect x="245" y="295" width="12" height="14" fill="url(#winGrad)" class="emp-twinkle-2"/>
+          <rect x="265" y="295" width="12" height="14" fill="url(#winGrad)"/>
+        </g>
+        <g class="emp-rise-1">
+          <circle cx="75" cy="240" r="4" fill="rgb(255,0,255)" opacity="0.7"/>
+        </g>
+        <g class="emp-rise-2">
+          <circle cx="325" cy="220" r="3" fill="rgb(255,0,255)" opacity="0.6"/>
+        </g>
+        <g class="emp-rise-3">
+          <circle cx="65" cy="280" r="3" fill="rgb(255,0,255)" opacity="0.5"/>
+        </g>
+        <g class="emp-rise-1" style="animation-delay: 1.5s">
+          <circle cx="335" cy="270" r="4" fill="rgb(255,0,255)" opacity="0.6"/>
+        </g>
+      </svg>
+    </div>
+    <div class="emp-card-num">Service 02 / Three</div>
+    <h3 class="emp-card-title">Elevated Corporate Events</h3>
+    <div class="emp-card-rule"></div>
+    <p class="emp-card-desc">
+      Corporate events should feel professional and engaging at the same time. Empire
+      Entertainment CT provides the perfect musical backdrop for company parties, holiday
+      celebrations, galas, and corporate gatherings across the Northeast — dialing in the
+      right tone for every moment, from ambient networking music to a full dance floor.
+    </p>
+    <div class="emp-card-tag">Galas · Holiday Parties · Networking</div>
+  </div>
 
-<div class="emp-scroll-ui" id="empScrollUI">
-  <div class="emp-scroll-counter">
-    <span class="current" id="empCurrent">01</span> <span style="opacity:0.4"> / </span> <span>03</span>
+  <!-- CARD 03 — EXCEPTIONAL PRIVATE EVENTS -->
+  <div class="emp-card" data-emp-card>
+    <div class="emp-card-bignum">03</div>
+    <div class="emp-card-visual">
+      <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="cakeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="rgb(255,0,255)" stop-opacity="1"/>
+            <stop offset="100%" stop-color="rgb(140,0,140)" stop-opacity="0.8"/>
+          </linearGradient>
+          <linearGradient id="cakeGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="rgb(255,0,255)" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="rgb(120,0,120)" stop-opacity="0.7"/>
+          </linearGradient>
+          <radialGradient id="flameGrad">
+            <stop offset="0%" stop-color="rgb(255,255,255)" stop-opacity="1"/>
+            <stop offset="40%" stop-color="rgb(255,0,255)" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="rgb(255,0,255)" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="cakeGlow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <g class="emp-pulse-glow">
+          <circle cx="200" cy="200" r="165" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.15"/>
+        </g>
+        <g class="emp-ring-rotate-rev">
+          <circle cx="200" cy="200" r="140" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.25" stroke-dasharray="3 9"/>
+        </g>
+        <g class="emp-rise-1">
+          <rect x="80" y="100" width="3" height="14" fill="rgb(255,0,255)" transform="rotate(20 81 107)"/>
+        </g>
+        <g class="emp-rise-2">
+          <rect x="320" y="90" width="3" height="14" fill="rgb(255,0,255)" transform="rotate(-25 321 97)"/>
+        </g>
+        <g class="emp-rise-3">
+          <rect x="70" y="180" width="3" height="12" fill="rgb(255,0,255)" transform="rotate(40 71 186)"/>
+        </g>
+        <g class="emp-rise-1" style="animation-delay: 0.8s">
+          <rect x="330" y="170" width="3" height="12" fill="rgb(255,0,255)" transform="rotate(-30 331 176)"/>
+        </g>
+        <ellipse cx="200" cy="325" rx="120" ry="14" fill="rgba(255,255,255,0.08)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
+        <ellipse cx="200" cy="322" rx="120" ry="14" fill="none" stroke="rgb(255,0,255)" stroke-width="1" opacity="0.5"/>
+        <g filter="url(#cakeGlow)">
+          <rect x="120" y="245" width="160" height="80" fill="url(#cakeGrad)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
+          <path d="M 120 260 Q 140 250 160 260 T 200 260 T 240 260 T 280 260" fill="none" stroke="rgb(255,255,255)" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="140" cy="290" r="4" fill="rgb(255,255,255)" opacity="0.7"/>
+          <circle cx="170" cy="295" r="3" fill="rgb(255,255,255)" opacity="0.6"/>
+          <circle cx="200" cy="290" r="4" fill="rgb(255,255,255)" opacity="0.7"/>
+          <circle cx="230" cy="295" r="3" fill="rgb(255,255,255)" opacity="0.6"/>
+          <circle cx="260" cy="290" r="4" fill="rgb(255,255,255)" opacity="0.7"/>
+        </g>
+        <g filter="url(#cakeGlow)">
+          <rect x="145" y="180" width="110" height="65" fill="url(#cakeGrad2)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
+          <path d="M 145 195 Q 165 185 185 195 T 225 195 T 255 195" fill="none" stroke="rgb(255,255,255)" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="170" cy="220" r="3" fill="rgb(255,255,255)" opacity="0.7"/>
+          <circle cx="200" cy="225" r="3" fill="rgb(255,255,255)" opacity="0.6"/>
+          <circle cx="230" cy="220" r="3" fill="rgb(255,255,255)" opacity="0.7"/>
+        </g>
+        <g filter="url(#cakeGlow)">
+          <rect x="170" y="130" width="60" height="50" fill="url(#cakeGrad)" stroke="rgb(255,0,255)" stroke-width="1.5"/>
+          <path d="M 170 142 Q 185 135 200 142 T 230 142" fill="none" stroke="rgb(255,255,255)" stroke-width="1.5" opacity="0.6"/>
+        </g>
+        <rect x="183" y="105" width="4" height="25" fill="rgb(255,255,255)" opacity="0.9"/>
+        <rect x="198" y="100" width="4" height="30" fill="rgb(255,255,255)" opacity="0.9"/>
+        <rect x="213" y="105" width="4" height="25" fill="rgb(255,255,255)" opacity="0.9"/>
+        <g class="emp-float">
+          <ellipse cx="185" cy="100" rx="6" ry="10" fill="url(#flameGrad)"/>
+          <circle cx="185" cy="100" r="2" fill="rgb(255,255,255)"/>
+        </g>
+        <g class="emp-float" style="animation-delay: 0.3s">
+          <ellipse cx="200" cy="94" rx="7" ry="12" fill="url(#flameGrad)"/>
+          <circle cx="200" cy="95" r="2" fill="rgb(255,255,255)"/>
+        </g>
+        <g class="emp-float" style="animation-delay: 0.6s">
+          <ellipse cx="215" cy="100" rx="6" ry="10" fill="url(#flameGrad)"/>
+          <circle cx="215" cy="100" r="2" fill="rgb(255,255,255)"/>
+        </g>
+        <g class="emp-twinkle-1">
+          <path d="M 95 215 L 98 223 L 106 226 L 98 229 L 95 237 L 92 229 L 84 226 L 92 223 Z" fill="rgb(255,0,255)"/>
+        </g>
+        <g class="emp-twinkle-2">
+          <path d="M 305 215 L 308 223 L 316 226 L 308 229 L 305 237 L 302 229 L 294 226 L 302 223 Z" fill="rgb(255,0,255)"/>
+        </g>
+        <g class="emp-twinkle-3">
+          <path d="M 110 140 L 112 146 L 118 148 L 112 150 L 110 156 L 108 150 L 102 148 L 108 146 Z" fill="rgb(255,0,255)"/>
+        </g>
+        <g class="emp-twinkle-4">
+          <path d="M 290 140 L 292 146 L 298 148 L 292 150 L 290 156 L 288 150 L 282 148 L 288 146 Z" fill="rgb(255,0,255)"/>
+        </g>
+      </svg>
+    </div>
+    <div class="emp-card-num">Service 03 / Three</div>
+    <h3 class="emp-card-title">Exceptional Private Events</h3>
+    <div class="emp-card-rule"></div>
+    <p class="emp-card-desc">
+      Every private celebration deserves great music and even greater energy. From birthday
+      parties and anniversaries to graduations and everything in between, Empire
+      Entertainment CT brings the same passion and professionalism to every event —
+      keeping the energy high and the memories flowing all night long.
+    </p>
+    <div class="emp-card-tag">Birthdays · Anniversaries · Graduations</div>
   </div>
-  <div class="emp-scroll-bar">
-    <div class="emp-scroll-bar-fill" id="empBarFill"></div>
-  </div>
-  <div class="emp-scroll-hint">Scroll →</div>
+
 </div>
 <section class="emp-showcase" id="showcase">
   <div class="sc-bg-grid"></div>

@@ -93,6 +93,26 @@ function initWillChange() {
 // ─── CURSOR — runs immediately, independent of GSAP/CDN availability ───
 initCursor();
 
+// ─── SERVICE CARDS reveal-on-scroll — plain IntersectionObserver, no GSAP needed ───
+(function () {
+  const cards = document.querySelectorAll('[data-emp-card]');
+  if (!cards.length) return;
+  if (typeof IntersectionObserver === 'undefined') {
+    // No IO support: just show them, no animation.
+    cards.forEach(c => c.classList.add('in-view'));
+    return;
+  }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  cards.forEach(c => io.observe(c));
+})();
+
 // ─── SINGLE LOAD LISTENER — ALL GSAP ───
 window.addEventListener('load', () => {
   // If GSAP/ScrollTrigger failed to load (CDN blocked, slow network, etc.),
@@ -112,9 +132,6 @@ ScrollTrigger.config({
   ignoreMobileResize: true,
   syncInterval: 40
 });
-  // ❌ REMOVED: ScrollTrigger.normalizeScroll(true);
-  // ^^ This line broke horizontal pinning. Do not add it back.
-
   initSmoothScroll();       // ← Lenis smooth scrolling (synced w/ ScrollTrigger)
   initWillChange();
 initGrain();
@@ -127,7 +144,6 @@ initGrain();
   initTestimonials();
   initTestimonialsCarousel();
   initDJSection();
-  initServices();           // ← service section init
 
   // Refresh all ScrollTriggers after everything is registered
   setTimeout(() => ScrollTrigger.refresh(true), 800);
@@ -589,288 +605,6 @@ function initDJSection() {
 }
 
 
-// ─── SERVICES (HORIZONTAL PINNED SCROLL) ───
-function initServices() {
-  const wrap = document.getElementById('empHorizontalWrap');
-  const track = document.getElementById('empHorizontalTrack');
-  if (!wrap || !track) return;
-
-  // Intro heading split + reveal
-  const titleEl = document.getElementById('empServicesTitle');
-  if (titleEl) {
-    titleEl.querySelectorAll('.word').forEach(word => {
-      const text = word.textContent;
-      word.innerHTML = '';
-      [...text].forEach(ch => {
-        const span = document.createElement('span');
-        span.className = 'char';
-        span.textContent = ch === ' ' ? '\u00A0' : ch;
-        word.appendChild(span);
-      });
-    });
-
-    const introTL = gsap.timeline({
-      scrollTrigger: { trigger: titleEl, start: 'top 85%', once: true, invalidateOnRefresh: true }
-    });
-    introTL
-      .to('#empChapterLabel', { opacity: 1, duration: 0.6, ease: 'power2.out' })
-      .to('#empServicesTitle .char', { y: '0%', duration: 1.1, stagger: 0.02, ease: 'expo.out' }, '-=0.3')
-      .to('#empServicesSub', { opacity: 1, duration: 0.8, ease: 'power2.out' }, '-=0.4');
-  }
-
-  // ─── Desktop ↔ Mobile mode switching ───
-  const mqMobile = window.matchMedia('(max-width: 900px)');
-  let svcMode = null;        // 'desktop' | 'mobile'
-  let svcTriggers = [];      // ScrollTriggers owned by the services layout
-  let svcPinTrigger = null;  // the pinned horizontal trigger (needs revert on kill)
-  let mobileCarousel = null; // { destroy } handle for the mobile carousel
-
-  function teardownServices() {
-    if (svcPinTrigger) { svcPinTrigger.kill(true); svcPinTrigger = null; } // revert removes pin-spacer
-    svcTriggers.forEach(t => t.kill());
-    svcTriggers = [];
-    if (mobileCarousel) { mobileCarousel.destroy(); mobileCarousel = null; }
-    gsap.killTweensOf(track);
-    gsap.set('#empHorizontalTrack', { clearProps: 'all' }); // wipe leftover GSAP transform
-  }
-
-  // ─── DESKTOP: GSAP horizontal pin (unchanged behaviour) ───
-  function buildDesktop() {
-    const panels = gsap.utils.toArray('.emp-panel');
-    const totalPanels = panels.length;
-    const scrollUI = document.getElementById('empScrollUI');
-    const barFill = document.getElementById('empBarFill');
-    const currentEl = document.getElementById('empCurrent');
-
-    panels.forEach(panel => {
-      const els = panel.querySelectorAll('.emp-panel-num, .emp-panel-title, .emp-panel-rule, .emp-panel-desc, .emp-panel-tag');
-      const visual = panel.querySelector('.emp-panel-visual');
-      const bignum = panel.querySelector('.emp-panel-bignum');
-      gsap.set(els, { opacity: 0, y: 40 });
-      gsap.set(visual, { opacity: 0, scale: 0.85 });
-      gsap.set(bignum, { opacity: 0, x: 100 });
-    });
-
-    // Pre-show first panel
-    const firstPanel = panels[0];
-    if (firstPanel) {
-      const firstEls = firstPanel.querySelectorAll('.emp-panel-num, .emp-panel-title, .emp-panel-rule, .emp-panel-desc, .emp-panel-tag');
-      gsap.set(firstEls, { opacity: 1, y: 0 });
-      gsap.set(firstPanel.querySelector('.emp-panel-visual'), { opacity: 1, scale: 1 });
-      gsap.set(firstPanel.querySelector('.emp-panel-bignum'), { opacity: 1, x: 0 });
-    }
-
-    const horizontalTween = gsap.to(track, {
-      x: () => -(track.scrollWidth - window.innerWidth),
-      ease: 'none',
-      scrollTrigger: {
-        trigger: wrap,
-        start: 'top top',
-        end: () => '+=' + (track.scrollWidth - window.innerWidth),
-        scrub: 1.5,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          if (barFill) barFill.style.width = (self.progress * 100) + '%';
-          if (currentEl) {
-            const idx = Math.min(totalPanels, Math.floor(self.progress * totalPanels) + 1);
-            currentEl.textContent = String(idx).padStart(2, '0');
-          }
-        },
-        onEnter: () => scrollUI && scrollUI.classList.add('active'),
-        onLeave: () => scrollUI && scrollUI.classList.remove('active'),
-        onEnterBack: () => scrollUI && scrollUI.classList.add('active'),
-        onLeaveBack: () => scrollUI && scrollUI.classList.remove('active')
-      }
-    });
-    svcPinTrigger = horizontalTween.scrollTrigger;
-
-    function animatePanelIn(panel) {
-      const els = panel.querySelectorAll('.emp-panel-num, .emp-panel-title, .emp-panel-rule, .emp-panel-desc, .emp-panel-tag');
-      gsap.to(els, { opacity: 1, y: 0, duration: 0.9, stagger: 0.07, ease: 'expo.out', overwrite: 'auto' });
-      gsap.to(panel.querySelector('.emp-panel-visual'), { opacity: 1, scale: 1, duration: 1.2, ease: 'power3.out', overwrite: 'auto' });
-      gsap.to(panel.querySelector('.emp-panel-bignum'), { opacity: 1, x: 0, duration: 1.4, ease: 'power3.out', overwrite: 'auto' });
-    }
-    function animatePanelOut(panel) {
-      const els = panel.querySelectorAll('.emp-panel-num, .emp-panel-title, .emp-panel-rule, .emp-panel-desc, .emp-panel-tag');
-      gsap.to(els, { opacity: 0, y: 40, duration: 0.5, ease: 'power2.in', overwrite: 'auto' });
-    }
-
-    panels.forEach((panel, i) => {
-      if (i === 0) return;
-      svcTriggers.push(ScrollTrigger.create({
-        trigger: panel,
-        containerAnimation: horizontalTween,
-        start: 'left 70%',
-        end: 'right 30%',
-        toggleActions: 'play reverse play reverse',
-        onEnter: () => animatePanelIn(panel),
-        onEnterBack: () => animatePanelIn(panel),
-        onLeave: () => animatePanelOut(panel),
-        onLeaveBack: () => animatePanelOut(panel)
-      }));
-    });
-  }
-
-  // ─── MOBILE: vanilla swipe carousel (overrides GSAP) ───
-  function buildMobile() {
-    // belt-and-suspenders: ensure no leftover GSAP transform on the track
-    gsap.killTweensOf(track);
-    gsap.set('#empHorizontalTrack', { clearProps: 'all' });
-
-    const panels = Array.from(track.querySelectorAll('.emp-panel'));
-    if (!panels.length) return;
-    panels.forEach(p => { p.style.opacity = '1'; }); // undo any prior fade
-
-    let index = 0;
-    track.style.display = 'flex';
-    track.style.transition = 'transform .45s ease';
-    track.style.willChange = 'transform';
-
-    // Build arrows + dots
-    const prevBtn = document.createElement('button');
-    prevBtn.className = 'ec-prev'; prevBtn.type = 'button';
-    prevBtn.setAttribute('aria-label', 'Previous service');
-    prevBtn.innerHTML = '&#8249;';
-    const nextBtn = document.createElement('button');
-    nextBtn.className = 'ec-next'; nextBtn.type = 'button';
-    nextBtn.setAttribute('aria-label', 'Next service');
-    nextBtn.innerHTML = '&#8250;';
-
-    const dotsWrap = document.createElement('div');
-    dotsWrap.className = 'ec-dots';
-    const dots = panels.map((_, i) => {
-      const d = document.createElement('button');
-      d.className = 'ec-dot' + (i === 0 ? ' ec-dot--active' : '');
-      d.type = 'button';
-      d.setAttribute('aria-label', 'Go to service ' + (i + 1));
-      d.addEventListener('click', () => { goTo(i); startAuto(); });
-      dotsWrap.appendChild(d);
-      return d;
-    });
-
-    wrap.appendChild(prevBtn);
-    wrap.appendChild(nextBtn);
-    wrap.appendChild(dotsWrap);
-
-    function render() {
-      track.style.transform = 'translateX(' + (-index * 100) + '%)';
-      dots.forEach((d, i) => d.classList.toggle('ec-dot--active', i === index));
-      prevBtn.classList.toggle('ec-disabled', index === 0);
-      nextBtn.classList.toggle('ec-disabled', index === panels.length - 1);
-    }
-    function goTo(i) {
-      index = Math.max(0, Math.min(panels.length - 1, i));
-      render();
-    }
-
-    // Autoplay — advance every 5s, loop back to start (mobile only)
-    let autoTimer = null;
-    function startAuto() {
-      stopAuto();
-      autoTimer = setInterval(() => {
-        index = (index + 1) % panels.length;   // wrap to first after last
-        render();
-      }, 5000);
-    }
-    function stopAuto() { clearInterval(autoTimer); autoTimer = null; }
-
-    const onPrev = () => { goTo(index - 1); startAuto(); };
-    const onNext = () => { goTo(index + 1); startAuto(); };
-    prevBtn.addEventListener('click', onPrev);
-    nextBtn.addEventListener('click', onNext);
-
-    // Pointer swipe
-    let startX = 0, dragging = false;
-    const SWIPE = 40;
-    function down(e) { dragging = true; startX = e.clientX; }
-    function move(e) { if (!dragging) return; }
-    function up(e) {
-      if (!dragging) return;
-      dragging = false;
-      const dx = e.clientX - startX;
-      if (Math.abs(dx) > SWIPE) { dx < 0 ? onNext() : onPrev(); }
-    }
-    track.addEventListener('pointerdown', down);
-    track.addEventListener('pointermove', move);
-    track.addEventListener('pointerup', up);
-    track.addEventListener('pointercancel', up);
-
-    render();
-    startAuto();
-
-    mobileCarousel = {
-      destroy() {
-        stopAuto();
-        prevBtn.remove(); nextBtn.remove(); dotsWrap.remove();
-        track.removeEventListener('pointerdown', down);
-        track.removeEventListener('pointermove', move);
-        track.removeEventListener('pointerup', up);
-        track.removeEventListener('pointercancel', up);
-        track.style.removeProperty('transition');
-        track.style.removeProperty('transform');
-        track.style.removeProperty('will-change');
-        track.style.removeProperty('display');
-      }
-    };
-  }
-
-  function applyServicesMode() {
-    const mode = mqMobile.matches ? 'mobile' : 'desktop';
-    if (mode === svcMode) return;
-    teardownServices();
-    svcMode = mode;
-    if (mode === 'desktop') buildDesktop(); else buildMobile();
-    ScrollTrigger.refresh();
-  }
-
-  applyServicesMode();
-
-  // Debounced resize / orientation handling across the 900px boundary
-  let svcResizeT;
-  function onSvcResize() {
-    clearTimeout(svcResizeT);
-    svcResizeT = setTimeout(applyServicesMode, 200);
-  }
-  window.addEventListener('resize', onSvcResize);
-  window.addEventListener('orientationchange', onSvcResize);
-
-  // SVG micro-animations
-  gsap.fromTo('.emp-pulse-ring',
-    { scale: 0.5, opacity: 0 },
-    { scale: 1.4, opacity: 0, duration: 2.5, stagger: 0.6, repeat: -1, ease: 'power2.out', transformOrigin: '50% 50%' });
-  gsap.to('.emp-bolt', { opacity: 0.6, duration: 0.15, repeat: -1, yoyo: true, repeatDelay: 1.5, ease: 'none' });
-  gsap.to('.emp-spark', { scale: 1.5, opacity: 0.3, duration: 0.8, repeat: -1, yoyo: true, stagger: 0.2, ease: 'sine.inOut', transformOrigin: '50% 50%' });
-
-  gsap.to('.emp-bar.b1', { scaleY: 1.8, duration: 0.4, repeat: -1, yoyo: true, ease: 'sine.inOut', transformOrigin: '50% 100%' });
-  gsap.to('.emp-bar.b2', { scaleY: 0.5, duration: 0.5, repeat: -1, yoyo: true, ease: 'sine.inOut', transformOrigin: '50% 100%' });
-  gsap.to('.emp-bar.b3', { scaleY: 0.7, duration: 0.6, repeat: -1, yoyo: true, ease: 'sine.inOut', transformOrigin: '50% 100%' });
-  gsap.to('.emp-bar.b4', { scaleY: 0.6, duration: 0.45, repeat: -1, yoyo: true, ease: 'sine.inOut', transformOrigin: '50% 100%' });
-  gsap.to('.emp-bar.b5', { scaleY: 1.4, duration: 0.55, repeat: -1, yoyo: true, ease: 'sine.inOut', transformOrigin: '50% 100%' });
-  gsap.to('.emp-bar.b6', { scaleY: 2.2, duration: 0.5, repeat: -1, yoyo: true, ease: 'sine.inOut', transformOrigin: '50% 100%' });
-  gsap.fromTo('.emp-wave',
-    { opacity: 0.05, scale: 0.9 },
-    { opacity: 0.4, scale: 1.05, duration: 2, repeat: -1, yoyo: true, stagger: 0.3, ease: 'sine.inOut', transformOrigin: '50% 50%' });
-
-  gsap.fromTo('.emp-beam',
-    { opacity: 0.2 },
-    { opacity: 0.7, duration: 1.5, repeat: -1, yoyo: true, stagger: 0.3, ease: 'sine.inOut' });
-  gsap.to('.emp-iris', { scale: 1.15, duration: 1.5, repeat: -1, yoyo: true, ease: 'sine.inOut', transformOrigin: '50% 50%' });
-  gsap.to('.emp-scan', { x: 30, opacity: 0, duration: 1.2, repeat: -1, stagger: 0.2, ease: 'power1.out' });
-
-  gsap.to('.emp-aperture', { rotation: 360, duration: 18, repeat: -1, ease: 'none', transformOrigin: '50% 50%' });
-  gsap.to('.emp-flash', { opacity: 0.1, duration: 0.8, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-
-  gsap.to('.emp-rotate-slow', { rotation: 360, duration: 24, repeat: -1, ease: 'none', transformOrigin: '50% 50%' });
-  gsap.to('.emp-rotate-rev', { rotation: -360, duration: 18, repeat: -1, ease: 'none', transformOrigin: '50% 50%' });
-  gsap.to('.emp-star-pulse', { scale: 1.08, duration: 1.6, repeat: -1, yoyo: true, ease: 'sine.inOut', transformOrigin: '50% 50%' });
-  gsap.to('.emp-star-pulse-2', { scale: 0.92, duration: 1.6, repeat: -1, yoyo: true, ease: 'sine.inOut', transformOrigin: '50% 50%' });
-  gsap.to('.emp-sparkle', { scale: 1.4, opacity: 0.4, duration: 1.2, repeat: -1, yoyo: true, stagger: 0.3, ease: 'sine.inOut', transformOrigin: '50% 50%' });
-
-  gsap.to('.emp-light', { opacity: 0.3, duration: 0.4, repeat: -1, yoyo: true, stagger: { each: 0.15, from: 'start' }, ease: 'sine.inOut' });
-  gsap.to('.emp-stack', { y: -4, duration: 2, repeat: -1, yoyo: true, stagger: 0.2, ease: 'sine.inOut' });
-}
 
 
 // ─── HERO PARALLAX ───
