@@ -30,8 +30,8 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { font-family: var(--f-body); background: var(--canvas); color: var(--bone); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body { font-family: var(--f-body); background: var(--canvas); color: var(--bone); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
 .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
@@ -783,8 +783,8 @@ nav.scrolled {
   /* ---- FOOTER ---- */
   .footer-legal { font-size: 0.65rem; }
 
-  /* ---- BODY BOTTOM PADDING for tab bar ---- */
-  body { padding-bottom: 72px !important; }
+  /* No tab bar — minimal bottom breathing room */
+  body { padding-bottom: 24px !important; }
 
 }
 
@@ -800,53 +800,61 @@ nav.scrolled {
    MOBILE NAV (max 768px) — simple top bar: logo + Book Call
    ===================================================== */
 
-/* Mobile top bar */
-.mobile-top-bar {
-  display: none;
-}
+/* Mobile top bar — hidden by default */
+.mobile-top-bar { display: none; }
+
 @media (max-width: 768px) {
+  /* Hard-lock horizontal scroll — nothing can exceed viewport */
+  html, body { overflow-x: hidden; max-width: 100vw; }
+  * { max-width: 100%; box-sizing: border-box; }
+  /* Containment on scrolling marquees so they never widen the page */
+  .ticker-bar, .team-track-wrap { overflow: hidden; }
+
   /* Hide desktop nav */
   nav { display: none; }
 
-  /* Show mobile top bar */
+  /* Mobile top bar: logo + CTA centered together */
   .mobile-top-bar {
     display: flex;
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 400;
-    height: 56px;
+    height: 60px;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
-    background: rgba(11,31,18,0.92);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(237,232,219,0.07);
+    justify-content: center;
+    gap: 14px;
+    background: rgba(11,31,18,0.95);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(237,232,219,0.08);
   }
   .mobile-top-bar img {
-    height: 36px;
+    height: 38px;
+    width: auto;
     filter: brightness(0) invert(1);
     display: block;
+    flex-shrink: 0;
   }
   .mobile-top-cta {
     background: var(--gold);
     color: var(--canvas);
     font-family: var(--f-body);
     font-weight: 700;
-    font-size: 0.72rem;
-    letter-spacing: 0.05em;
-    padding: 9px 18px;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    padding: 10px 20px;
     border-radius: 50px;
     text-decoration: none;
     white-space: nowrap;
+    flex-shrink: 0;
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* Push page content below the fixed bar */
-  body { padding-top: 56px; padding-bottom: 0; }
+  /* Push content below fixed bar */
+  body { padding-top: 60px; padding-bottom: 20px; }
 
-  /* Video hero: full height minus top bar */
-  .video-hero { height: calc(100svh - 56px); }
+  /* Video hero fills remaining viewport */
+  .video-hero { height: calc(100svh - 60px); }
 
   /* Mobile logo centered overlay on hero */
   .mobile-logo-hero {
