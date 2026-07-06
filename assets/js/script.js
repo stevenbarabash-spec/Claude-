@@ -247,11 +247,13 @@ function initChapters() {
     gsap.set('#rtv-img2', { rotation:   6, y: rtvY });
     gsap.set('#rtv-img3', { rotation:  -6, y: rtvY });
     gsap.set('#rtv-img4', { rotation:  -6, y: rtvY });
+    gsap.set('#rtv-img5', { rotation:  10, y: rtvY });
     [
       { id: '#rtv-img1', start: '10% top', end: '35% top' },
       { id: '#rtv-img2', start: '30% top', end: '55% top' },
       { id: '#rtv-img3', start: '55% top', end: '70% top' },
       { id: '#rtv-img4', start: '65% top', end: '80% top' },
+      { id: '#rtv-img5', start: '78% top', end: '95% top' },
     ].forEach(({ id, start, end }) => {
       if (document.querySelector(id)) {
         gsap.to(id, { y: 0, ease: 'none', scrollTrigger: { trigger: '.reality-tv-track', start, end, scrub: 1.2 } });

@@ -791,6 +791,8 @@
     #rtv-img1 { top: 15%; left: 8%;  z-index: 2; }
     #rtv-img2 { top: 20%; left: 35%; z-index: 2; }
     #rtv-img3 { top: 10%; left: 55%; z-index: 3; }
+    #rtv-img4 { top: 18%; left: 75%; z-index: 2; }
+    #rtv-img5 { top: 45%; left: 20%; z-index: 1; }
 
     /* ─── HAMBURGER ─── */
     .hamburger {
@@ -925,6 +927,8 @@
       #rtv-img1 { width: 72vw; max-width: 280px; left: 14vw; top: 18%; }
       #rtv-img2 { width: 72vw; max-width: 280px; left: 14vw; top: 26%; }
       #rtv-img3 { width: 72vw; max-width: 280px; left: 14vw; top: 12%; }
+      #rtv-img4 { width: 72vw; max-width: 280px; left: 14vw; top: 34%; }
+      #rtv-img5 { width: 72vw; max-width: 280px; left: 14vw; top: 40%; }
 
       #tour { padding: 80px 24px; }
       .tour-row { grid-template-columns: 96px 1fr; }

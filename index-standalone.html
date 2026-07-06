@@ -915,6 +915,8 @@
     #rtv-img1 { top: 15%; left: 8%;  z-index: 2; }
     #rtv-img2 { top: 20%; left: 35%; z-index: 2; }
     #rtv-img3 { top: 10%; left: 55%; z-index: 3; }
+    #rtv-img4 { top: 18%; left: 75%; z-index: 2; }
+    #rtv-img5 { top: 45%; left: 20%; z-index: 1; }
 
     /* ─── HAMBURGER ─── */
     .hamburger {
@@ -1049,6 +1051,8 @@
       #rtv-img1 { width: 72vw; max-width: 280px; left: 14vw; top: 18%; }
       #rtv-img2 { width: 72vw; max-width: 280px; left: 14vw; top: 26%; }
       #rtv-img3 { width: 72vw; max-width: 280px; left: 14vw; top: 12%; }
+      #rtv-img4 { width: 72vw; max-width: 280px; left: 14vw; top: 34%; }
+      #rtv-img5 { width: 72vw; max-width: 280px; left: 14vw; top: 40%; }
 
       #tour { padding: 80px 24px; }
       .tour-row { grid-template-columns: 96px 1fr; }
@@ -4119,7 +4123,13 @@ button:hover * {
     <div class="rtv-photo" id="rtv-img3">
       <img src="https://assets.cdn.filesafe.space/vhbStpS0g5uGrKHZbkSE/media/6a4beeb6a97402b00bb55ec8.jpg" alt="Team Gwen" />
     </div>
-    
+    <div class="rtv-photo" id="rtv-img4">
+      <img src="https://assets.cdn.filesafe.space/vhbStpS0g5uGrKHZbkSE/media/6a4bef6d0e898f7923dc3a80.jpeg" alt="Team photo" />
+    </div>
+    <div class="rtv-photo" id="rtv-img5">
+      <img src="https://assets.cdn.filesafe.space/vhbStpS0g5uGrKHZbkSE/media/6a4beecaa97402b00bb5606f.jpg" alt="Team photo" />
+    </div>
+
   </div>
 </div>
 
@@ -5690,11 +5700,13 @@ function initChapters() {
     gsap.set('#rtv-img2', { rotation:   6, y: rtvY });
     gsap.set('#rtv-img3', { rotation:  -6, y: rtvY });
     gsap.set('#rtv-img4', { rotation:  -6, y: rtvY });
+    gsap.set('#rtv-img5', { rotation:  10, y: rtvY });
     [
       { id: '#rtv-img1', start: '10% top', end: '35% top' },
       { id: '#rtv-img2', start: '30% top', end: '55% top' },
       { id: '#rtv-img3', start: '55% top', end: '70% top' },
       { id: '#rtv-img4', start: '65% top', end: '80% top' },
+      { id: '#rtv-img5', start: '78% top', end: '95% top' },
     ].forEach(({ id, start, end }) => {
       if (document.querySelector(id)) {
         gsap.to(id, { y: 0, ease: 'none', scrollTrigger: { trigger: '.reality-tv-track', start, end, scrub: 1.2 } });
