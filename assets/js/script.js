@@ -919,46 +919,6 @@ function initServices() {
 })();
 
 
-// ─── FOOTER FORM SUBMIT ───
-(function () {
-  const efForm = document.getElementById('ef-form');
-  if (!efForm) return;
-
-  efForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const n  = document.getElementById('ef-name').value.trim();
-    const em = document.getElementById('ef-email').value.trim();
-    const t  = document.getElementById('ef-type').value;
-
-    const invalids = [
-      [!n,  'ef-name'],
-      [!em, 'ef-email'],
-      [!t,  'ef-type']
-    ].filter(([bad]) => bad);
-
-    if (invalids.length) {
-      invalids.forEach(([, id]) => {
-        const field = document.getElementById(id).closest('.ef-field');
-        gsap.fromTo(field, { x: -10 }, { x: 0, duration: 0.5, ease: 'elastic.out(1,0.3)' });
-        gsap.to(field.querySelector('label'), { color: '#ff0055', duration: 0.15, yoyo: true, repeat: 3 });
-      });
-      return;
-    }
-
-    gsap.to(this, {
-      opacity: 0, y: -12, duration: 0.3, ease: 'power2.in',
-      onComplete: () => {
-        this.style.display = 'none';
-        const ok = document.getElementById('ef-ok');
-        ok.classList.add('show');
-        gsap.fromTo(ok, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' });
-        gsap.to('.ef-success-ring', { boxShadow: '0 0 40px rgba(255,0,255,0.6)', duration: 0.5, yoyo: true, repeat: -1, ease: 'power1.inOut' });
-      }
-    });
-  });
-})();
-
-
 // ─── GALLERY / SHOWCASE ───
 (function () {
   const scLine1 = document.getElementById('scLine1');
