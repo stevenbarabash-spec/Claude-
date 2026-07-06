@@ -47,6 +47,38 @@ body { font-family: var(--f-body); background: var(--canvas); color: var(--bone)
 .d1 { transition-delay: 0.08s; } .d2 { transition-delay: 0.16s; } .d3 { transition-delay: 0.24s; }
 .d4 { transition-delay: 0.32s; } .d5 { transition-delay: 0.40s; } .d6 { transition-delay: 0.48s; }
 
+/* Lazy image load — blur-up shimmer */
+img[data-src] {
+  opacity: 0;
+  filter: blur(12px) saturate(0.4);
+  transform: scale(1.04);
+  transition:
+    opacity 0.9s cubic-bezier(0.22,1,0.36,1),
+    filter  0.9s cubic-bezier(0.22,1,0.36,1),
+    transform 0.9s cubic-bezier(0.22,1,0.36,1);
+  will-change: opacity, filter, transform;
+}
+img.img-loaded {
+  opacity: 1;
+  filter: blur(0) saturate(1);
+  transform: scale(1);
+}
+/* Shimmer placeholder while unloaded */
+img[data-src]:not(.img-loaded) {
+  background: linear-gradient(
+    90deg,
+    rgba(28,64,34,0.5) 25%,
+    rgba(77,139,94,0.25) 50%,
+    rgba(28,64,34,0.5) 75%
+  );
+  background-size: 200% 100%;
+  animation: img-shimmer 1.6s ease infinite;
+}
+@keyframes img-shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
 /* Buttons */
 .btn-gold {
   background: var(--gold); color: var(--canvas); font-family: var(--f-body); font-weight: 600;
@@ -375,34 +407,19 @@ nav.scrolled {
   #cursor-glow {
     position: fixed;
     top: 0; left: 0;
-    width: 520px; height: 520px;
+    width: 340px; height: 340px;
     border-radius: 50%;
     pointer-events: none;
     z-index: 9990;
     transform: translate(-50%, -50%);
     background: radial-gradient(circle,
-      rgba(212,175,62,0.11) 0%,
-      rgba(184,147,12,0.055) 30%,
-      rgba(120,179,137,0.025) 60%,
-      transparent 75%);
+      rgba(0,229,180,0.13) 0%,
+      rgba(0,201,167,0.055) 40%,
+      transparent 70%);
     mix-blend-mode: screen;
     will-change: transform;
-    /* slow bloom in, fast dismiss */
-    opacity: 0;
-    transition: opacity 1.2s ease, background 0.6s ease;
+    transition: background 0.5s ease;
   }
-  #cursor-glow.visible {
-    opacity: 1;
-  }
-  #cursor-trail {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 9989;
-    mix-blend-mode: screen;
-  }
-
   #cursor-drop {
     position: fixed;
     top: 0; left: 0;
@@ -411,11 +428,11 @@ nav.scrolled {
     z-index: 9999;
     transform: translate(0, 0);
     will-change: transform;
-    filter: drop-shadow(0 0 5px rgba(212,175,62,0.75));
+    filter: drop-shadow(0 0 5px rgba(0,229,180,0.75));
     transition: filter 0.3s ease, opacity 0.2s;
   }
   #cursor-drop.hovering {
-    filter: drop-shadow(0 0 9px rgba(212,175,62,1)) brightness(1.15);
+    filter: drop-shadow(0 0 9px rgba(0,229,180,1)) brightness(1.15);
   }
 }
 
@@ -658,7 +675,6 @@ nav.scrolled {
 </a>
 
 <!-- CUSTOM CURSOR (desktop only) -->
-<canvas id="cursor-trail"></canvas>
 <div id="cursor-glow"></div>
 <svg id="cursor-drop" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -674,11 +690,11 @@ nav.scrolled {
   <!-- Arrow body -->
   <path d="M2 2 L2 17 L6 13 L9.5 21 L11.5 20 L8 12 L13.5 12 Z"
         fill="url(#arrowFill)"
-        stroke="#D4AF3E" stroke-width="1.2"
+        stroke="#00E5B4" stroke-width="1.2"
         stroke-linejoin="round" stroke-linecap="round"
         filter="url(#arrowGlow)"/>
   <!-- Left-edge inner highlight -->
-  <line x1="3" y1="4" x2="3" y2="14" stroke="#EDD875" stroke-width="0.7" stroke-opacity="0.4" stroke-linecap="round"/>
+  <line x1="3" y1="4" x2="3" y2="14" stroke="#4DFFD8" stroke-width="0.7" stroke-opacity="0.4" stroke-linecap="round"/>
 </svg>
 
 <!-- MOBILE BOTTOM TAB BAR -->
@@ -924,7 +940,7 @@ nav.scrolled {
       </div>
     </div>
 
-    <img src="https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/69d623b6ebf1a6084329c499.png" alt="HydroGel Product" class="solution-img reveal" loading="lazy">
+    <img data-src="https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/69d623b6ebf1a6084329c499.png" alt="HydroGel Product" class="solution-img reveal lazy-img">
 
     <div class="proof-grid reveal">
       <div class="proof-item">
@@ -1328,7 +1344,7 @@ nav.scrolled {
         </div>
       </div>
       <div class="reveal">
-        <img src="https://assets.cdn.filesafe.space/kwymA6ZKPgUkxoeoTobO/media/6a0ca6a9892d6c99109d401b.png" alt="Agriculture" style="width:100%;border-radius:8px;object-fit:cover;" loading="lazy">
+        <img data-src="https://assets.cdn.filesafe.space/kwymA6ZKPgUkxoeoTobO/media/6a0ca6a9892d6c99109d401b.png" alt="Agriculture" class="lazy-img" style="width:100%;border-radius:8px;object-fit:cover;">
       </div>
     </div>
   </div>
@@ -1520,27 +1536,27 @@ nav.scrolled {
   <div class="team-track-wrap">
     <div class="team-track">
       <div class="team-card">
-        <img src="https://invest.greenevolutiontechnologies.com/assets/team-argina-BSMHwAAs.webp" alt="Argina Mardiyan" class="team-photo" loading="lazy">
+        <img data-src="https://invest.greenevolutiontechnologies.com/assets/team-argina-BSMHwAAs.webp" alt="Argina Mardiyan" class="team-photo lazy-img">
         <div class="team-name">Argina Mardiyan</div>
         <div class="team-role">Co-CEO &amp; Co-Founder</div>
       </div>
       <div class="team-card">
-        <img src="https://invest.greenevolutiontechnologies.com/assets/team-zarzand-CrmTua39.webp" alt="Zarzand Alaverdyan" class="team-photo" loading="lazy">
+        <img data-src="https://invest.greenevolutiontechnologies.com/assets/team-zarzand-CrmTua39.webp" alt="Zarzand Alaverdyan" class="team-photo lazy-img">
         <div class="team-name">Zarzand Alaverdyan</div>
         <div class="team-role">Co-CEO &amp; Co-Founder</div>
       </div>
       <div class="team-card">
-        <img src="https://invest.greenevolutiontechnologies.com/assets/team-aristakes-BkrTfPKc.webp" alt="Aris Alaverdyan" class="team-photo" loading="lazy">
+        <img data-src="https://invest.greenevolutiontechnologies.com/assets/team-aristakes-BkrTfPKc.webp" alt="Aris Alaverdyan" class="team-photo lazy-img">
         <div class="team-name">Aris Alaverdyan</div>
         <div class="team-role">Chief Science Officer</div>
       </div>
       <div class="team-card">
-        <img src="https://invest.greenevolutiontechnologies.com/assets/team-chad-mdJwivjt.webp" alt="Dr. Chad Godsey" class="team-photo" loading="lazy">
+        <img data-src="https://invest.greenevolutiontechnologies.com/assets/team-chad-mdJwivjt.webp" alt="Dr. Chad Godsey" class="team-photo lazy-img">
         <div class="team-name">Dr. Chad Godsey</div>
         <div class="team-role">Chief Agronomist</div>
       </div>
       <div class="team-card">
-        <img src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata" class="team-photo" loading="lazy">
+        <img data-src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata" class="team-photo lazy-img">
         <div class="team-name">Jon Licata</div>
         <div class="team-role">Chief Revenue Officer</div>
         <div class="investor-badge">Investor</div>
@@ -1565,27 +1581,27 @@ nav.scrolled {
       </div>
       <!-- Duplicate for seamless loop -->
       <div class="team-card">
-        <img src="https://invest.greenevolutiontechnologies.com/assets/team-argina-BSMHwAAs.webp" alt="Argina Mardiyan" class="team-photo" loading="lazy">
+        <img data-src="https://invest.greenevolutiontechnologies.com/assets/team-argina-BSMHwAAs.webp" alt="Argina Mardiyan" class="team-photo lazy-img">
         <div class="team-name">Argina Mardiyan</div>
         <div class="team-role">Co-CEO &amp; Co-Founder</div>
       </div>
       <div class="team-card">
-        <img src="https://invest.greenevolutiontechnologies.com/assets/team-zarzand-CrmTua39.webp" alt="Zarzand Alaverdyan" class="team-photo" loading="lazy">
+        <img data-src="https://invest.greenevolutiontechnologies.com/assets/team-zarzand-CrmTua39.webp" alt="Zarzand Alaverdyan" class="team-photo lazy-img">
         <div class="team-name">Zarzand Alaverdyan</div>
         <div class="team-role">Co-CEO &amp; Co-Founder</div>
       </div>
       <div class="team-card">
-        <img src="https://invest.greenevolutiontechnologies.com/assets/team-aristakes-BkrTfPKc.webp" alt="Aris Alaverdyan" class="team-photo" loading="lazy">
+        <img data-src="https://invest.greenevolutiontechnologies.com/assets/team-aristakes-BkrTfPKc.webp" alt="Aris Alaverdyan" class="team-photo lazy-img">
         <div class="team-name">Aris Alaverdyan</div>
         <div class="team-role">Chief Science Officer</div>
       </div>
       <div class="team-card">
-        <img src="https://invest.greenevolutiontechnologies.com/assets/team-chad-mdJwivjt.webp" alt="Dr. Chad Godsey" class="team-photo" loading="lazy">
+        <img data-src="https://invest.greenevolutiontechnologies.com/assets/team-chad-mdJwivjt.webp" alt="Dr. Chad Godsey" class="team-photo lazy-img">
         <div class="team-name">Dr. Chad Godsey</div>
         <div class="team-role">Chief Agronomist</div>
       </div>
       <div class="team-card">
-        <img src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata" class="team-photo" loading="lazy">
+        <img data-src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata" class="team-photo lazy-img">
         <div class="team-name">Jon Licata</div>
         <div class="team-role">Chief Revenue Officer</div>
         <div class="investor-badge">Investor</div>
@@ -1787,6 +1803,30 @@ function toggleFaq(btn) {
   document.querySelectorAll('.reveal').forEach(function(el) { io.observe(el); });
 })();
 
+// LAZY IMAGE LOAD — blur-up with IntersectionObserver
+(function() {
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (!e.isIntersecting) return;
+      var img = e.target;
+      var src = img.getAttribute('data-src');
+      if (!src) return;
+      var tmp = new Image();
+      tmp.onload = function() {
+        img.src = src;
+        img.removeAttribute('data-src');
+        // Tiny RAF delay so the browser paints the src swap before we transition
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() { img.classList.add('img-loaded'); });
+        });
+      };
+      tmp.src = src;
+      io.unobserve(img);
+    });
+  }, { rootMargin: '0px 0px 160px 0px', threshold: 0 });
+  document.querySelectorAll('img.lazy-img[data-src]').forEach(function(img) { io.observe(img); });
+})();
+
 // WATER COLUMN FILL
 (function() {
   var ws = document.querySelector('.water-stats');
@@ -1908,94 +1948,29 @@ function toggleFaq(btn) {
 })();
 
 // =====================================================
-// CUSTOM CURSOR — teal arrow + concentrated glow + 5s fading trail
+// CUSTOM CURSOR — teal arrow + bioluminescent glow
 // Desktop (pointer: fine) only
 // =====================================================
 (function() {
   if (!window.matchMedia('(pointer: fine)').matches) return;
-
-  var arrow  = document.getElementById('cursor-drop');
-  var glow   = document.getElementById('cursor-glow');
-  var canvas = document.getElementById('cursor-trail');
-  if (!arrow || !glow || !canvas) return;
-
-  // Size canvas to viewport; resize on window change
-  var ctx = canvas.getContext('2d');
-  function resizeCanvas() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas, { passive: true });
-
-  var mx = -400, my = -400;
-  var gx = -400, gy = -400;
-  var trail = []; // {x, y, t}
-  var TRAIL_LIFE = 5000; // ms
-
+  var arrow = document.getElementById('cursor-drop');
+  var glow  = document.getElementById('cursor-glow');
+  if (!arrow || !glow) return;
+  var mx = -400, my = -400, gx = -400, gy = -400;
   function lerp(a, b, t) { return a + (b - a) * t; }
-
   document.addEventListener('mousemove', function(e) {
-    mx = e.clientX;
-    my = e.clientY;
-    arrow.style.left = mx + 'px';
-    arrow.style.top  = my + 'px';
-    trail.push({ x: mx, y: my, t: performance.now() });
-    glow.classList.add('visible');
+    mx = e.clientX; my = e.clientY;
+    arrow.style.left = mx + 'px'; arrow.style.top = my + 'px';
   }, { passive: true });
-
   (function loop() {
-    var now = performance.now();
-
-    // Drop expired trail points
-    while (trail.length && now - trail[0].t > TRAIL_LIFE) trail.shift();
-
-    // Draw trail on canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (var i = 1; i < trail.length; i++) {
-      var age  = now - trail[i].t;
-      var frac = 1 - age / TRAIL_LIFE;           // 1 = fresh, 0 = expired
-      // Smooth ease-out so it doesn't vanish abruptly
-      var alpha = frac * frac * 0.28;
-      var radius = 18 * frac + 4;
-
-      var grad = ctx.createRadialGradient(
-        trail[i].x, trail[i].y, 0,
-        trail[i].x, trail[i].y, radius
-      );
-      grad.addColorStop(0,   'rgba(212,175,62,' + (alpha * 0.85).toFixed(3) + ')');
-      grad.addColorStop(0.4, 'rgba(184,147,12,' + (alpha * 0.4).toFixed(3) + ')');
-      grad.addColorStop(1,   'rgba(120,179,137,0)');
-
-      ctx.beginPath();
-      ctx.arc(trail[i].x, trail[i].y, radius, 0, Math.PI * 2);
-      ctx.fillStyle = grad;
-      ctx.fill();
-    }
-
-    // Lerp ambient glow blob
-    gx = lerp(gx, mx, 0.07);
-    gy = lerp(gy, my, 0.07);
-    glow.style.left = gx + 'px';
-    glow.style.top  = gy + 'px';
-
+    gx = lerp(gx, mx, 0.07); gy = lerp(gy, my, 0.07);
+    glow.style.left = gx + 'px'; glow.style.top = gy + 'px';
     requestAnimationFrame(loop);
   })();
-
-  // Hover: glow reaction
-  function bind(sel, gold) {
-    document.querySelectorAll(sel).forEach(function(el) {
-      el.addEventListener('mouseenter', function() {
-        arrow.classList.add('hovering');
-      });
-      el.addEventListener('mouseleave', function() {
-        arrow.classList.remove('hovering');
-      });
-    });
-  }
-  bind('a, button, input, select, label', false);
-  bind('.btn-gold, .float-cta, .cta-tab, .form-submit, .closing-btn', true);
-
+  document.querySelectorAll('a,button,input,select,label').forEach(function(el) {
+    el.addEventListener('mouseenter', function() { arrow.classList.add('hovering'); });
+    el.addEventListener('mouseleave', function() { arrow.classList.remove('hovering'); });
+  });
   document.addEventListener('mouseleave', function() { arrow.style.opacity = '0'; });
   document.addEventListener('mouseenter', function() { arrow.style.opacity = '1'; });
 })();
