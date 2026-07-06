@@ -398,28 +398,21 @@ nav.scrolled {
   #cursor-drop {
     position: fixed;
     top: 0; left: 0;
-    width: 18px; height: 26px;
+    width: 22px; height: 30px;
     pointer-events: none;
     z-index: 9999;
-    transform: translate(-50%, 0);
+    /* hotspot: bottom-center of beaker sits on cursor point */
+    transform: translate(-50%, -100%);
     will-change: transform;
     transition: filter 0.3s ease, opacity 0.2s;
   }
   #cursor-drop.hovering {
-    filter: drop-shadow(0 0 6px rgba(120,179,137,0.7)) brightness(1.2);
-    transform: translate(-50%, 0) scale(1.25);
+    filter: drop-shadow(0 0 7px rgba(120,179,137,0.75)) brightness(1.2);
+    transform: translate(-50%, -100%) scale(1.2);
   }
   #cursor-drop.on-gold {
-    filter: drop-shadow(0 0 8px rgba(212,175,62,0.8)) brightness(1.3);
-  }
-
-  /* Water particles spawned on shake */
-  .wp {
-    position: fixed;
-    pointer-events: none;
-    z-index: 9988;
-    border-radius: 50% 50% 45% 45% / 55% 55% 45% 45%;
-    will-change: transform, opacity;
+    filter: drop-shadow(0 0 9px rgba(212,175,62,0.85)) brightness(1.3);
+    transform: translate(-50%, -100%) scale(1.15);
   }
 }
 
@@ -663,15 +656,30 @@ nav.scrolled {
 
 <!-- CUSTOM CURSOR (desktop only) -->
 <div id="cursor-glow"></div>
-<svg id="cursor-drop" viewBox="0 0 18 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Drop body: pointed tip at top, rounded belly -->
-  <path d="M9 1 C9 1 1 11 1 17.5 C1 22.5 4.7 25.5 9 25.5 C13.3 25.5 17 22.5 17 17.5 C17 11 9 1 9 1Z"
-        fill="rgba(78,195,158,0.22)" stroke="rgba(120,179,137,0.72)" stroke-width="1"/>
-  <!-- Inner highlight — light refracting left side -->
-  <path d="M5.5 11 C4.5 14 4.5 17 5.8 19.5"
-        stroke="rgba(255,255,255,0.45)" stroke-width="1.4" stroke-linecap="round"/>
-  <!-- Tiny specular dot -->
-  <circle cx="7" cy="13" r="1.2" fill="rgba(255,255,255,0.28)"/>
+<svg id="cursor-drop" viewBox="0 0 22 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Beaker body + rim + pour spout -->
+  <path d="M3 28 L19 28 L19 7 L21 7 L21 5 L5.5 5 L3.5 3 L1.5 5 L1 7 L3 7 Z"
+        fill="rgba(78,195,158,0.10)"
+        stroke="rgba(120,179,137,0.82)"
+        stroke-width="1.1"
+        stroke-linejoin="round"
+        stroke-linecap="round"/>
+  <!-- Liquid fill — ~55% full -->
+  <path d="M3 18.5 L19 18.5 L19 27.5 L3 27.5 Z" fill="rgba(78,195,158,0.28)"/>
+  <!-- Liquid surface — subtle wave -->
+  <path d="M3 18.5 Q7.5 17 11 18.5 Q14.5 20 19 18.5"
+        stroke="rgba(120,179,137,0.55)" stroke-width="0.9" fill="none"/>
+  <!-- Graduation line 1 -->
+  <line x1="3" y1="22" x2="6.5" y2="22" stroke="rgba(120,179,137,0.50)" stroke-width="0.75"/>
+  <!-- Graduation line 2 -->
+  <line x1="3" y1="14" x2="6.5" y2="14" stroke="rgba(120,179,137,0.40)" stroke-width="0.75"/>
+  <!-- Graduation line 3 (small tick) -->
+  <line x1="3" y1="10" x2="5" y2="10" stroke="rgba(120,179,137,0.30)" stroke-width="0.6"/>
+  <!-- Glass highlight — left inner edge -->
+  <line x1="4.5" y1="8" x2="4.5" y2="26.5"
+        stroke="rgba(255,255,255,0.22)" stroke-width="1.3" stroke-linecap="round"/>
+  <!-- Specular glint top-left -->
+  <circle cx="4.8" cy="8.5" r="0.9" fill="rgba(255,255,255,0.35)"/>
 </svg>
 
 <!-- MOBILE BOTTOM TAB BAR -->
@@ -1901,144 +1909,56 @@ function toggleFaq(btn) {
 })();
 
 // =====================================================
-// CUSTOM CURSOR — water drop + glow + shake particles
+// CUSTOM CURSOR — scientific beaker + bioluminescent glow
 // Desktop (pointer: fine) only
 // =====================================================
 (function() {
   if (!window.matchMedia('(pointer: fine)').matches) return;
 
-  var drop  = document.getElementById('cursor-drop');
-  var glow  = document.getElementById('cursor-glow');
-  if (!drop || !glow) return;
+  var beaker = document.getElementById('cursor-drop');
+  var glow   = document.getElementById('cursor-glow');
+  if (!beaker || !glow) return;
 
-  // Current & target positions
-  var mx = -400, my = -400;   // mouse (exact)
-  var gx = -400, gy = -400;   // glow (lerped)
-
-  // Velocity tracking for shake detection
-  var prevX = 0, prevY = 0, prevT = 0;
-  var vel = 0;
-  var particlePool = [];
-  var lastBurst = 0;
-  var BURST_COOLDOWN = 40; // ms between bursts at max shake
+  var mx = -400, my = -400;
+  var gx = -400, gy = -400;
 
   function lerp(a, b, t) { return a + (b - a) * t; }
 
-  // ---- Mouse move ----
+  // Beaker follows cursor exactly (hotspot = bottom center)
   document.addEventListener('mousemove', function(e) {
-    var now = performance.now();
     mx = e.clientX;
     my = e.clientY;
-
-    // Instant drop position
-    drop.style.left = mx + 'px';
-    drop.style.top  = my + 'px';
-
-    // Velocity (px/ms)
-    var dt = now - prevT || 1;
-    var dx = mx - prevX;
-    var dy = my - prevY;
-    vel = Math.sqrt(dx * dx + dy * dy) / dt;
-
-    // Shake → burst water
-    if (vel > 1.2 && now - lastBurst > BURST_COOLDOWN) {
-      var count = Math.min(Math.round(vel * 2.5), 18);
-      for (var i = 0; i < count; i++) spawnParticle(mx, my, vel);
-      lastBurst = now;
-    }
-
-    prevX = mx; prevY = my; prevT = now;
+    beaker.style.left = mx + 'px';
+    beaker.style.top  = my + 'px';
   }, { passive: true });
 
-  // ---- Glow lerp loop ----
-  function animate() {
+  // Glow trails with organic lag
+  (function loop() {
     gx = lerp(gx, mx, 0.07);
     gy = lerp(gy, my, 0.07);
     glow.style.left = gx + 'px';
     glow.style.top  = gy + 'px';
+    requestAnimationFrame(loop);
+  })();
 
-    // Tick all live particles
-    var now = performance.now();
-    for (var i = particlePool.length - 1; i >= 0; i--) {
-      var p = particlePool[i];
-      var elapsed = (now - p.born) / p.life;
-      if (elapsed >= 1) {
-        p.el.remove();
-        particlePool.splice(i, 1);
-        continue;
-      }
-      // Physics: vx/vy + gravity
-      var t = elapsed;
-      var x = p.sx + p.vx * t * p.life * 0.001;
-      var y = p.sy + p.vy * t * p.life * 0.001 + 0.5 * 1800 * t * t * (p.life * 0.001) * (p.life * 0.001);
-      var scale = 1 - t * 0.7;
-      var opacity = t < 0.15 ? t / 0.15 : 1 - ((t - 0.15) / 0.85);
-      p.el.style.transform = 'translate(-50%,-50%) scale(' + scale + ')';
-      p.el.style.left    = x + 'px';
-      p.el.style.top     = y + 'px';
-      p.el.style.opacity = Math.max(0, opacity * p.alpha);
-    }
-
-    requestAnimationFrame(animate);
-  }
-  animate();
-
-  // ---- Spawn a water particle ----
-  var COLORS = [
-    'rgba(78,195,158,VAL)',
-    'rgba(120,179,137,VAL)',
-    'rgba(77,139,94,VAL)',
-    'rgba(140,210,175,VAL)',
-    'rgba(200,240,220,VAL)',
-  ];
-
-  function spawnParticle(x, y, speed) {
-    var el = document.createElement('div');
-    el.className = 'wp';
-
-    var size = 3 + Math.random() * 6;          // 3–9px
-    var angle = Math.random() * Math.PI * 2;
-    var magnitude = (0.5 + Math.random()) * Math.min(speed, 6) * 55;
-    var vx = Math.cos(angle) * magnitude;
-    var vy = Math.sin(angle) * magnitude - Math.random() * 60; // bias upward
-    var life = 550 + Math.random() * 500;       // 550–1050ms
-    var alpha = 0.55 + Math.random() * 0.45;
-    var col = COLORS[Math.floor(Math.random() * COLORS.length)]
-                    .replace('VAL', alpha.toFixed(2));
-
-    el.style.cssText = [
-      'width:' + size + 'px',
-      'height:' + (size * 1.5) + 'px',
-      'background:' + col,
-      'left:' + x + 'px',
-      'top:' + y + 'px',
-      'opacity:0',
-    ].join(';');
-
-    document.body.appendChild(el);
-    particlePool.push({ el: el, sx: x, sy: y, vx: vx, vy: vy,
-                        life: life, born: performance.now(), alpha: alpha });
-  }
-
-  // ---- Hover states ----
-  function bindHover(sel, isGold) {
+  // Hover: scale + glow reaction
+  function bind(sel, gold) {
     document.querySelectorAll(sel).forEach(function(el) {
       el.addEventListener('mouseenter', function() {
-        drop.classList.add('hovering');
-        if (isGold) { glow.classList.add('on-gold'); drop.classList.add('on-gold'); }
+        beaker.classList.add('hovering');
+        if (gold) { glow.classList.add('on-gold'); beaker.classList.add('on-gold'); }
       });
       el.addEventListener('mouseleave', function() {
-        drop.classList.remove('hovering', 'on-gold');
+        beaker.classList.remove('hovering', 'on-gold');
         glow.classList.remove('on-gold');
       });
     });
   }
-  bindHover('a, button, input, select, [role="button"]', false);
-  bindHover('.btn-gold, .float-cta, .cta-tab, .form-submit, .closing-btn', true);
+  bind('a, button, input, select, label', false);
+  bind('.btn-gold, .float-cta, .cta-tab, .form-submit, .closing-btn', true);
 
-  // Hide cursor when leaving window
-  document.addEventListener('mouseleave', function() { drop.style.opacity = '0'; });
-  document.addEventListener('mouseenter', function() { drop.style.opacity = '1'; });
+  document.addEventListener('mouseleave', function() { beaker.style.opacity = '0'; });
+  document.addEventListener('mouseenter', function() { beaker.style.opacity = '1'; });
 })();
 </script>
 </body>
