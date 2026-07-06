@@ -428,6 +428,51 @@ nav.scrolled {
 .faq-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
 .faq-body-inner { padding: 0 0 20px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; max-width: 680px; }
 
+/* AS FEATURED IN */
+.press-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin-top: 56px; }
+@media (max-width: 700px) { .press-grid { grid-template-columns: 1fr; } }
+.press-card {
+  display: flex; flex-direction: column;
+  border: 1px solid var(--border-l); border-radius: 10px; overflow: hidden;
+  background: #fff;
+  transition: transform 0.32s cubic-bezier(0.22,1,0.36,1), box-shadow 0.32s cubic-bezier(0.22,1,0.36,1);
+  text-decoration: none; color: inherit;
+}
+@media (pointer: fine) {
+  .press-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 24px 56px rgba(0,0,0,0.12); }
+  .press-card:not(:hover) { transition: transform 0.55s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease; }
+}
+.press-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+.press-thumb-placeholder {
+  width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #f0ece0 0%, #e4dfd0 100%);
+}
+.press-thumb-placeholder svg { opacity: 0.28; }
+.press-body { padding: 24px 26px 28px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+.press-outlet {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--f-body); font-weight: 700; font-size: 0.72rem;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--sage);
+}
+.press-outlet-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+.press-quote {
+  font-family: var(--f-display); font-weight: 400; font-style: italic;
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem); color: var(--ink); line-height: 1.55;
+  position: relative; padding-left: 18px;
+}
+.press-quote::before {
+  content: '"'; position: absolute; left: 0; top: -4px;
+  font-size: 2.8rem; line-height: 1; color: var(--gold-light); opacity: 0.6;
+  font-family: var(--f-display);
+}
+.press-read {
+  margin-top: auto; display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--f-body); font-size: 0.76rem; font-weight: 600;
+  color: var(--sage); letter-spacing: 0.05em; text-transform: uppercase;
+}
+.press-read svg { transition: transform 0.2s ease; }
+.press-card:hover .press-read svg { transform: translateX(4px); }
+
 /* CLOSING CTA */
 .closing-headline { font-family: var(--f-display); font-weight: 300; font-size: clamp(2rem, 4.5vw, 4rem); color: var(--bone); line-height: 1.15; max-width: 760px; margin: 0 auto 40px; }
 .closing-headline em { font-style: italic; color: var(--gold-light); }
@@ -1045,6 +1090,67 @@ nav.scrolled {
           <span>Proprietary crosslinked hydrogel matrix with 14 defensive patent filings protecting the core formulation</span>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- AS FEATURED IN -->
+<section style="background:var(--paper-2);padding:80px 0;">
+  <div class="container">
+    <div class="section-head light-text reveal">
+      <span class="section-eyebrow">As Featured In</span>
+      <h2 class="display-sm">The Story Is Getting Out.</h2>
+      <p>Independent journalists and editors are covering what farmers are already experiencing in the field.</p>
+    </div>
+    <div class="press-grid">
+
+      <!-- Farm News Daily -->
+      <a class="press-card reveal d1" href="https://farmnewsdaily.com/beyond-fertilizer-the-new-science-of-water-roots-and-yield/" target="_blank" rel="noopener noreferrer">
+        <img
+          data-src="https://assets.cdn.filesafe.space/IUFCbHtG5zmLcNxfm2Ke/media/6a4b96496a04624f33af44ca.png"
+          class="press-thumb lazy-img"
+          alt="Farm News Daily — Beyond Fertilizer"
+        >
+        <div class="press-body">
+          <div class="press-outlet">
+            <span class="press-outlet-dot"></span>
+            Farm News Daily
+          </div>
+          <div class="press-quote">we're seeing multi multi year benefit from applications which is which is huge.</div>
+          <span class="press-read">
+            Read the Article
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Authority Magazine -->
+      <a class="press-card reveal d2" href="https://medium.com/authority-magazine/navigating-capital-as-a-woman-argina-mardiyan-of-green-evolution-technologies-on-top-strategies-730e556ea38a" target="_blank" rel="noopener noreferrer">
+        <div class="press-thumb-placeholder">
+          <!-- Authority Magazine wordmark SVG -->
+          <svg width="180" height="40" viewBox="0 0 180 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="180" height="40" rx="4" fill="none"/>
+            <text x="8" y="28" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#1A3021" letter-spacing="-0.5">Authority</text>
+            <text x="122" y="28" font-family="Georgia, serif" font-size="22" font-weight="300" fill="#4D8B5E">Mag</text>
+          </svg>
+        </div>
+        <div class="press-body">
+          <div class="press-outlet">
+            <span class="press-outlet-dot"></span>
+            Authority Magazine · Medium
+          </div>
+          <div class="press-quote">Don't ask investors to believe in you. Show them something they can verify independently.</div>
+          <span class="press-read">
+            Read the Article
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+      </a>
+
     </div>
   </div>
 </section>
