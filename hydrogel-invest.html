@@ -398,21 +398,28 @@ nav.scrolled {
   #cursor-drop {
     position: fixed;
     top: 0; left: 0;
-    width: 22px; height: 30px;
+    width: 20px; height: 24px;
     pointer-events: none;
     z-index: 9999;
-    /* hotspot: bottom-center of beaker sits on cursor point */
-    transform: translate(-50%, -100%);
+    /* hotspot: tip of arrow at top-left */
+    transform: translate(0, 0);
     will-change: transform;
+    filter: drop-shadow(0 0 4px rgba(0,229,180,0.7));
     transition: filter 0.3s ease, opacity 0.2s;
   }
   #cursor-drop.hovering {
-    filter: drop-shadow(0 0 8px rgba(0,229,180,0.85)) brightness(1.25);
-    transform: translate(-50%, -100%) scale(1.2);
+    filter: drop-shadow(0 0 8px rgba(0,229,180,0.95)) brightness(1.15);
   }
   #cursor-drop.on-gold {
-    filter: drop-shadow(0 0 10px rgba(212,175,62,0.9)) brightness(1.35);
-    transform: translate(-50%, -100%) scale(1.15);
+    filter: drop-shadow(0 0 10px rgba(212,175,62,0.9)) brightness(1.2);
+  }
+  .cursor-particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    border-radius: 50%;
+    background: radial-gradient(circle, #4DFFD8 0%, #00C9A7 60%, transparent 100%);
+    will-change: transform, opacity;
   }
 }
 
@@ -656,56 +663,25 @@ nav.scrolled {
 
 <!-- CUSTOM CURSOR (desktop only) -->
 <div id="cursor-glow"></div>
-<svg id="cursor-drop" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg id="cursor-drop" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- Glass body gradient: very subtle tint -->
-    <linearGradient id="bglass" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%"   stop-color="#00E5B4" stop-opacity="0.18"/>
-      <stop offset="40%"  stop-color="#00C9A7" stop-opacity="0.06"/>
-      <stop offset="100%" stop-color="#00E5B4" stop-opacity="0.10"/>
+    <linearGradient id="arrowFill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1A4A3A"/>
+      <stop offset="100%" stop-color="#0D2E24"/>
     </linearGradient>
-    <!-- Liquid gradient: deep at bottom, bright at top -->
-    <linearGradient id="bliq" x1="0" y1="1" x2="0" y2="0">
-      <stop offset="0%"   stop-color="#00796B" stop-opacity="0.90"/>
-      <stop offset="55%"  stop-color="#00C9A7" stop-opacity="0.80"/>
-      <stop offset="100%" stop-color="#4DFFD8" stop-opacity="0.70"/>
-    </linearGradient>
+    <filter id="arrowGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="1.2" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
   </defs>
-
-  <!-- Beaker body fill (glass tint) -->
-  <path d="M3.5 30 L20.5 30 L20.5 7.5 L22.5 7.5 L22.5 5.5 L6 5.5 L4 3 L1.5 5.5 L1.5 7.5 L3.5 7.5 Z"
-        fill="url(#bglass)"/>
-
-  <!-- Liquid fill ~58% -->
-  <path d="M3.5 18 L20.5 18 L20.5 29.5 L3.5 29.5 Z" fill="url(#bliq)"/>
-
-  <!-- Liquid surface wave -->
-  <path d="M3.5 18 Q8 16.2 12 18 Q16 19.8 20.5 18"
-        stroke="#4DFFD8" stroke-width="0.9" fill="none" stroke-opacity="0.75"/>
-
-  <!-- Beaker outline (crisp, bright) -->
-  <path d="M3.5 30 L20.5 30 L20.5 7.5 L22.5 7.5 L22.5 5.5 L6 5.5 L4 3 L1.5 5.5 L1.5 7.5 L3.5 7.5 Z"
-        stroke="#00E5B4" stroke-width="1.3"
-        stroke-linejoin="round" stroke-linecap="round"/>
-
-  <!-- Graduation marks (right side, precise) -->
-  <line x1="17.5" y1="22" x2="20.5" y2="22" stroke="#00C9A7" stroke-width="0.8" stroke-opacity="0.7"/>
-  <line x1="19"   y1="25" x2="20.5" y2="25" stroke="#00C9A7" stroke-width="0.6" stroke-opacity="0.5"/>
-  <line x1="17.5" y1="14" x2="20.5" y2="14" stroke="#00C9A7" stroke-width="0.8" stroke-opacity="0.5"/>
-  <line x1="19"   y1="10" x2="20.5" y2="10" stroke="#00C9A7" stroke-width="0.6" stroke-opacity="0.35"/>
-
-  <!-- Glass left-edge highlight (main) -->
-  <line x1="5" y1="9" x2="5" y2="29"
-        stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-opacity="0.32"/>
-  <!-- Glass left-edge highlight (secondary, offset) -->
-  <line x1="6.2" y1="10" x2="6.2" y2="27"
-        stroke="white" stroke-width="0.6" stroke-linecap="round" stroke-opacity="0.14"/>
-
-  <!-- Top specular glint -->
-  <ellipse cx="5.8" cy="8.2" rx="1.4" ry="0.8" fill="white" fill-opacity="0.55"/>
-
-  <!-- Liquid inner shimmer -->
-  <path d="M6 20 Q8 18.8 10 20" stroke="white" stroke-width="0.7" stroke-opacity="0.25" fill="none" stroke-linecap="round"/>
+  <!-- Arrow body (classic pointer shape) -->
+  <path d="M2 2 L2 17 L6 13 L9.5 21 L11.5 20 L8 12 L13.5 12 Z"
+        fill="url(#arrowFill)"
+        stroke="#00E5B4" stroke-width="1.2"
+        stroke-linejoin="round" stroke-linecap="round"
+        filter="url(#arrowGlow)"/>
+  <!-- Left-edge inner highlight -->
+  <line x1="3" y1="4" x2="3" y2="14" stroke="#4DFFD8" stroke-width="0.7" stroke-opacity="0.45" stroke-linecap="round"/>
 </svg>
 
 <!-- MOBILE BOTTOM TAB BAR -->
@@ -1935,27 +1911,40 @@ function toggleFaq(btn) {
 })();
 
 // =====================================================
-// CUSTOM CURSOR — scientific beaker + bioluminescent glow
+// CUSTOM CURSOR — teal arrow + bioluminescent glow + shake water
 // Desktop (pointer: fine) only
 // =====================================================
 (function() {
   if (!window.matchMedia('(pointer: fine)').matches) return;
 
-  var beaker = document.getElementById('cursor-drop');
-  var glow   = document.getElementById('cursor-glow');
-  if (!beaker || !glow) return;
+  var arrow = document.getElementById('cursor-drop');
+  var glow  = document.getElementById('cursor-glow');
+  if (!arrow || !glow) return;
 
   var mx = -400, my = -400;
   var gx = -400, gy = -400;
+  var px = -400, py = -400, pt = 0;
+  var shaking = false;
 
   function lerp(a, b, t) { return a + (b - a) * t; }
 
-  // Beaker follows cursor exactly (hotspot = bottom center)
   document.addEventListener('mousemove', function(e) {
-    mx = e.clientX;
-    my = e.clientY;
-    beaker.style.left = mx + 'px';
-    beaker.style.top  = my + 'px';
+    var now = performance.now();
+    var dt  = now - pt;
+    if (dt > 0) {
+      var dx = e.clientX - px;
+      var dy = e.clientY - py;
+      var vel = Math.sqrt(dx*dx + dy*dy) / dt; // px/ms
+      if (vel > 2.2 && !shaking) {
+        shaking = true;
+        spawnWater(e.clientX, e.clientY, 6);
+        setTimeout(function() { shaking = false; }, 500);
+      }
+    }
+    px = e.clientX; py = e.clientY; pt = now;
+    mx = e.clientX; my = e.clientY;
+    arrow.style.left = mx + 'px';
+    arrow.style.top  = my + 'px';
   }, { passive: true });
 
   // Glow trails with organic lag
@@ -1967,15 +1956,48 @@ function toggleFaq(btn) {
     requestAnimationFrame(loop);
   })();
 
-  // Hover: scale + glow reaction
+  // Spawn tiny water drop particles on shake
+  function spawnWater(cx, cy, count) {
+    for (var i = 0; i < count; i++) {
+      (function() {
+        var p = document.createElement('div');
+        p.className = 'cursor-particle';
+        var size = 3 + Math.random() * 3;
+        p.style.cssText = 'width:' + size + 'px;height:' + size + 'px;' +
+          'left:' + cx + 'px;top:' + cy + 'px;opacity:0.85;';
+        document.body.appendChild(p);
+        var angle = -Math.PI/2 + (Math.random() - 0.5) * Math.PI;
+        var speed = 2 + Math.random() * 3;
+        var vx = Math.cos(angle) * speed;
+        var vy = Math.sin(angle) * speed;
+        var startTime = performance.now();
+        var lifetime = 380 + Math.random() * 260;
+        (function tick() {
+          var elapsed = performance.now() - startTime;
+          var t = elapsed / lifetime;
+          if (t >= 1) { p.parentNode && p.parentNode.removeChild(p); return; }
+          vy += 0.12;
+          vx *= 0.97;
+          cx += vx;
+          cy += vy;
+          p.style.left = cx + 'px';
+          p.style.top  = cy + 'px';
+          p.style.opacity = (0.85 * (1 - t * t)).toString();
+          requestAnimationFrame(tick);
+        })();
+      })();
+    }
+  }
+
+  // Hover: glow reaction
   function bind(sel, gold) {
     document.querySelectorAll(sel).forEach(function(el) {
       el.addEventListener('mouseenter', function() {
-        beaker.classList.add('hovering');
-        if (gold) { glow.classList.add('on-gold'); beaker.classList.add('on-gold'); }
+        arrow.classList.add('hovering');
+        if (gold) { glow.classList.add('on-gold'); arrow.classList.add('on-gold'); }
       });
       el.addEventListener('mouseleave', function() {
-        beaker.classList.remove('hovering', 'on-gold');
+        arrow.classList.remove('hovering', 'on-gold');
         glow.classList.remove('on-gold');
       });
     });
@@ -1983,8 +2005,8 @@ function toggleFaq(btn) {
   bind('a, button, input, select, label', false);
   bind('.btn-gold, .float-cta, .cta-tab, .form-submit, .closing-btn', true);
 
-  document.addEventListener('mouseleave', function() { beaker.style.opacity = '0'; });
-  document.addEventListener('mouseenter', function() { beaker.style.opacity = '1'; });
+  document.addEventListener('mouseleave', function() { arrow.style.opacity = '0'; });
+  document.addEventListener('mouseenter', function() { arrow.style.opacity = '1'; });
 })();
 </script>
 </body>
