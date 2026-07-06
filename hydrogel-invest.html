@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HydroGel® — Investor Overview | Green Evolution Technologies</title>
+<title>InteliGel® — Investor Overview | Green Evolution Technologies</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap');
 
@@ -165,19 +165,25 @@ nav.scrolled {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  padding: 0 14px;
+  padding: 0 16px 0 14px;
   height: 100%;
-  display: flex; align-items: center;
+  display: flex; align-items: center; gap: 8px;
   z-index: 2;
   white-space: nowrap;
+  position: relative;
 }
-.ticker-label::after {
-  content: '';
-  position: absolute;
-  left: calc(14px * 2 + 4ch + 1rem);
-  top: 0; bottom: 0; width: 32px;
-  background: linear-gradient(to right, #060e08, transparent);
-  pointer-events: none; z-index: 3;
+/* pulsing live dot */
+.ticker-live-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #22c55e;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 0 rgba(34,197,94,0.7);
+  animation: live-pulse 2s ease-out infinite;
+}
+@keyframes live-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(34,197,94,0.75); }
+  60%  { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
 }
 .ticker-track-wrap {
   flex: 1; overflow: hidden; position: relative;
@@ -856,7 +862,7 @@ nav.scrolled {
   <div class="container">
     <div class="nav-inner">
       <a class="nav-logo" href="#">
-        <img src="https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68fcb146e579f9846b78dd04.png" alt="HydroGel">
+        <img src="https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68fcb146e579f9846b78dd04.png" alt="InteliGel">
       </a>
       <div class="nav-links">
         <a href="#problem">Problem</a>
@@ -930,7 +936,7 @@ nav.scrolled {
 
   <!-- Mobile: big centered logo over video -->
   <div class="mobile-logo-hero">
-    <img src="https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68fcb146e579f9846b78dd04.png" alt="HydroGel by Green Evolution Technologies">
+    <img src="https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68fcb146e579f9846b78dd04.png" alt="InteliGel by Green Evolution Technologies">
     <span class="mobile-logo-pill">Reg D 506(c) · Investor Overview</span>
   </div>
 
@@ -951,7 +957,7 @@ nav.scrolled {
 
 <!-- STOCK TICKER -->
 <div class="ticker-bar" aria-hidden="true">
-  <div class="ticker-label">HGEL·LIVE</div>
+  <div class="ticker-label"><span class="ticker-live-dot"></span>LIVE</div>
   <div class="ticker-track-wrap">
     <div class="ticker-track" id="tickerTrack">
       <!-- items injected by JS; duplicated for seamless loop -->
@@ -968,7 +974,7 @@ nav.scrolled {
           <span>Pre-Series A · Round Open</span>
         </div>
         <h1 class="display hero-heading reveal">
-          Watch HydroGel®<br>
+          Watch InteliGel®<br>
           Transform the <em>Field.</em>
         </h1>
         <p class="hero-sub reveal">Real trials. Real farmers. Real results — documented across 12 states and 3 land-grant universities.</p>
@@ -1127,7 +1133,7 @@ nav.scrolled {
       <span class="section-eyebrow">The Solution</span>
       <div class="solution-big-num">3,000×</div>
       <div class="solution-big-label">Water Retention Capacity vs. Conventional Soil</div>
-      <h2 class="display-sm" style="color:var(--bone);margin-bottom:16px;">HydroGel® Transforms How Crops<br>Absorb, Retain &amp; Use Water.</h2>
+      <h2 class="display-sm" style="color:var(--bone);margin-bottom:16px;">InteliGel® Transforms How Crops<br>Absorb, Retain &amp; Use Water.</h2>
       <p>A patented polymer matrix applied directly to the soil root zone — holding 3,000 times its weight in water and releasing it precisely when crops need it most.</p>
     </div>
 
@@ -1150,7 +1156,7 @@ nav.scrolled {
       </div>
     </div>
 
-    <img data-src="https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/69d623b6ebf1a6084329c499.png" alt="HydroGel Product" class="solution-img reveal lazy-img">
+    <img data-src="https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/69d623b6ebf1a6084329c499.png" alt="InteliGel Product" class="solution-img reveal lazy-img">
 
     <div class="proof-grid reveal">
       <div class="proof-item">
@@ -1295,7 +1301,7 @@ nav.scrolled {
 
     <div class="testimonials">
       <div class="testimonial reveal">
-        <div class="testimonial-quote">"I was skeptical — I've been farming this land for 30 years. But after year one with HydroGel, my corn yield jumped 62% and my water bill dropped by half. I've already pre-ordered for next season."</div>
+        <div class="testimonial-quote">"I was skeptical — I've been farming this land for 30 years. But after year one with InteliGel, my corn yield jumped 62% and my water bill dropped by half. I've already pre-ordered for next season."</div>
         <div class="testimonial-attr">JAMES WHITFIELD — Corn &amp; Soybean Farmer, Nebraska · 840 Acres</div>
       </div>
       <div class="testimonial reveal">
@@ -1312,7 +1318,7 @@ nav.scrolled {
     <div class="section-head light-text reveal">
       <span class="section-eyebrow">Farmer Economics</span>
       <h2 class="display-sm">The ROI Case Is<br>Mathematically Undeniable.</h2>
-      <p>HydroGel® doesn't just save water — it pays for itself many times over in year one.</p>
+      <p>InteliGel® doesn't just save water — it pays for itself many times over in year one.</p>
     </div>
 
     <div class="roi-grid">
@@ -1323,7 +1329,7 @@ nav.scrolled {
             <tr>
               <th>Line Item</th>
               <th>Conventional</th>
-              <th class="hl">HydroGel®</th>
+              <th class="hl">InteliGel®</th>
             </tr>
           </thead>
           <tbody>
@@ -1348,7 +1354,7 @@ nav.scrolled {
               <td class="mono hl">$31</td>
             </tr>
             <tr>
-              <td>HydroGel® Application</td>
+              <td>InteliGel® Application</td>
               <td class="mono">—</td>
               <td class="mono hl">$120</td>
             </tr>
@@ -1367,8 +1373,8 @@ nav.scrolled {
           <thead>
             <tr>
               <th>Metric</th>
-              <th>Without HydroGel</th>
-              <th class="hl">With HydroGel®</th>
+              <th>Without InteliGel</th>
+              <th class="hl">With InteliGel®</th>
             </tr>
           </thead>
           <tbody>
@@ -1646,13 +1652,13 @@ nav.scrolled {
     <div class="section-head light-text reveal">
       <span class="section-eyebrow">Market Opportunity</span>
       <h2 class="display-sm">A Multi-Trillion Dollar<br>Market Waiting to be Captured.</h2>
-      <p>HydroGel® addresses every layer of the global agricultural value chain — from soil health to water infrastructure.</p>
+      <p>InteliGel® addresses every layer of the global agricultural value chain — from soil health to water infrastructure.</p>
     </div>
     <div class="market-grid">
       <div class="market-card reveal d1">
         <div class="market-num">$808B</div>
         <div class="market-label">U.S. Agricultural Market</div>
-        <div class="market-desc">Total annual value of U.S. crop production — HydroGel's addressable domestic market for direct farmer sales</div>
+        <div class="market-desc">Total annual value of U.S. crop production — InteliGel's addressable domestic market for direct farmer sales</div>
       </div>
       <div class="market-card reveal d2">
         <div class="market-num">$27T+</div>
@@ -1711,7 +1717,7 @@ nav.scrolled {
         <div class="reason-card reveal d2">
           <div class="reason-roman">II</div>
           <div class="reason-title">Proven, Documented Results</div>
-          <div class="reason-text">Unlike most agtech, HydroGel® has 3 years of university-verified trial data across 12 states — not projections, not pilots, but documented commercial-scale results.</div>
+          <div class="reason-text">Unlike most agtech, InteliGel® has 3 years of university-verified trial data across 12 states — not projections, not pilots, but documented commercial-scale results.</div>
         </div>
         <div class="reason-card reveal d3">
           <div class="reason-roman">III</div>
@@ -1721,7 +1727,7 @@ nav.scrolled {
         <div class="reason-card reveal d4">
           <div class="reason-roman">IV</div>
           <div class="reason-title">Massive, Underserved Market</div>
-          <div class="reason-text">The $808B U.S. agricultural market has seen virtually no biological innovation in soil-water management in decades. HydroGel® enters a greenfield opportunity with first-mover advantage.</div>
+          <div class="reason-text">The $808B U.S. agricultural market has seen virtually no biological innovation in soil-water management in decades. InteliGel® enters a greenfield opportunity with first-mover advantage.</div>
         </div>
         <div class="reason-card reveal d5">
           <div class="reason-roman">V</div>
@@ -1788,7 +1794,7 @@ nav.scrolled {
       <div class="reveal">
         <div class="moat-card">
           <h3>Why the Moat Is Deep</h3>
-          <p>HydroGel's patent portfolio was built with clearance opinions from top-5 IP firms. The formulation took 11 years to develop — competitors cannot shortcut the chemistry or the regulatory path.</p>
+          <p>InteliGel's patent portfolio was built with clearance opinions from top-5 IP firms. The formulation took 11 years to develop — competitors cannot shortcut the chemistry or the regulatory path.</p>
           <p>Our polymer synthesis process is proprietary and maintained as a trade secret alongside patent protections, creating a layered defensive strategy that is exceptionally difficult to design around.</p>
           <div class="moat-stats">
             <div class="moat-stat">
@@ -2042,9 +2048,9 @@ nav.scrolled {
 <footer style="background:var(--ink);padding:48px 0;">
   <div class="container">
     <div class="footer-inner">
-      <div class="footer-brand">Green Evolution Technologies · HydroGel®</div>
+      <div class="footer-brand">Green Evolution Technologies · InteliGel®</div>
       <div class="footer-legal">
-        © 2025 Green Evolution Technologies, Inc. All rights reserved. HydroGel® is a registered trademark.<br>
+        © 2025 Green Evolution Technologies, Inc. All rights reserved. InteliGel® is a registered trademark.<br>
         This website contains forward-looking statements based on management assumptions and projections. Actual results may differ materially.<br>
         Securities offered pursuant to Regulation D, Rule 506(c) under the Securities Act of 1933, as amended. Available to accredited investors only. Not registered with the SEC.<br>
         This is not investment advice. Consult your financial advisor before making any investment decision.
