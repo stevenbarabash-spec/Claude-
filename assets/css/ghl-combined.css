@@ -433,6 +433,9 @@
       line-height: 1;
       color: var(--cream);
       will-change: transform;
+      overflow-wrap: normal;
+      word-break: normal;
+      hyphens: none;
     }
     .chapter-heading .line-2 {
       color: transparent;
@@ -528,6 +531,9 @@
       font-weight: 900;
       line-height: 0.9;
       will-change: transform;
+      overflow-wrap: normal;
+      word-break: normal;
+      hyphens: none;
     }
     .section-heading .line-1 { color: var(--cream); }
     .section-heading .line-2 {
@@ -1943,6 +1949,9 @@
     font-size: clamp(48px, 7vw, 110px);
     line-height: 0.9;
     will-change: transform;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
   }
   .t-title .line-1 {
     color: #f0ece4;
