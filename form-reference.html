@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Empire Entertainment CT — Booking Form Reference</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    background: #080808;
+    padding: 60px 20px;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  :root { --mg: #ff00ff; --mg-glow: rgba(255,0,255,0.5); }
+
+  .ef-form-head {
+    margin-bottom: 32px;
+  }
+  .ef-form-title {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(32px, 4vw, 54px);
+    font-weight: 900; line-height: 1;
+    color: #fff; letter-spacing: -0.02em;
+  }
+  .ef-form-title .ef-mg { color: var(--mg); text-shadow: 0 0 30px rgba(255,0,255,0.5); }
+  .ef-form-caption {
+    display: block; margin-top: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 0.25em;
+    color: rgba(255,0,255,0.6); text-transform: uppercase;
+  }
+
+  .ef-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    border: none;
+    background: transparent;
+    max-width: 640px;
+  }
+  .ef-field {
+    position: relative;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .ef-field.ef-full { grid-column: 1 / -1; }
+
+  .ef-field:focus-within {
+    background: rgba(255,0,255,0.05);
+    border-color: rgba(255,0,255,0.55);
+    box-shadow: 0 0 0 1px rgba(255,0,255,0.35), 0 8px 30px rgba(255,0,255,0.12);
+  }
+
+  .ef-field label {
+    position: absolute; top: 14px; left: 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 0.24em;
+    color: rgba(255,255,255,0.55); text-transform: uppercase;
+    pointer-events: none; transition: color 0.2s;
+  }
+  .ef-field:focus-within label { color: var(--mg); }
+
+  .ef-field input,
+  .ef-field select,
+  .ef-field textarea {
+    display: block; width: 100%;
+    background: transparent; border: none; outline: none;
+    padding: 34px 20px 15px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; color: #fff;
+    appearance: none; -webkit-appearance: none;
+  }
+  .ef-field input::placeholder,
+  .ef-field textarea::placeholder { color: rgba(255,255,255,0.3); }
+  .ef-field select option { background: #0a0a0a; color: #fff; }
+  .ef-field textarea { resize: none; min-height: 120px; line-height: 1.6; }
+  .ef-field input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
+
+  .ef-sel-wrap { position: relative; }
+  .ef-sel-wrap::after {
+    content: '';
+    position: absolute; right: 20px; top: 60%;
+    width: 8px; height: 8px;
+    border-right: 2px solid rgba(255,0,255,0.7);
+    border-bottom: 2px solid rgba(255,0,255,0.7);
+    transform: translateY(-50%) rotate(45deg);
+    pointer-events: none;
+  }
+
+  .ef-send-row {
+    grid-column: 1 / -1;
+    margin-top: 6px;
+  }
+  .ef-send-btn {
+    display: block; width: 100%; border: none;
+    background: transparent;
+    padding: 24px 18px;
+    border-radius: 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px; font-weight: 900;
+    letter-spacing: 0.35em; text-transform: uppercase;
+    color: #fff; cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: color 0.4s, box-shadow 0.4s, transform 0.2s;
+    box-shadow: 0 6px 24px rgba(255,0,255,0.25);
+  }
+  .ef-send-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--mg), #ff6600);
+    transition: filter 0.4s;
+    z-index: 0;
+  }
+  .ef-send-btn:hover { box-shadow: 0 10px 36px rgba(255,0,255,0.45); }
+  .ef-send-btn:hover::before { filter: brightness(1.15) saturate(1.1); }
+  .ef-send-btn:active { transform: translateY(1px); }
+  .ef-send-btn-inner {
+    position: relative; z-index: 1;
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+  }
+  .ef-arrow-circle {
+    width: 22px; height: 22px;
+    border: 1.5px solid currentColor; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: transform 0.3s;
+  }
+  .ef-send-btn:hover .ef-arrow-circle { transform: rotate(45deg); }
+  .ef-arrow-circle svg { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+
+  .ef-consent {
+    margin-top: 14px;
+    max-width: 640px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.2);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 640px) {
+    .ef-grid { grid-template-columns: 1fr; }
+    .ef-field.ef-full { grid-column: 1; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="ef-form-head">
+    <span class="ef-form-title">Book <span class="ef-mg">Your</span><br />Event.</span>
+    <span class="ef-form-caption">Let's make it extraordinary</span>
+  </div>
+
+  <form class="ef-grid" id="ef-form" novalidate>
+
+    <div class="ef-field">
+      <label for="ef-name">Name *</label>
+      <input type="text" id="ef-name" name="name" autocomplete="name" required />
+    </div>
+
+    <div class="ef-field">
+      <label for="ef-email">Email *</label>
+      <input type="email" id="ef-email" name="email" autocomplete="email" required />
+    </div>
+
+    <div class="ef-field">
+      <label for="ef-phone">Phone</label>
+      <input type="tel" id="ef-phone" name="phone" autocomplete="tel" />
+    </div>
+
+    <div class="ef-field ef-sel-wrap">
+      <label for="ef-type">Type of Event *</label>
+      <select id="ef-type" name="event_type" required>
+        <option value="" disabled selected></option>
+        <option>Mitzvah</option>
+        <option>Sweet 16</option>
+        <option>Quinceañera</option>
+        <option>Wedding</option>
+        <option>Prom / Graduation</option>
+        <option>Corporate Event</option>
+        <option>Holiday Party</option>
+        <option>NYE Celebration</option>
+        <option>Birthday Party</option>
+        <option>Gala / Fundraiser</option>
+        <option>Father-Daughter Dance</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="ef-field">
+      <label for="ef-date">Date of Event</label>
+      <input type="date" id="ef-date" name="event_date" />
+    </div>
+
+    <div class="ef-field">
+      <label for="ef-guests">Est. Guests</label>
+      <input type="number" id="ef-guests" name="guests" min="1" />
+    </div>
+
+    <div class="ef-field ef-full">
+      <label for="ef-msg">Tell Us More</label>
+      <textarea id="ef-msg" name="message" rows="4"></textarea>
+    </div>
+
+    <div class="ef-field ef-send-row">
+      <button type="submit" class="ef-send-btn">
+        <span class="ef-send-btn-inner">
+          Send Enquiry
+          <span class="ef-arrow-circle">
+            <svg viewBox="0 0 10 10"><path d="M2 8L8 2M8 2H3M8 2v5"/></svg>
+          </span>
+        </span>
+      </button>
+    </div>
+
+  </form>
+
+  <p class="ef-consent">
+    By messaging, you agree to receive messages related to your booking at the provided number.
+    Message frequency varies. Standard rates may apply. Reply STOP to opt-out. Reply HELP for assistance.
+  </p>
+
+</body>
+</html>
