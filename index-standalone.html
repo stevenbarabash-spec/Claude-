@@ -166,19 +166,26 @@
       z-index: 9999;
       transform: translate(-50%, -50%) rotate(-15deg);
       transition: none;
+      filter: drop-shadow(0 0 6px #ff00cc) drop-shadow(0 0 14px rgba(255, 0, 204, 0.8));
     }
     #cursor-ring {
       position: fixed;
-      width: 44px; height: 44px;
-      border: 1.5px solid var(--gold);
+      width: 60px; height: 60px;
+      border: 1.5px solid #ff00cc;
       border-radius: 50%;
       pointer-events: none;
       z-index: 9998;
       transform: translate(-50%, -50%);
       transition: width 0.3s, height 0.3s, border-color 0.3s;
+      background: radial-gradient(circle, rgba(255, 0, 204, 0.35) 0%, rgba(255, 0, 204, 0) 70%);
+      animation: cursorGlowPulse 2s ease-in-out infinite;
     }
     body.hovering #cursor-ring {
-      width: 96px; height: 96px;
+      width: 110px; height: 110px;
+    }
+    @keyframes cursorGlowPulse {
+      0%, 100% { box-shadow: 0 0 16px rgba(255, 0, 204, 0.5), 0 0 32px rgba(255, 0, 204, 0.25); }
+      50%      { box-shadow: 0 0 28px rgba(255, 0, 204, 0.8), 0 0 50px rgba(255, 0, 204, 0.4); }
     }
     /* no custom cursor on touch / mobile */
     @media (max-width: 768px), (hover: none) {
@@ -271,6 +278,16 @@
 
 .nav-links li a:hover {
   opacity: 0.55;
+}
+
+.nav-cta-glow {
+  color: #ff00cc !important;
+  animation: navGlowPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes navGlowPulse {
+  0%, 100% { text-shadow: 0 0 6px #ff00cc, 0 0 12px rgba(255, 0, 204, 0.6); }
+  50%      { text-shadow: 0 0 14px #ff00cc, 0 0 28px rgba(255, 0, 204, 0.9); }
 }
 
 /* ─── HAMBURGER BUTTON ─── */
@@ -3661,6 +3678,9 @@ button:hover * {
     margin: 0 0 24px;
     color: var(--emp-text);
     position: relative;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
   }
   .emp-panel-bignum {
     position: absolute;
@@ -3894,10 +3914,10 @@ button:hover * {
     <li class="nav-menu-logo"><img src="https://assets.cdn.filesafe.space/vhbStpS0g5uGrKHZbkSE/media/6a4bee141209780f80d55e64.png" alt="Empire Entertainment CT" /></li>
     <li><a href="#Home">HOME</a></li>
    
-    <li><a href="#services">What We Do</a></li>
+    <li><a href="#services">WHAT WE DO</a></li>
     <li><a href="#showcase">SHOWCASE</a></li>
     <li><a href="#testimonials">TESTIMONIALS</a></li>
-    <li><a href="#ef">Book Your Event</a></li>
+    <li><a href="#ef" class="nav-cta-glow">BOOK YOUR EVENT</a></li>
   </ul>
 
   <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
@@ -4316,6 +4336,9 @@ button:hover * {
     margin: 0 0 24px;
     color: var(--emp-text);
     position: relative;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
   }
   .emp-panel-bignum {
     position: absolute;
@@ -5191,7 +5214,7 @@ button:hover * {
     <!-- BOTTOM BAR -->
     <div class="t-bottom-bar" id="tBottomBar">
       <span class="t-bottom-text">Every event. Every memory. Every time.</span>
-      <a href="#contact" class="t-bottom-cta">Book Your Event</a>
+      <a href="#ef" class="t-bottom-cta">Book Your Event</a>
     </div>
 
   </div><!-- /t-container -->
@@ -5547,6 +5570,9 @@ function initWillChange() {
   });
 }
 
+// ─── CURSOR — runs immediately, independent of GSAP/CDN availability ───
+initCursor();
+
 // ─── SINGLE LOAD LISTENER — ALL GSAP ───
 window.addEventListener('load', () => {
   gsap.registerPlugin(ScrollTrigger);
@@ -5564,7 +5590,6 @@ ScrollTrigger.config({
   initSmoothScroll();       // ← Lenis smooth scrolling (synced w/ ScrollTrigger)
   initWillChange();
 initGrain();
-  initCursor();
   initAbout();
   initChapters();
   initTour();

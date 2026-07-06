@@ -90,6 +90,9 @@ function initWillChange() {
   });
 }
 
+// ─── CURSOR — runs immediately, independent of GSAP/CDN availability ───
+initCursor();
+
 // ─── SINGLE LOAD LISTENER — ALL GSAP ───
 window.addEventListener('load', () => {
   gsap.registerPlugin(ScrollTrigger);
@@ -107,7 +110,6 @@ ScrollTrigger.config({
   initSmoothScroll();       // ← Lenis smooth scrolling (synced w/ ScrollTrigger)
   initWillChange();
 initGrain();
-  initCursor();
   initAbout();
   initChapters();
   initTour();
