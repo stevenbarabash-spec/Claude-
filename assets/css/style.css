@@ -1161,6 +1161,8 @@
       font-weight: 900;
       line-height: 1.4;
       margin-bottom: 40px;
+    }
+    .gsap-active .ef-tagline {
       opacity: 0;
       transform: translateY(24px);
     }
@@ -1173,8 +1175,8 @@
       display: flex; align-items: flex-start; gap: 18px;
       padding: 18px 0;
       border-bottom: 1px solid rgba(255,255,255,0.06);
-      opacity: 0; transform: translateX(-24px);
     }
+    .gsap-active .ef-info-row { opacity: 0; transform: translateX(-24px); }
     .ef-info-row:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
     .ef-info-icon {
       width: 40px; height: 40px; flex-shrink: 0;
@@ -1217,8 +1219,9 @@
       font-family: 'Space Mono', monospace;
       font-size: 9px; letter-spacing: 0.3em;
       color: rgba(255,0,255,0.5); text-transform: uppercase;
-      margin-bottom: 14px; opacity: 0;
+      margin-bottom: 14px;
     }
+    .gsap-active .ef-social-head { opacity: 0; }
     .ef-social-row { display: flex; gap: 10px; }
     .ef-soc-btn {
       display: inline-flex; align-items: center; gap: 9px;
@@ -1228,9 +1231,9 @@
       font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
       color: #fff; text-decoration: none;
       position: relative; overflow: hidden;
-      opacity: 0; transform: translateY(12px);
       transition: color 0.35s, border-color 0.35s;
     }
+    .gsap-active .ef-soc-btn { opacity: 0; transform: translateY(12px); }
     .ef-soc-btn::before {
       content: '';
       position: absolute; inset: 0;
@@ -1246,8 +1249,9 @@
 
     /* ── RIGHT: Form ── */
     .ef-form-head {
-      margin-bottom: 32px; opacity: 0; transform: translateY(24px);
+      margin-bottom: 32px;
     }
+    .gsap-active .ef-form-head { opacity: 0; transform: translateY(24px); }
     .ef-form-title {
       display: block;
       font-family: 'Montserrat', sans-serif;
@@ -1264,7 +1268,7 @@
     }
 
     /* Form grid */
-    .ef-form {
+    .gsap-active .ef-form {
       opacity: 0; transform: translateY(20px);
     }
     .ef-grid {
@@ -1411,8 +1415,8 @@
       height: 1px;
       background: linear-gradient(to right, transparent, rgba(255,0,255,0.4) 20%, rgba(255,0,255,0.4) 80%, transparent);
       transform-origin: left;
-      transform: scaleX(0); opacity: 0;
     }
+    .gsap-active .ef-rule { transform: scaleX(0); opacity: 0; }
 
     /* ── BOTTOM BAR ── */
     .ef-bottom {
@@ -1527,9 +1531,8 @@
     align-items: center;
     gap: 14px;
     margin-bottom: 20px;
-    opacity: 0;
-    transform: translateY(10px);
   }
+  .gsap-active .sc-chap { opacity: 0; transform: translateY(10px); }
   .sc-chap::before, .sc-chap::after {
     content: ''; width: 28px; height: 1px; background: var(--m);
   }
@@ -1566,9 +1569,8 @@
     color: var(--txt-dim);
     text-transform: uppercase;
     margin-top: 22px;
-    opacity: 0;
-    transform: translateY(8px);
   }
+  .gsap-active .sc-sub { opacity: 0; transform: translateY(8px); }
 
   /* =============================================
      SLIDER STAGE
@@ -1921,13 +1923,12 @@
     letter-spacing: 0.28em;
     color: #ff00ff;
     text-transform: uppercase;
-    opacity: 0;
-    transform: translateX(-20px);
     writing-mode: vertical-rl;
     transform: rotate(180deg);
     white-space: nowrap;
     padding-bottom: 8px;
   }
+  .gsap-active .t-chapter-tag { opacity: 0; }
 
   .t-title-block { flex: 1; }
 
@@ -1938,8 +1939,8 @@
     color: #ff00ff;
     text-transform: uppercase;
     margin-bottom: 14px;
-    opacity: 0;
   }
+  .gsap-active .t-eyebrow { opacity: 0; }
 
   .t-title {
     overflow: hidden;
@@ -1966,8 +1967,8 @@
   .t-score-block {
     text-align: right;
     padding-bottom: 8px;
-    opacity: 0;
   }
+  .gsap-active .t-score-block { opacity: 0; }
   .t-score-number {
     font-family: 'Playfair Display', serif;
     font-size: 72px;
@@ -1998,8 +1999,8 @@
     padding: 14px 0;
     margin-bottom: 90px;
     position: relative;
-    opacity: 0;
   }
+  .gsap-active .t-marquee-wrap { opacity: 0; }
   .t-marquee-wrap::before,
   .t-marquee-wrap::after {
     content: '';
@@ -2058,11 +2059,10 @@
     padding: 52px 44px 44px;
     border: 1px solid rgba(255,255,255,0.05);
     overflow: hidden;
-    opacity: 0;
-    transform: translateY(40px);
     cursor: default;
     transition: border-color 0.4s ease;
   }
+  .gsap-active .t-card { opacity: 0; transform: translateY(40px); }
   .t-card:hover { border-color: rgba(255,0,255,0.18); }
 
   .t-card::before {
@@ -2247,8 +2247,8 @@
     justify-content: space-between;
     border-top: 1px solid rgba(255,255,255,0.07);
     padding-top: 30px;
-    opacity: 0;
   }
+  .gsap-active .t-bottom-bar { opacity: 0; }
   .t-bottom-text {
     font-family: 'Cormorant Garamond', serif;
     font-size: 16px;
@@ -2442,9 +2442,8 @@
   position: relative;
   overflow: hidden;
   background: #0a080c;
-  opacity: 0;
-  transform: translateY(60px);
 }
+.gsap-active .dj-card { opacity: 0; transform: translateY(60px); }
 
 /* ─── CARD INNER — SPLIT LAYOUT ─── */
 .dj-card-inner {

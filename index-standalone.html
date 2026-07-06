@@ -1285,6 +1285,8 @@
       font-weight: 900;
       line-height: 1.4;
       margin-bottom: 40px;
+    }
+    .gsap-active .ef-tagline {
       opacity: 0;
       transform: translateY(24px);
     }
@@ -1297,8 +1299,8 @@
       display: flex; align-items: flex-start; gap: 18px;
       padding: 18px 0;
       border-bottom: 1px solid rgba(255,255,255,0.06);
-      opacity: 0; transform: translateX(-24px);
     }
+    .gsap-active .ef-info-row { opacity: 0; transform: translateX(-24px); }
     .ef-info-row:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
     .ef-info-icon {
       width: 40px; height: 40px; flex-shrink: 0;
@@ -1341,8 +1343,9 @@
       font-family: 'Space Mono', monospace;
       font-size: 9px; letter-spacing: 0.3em;
       color: rgba(255,0,255,0.5); text-transform: uppercase;
-      margin-bottom: 14px; opacity: 0;
+      margin-bottom: 14px;
     }
+    .gsap-active .ef-social-head { opacity: 0; }
     .ef-social-row { display: flex; gap: 10px; }
     .ef-soc-btn {
       display: inline-flex; align-items: center; gap: 9px;
@@ -1352,9 +1355,9 @@
       font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
       color: #fff; text-decoration: none;
       position: relative; overflow: hidden;
-      opacity: 0; transform: translateY(12px);
       transition: color 0.35s, border-color 0.35s;
     }
+    .gsap-active .ef-soc-btn { opacity: 0; transform: translateY(12px); }
     .ef-soc-btn::before {
       content: '';
       position: absolute; inset: 0;
@@ -1370,8 +1373,9 @@
 
     /* ── RIGHT: Form ── */
     .ef-form-head {
-      margin-bottom: 32px; opacity: 0; transform: translateY(24px);
+      margin-bottom: 32px;
     }
+    .gsap-active .ef-form-head { opacity: 0; transform: translateY(24px); }
     .ef-form-title {
       display: block;
       font-family: 'Montserrat', sans-serif;
@@ -1388,7 +1392,7 @@
     }
 
     /* Form grid */
-    .ef-form {
+    .gsap-active .ef-form {
       opacity: 0; transform: translateY(20px);
     }
     .ef-grid {
@@ -1535,8 +1539,8 @@
       height: 1px;
       background: linear-gradient(to right, transparent, rgba(255,0,255,0.4) 20%, rgba(255,0,255,0.4) 80%, transparent);
       transform-origin: left;
-      transform: scaleX(0); opacity: 0;
     }
+    .gsap-active .ef-rule { transform: scaleX(0); opacity: 0; }
 
     /* ── BOTTOM BAR ── */
     .ef-bottom {
@@ -1651,9 +1655,8 @@
     align-items: center;
     gap: 14px;
     margin-bottom: 20px;
-    opacity: 0;
-    transform: translateY(10px);
   }
+  .gsap-active .sc-chap { opacity: 0; transform: translateY(10px); }
   .sc-chap::before, .sc-chap::after {
     content: ''; width: 28px; height: 1px; background: var(--m);
   }
@@ -1690,9 +1693,8 @@
     color: var(--txt-dim);
     text-transform: uppercase;
     margin-top: 22px;
-    opacity: 0;
-    transform: translateY(8px);
   }
+  .gsap-active .sc-sub { opacity: 0; transform: translateY(8px); }
 
   /* =============================================
      SLIDER STAGE
@@ -2045,13 +2047,12 @@
     letter-spacing: 0.28em;
     color: #ff00ff;
     text-transform: uppercase;
-    opacity: 0;
-    transform: translateX(-20px);
     writing-mode: vertical-rl;
     transform: rotate(180deg);
     white-space: nowrap;
     padding-bottom: 8px;
   }
+  .gsap-active .t-chapter-tag { opacity: 0; }
 
   .t-title-block { flex: 1; }
 
@@ -2062,8 +2063,8 @@
     color: #ff00ff;
     text-transform: uppercase;
     margin-bottom: 14px;
-    opacity: 0;
   }
+  .gsap-active .t-eyebrow { opacity: 0; }
 
   .t-title {
     overflow: hidden;
@@ -2090,8 +2091,8 @@
   .t-score-block {
     text-align: right;
     padding-bottom: 8px;
-    opacity: 0;
   }
+  .gsap-active .t-score-block { opacity: 0; }
   .t-score-number {
     font-family: 'Playfair Display', serif;
     font-size: 72px;
@@ -2122,8 +2123,8 @@
     padding: 14px 0;
     margin-bottom: 90px;
     position: relative;
-    opacity: 0;
   }
+  .gsap-active .t-marquee-wrap { opacity: 0; }
   .t-marquee-wrap::before,
   .t-marquee-wrap::after {
     content: '';
@@ -2182,11 +2183,10 @@
     padding: 52px 44px 44px;
     border: 1px solid rgba(255,255,255,0.05);
     overflow: hidden;
-    opacity: 0;
-    transform: translateY(40px);
     cursor: default;
     transition: border-color 0.4s ease;
   }
+  .gsap-active .t-card { opacity: 0; transform: translateY(40px); }
   .t-card:hover { border-color: rgba(255,0,255,0.18); }
 
   .t-card::before {
@@ -2371,8 +2371,8 @@
     justify-content: space-between;
     border-top: 1px solid rgba(255,255,255,0.07);
     padding-top: 30px;
-    opacity: 0;
   }
+  .gsap-active .t-bottom-bar { opacity: 0; }
   .t-bottom-text {
     font-family: 'Cormorant Garamond', serif;
     font-size: 16px;
@@ -2566,9 +2566,8 @@
   position: relative;
   overflow: hidden;
   background: #0a080c;
-  opacity: 0;
-  transform: translateY(60px);
 }
+.gsap-active .dj-card { opacity: 0; transform: translateY(60px); }
 
 /* ─── CARD INNER — SPLIT LAYOUT ─── */
 .dj-card-inner {
@@ -3418,7 +3417,48 @@ button:hover * {
   -webkit-text-fill-color: #ffffff !important; /* override gradient-clip text */
 }
 
+/* ─── FLOATING CALL BUTTON ─── */
+.floating-call-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  background: #ff6600;
+  color: #ffffff !important;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  text-transform: uppercase;
+  border-radius: 50px;
+  animation: floatCallGlow 2s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+.floating-call-btn:hover {
+  transform: scale(1.06);
+}
+.floating-call-btn svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+@keyframes floatCallGlow {
+  0%, 100% { box-shadow: 0 0 14px rgba(255, 102, 0, 0.55), 0 4px 14px rgba(0, 0, 0, 0.4); }
+  50%      { box-shadow: 0 0 30px rgba(255, 102, 0, 0.95), 0 4px 20px rgba(0, 0, 0, 0.5); }
+}
+@media (max-width: 480px) {
+  .floating-call-btn span { display: none; }
+  .floating-call-btn { padding: 14px; border-radius: 50%; bottom: 16px; right: 16px; }
+}
+
+
 /* ===== HERO TEXT STYLES (was inline <style> in <head>) ===== */
+
    
 
 .hero_h2 {
@@ -3514,8 +3554,10 @@ button:hover * {
   }
 }
 
+  
 
 /* ===== SERVICES SECTION STYLES (was inline <style> mid-body) ===== */
+
   :root {
     --emp-magenta: rgb(255, 0, 255);
     --emp-magenta-soft: rgba(255, 0, 255, 0.15);
@@ -3897,45 +3939,6 @@ button:hover * {
     .emp-panel-visual { max-width: 200px; }
     .emp-services-title { font-size: clamp(36px, 12vw, 80px); }
   }
-
-/* ─── FLOATING CALL BUTTON ─── */
-.floating-call-btn {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 500;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 22px;
-  background: #ff6600;
-  color: #ffffff !important;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 800;
-  font-size: 14px;
-  letter-spacing: 0.05em;
-  text-decoration: none;
-  text-transform: uppercase;
-  border-radius: 50px;
-  animation: floatCallGlow 2s ease-in-out infinite;
-  transition: transform 0.2s ease;
-}
-.floating-call-btn:hover {
-  transform: scale(1.06);
-}
-.floating-call-btn svg {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-}
-@keyframes floatCallGlow {
-  0%, 100% { box-shadow: 0 0 14px rgba(255, 102, 0, 0.55), 0 4px 14px rgba(0, 0, 0, 0.4); }
-  50%      { box-shadow: 0 0 30px rgba(255, 102, 0, 0.95), 0 4px 20px rgba(0, 0, 0, 0.5); }
-}
-@media (max-width: 480px) {
-  .floating-call-btn span { display: none; }
-  .floating-call-btn { padding: 14px; border-radius: 50%; bottom: 16px; right: 16px; }
-}
 
 </style>
 </head>
@@ -5579,6 +5582,14 @@ initCursor();
 
 // ─── SINGLE LOAD LISTENER — ALL GSAP ───
 window.addEventListener('load', () => {
+  // If GSAP/ScrollTrigger failed to load (CDN blocked, slow network, etc.),
+  // bail out here instead of throwing. Content stays visible by default —
+  // CSS only hides it once .gsap-active is added below, so a failed CDN
+  // just means no scroll animations, never invisible content.
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+    return;
+  }
+  document.body.classList.add('gsap-active');
   gsap.registerPlugin(ScrollTrigger);
 
 // ─── GLOBAL GSAP PERFORMANCE CONFIG ───
@@ -6408,6 +6419,11 @@ function initServices() {
   const scLine1 = document.getElementById('scLine1');
   if (!scLine1) return;
 
+  // GSAP may fail to load (CDN blocked, slow network). Guard every direct
+  // call so a failure only skips the animation flourish, never breaks the
+  // slider's core interactivity (arrows, dots, autoplay, keyboard, swipe).
+  const hasGsap = typeof gsap !== 'undefined';
+
   function splitChars(el, text) {
     if (!el) return;
     el.innerHTML = '';
@@ -6428,7 +6444,7 @@ function initServices() {
   }
 
   const scHead = document.querySelector('.sc-head');
-  if (scHead) {
+  if (scHead && hasGsap) {
     onVisible(scHead, () => {
       const htl = gsap.timeline();
       htl
@@ -6493,27 +6509,40 @@ function initServices() {
       const delta = (thumbRect.left + thumbRect.width / 2) - (filmRect.left + filmRect.width / 2);
       filmEl.scrollBy({ left: delta, behavior: 'smooth' });
     }
-    gsap.to(track, {
-      x: getOffset(current),
-      duration: instant ? 0 : 0.85,
-      ease: 'power3.inOut',
-      overwrite: 'auto',
-      onComplete:  () => { animating = false; },
-      onInterrupt: () => { animating = false; }   // resize/overwrite must not leave it stuck
-    });
+    if (hasGsap) {
+      gsap.to(track, {
+        x: getOffset(current),
+        duration: instant ? 0 : 0.85,
+        ease: 'power3.inOut',
+        overwrite: 'auto',
+        onComplete:  () => { animating = false; },
+        onInterrupt: () => { animating = false; }   // resize/overwrite must not leave it stuck
+      });
+    } else {
+      track.style.transform = 'translateX(' + getOffset(current) + 'px)';
+      animating = false;
+    }
     progFill.style.width = ((current + 1) / total * 100) + '%';
     curNum.textContent = String(current + 1).padStart(2, '0');
   }
 
   function init() {
     slides[0].classList.add('active');
-    gsap.set(track, { x: getOffset(0) });
+    if (hasGsap) {
+      gsap.set(track, { x: getOffset(0) });
+    } else {
+      track.style.transform = 'translateX(' + getOffset(0) + 'px)';
+    }
   }
   init();
 
   window.addEventListener('resize', () => {
     if (animating) return;                       // don't clobber an in-flight slide tween
-    gsap.set(track, { x: getOffset(current) });
+    if (hasGsap) {
+      gsap.set(track, { x: getOffset(current) });
+    } else {
+      track.style.transform = 'translateX(' + getOffset(current) + 'px)';
+    }
   });
 
   scPrev.addEventListener('click', () => goTo(current - 1));
@@ -6560,8 +6589,10 @@ function initServices() {
   stage.addEventListener('mouseenter', () => { if (isPlaying) clearInterval(autoTimer); });
   stage.addEventListener('mouseleave', () => { if (isPlaying) startAuto(); });
 
-  gsap.to('.sc-blob.b1', { x: 70, y: -40, duration: 12, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-  gsap.to('.sc-blob.b2', { x: -80, y: 50, duration: 15, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  if (hasGsap) {
+    gsap.to('.sc-blob.b1', { x: 70, y: -40, duration: 12, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+    gsap.to('.sc-blob.b2', { x: -80, y: 50, duration: 15, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  }
 })();
 </script>
 </body>

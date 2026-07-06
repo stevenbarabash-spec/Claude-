@@ -95,6 +95,14 @@ initCursor();
 
 // ─── SINGLE LOAD LISTENER — ALL GSAP ───
 window.addEventListener('load', () => {
+  // If GSAP/ScrollTrigger failed to load (CDN blocked, slow network, etc.),
+  // bail out here instead of throwing. Content stays visible by default —
+  // CSS only hides it once .gsap-active is added below, so a failed CDN
+  // just means no scroll animations, never invisible content.
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+    return;
+  }
+  document.body.classList.add('gsap-active');
   gsap.registerPlugin(ScrollTrigger);
 
 // ─── GLOBAL GSAP PERFORMANCE CONFIG ───
@@ -924,6 +932,11 @@ function initServices() {
   const scLine1 = document.getElementById('scLine1');
   if (!scLine1) return;
 
+  // GSAP may fail to load (CDN blocked, slow network). Guard every direct
+  // call so a failure only skips the animation flourish, never breaks the
+  // slider's core interactivity (arrows, dots, autoplay, keyboard, swipe).
+  const hasGsap = typeof gsap !== 'undefined';
+
   function splitChars(el, text) {
     if (!el) return;
     el.innerHTML = '';
@@ -944,7 +957,7 @@ function initServices() {
   }
 
   const scHead = document.querySelector('.sc-head');
-  if (scHead) {
+  if (scHead && hasGsap) {
     onVisible(scHead, () => {
       const htl = gsap.timeline();
       htl
@@ -1009,27 +1022,40 @@ function initServices() {
       const delta = (thumbRect.left + thumbRect.width / 2) - (filmRect.left + filmRect.width / 2);
       filmEl.scrollBy({ left: delta, behavior: 'smooth' });
     }
-    gsap.to(track, {
-      x: getOffset(current),
-      duration: instant ? 0 : 0.85,
-      ease: 'power3.inOut',
-      overwrite: 'auto',
-      onComplete:  () => { animating = false; },
-      onInterrupt: () => { animating = false; }   // resize/overwrite must not leave it stuck
-    });
+    if (hasGsap) {
+      gsap.to(track, {
+        x: getOffset(current),
+        duration: instant ? 0 : 0.85,
+        ease: 'power3.inOut',
+        overwrite: 'auto',
+        onComplete:  () => { animating = false; },
+        onInterrupt: () => { animating = false; }   // resize/overwrite must not leave it stuck
+      });
+    } else {
+      track.style.transform = 'translateX(' + getOffset(current) + 'px)';
+      animating = false;
+    }
     progFill.style.width = ((current + 1) / total * 100) + '%';
     curNum.textContent = String(current + 1).padStart(2, '0');
   }
 
   function init() {
     slides[0].classList.add('active');
-    gsap.set(track, { x: getOffset(0) });
+    if (hasGsap) {
+      gsap.set(track, { x: getOffset(0) });
+    } else {
+      track.style.transform = 'translateX(' + getOffset(0) + 'px)';
+    }
   }
   init();
 
   window.addEventListener('resize', () => {
     if (animating) return;                       // don't clobber an in-flight slide tween
-    gsap.set(track, { x: getOffset(current) });
+    if (hasGsap) {
+      gsap.set(track, { x: getOffset(current) });
+    } else {
+      track.style.transform = 'translateX(' + getOffset(current) + 'px)';
+    }
   });
 
   scPrev.addEventListener('click', () => goTo(current - 1));
@@ -1076,6 +1102,8 @@ function initServices() {
   stage.addEventListener('mouseenter', () => { if (isPlaying) clearInterval(autoTimer); });
   stage.addEventListener('mouseleave', () => { if (isPlaying) startAuto(); });
 
-  gsap.to('.sc-blob.b1', { x: 70, y: -40, duration: 12, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-  gsap.to('.sc-blob.b2', { x: -80, y: 50, duration: 15, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  if (hasGsap) {
+    gsap.to('.sc-blob.b1', { x: 70, y: -40, duration: 12, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+    gsap.to('.sc-blob.b2', { x: -80, y: 50, duration: 15, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  }
 })();
