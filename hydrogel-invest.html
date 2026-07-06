@@ -375,14 +375,14 @@ nav.scrolled {
   #cursor-glow {
     position: fixed;
     top: 0; left: 0;
-    width: 380px; height: 380px;
+    width: 140px; height: 140px;
     border-radius: 50%;
     pointer-events: none;
     z-index: 9990;
     transform: translate(-50%, -50%);
     background: radial-gradient(circle,
-      rgba(0,229,180,0.12) 0%,
-      rgba(0,201,167,0.06) 38%,
+      rgba(0,229,180,0.18) 0%,
+      rgba(0,201,167,0.08) 45%,
       transparent 70%);
     mix-blend-mode: screen;
     will-change: transform;
@@ -390,9 +390,17 @@ nav.scrolled {
   }
   #cursor-glow.on-gold {
     background: radial-gradient(circle,
-      rgba(212,175,62,0.14) 0%,
-      rgba(184,147,12,0.06) 38%,
+      rgba(212,175,62,0.20) 0%,
+      rgba(184,147,12,0.08) 45%,
       transparent 70%);
+  }
+  #cursor-trail {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9989;
+    mix-blend-mode: screen;
   }
 
   #cursor-drop {
@@ -412,14 +420,6 @@ nav.scrolled {
   }
   #cursor-drop.on-gold {
     filter: drop-shadow(0 0 10px rgba(212,175,62,0.9)) brightness(1.2);
-  }
-  .cursor-particle {
-    position: fixed;
-    pointer-events: none;
-    z-index: 9998;
-    border-radius: 50%;
-    background: radial-gradient(circle, #4DFFD8 0%, #00C9A7 60%, transparent 100%);
-    will-change: transform, opacity;
   }
 }
 
@@ -662,6 +662,7 @@ nav.scrolled {
 </a>
 
 <!-- CUSTOM CURSOR (desktop only) -->
+<canvas id="cursor-trail"></canvas>
 <div id="cursor-glow"></div>
 <svg id="cursor-drop" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -1911,83 +1912,78 @@ function toggleFaq(btn) {
 })();
 
 // =====================================================
-// CUSTOM CURSOR — teal arrow + bioluminescent glow + shake water
+// CUSTOM CURSOR — teal arrow + concentrated glow + 5s fading trail
 // Desktop (pointer: fine) only
 // =====================================================
 (function() {
   if (!window.matchMedia('(pointer: fine)').matches) return;
 
-  var arrow = document.getElementById('cursor-drop');
-  var glow  = document.getElementById('cursor-glow');
-  if (!arrow || !glow) return;
+  var arrow  = document.getElementById('cursor-drop');
+  var glow   = document.getElementById('cursor-glow');
+  var canvas = document.getElementById('cursor-trail');
+  if (!arrow || !glow || !canvas) return;
+
+  // Size canvas to viewport; resize on window change
+  var ctx = canvas.getContext('2d');
+  function resizeCanvas() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas, { passive: true });
 
   var mx = -400, my = -400;
   var gx = -400, gy = -400;
-  var px = -400, py = -400, pt = 0;
-  var shaking = false;
+  var trail = []; // {x, y, t}
+  var TRAIL_LIFE = 5000; // ms
 
   function lerp(a, b, t) { return a + (b - a) * t; }
 
   document.addEventListener('mousemove', function(e) {
-    var now = performance.now();
-    var dt  = now - pt;
-    if (dt > 0) {
-      var dx = e.clientX - px;
-      var dy = e.clientY - py;
-      var vel = Math.sqrt(dx*dx + dy*dy) / dt; // px/ms
-      if (vel > 2.2 && !shaking) {
-        shaking = true;
-        spawnWater(e.clientX, e.clientY, 6);
-        setTimeout(function() { shaking = false; }, 500);
-      }
-    }
-    px = e.clientX; py = e.clientY; pt = now;
-    mx = e.clientX; my = e.clientY;
+    mx = e.clientX;
+    my = e.clientY;
     arrow.style.left = mx + 'px';
     arrow.style.top  = my + 'px';
+    trail.push({ x: mx, y: my, t: performance.now() });
   }, { passive: true });
 
-  // Glow trails with organic lag
   (function loop() {
+    var now = performance.now();
+
+    // Drop expired trail points
+    while (trail.length && now - trail[0].t > TRAIL_LIFE) trail.shift();
+
+    // Draw trail on canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i = 1; i < trail.length; i++) {
+      var age  = now - trail[i].t;
+      var frac = 1 - age / TRAIL_LIFE;           // 1 = fresh, 0 = expired
+      // Smooth ease-out so it doesn't vanish abruptly
+      var alpha = frac * frac * 0.28;
+      var radius = 18 * frac + 4;
+
+      var grad = ctx.createRadialGradient(
+        trail[i].x, trail[i].y, 0,
+        trail[i].x, trail[i].y, radius
+      );
+      grad.addColorStop(0,   'rgba(0,229,180,' + (alpha * 0.9).toFixed(3) + ')');
+      grad.addColorStop(0.4, 'rgba(0,201,167,' + (alpha * 0.45).toFixed(3) + ')');
+      grad.addColorStop(1,   'rgba(0,180,150,0)');
+
+      ctx.beginPath();
+      ctx.arc(trail[i].x, trail[i].y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+
+    // Lerp ambient glow blob
     gx = lerp(gx, mx, 0.07);
     gy = lerp(gy, my, 0.07);
     glow.style.left = gx + 'px';
     glow.style.top  = gy + 'px';
+
     requestAnimationFrame(loop);
   })();
-
-  // Spawn tiny water drop particles on shake
-  function spawnWater(cx, cy, count) {
-    for (var i = 0; i < count; i++) {
-      (function() {
-        var p = document.createElement('div');
-        p.className = 'cursor-particle';
-        var size = 3 + Math.random() * 3;
-        p.style.cssText = 'width:' + size + 'px;height:' + size + 'px;' +
-          'left:' + cx + 'px;top:' + cy + 'px;opacity:0.85;';
-        document.body.appendChild(p);
-        var angle = -Math.PI/2 + (Math.random() - 0.5) * Math.PI;
-        var speed = 2 + Math.random() * 3;
-        var vx = Math.cos(angle) * speed;
-        var vy = Math.sin(angle) * speed;
-        var startTime = performance.now();
-        var lifetime = 380 + Math.random() * 260;
-        (function tick() {
-          var elapsed = performance.now() - startTime;
-          var t = elapsed / lifetime;
-          if (t >= 1) { p.parentNode && p.parentNode.removeChild(p); return; }
-          vy += 0.12;
-          vx *= 0.97;
-          cx += vx;
-          cy += vy;
-          p.style.left = cx + 'px';
-          p.style.top  = cy + 'px';
-          p.style.opacity = (0.85 * (1 - t * t)).toString();
-          requestAnimationFrame(tick);
-        })();
-      })();
-    }
-  }
 
   // Hover: glow reaction
   function bind(sel, gold) {
