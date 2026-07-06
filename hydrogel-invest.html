@@ -582,7 +582,11 @@ nav.scrolled {
 /* =====================================================
    CUSTOM CURSOR SYSTEM (desktop only)
    ===================================================== */
+/* Hide cursor elements on touch/mobile — only shown inside pointer:fine */
+#cursor-drop, #cursor-glow { display: none; }
+
 @media (pointer: fine) {
+  #cursor-drop, #cursor-glow { display: block; }
   * { cursor: none !important; }
 
   /* Ambient shadow pool — soft ellipse under cursor, simulates elevation */
