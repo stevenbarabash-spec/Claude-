@@ -37,7 +37,7 @@
     #cursor-dot {
       position: fixed;
       width: 38px; height: 38px;
-      color: var(--gold);
+      color: #ff00cc;
       pointer-events: none;
       z-index: 9999;
       transform: translate(-50%, -50%) rotate(-15deg);

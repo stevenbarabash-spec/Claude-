@@ -161,7 +161,7 @@
     #cursor-dot {
       position: fixed;
       width: 38px; height: 38px;
-      color: var(--gold);
+      color: #ff00cc;
       pointer-events: none;
       z-index: 9999;
       transform: translate(-50%, -50%) rotate(-15deg);
@@ -3873,11 +3873,11 @@ button:hover * {
 
 
 <!-- CURSOR -->
-<svg id="cursor-dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-  <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-  <line x1="12" y1="19" x2="12" y2="23"/>
-  <line x1="8" y1="23" x2="16" y2="23"/>
+<svg id="cursor-dot" viewBox="0 0 24 24" fill="currentColor">
+  <rect x="7" y="1" width="10" height="13" rx="5"/>
+  <rect x="9" y="12" width="6" height="11" rx="2"/>
+  <rect x="8.5" y="14" width="7" height="1.4" rx="0.7" opacity="0.55"/>
+  <rect x="8.5" y="17" width="7" height="1.4" rx="0.7" opacity="0.55"/>
 </svg>
 <div id="cursor-ring"></div>
 
