@@ -652,101 +652,136 @@ nav.scrolled {
    ===================================================== */
 @media (max-width: 640px) {
 
-  /* Global section padding */
-  section[style*="padding:100px"] { padding-top: 64px !important; padding-bottom: 64px !important; }
-  section[style*="padding:120px"] { padding-top: 80px !important; padding-bottom: 80px !important; }
-  section[style*="padding:80px"]  { padding-top: 56px !important; padding-bottom: 0 !important; }
+  /* ---- GLOBAL ---- */
+  /* Uniform section padding on mobile */
+  section { padding-top: 56px !important; padding-bottom: 56px !important; }
+  section[style*="padding:120px"] { padding-top: 72px !important; padding-bottom: 72px !important; }
+  /* No horizontal overflow on any element */
+  *, *::before, *::after { max-width: 100%; box-sizing: border-box; }
+  body { overflow-x: hidden; }
 
-  /* Nav: tighter logo on mobile */
+  /* ---- TICKER ---- */
+  /* Shrink ticker on mobile so it doesn't look cluttered */
+  .ticker-bar { height: 32px; }
+  .ticker-label { font-size: 0.52rem; padding: 0 10px 0 10px; gap: 6px; }
+  .ticker-live-dot { width: 6px; height: 6px; }
+  .ticker-item { font-size: 0.56rem; padding: 0 18px; gap: 6px; }
+  .ticker-sym { font-size: 0.5rem; }
+
+  /* ---- VIDEO HERO ---- */
+  .video-hero { height: 100svh; }
+
+  /* ---- NAV / LOGO ---- */
   .nav-logo img { height: 52px; }
 
-  /* Floating pill: smaller, lower on mobile */
-  .float-cta { bottom: 16px; right: 16px; padding: 12px 20px; font-size: 0.72rem; gap: 8px; }
+  /* ---- FLOATING PILL ---- */
+  .float-cta { bottom: 80px; right: 12px; padding: 11px 18px; font-size: 0.7rem; }
 
-  /* Hero: add top breathing room for fixed nav */
-  .hero-section { padding: 52px 0 64px; }
+  /* ---- HERO TEXT SECTION ---- */
+  .hero-section { padding: 48px 0 56px !important; }
   .hero-sub { font-size: 0.88rem; margin-bottom: 28px; }
+  .hero-grid { gap: 32px; }
+  .hero-form-card { padding: 24px 18px; }
+  .form-row { grid-template-columns: 1fr; gap: 10px; }
 
-  /* Water columns: scale down so they fit on small screen */
-  .water-stats { gap: 16px; margin-bottom: 28px; }
-  .w-col-track { width: 44px; height: 120px; }
-  .w-col-num { font-size: 0.95rem; }
-  .w-col-label { font-size: 0.6rem; max-width: 56px; }
-
-  /* Hero CTA buttons: stack vertically */
+  /* ---- HERO CTA BUTTONS ---- */
   .hero-cta-row { flex-direction: column; gap: 10px; }
   .hero-cta-row .btn-gold,
   .hero-cta-row .btn-ghost { width: 100%; text-align: center; }
 
-  /* Hero form: compact padding */
-  .hero-form-card { padding: 24px 20px; }
-  .form-row { grid-template-columns: 1fr; }
-
-  /* Section heads: tighter */
+  /* ---- SECTION HEADS ---- */
   .section-head { margin-bottom: 32px; }
   .section-head p { font-size: 0.85rem; }
-  .display-sm { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+  .display-sm { font-size: clamp(1.5rem, 6vw, 2.2rem); }
 
-  /* Press bar: wrap items neatly */
-  .press-bar { padding: 16px 0; }
-  .press-bar-inner { gap: 12px; }
-  .press-label { font-size: 0.62rem; }
-  .press-items { gap: 14px; }
-  .press-item { font-size: 0.68rem; }
-  .press-dot { display: none; }
+  /* ---- WATER COLUMNS ---- */
+  .water-stats { gap: 10px; margin-bottom: 28px; }
+  .w-col-track { width: 36px; height: 100px; }
+  .w-col-num { font-size: 0.88rem; }
+  .w-col-label { font-size: 0.56rem; max-width: 52px; }
 
-  /* Problem grid: 1 col already set, tighten padding */
-  .problem-item { padding: 20px 18px; }
-  .problem-num { font-size: 2rem; }
+  /* ---- PROBLEM ---- */
+  .problem-item { padding: 18px 16px; }
+  .problem-num { font-size: 1.8rem; }
 
-  /* Solution big number */
-  .solution-big-num { font-size: clamp(3rem, 14vw, 5rem); }
-  .solution-big-label { margin-bottom: 36px; font-size: 0.72rem; }
-  .sol-stat-num { font-size: 1.1rem; }
+  /* ---- SOLUTION ---- */
+  .solution-big-num { font-size: clamp(2.8rem, 13vw, 4.5rem); }
+  .solution-big-label { margin-bottom: 28px; font-size: 0.7rem; }
+  .sol-stat-num { font-size: 1rem; }
+  .solution-img { width: 100%; border-radius: 6px; }
 
-  /* Traction grid: 2 col already but tighten padding */
-  .traction-card { padding: 20px 16px; }
-  .traction-card-num { font-size: 2rem; }
+  /* ---- TRACTION ---- */
+  .traction-grid { grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 36px; }
+  .traction-card { padding: 18px 14px; }
+  .traction-card-num { font-size: 1.8rem; }
+  .testimonials { grid-template-columns: 1fr; gap: 16px; }
+  .testimonial { padding: 20px 18px; }
+  .testimonial-quote { font-size: 0.85rem; }
 
-  /* Tables: horizontal scroll */
-  .lt, .dt { font-size: 0.75rem; }
-  .lt thead th, .dt thead th { padding: 8px 10px; font-size: 0.6rem; }
-  .lt tbody tr td, .dt tbody tr td { padding: 10px 10px; }
-  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  /* ---- TABLES ---- */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -16px; padding: 0 16px; }
+  .lt, .dt { font-size: 0.72rem; min-width: 480px; }
+  .lt thead th, .dt thead th { padding: 7px 9px; font-size: 0.58rem; }
+  .lt tbody tr td, .dt tbody tr td { padding: 9px 9px; }
+  .roi-grid { grid-template-columns: 1fr; gap: 28px; }
 
-  /* Revenue grid: tighter */
-  .rev-cell { padding: 24px 16px; }
+  /* ---- REVENUE / MARKET ---- */
+  .revenue-grid { grid-template-columns: 1fr; gap: 14px; margin: 28px 0; }
+  .rev-cell { padding: 20px 16px; }
+  .market-grid { grid-template-columns: 1fr; gap: 14px; }
+  .market-card { padding: 22px 18px; }
 
-  /* Comps grid: already 1-col */
-  .comps-grid { max-width: 100%; }
+  /* ---- COMPS ---- */
+  .comps-grid { grid-template-columns: 1fr; max-width: 100%; gap: 12px; }
+  .comp-card { padding: 18px 16px; }
 
-  /* Reasons: already 1-col at 480 */
-  .reason-card { padding: 20px 18px; }
+  /* ---- REASONS ---- */
+  .reasons-grid { grid-template-columns: 1fr; gap: 14px; }
+  .reason-card { padding: 18px 16px; }
+  .reason-roman { font-size: 1.8rem; }
 
-  /* Patent grid: already 1-col */
-  .moat-card { padding: 24px 20px; }
-  .moat-stats { gap: 16px; }
+  /* ---- PATENT / MOAT ---- */
+  .patent-grid { grid-template-columns: 1fr; gap: 24px; }
+  .moat-card { padding: 22px 18px; }
+  .moat-stats { gap: 14px; flex-direction: column; }
 
-  /* Team track: smaller cards */
-  .team-card { width: 148px; }
+  /* ---- PRESS CARDS ---- */
+  .press-grid { grid-template-columns: 1fr; gap: 20px; }
+  .press-body { padding: 18px 18px 22px; }
+  .press-quote { font-size: 1rem; }
+
+  /* ---- TEAM ---- */
+  .team-card { width: 140px; }
   .team-track-wrap::before,
-  .team-track-wrap::after { width: 48px; }
+  .team-track-wrap::after { width: 40px; }
 
-  /* Validation: image hidden on mobile to reduce scroll */
+  /* ---- VALIDATION ---- */
+  .validation-grid { grid-template-columns: 1fr; gap: 28px; }
   .validation-grid > div:last-child { display: none; }
 
-  /* Chart: shorter on mobile */
-  #chartContainer { height: 260px; }
+  /* ---- CHART ---- */
+  #chartContainer { height: 240px; }
 
-  /* Closing CTA: stack input + button */
-  .closing-headline { font-size: clamp(1.6rem, 6.5vw, 2.8rem); margin-bottom: 28px; }
+  /* ---- RISK ---- */
+  .risk-grid { grid-template-columns: 1fr; gap: 12px; }
+  .risk-card { padding: 18px 16px; }
+
+  /* ---- FAQ ---- */
+  .faq-q { font-size: 0.85rem; }
+  .faq-btn { padding: 14px 0; }
+
+  /* ---- CLOSING CTA ---- */
+  .closing-headline { font-size: clamp(1.5rem, 6.5vw, 2.4rem); margin-bottom: 24px; }
   .closing-input-row { flex-direction: column; max-width: 100%; gap: 10px; }
   .closing-input { border-right: 1px solid rgba(237,232,219,0.2); border-radius: 3px; }
   .closing-btn { border-radius: 3px; text-align: center; }
 
-  /* FAQ: tighter */
-  .faq-q { font-size: 0.85rem; }
-  .faq-btn { padding: 16px 0; }
+  /* ---- FOOTER ---- */
+  .footer-legal { font-size: 0.65rem; }
+
+  /* ---- BODY BOTTOM PADDING for tab bar ---- */
+  body { padding-bottom: 72px !important; }
+
 }
 
 /* Extra small: 390px and below */
@@ -840,8 +875,8 @@ nav.scrolled {
   }
   .tab-item.cta-tab svg { stroke: var(--canvas); }
 
-  /* Add bottom padding to page content so tab bar doesn't cover it */
-  body { padding-bottom: 64px; }
+  /* Add bottom padding so tab bar doesn't cover content */
+  body { padding-bottom: 72px; }
 }
 
 /* Desktop: hide mobile-only elements */
