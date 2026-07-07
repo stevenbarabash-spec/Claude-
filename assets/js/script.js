@@ -93,6 +93,32 @@ function initWillChange() {
 // ─── CURSOR — runs immediately, independent of GSAP/CDN availability ───
 initCursor();
 
+// ─── DJ VIDEO — force-nudge autoplay on mobile browsers that ignore the
+// autoplay attribute (some in-app/Android WebViews, Low Power Mode, etc.) ───
+(function () {
+  const vid = document.querySelector('.dj-video');
+  if (!vid) return;
+  vid.muted = true;
+  vid.playsInline = true;
+
+  const tryPlay = () => { const p = vid.play(); if (p && p.catch) p.catch(() => {}); };
+  tryPlay();
+
+  // If autoplay was blocked outright, most browsers will allow it on the
+  // first user gesture anywhere on the page -- retry then, once.
+  function retryOnGesture() {
+    if (!vid.paused) { cleanup(); return; }
+    tryPlay();
+    cleanup();
+  }
+  function cleanup() {
+    document.removeEventListener('touchstart', retryOnGesture);
+    document.removeEventListener('click', retryOnGesture);
+  }
+  document.addEventListener('touchstart', retryOnGesture, { passive: true });
+  document.addEventListener('click', retryOnGesture);
+})();
+
 // ─── SERVICE CARDS reveal-on-scroll — plain IntersectionObserver, no GSAP needed ───
 (function () {
   const cards = document.querySelectorAll('[data-emp-card]');

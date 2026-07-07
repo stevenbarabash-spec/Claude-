@@ -960,7 +960,6 @@
 
       #music { padding: 80px 24px; }
       .album-grid { grid-template-columns: 1fr; gap: 40px; }
-      .album-card { max-width: min(360px, 100%); margin: 0 auto; }
       .album-grid { margin-top: 48px; }
 
       footer { padding: 80px 24px 40px; }
@@ -2591,7 +2590,8 @@
   inset: 0;
 }
 
-.dj-img-wrap img {
+.dj-img-wrap img,
+.dj-img-wrap video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -2599,7 +2599,8 @@
   transition: transform 0.8s ease;
   filter: grayscale(15%);
 }
-.dj-card:hover .dj-img-wrap img {
+.dj-card:hover .dj-img-wrap img,
+.dj-card:hover .dj-img-wrap video {
   transform: scale(1.04);
   filter: grayscale(0%);
 }
