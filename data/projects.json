@@ -151,6 +151,26 @@
         { "title": "SMS blast(s) this month (1-2 depending on sales)", "done": false, "due": null },
         { "title": "Wholesale site updates (as requested by owner)", "done": false, "due": null }
       ]
+    },
+    {
+      "name": "Back to Modern — E-Bike Company",
+      "status": "active",
+      "progress": 0,
+      "phase": "Ongoing — Steven's own business",
+      "deadline": null,
+      "nextMilestone": "Florida & Ohio taxes due Jul 5",
+      "team": [],
+      "budget": null,
+      "iterations": [
+        {
+          "date": "2026-07-03",
+          "note": "New business added: Back to Modern, Steven's own e-bike company. First recurring obligation: monthly state tax filings for Florida and Ohio, tracked as two separate tasks since they're filed individually. Due on the 5th of every month — once a month's filing is marked complete, the next month's filing becomes due on the 5th of the following month."
+        }
+      ],
+      "tasks": [
+        { "title": "File Florida state taxes", "done": false, "due": "2026-07-05" },
+        { "title": "File Ohio state taxes", "done": false, "due": "2026-07-05" }
+      ]
     }
   ],
   "tasks": []
