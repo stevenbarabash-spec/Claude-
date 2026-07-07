@@ -1,0 +1,32 @@
+{
+  "@context": "https://schema.org",
+  "@type": "EntertainmentBusiness",
+  "name": "Empire Entertainment CT",
+  "alternateName": "Empire Entertainment Connecticut",
+  "description": "Empire Entertainment CT, led by DJ Brandon, provides premier DJ and event entertainment services for weddings, bar/bat mitzvahs, quinceañeras, sweet 16s, corporate events, proms, and private celebrations across Connecticut, New York, and New Jersey.",
+  "image": "https://assets.cdn.filesafe.space/vhbStpS0g5uGrKHZbkSE/media/6a4bee141209780f80d55e64.png",
+  "url": "https://empireentertainmentct.com/",
+  "telephone": "+1-475-335-7030",
+  "email": "brandon@empireentertainmentct.com",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Greenwich",
+    "addressRegion": "CT",
+    "addressCountry": "US"
+  },
+  "areaServed": [
+    { "@type": "State", "name": "Connecticut" },
+    { "@type": "State", "name": "New York" },
+    { "@type": "State", "name": "New Jersey" }
+  ],
+  "sameAs": [
+    "https://www.instagram.com/empireentertainmentct/",
+    "https://www.facebook.com/Empire-Entertainment-1889998804643519/"
+  ],
+  "makesOffer": [
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Wedding DJ & Entertainment" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Corporate Event Entertainment" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Private Party & Celebration DJ" } }
+  ]
+}
