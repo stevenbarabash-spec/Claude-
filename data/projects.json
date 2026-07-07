@@ -168,8 +168,8 @@
         }
       ],
       "tasks": [
-        { "title": "File Florida state taxes", "done": false, "due": "2026-07-05" },
-        { "title": "File Ohio state taxes", "done": false, "due": "2026-07-05" }
+        { "title": "File Florida state tax for the month of July", "done": false, "due": "2026-07-05" },
+        { "title": "File Ohio state tax for the month of July", "done": false, "due": "2026-07-05" }
       ]
     }
   ],
