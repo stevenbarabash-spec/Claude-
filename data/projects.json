@@ -169,13 +169,18 @@
         {
           "date": "2026-07-03",
           "note": "July Florida and Ohio state taxes filed and marked complete. Rolled forward: August filings now open, due Aug 5."
+        },
+        {
+          "date": "2026-07-03",
+          "note": "New orders came in Jul 7 — need to be placed by Jul 9."
         }
       ],
       "tasks": [
         { "title": "File Florida state tax for the month of July", "done": true, "due": "2026-07-05" },
         { "title": "File Ohio state tax for the month of July", "done": true, "due": "2026-07-05" },
         { "title": "File Florida state tax for the month of August", "done": false, "due": "2026-08-05" },
-        { "title": "File Ohio state tax for the month of August", "done": false, "due": "2026-08-05" }
+        { "title": "File Ohio state tax for the month of August", "done": false, "due": "2026-08-05" },
+        { "title": "Place new e-bike orders (received Jul 7)", "done": false, "due": "2026-07-09" }
       ]
     }
   ],
