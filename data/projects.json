@@ -6,11 +6,11 @@
   "projects": [
     {
       "name": "Empire Entertainment DJ Brandon — Website",
-      "status": "active",
-      "progress": 70,
-      "phase": "Sandbox build",
-      "deadline": "2026-07-10",
-      "nextMilestone": "Domain research by Jul 4 · Go live Jul 10",
+      "status": "done",
+      "progress": 100,
+      "phase": "Live — ahead of schedule",
+      "deadline": null,
+      "nextMilestone": "Get Brandon on yearly hosting auto-pay in GHL",
       "team": ["Jarin (web)"],
       "iterations": [
         {
@@ -24,16 +24,21 @@
         {
           "date": "2026-07-02",
           "note": "Renamed project to Empire Entertainment DJ Brandon. Added task to ship scannable Google review stands (already made, need to ship today)."
+        },
+        {
+          "date": "2026-07-03",
+          "note": "Site is live — ahead of the Jul 10 target. All build tasks complete. Only remaining item: get Brandon set up on a recurring yearly hosting payment in GoHighLevel."
         }
       ],
       "tasks": [
-        { "title": "Ship scannable Google review stands", "done": false, "due": "2026-07-02" },
-        { "title": "Jarin builds GoHighLevel webhook", "done": false, "due": null },
-        { "title": "Test GoHighLevel webhook in GHL", "done": false, "due": null },
-        { "title": "Verify Jarin updated photos + fixed text/copy on site", "done": false, "due": "2026-07-04" },
-        { "title": "Research GoDaddy domain transfer process", "done": false, "due": "2026-07-04" },
-        { "title": "Execute domain transfer", "done": false, "due": null },
-        { "title": "Upload & launch website on domain", "done": false, "due": "2026-07-10" }
+        { "title": "Ship scannable Google review stands", "done": true, "due": "2026-07-02" },
+        { "title": "Jarin builds GoHighLevel webhook", "done": true, "due": null },
+        { "title": "Test GoHighLevel webhook in GHL", "done": true, "due": null },
+        { "title": "Verify Jarin updated photos + fixed text/copy on site", "done": true, "due": "2026-07-04" },
+        { "title": "Research GoDaddy domain transfer process", "done": true, "due": "2026-07-04" },
+        { "title": "Execute domain transfer", "done": true, "due": null },
+        { "title": "Upload & launch website on domain", "done": true, "due": "2026-07-10" },
+        { "title": "Set up yearly hosting recurring payment in GoHighLevel", "done": false, "due": null }
       ]
     },
     {
