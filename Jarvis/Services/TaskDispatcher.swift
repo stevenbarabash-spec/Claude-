@@ -27,16 +27,28 @@ enum TaskDispatcher {
     }
 
     static func dispatch(_ task: String) async throws {
+        try await append(task, to: path, header: "# Jarvis task inbox",
+                         message: "Jarvis: dispatch task")
+    }
+
+    static func addToWishlist(_ feature: String) async throws {
+        try await append(feature, to: ".jarvis/feature-wishlist.md",
+                         header: "# Jarvis feature wishlist",
+                         message: "Jarvis: feature request")
+    }
+
+    private static func append(_ line: String, to filePath: String,
+                               header: String, message: String) async throws {
         guard let token = KeychainHelper.read(MemoryStore.tokenKeychainKey), !token.isEmpty else {
             throw DispatchError.missingToken
         }
         try await ensureBranch(token: token)
 
-        // Read the current inbox (if any) so we can append.
+        // Read the current file (if any) so we can append.
         var existing = ""
         var sha: String?
         if let file = try? await getJSON(
-            "https://api.github.com/repos/\(repo)/contents/\(path)?ref=\(branch)", token: token) {
+            "https://api.github.com/repos/\(repo)/contents/\(filePath)?ref=\(branch)", token: token) {
             sha = file["sha"] as? String
             if let b64 = (file["content"] as? String)?
                 .replacingOccurrences(of: "\n", with: ""),
@@ -46,20 +58,20 @@ enum TaskDispatcher {
         }
 
         let stamp = ISO8601DateFormatter().string(from: Date())
-        let entry = "- [ ] (\(stamp)) \(task.replacingOccurrences(of: "\n", with: " "))"
+        let entry = "- [ ] (\(stamp)) \(line.replacingOccurrences(of: "\n", with: " "))"
         let updated = existing.isEmpty
-            ? "# Jarvis task inbox\n\n\(entry)\n"
+            ? "\(header)\n\n\(entry)\n"
             : existing.trimmingCharacters(in: .whitespacesAndNewlines) + "\n\(entry)\n"
 
         var body: [String: Any] = [
-            "message": "Jarvis: dispatch task",
+            "message": message,
             "content": Data(updated.utf8).base64EncodedString(),
             "branch": branch,
         ]
         if let sha { body["sha"] = sha }
 
         let (data, response) = try await send(
-            "https://api.github.com/repos/\(repo)/contents/\(path)",
+            "https://api.github.com/repos/\(repo)/contents/\(filePath)",
             method: "PUT", token: token, json: body)
         let status = (response as? HTTPURLResponse)?.statusCode ?? 0
         guard (200..<300).contains(status) else {

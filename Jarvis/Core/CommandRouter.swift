@@ -22,6 +22,8 @@ enum JarvisAction {
     /// Send a work request to the user's Claude Code workspace (executed
     /// within the hour by a scheduled session).
     case delegateTask(task: String)
+    /// Log a capability Jarvis doesn't have yet to the feature wishlist.
+    case featureRequest(feature: String)
     case playMusic(query: String)
     case composeEmail(EmailDraft)
     case composeMessage(MessageDraft)
@@ -71,6 +73,7 @@ struct CommandRouter {
         let reply: String?
         let memory: String?
         let task: String?
+        let feature: String?
     }
 
     private func claudeRoute(_ transcript: String) async throws -> JarvisAction {
@@ -81,6 +84,7 @@ struct CommandRouter {
         You run on the user's iPhone. The current date-time is \(now) (device local time zone).
         The user's saved places are: [\(places)].
         \(MemoryStore.shared.contextBlock)
+        \(JarvisCapabilities.promptSummary)
         Classify the user's spoken command and respond with ONLY a JSON object, no prose, matching one of:
 
         {"action":"play_music","query":"<song, artist or playlist>"}
@@ -94,6 +98,7 @@ struct CommandRouter {
         {"action":"health"}  // "how did I sleep", "health summary", "how active was I"
         {"action":"remember","memory":"<the fact(s) distilled, short and factual, third person about the user>"}  // when the user shares a durable personal fact or says remember/note/store this — e.g. "my name is Steve", "remember that I built you"
         {"action":"delegate","task":"<the full work request, verbatim plus any context needed to execute it>"}  // when the user asks for work in their Claude workspace/projects: updating the schedule tracker, Bytox social media posts, website edits, or any "go do this" request that no other action covers
+        {"action":"feature_request","feature":"<a clear one-line description of the requested capability>"}  // when the user asks Jarvis itself to do something none of these actions can (a missing app capability), or says "add this to the wishlist"
         {"action":"answer","reply":"<a concise spoken-style answer in JARVIS's voice, 1-3 sentences>"}
 
         Rules: for email/message, write the full content yourself from the user's intent — no placeholders like [name].
@@ -146,6 +151,8 @@ struct CommandRouter {
             return .remember(fact: routed.memory ?? transcript)
         case "delegate":
             return .delegateTask(task: routed.task ?? transcript)
+        case "feature_request":
+            return .featureRequest(feature: routed.feature ?? transcript)
         default:
             // Questions, chat, news — answered conversationally with history
             // and web search rather than the one-shot routing reply.

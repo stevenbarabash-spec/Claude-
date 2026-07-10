@@ -186,6 +186,11 @@ final class JarvisViewModel: ObservableObject {
                 say(error.localizedDescription)
             }
 
+        case .featureRequest(let feature):
+            Wishlist.add(feature)
+            try? await TaskDispatcher.addToWishlist(feature)
+            say("That's beyond my current abilities, sir — I've added it to the feature wishlist for your next build session.")
+
         case .playMusic(let query):
             await playMusic(query: query)
 
@@ -251,6 +256,7 @@ final class JarvisViewModel: ObservableObject {
             time-sensitive, and mention when information is fresh from the web. \
             Today is \(Date().formatted(date: .complete, time: .shortened)).
             \(MemoryStore.shared.contextBlock)
+            \(JarvisCapabilities.promptSummary)
             \(JarvisKnowledge.scheduleContext)
             """
             let reply = try await claude.chat(system: system,

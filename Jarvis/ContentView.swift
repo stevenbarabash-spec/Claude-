@@ -5,6 +5,7 @@ struct ContentView: View {
     @State private var showSettings = false
     @State private var showVision = false
     @State private var showShared = false
+    @State private var showAbilities = false
 
     var body: some View {
         NavigationStack {
@@ -51,6 +52,9 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showShared) {
             SharedItemsView()
+        }
+        .sheet(isPresented: $showAbilities) {
+            CapabilitiesView()
         }
         .sheet(isPresented: $viewModel.showInbox) {
             InboxView()
@@ -181,6 +185,9 @@ struct ContentView: View {
             }
         }
         ToolbarItemGroup(placement: .topBarTrailing) {
+            Button { showAbilities = true } label: {
+                Image(systemName: "sparkles")
+            }
             Button {
                 Task { await viewModel.handle(transcript: "check my email") }
             } label: {
