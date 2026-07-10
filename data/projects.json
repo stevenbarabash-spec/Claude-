@@ -1,7 +1,7 @@
 {
   "meta": {
     "owner": "Steven",
-    "lastUpdated": "2026-07-02"
+    "lastUpdated": "2026-07-10"
   },
   "projects": [
     {
@@ -68,11 +68,11 @@
           "note": "Added SEO tasks: (1) set up URL redirects in GoHighLevel from old URLs to new URLs so nothing breaks/loses ranking on relaunch, and (2) add meta tags, meta descriptions, and page titles across every page for SEO."
         },
         {
-          "date": "2026-07-03",
+          "date": "2026-07-09",
           "note": "50% deposit ($3,750) received. Project officially started — moved from scoping into active development."
         },
         {
-          "date": "2026-07-03",
+          "date": "2026-07-09",
           "note": "Internal target set: have something ready to show GDG for review/revisions by Jul 20."
         }
       ],
@@ -94,8 +94,8 @@
       "status": "active",
       "progress": 5,
       "phase": "Scoping",
-      "deadline": "2026-07-16",
-      "nextMilestone": "Site + funnel + ads live by Jul 16 → monitor through Jul 30",
+      "deadline": "2026-07-24",
+      "nextMilestone": "Site + funnel + ads live by Jul 24 → monitor through Aug 7",
       "team": ["Jaren (Google Ads)"],
       "budget": "$5,000/mo",
       "iterations": [
@@ -114,16 +114,20 @@
         {
           "date": "2026-07-02",
           "note": "Pay confirmed: $5,000/month for this engagement."
+        },
+        {
+          "date": "2026-07-10",
+          "note": "Resynced due dates to the actual calendar date — the original Jul 16/30 dates were computed off a wrong 'today.' Build/launch now targets Jul 24, monitoring window runs through Aug 7."
         }
       ],
       "tasks": [
-        { "title": "Build dedicated funnel website / landing page", "done": false, "due": "2026-07-16" },
-        { "title": "Build GoHighLevel funnel (lead capture + routing to salesperson)", "done": false, "due": "2026-07-16" },
-        { "title": "Connect landing page signups to salesperson handoff", "done": false, "due": "2026-07-16" },
-        { "title": "Jaren: Google Ads keyword research", "done": false, "due": "2026-07-16" },
-        { "title": "Jaren: launch Google Ads campaign", "done": false, "due": "2026-07-16" },
-        { "title": "Monitor ad performance (2 weeks)", "done": false, "due": "2026-07-30" },
-        { "title": "Review results with team", "done": false, "due": "2026-07-30" }
+        { "title": "Build dedicated funnel website / landing page", "done": false, "due": "2026-07-24" },
+        { "title": "Build GoHighLevel funnel (lead capture + routing to salesperson)", "done": false, "due": "2026-07-24" },
+        { "title": "Connect landing page signups to salesperson handoff", "done": false, "due": "2026-07-24" },
+        { "title": "Jaren: Google Ads keyword research", "done": false, "due": "2026-07-24" },
+        { "title": "Jaren: launch Google Ads campaign", "done": false, "due": "2026-07-24" },
+        { "title": "Monitor ad performance (2 weeks)", "done": false, "due": "2026-08-07" },
+        { "title": "Review results with team", "done": false, "due": "2026-08-07" }
       ]
     },
     {
@@ -171,8 +175,8 @@
           "note": "July Florida and Ohio state taxes filed and marked complete. Rolled forward: August filings now open, due Aug 5."
         },
         {
-          "date": "2026-07-03",
-          "note": "New orders came in Jul 7 — need to be placed by Jul 9."
+          "date": "2026-07-10",
+          "note": "System date resynced from Jul 2/3 to the real Jul 10 — this task's Jul 9 deadline was stated directly by Steven, not computed, so it's left as-is. It now reads as overdue; flagged for follow-up."
         }
       ],
       "tasks": [
