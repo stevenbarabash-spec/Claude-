@@ -103,6 +103,60 @@
     margin-top: 2px;
   }
 
+  /* ── TODAY STRIP ─────────────────────────────── */
+  .today-strip {
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--rule);
+    background: linear-gradient(180deg, rgba(61,142,189,0.06), transparent);
+  }
+
+  .today-strip-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .today-strip-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .today-strip-title span { color: var(--muted); font-weight: 400; letter-spacing: 0.02em; text-transform: none; }
+
+  .today-strip-list {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .today-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 8px 12px;
+    font-size: 12px;
+    max-width: 320px;
+  }
+
+  .today-chip.overdue { border-left-color: var(--urgent); }
+  .today-chip.deadline { border-left-color: var(--done); }
+
+  .today-chip-title { color: var(--ink); line-height: 1.3; }
+  .today-chip-sub { font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+
+  .today-strip-empty {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
   /* ── MAIN GRID ───────────────────────────────── */
   .main {
     display: grid;
@@ -658,6 +712,13 @@
   </div>
 </header>
 
+<section class="today-strip" id="today-strip-wrap">
+  <div class="today-strip-header">
+    <span class="today-strip-title">Today · <span id="today-strip-date"></span></span>
+  </div>
+  <div class="today-strip-list" id="today-strip-list"></div>
+</section>
+
 <div class="main">
   <section class="col-projects">
     <div class="section-label">Projects</div>
@@ -725,6 +786,7 @@ function setTaskOverride(projectName, title, patch) {
   buildDeadlines();
   buildTasks();
   buildStats();
+  buildTodayStrip();
 }
 
 function addDays(dateStr, n) {
@@ -1116,8 +1178,50 @@ function toggleIter(btn) {
   btn.setAttribute('aria-expanded', open);
 }
 
+// ── TODAY STRIP ───────────────────────────────────────────────────────
+function buildTodayStrip() {
+  document.getElementById('today-strip-date').textContent = today.toLocaleDateString('en-US', {
+    weekday: 'long', month: 'short', day: 'numeric'
+  });
+
+  const list = document.getElementById('today-strip-list');
+  list.innerHTML = '';
+
+  const projTasks = DATA.projects.flatMap(p =>
+    (p.tasks || []).map(t => ({ ...t, _project: p.name }))
+  );
+  const allTasks = [...DATA.tasks, ...projTasks];
+
+  const overdue = allTasks.filter(t => !t.done && t.due && daysUntil(t.due) < 0);
+  const dueToday = allTasks.filter(t => !t.done && t.due && daysUntil(t.due) === 0);
+  const deadlinesToday = DATA.projects.filter(p => p.deadline && daysUntil(p.deadline) === 0);
+
+  const items = [
+    ...overdue.map(t => ({ ...t, kind: 'overdue' })),
+    ...dueToday.map(t => ({ ...t, kind: 'today' })),
+    ...deadlinesToday.map(p => ({ title: `${p.name.split('—')[0].trim()} — project deadline`, _project: p.name, kind: 'deadline' })),
+  ];
+
+  if (!items.length) {
+    list.innerHTML = `<div class="today-strip-empty">Nothing due today or overdue. Next up is in Upcoming Deadlines / Open Tasks →</div>`;
+    return;
+  }
+
+  items.forEach(it => {
+    const chip = document.createElement('div');
+    chip.className = 'today-chip' + (it.kind === 'overdue' ? ' overdue' : it.kind === 'deadline' ? ' deadline' : '');
+    chip.innerHTML = `
+      <div>
+        <div class="today-chip-title">${it.title}</div>
+        <div class="today-chip-sub">${it.kind === 'overdue' ? 'Overdue' : it.kind === 'deadline' ? 'Deadline' : 'Due today'}${it._project ? ` · ${it._project.split('—')[0].trim()}` : ''}</div>
+      </div>`;
+    list.appendChild(chip);
+  });
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────
 buildWeekStrip();
+buildTodayStrip();
 buildProjects();
 buildDeadlines();
 buildTasks();
