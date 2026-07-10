@@ -6,6 +6,7 @@ struct ContentView: View {
     @State private var showVision = false
     @State private var showShared = false
     @State private var showAbilities = false
+    @State private var booted = false
 
     var body: some View {
         NavigationStack {
@@ -17,6 +18,8 @@ struct ContentView: View {
 
                     JarvisOrb(state: viewModel.state, audioLevel: viewModel.audioLevel)
                         .frame(width: 270, height: 270)
+                        .scaleEffect(booted ? 1 : 0.4)
+                        .opacity(booted ? 1 : 0)
                         .contentShape(Circle())
                         .onTapGesture { viewModel.toggleListening() }
                         .accessibilityLabel(viewModel.isListening ? "Stop listening" : "Start listening")
@@ -42,6 +45,13 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbarContent }
             .toolbarBackground(.hidden, for: .navigationBar)
+            .onAppear {
+                guard !booted else { return }
+                FX.shared.boot()
+                withAnimation(.spring(duration: 0.9, bounce: 0.35)) {
+                    booted = true
+                }
+            }
         }
         .preferredColorScheme(.dark)
         .sheet(isPresented: $showSettings) {

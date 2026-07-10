@@ -102,6 +102,7 @@ final class JarvisViewModel: ObservableObject {
                 }
             )
             state = .listening
+            FX.shared.listenStart()
             if autoSendEnabled || conversationMode {
                 startSilenceMonitor()
             }
@@ -150,6 +151,7 @@ final class JarvisViewModel: ObservableObject {
             state = .idle
             return
         }
+        FX.shared.sendOff()
         Task { await handle(transcript: heard) }
     }
 
@@ -157,11 +159,14 @@ final class JarvisViewModel: ObservableObject {
     func handle(transcript: String) async {
         self.transcript = transcript
         state = .thinking
+        FX.shared.startThinking()
         do {
             let action = try await router.route(transcript)
             try await perform(action)
         } catch {
             errorMessage = error.localizedDescription
+            FX.shared.stopThinking()
+            FX.shared.failure()
             say("Sorry, something went wrong. \(error.localizedDescription)")
         }
     }
@@ -181,6 +186,7 @@ final class JarvisViewModel: ObservableObject {
         case .delegateTask(let task):
             do {
                 try await TaskDispatcher.dispatch(task)
+                FX.shared.dispatch()
                 say("Dispatched to headquarters, sir. It'll be picked up within the hour.")
             } catch {
                 say(error.localizedDescription)
@@ -392,6 +398,8 @@ final class JarvisViewModel: ObservableObject {
     // MARK: - Speech
 
     private func say(_ text: String) {
+        FX.shared.stopThinking()
+        FX.shared.responseReady()
         response = text
         state = .speaking
         synthesizer.speak(text) { [weak self] in

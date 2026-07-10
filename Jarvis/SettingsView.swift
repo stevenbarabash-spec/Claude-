@@ -9,6 +9,7 @@ struct SettingsView: View {
     @AppStorage("briefingMinute") private var briefingMinute = 0
     @AppStorage("keyboardShareKey") private var keyboardShareKey = false
     @AppStorage("autoSend") private var autoSend = true
+    @AppStorage("fxEnabled") private var fxEnabled = true
     @AppStorage(JarvisKnowledge.urlsKey) private var knowledgeURLs = ""
 
     @State private var githubToken: String = KeychainHelper.read(MemoryStore.tokenKeychainKey) ?? ""
@@ -65,6 +66,7 @@ struct SettingsView: View {
     private var interactionSection: some View {
         Section {
             Toggle("Auto-send when you stop talking", isOn: $autoSend)
+            Toggle("Sounds & haptics", isOn: $fxEnabled)
         } header: {
             Text("Voice interaction")
         } footer: {
