@@ -28,30 +28,12 @@ struct ContentView: View {
                         .foregroundStyle(.cyan.opacity(0.85))
                         .animation(.easeInOut(duration: 0.25), value: viewModel.state)
 
-                    Button {
-                        viewModel.toggleConversationMode()
-                    } label: {
-                        Label(viewModel.conversationMode ? "Hands-free on" : "Hands-free",
-                              systemImage: "infinity")
-                            .font(.caption.weight(.semibold))
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 7)
-                            .background(
-                                Capsule().fill(viewModel.conversationMode
-                                               ? Color.cyan.opacity(0.25)
-                                               : Color.white.opacity(0.06))
-                            )
-                            .overlay(
-                                Capsule().strokeBorder(
-                                    viewModel.conversationMode ? .cyan : .white.opacity(0.2),
-                                    lineWidth: 1)
-                            )
-                            .foregroundStyle(viewModel.conversationMode ? .cyan : .white.opacity(0.7))
-                    }
-
                     Spacer(minLength: 8)
 
                     conversationPanel
+
+                    modeSwitcher
+                        .padding(.top, 6)
                 }
                 .padding()
             }
@@ -105,6 +87,7 @@ struct ContentView: View {
                                     Color(red: 0.02, green: 0.05, blue: 0.12),
                                     .black],
                            startPoint: .top, endPoint: .bottom)
+            MatrixRainView(intensity: 0.38)
             // Faint ambient halo behind the orb.
             RadialGradient(colors: [.cyan.opacity(0.08), .clear],
                            center: UnitPoint(x: 0.5, y: 0.38),
@@ -158,6 +141,33 @@ struct ContentView: View {
             RoundedRectangle(cornerRadius: 18)
                 .strokeBorder(tint.opacity(0.25), lineWidth: 1)
         )
+    }
+
+    /// Bottom mode picker: classic tap-to-speak, or Auto (hands-free loop).
+    private var modeSwitcher: some View {
+        HStack(spacing: 4) {
+            modeButton("Tap to speak", icon: "hand.tap", active: !viewModel.conversationMode) {
+                if viewModel.conversationMode { viewModel.toggleConversationMode() }
+            }
+            modeButton("Auto", icon: "infinity", active: viewModel.conversationMode) {
+                if !viewModel.conversationMode { viewModel.toggleConversationMode() }
+            }
+        }
+        .padding(4)
+        .background(Capsule().fill(.white.opacity(0.05)))
+        .overlay(Capsule().strokeBorder(.white.opacity(0.15), lineWidth: 1))
+    }
+
+    private func modeButton(_ title: String, icon: String, active: Bool,
+                            action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(title, systemImage: icon)
+                .font(.caption.weight(.semibold))
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(Capsule().fill(active ? Color.cyan.opacity(0.22) : .clear))
+                .foregroundStyle(active ? .cyan : .white.opacity(0.6))
+        }
     }
 
     @ToolbarContentBuilder

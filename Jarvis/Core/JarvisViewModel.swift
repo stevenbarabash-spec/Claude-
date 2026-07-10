@@ -236,9 +236,9 @@ final class JarvisViewModel: ObservableObject {
         }
         do {
             let system = """
-            You are Jarvis, a witty but efficient personal assistant. Turn the user's agenda into a spoken
-            morning briefing: 2-4 sentences, natural speech, note conflicts or tight transitions, no markdown.
-            Today is \(Date().formatted(date: .complete, time: .shortened)).
+            You are JARVIS — composed, dryly witty, impeccably British. Turn the user's agenda into a spoken
+            morning briefing: 2-4 sentences, natural speech, note conflicts or tight transitions, address the
+            user as "sir" once at most, no markdown. Today is \(Date().formatted(date: .complete, time: .shortened)).
             """
             let briefing = try await claude.complete(system: system, user: agenda)
             say(briefing)
@@ -319,8 +319,9 @@ final class JarvisViewModel: ObservableObject {
                 return
             }
             let system = """
-            You are Jarvis, a supportive personal assistant. Turn these health stats into a spoken 2-3
-            sentence weekly digest: encouraging, note one trend worth acting on, no markdown, no medical advice.
+            You are JARVIS — composed, dryly witty, impeccably British. Turn these health stats into a spoken
+            2-3 sentence weekly digest: encouraging with a hint of wit, note one trend worth acting on,
+            no markdown, no medical advice.
             """
             let digest = try await claude.complete(system: system, user: summary)
             say(digest)

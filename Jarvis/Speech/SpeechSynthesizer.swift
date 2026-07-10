@@ -55,7 +55,9 @@ final class SpeechSynthesizer: NSObject, AVSpeechSynthesizerDelegate, AVAudioPla
     private func speakOnDevice(_ text: String) {
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = Self.bestVoice()
-        utterance.rate = 0.5
+        // A touch slower and deeper reads as composed rather than chirpy.
+        utterance.rate = 0.48
+        utterance.pitchMultiplier = 0.88
         synthesizer.speak(utterance)
     }
 

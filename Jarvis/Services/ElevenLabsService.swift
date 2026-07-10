@@ -43,7 +43,14 @@ struct ElevenLabsService {
         request.httpBody = try JSONSerialization.data(withJSONObject: [
             "text": text,
             "model_id": "eleven_turbo_v2_5",
-            "voice_settings": ["stability": 0.5, "similarity_boost": 0.75],
+            // Lower stability = more expressive delivery; style adds gravitas;
+            // speaker boost sharpens presence on small phone speakers.
+            "voice_settings": [
+                "stability": 0.4,
+                "similarity_boost": 0.8,
+                "style": 0.3,
+                "use_speaker_boost": true,
+            ],
         ])
 
         let (data, response) = try await URLSession.shared.data(for: request)
