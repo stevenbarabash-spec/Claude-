@@ -136,7 +136,7 @@
       "progress": 0,
       "phase": "Ongoing retainer",
       "deadline": null,
-      "nextMilestone": "2 newsletters this week",
+      "nextMilestone": "2 final sale newsletters next week",
       "team": [],
       "budget": "$2,000/mo retainer (~8 hrs/wk)",
       "iterations": [
@@ -147,12 +147,23 @@
         {
           "date": "2026-07-02",
           "note": "This is an ongoing retainer, not a build project: $2,000/mo, roughly ≤8 hrs/week. Owner requests ad-hoc updates as needed. Recurring deliverables: ~2 newsletters/week, 1-2 SMS blasts/month (2 if there's a sale, 1 if not), plus maintenance of the wholesale website whenever updates are needed."
+        },
+        {
+          "date": "2026-07-10",
+          "note": "This week's 2 newsletters launched and complete. Next up: 2 newsletters next week, which will be the final push for the current sale before it ends."
+        },
+        {
+          "date": "2026-07-10",
+          "note": "Once the sale ends, need to remove all sale items from the site and revert it back to the original (non-sale) state."
         }
       ],
       "tasks": [
-        { "title": "Newsletter #1 this week", "done": false, "due": null },
-        { "title": "Newsletter #2 this week", "done": false, "due": null },
+        { "title": "Newsletter #1 this week", "done": true, "due": null },
+        { "title": "Newsletter #2 this week", "done": true, "due": null },
+        { "title": "Newsletter #1 next week — final sale push", "done": false, "due": "2026-07-13" },
+        { "title": "Newsletter #2 next week — final sale push", "done": false, "due": "2026-07-17" },
         { "title": "SMS blast(s) this month (1-2 depending on sales)", "done": false, "due": null },
+        { "title": "Remove sale items from website & revert to original", "done": false, "due": null },
         { "title": "Wholesale site updates (as requested by owner)", "done": false, "due": null }
       ]
     },
