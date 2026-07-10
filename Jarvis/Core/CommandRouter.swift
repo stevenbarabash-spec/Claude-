@@ -15,6 +15,8 @@ struct MessageDraft: Identifiable, Equatable {
 
 enum JarvisAction {
     case speak(String)
+    /// Free-form conversation — handled with chat history + live web search.
+    case chatAnswer
     case playMusic(query: String)
     case composeEmail(EmailDraft)
     case composeMessage(MessageDraft)
@@ -131,7 +133,9 @@ struct CommandRouter {
         case "health":
             return .healthDigest
         default:
-            return .speak(routed.reply ?? "I'm not sure how to help with that.")
+            // Questions, chat, news — answered conversationally with history
+            // and web search rather than the one-shot routing reply.
+            return .chatAnswer
         }
     }
 

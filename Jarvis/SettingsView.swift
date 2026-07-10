@@ -9,6 +9,7 @@ struct SettingsView: View {
     @AppStorage("briefingMinute") private var briefingMinute = 0
     @AppStorage("keyboardShareKey") private var keyboardShareKey = false
     @AppStorage("autoSend") private var autoSend = true
+    @AppStorage(JarvisKnowledge.urlsKey) private var knowledgeURLs = ""
 
     @State private var elevenLabsKey: String = KeychainHelper.read(ElevenLabsService.keychainKey) ?? ""
     @AppStorage(ElevenLabsService.voiceIDDefaultsKey) private var elevenLabsVoiceID = ""
@@ -25,6 +26,7 @@ struct SettingsView: View {
             Form {
                 claudeSection
                 interactionSection
+                knowledgeSection
                 voiceSection
                 gmailSection
                 placesSection
@@ -65,6 +67,20 @@ struct SettingsView: View {
             Text("Voice interaction")
         } footer: {
             Text("With auto-send on, tap the orb once, speak, and Jarvis replies when you pause — no second tap. The ∞ Hands-free button on the main screen keeps the whole conversation going with no taps at all.")
+        }
+    }
+
+    private var knowledgeSection: some View {
+        Section {
+            TextField("Share links, one per line", text: $knowledgeURLs, axis: .vertical)
+                .lineLimit(2...5)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .font(.footnote)
+        } header: {
+            Text("Jarvis knowledge")
+        } footer: {
+            Text("Paste links to pages Jarvis should always know — like your schedule tracker artifacts. On claude.ai, open the artifact → Share → copy the link, then paste it here. Jarvis refetches every 30 minutes and uses them when you ask about your schedule, week, or workload.")
         }
     }
 
@@ -200,6 +216,7 @@ struct SettingsView: View {
         AppGroup.defaults.set(keyboardShareKey ? trimmed : nil,
                               forKey: AppGroup.keyboardAPIKeyKey)
 
+        Task { await JarvisKnowledge.refresh() }
         Task {
             if briefingEnabled {
                 try? await NotificationManager.shared.scheduleDailyBriefing(

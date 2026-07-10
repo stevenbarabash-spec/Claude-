@@ -48,7 +48,32 @@ struct ClaudeService {
                        maxTokens: maxTokens)
     }
 
+    /// Multi-turn conversation with optional live web search (used for news,
+    /// current events, anything time-sensitive). The server runs the searches
+    /// itself and returns the final answer.
+    func chat(system: String,
+              history: [(role: String, content: String)],
+              enableWebSearch: Bool = false,
+              maxTokens: Int = 1024) async throws -> String {
+        let messages = history.map { ["role": $0.role, "content": $0.content] }
+        var extras: [String: Any] = [:]
+        if enableWebSearch {
+            extras["tools"] = [
+                ["type": "web_search_20250305", "name": "web_search", "max_uses": 3]
+            ]
+        }
+        return try await send(system: system, messages: messages, maxTokens: maxTokens, extras: extras)
+    }
+
     private func send(system: String, content: [[String: Any]], maxTokens: Int) async throws -> String {
+        try await send(system: system,
+                       messages: [["role": "user", "content": content]],
+                       maxTokens: maxTokens,
+                       extras: [:])
+    }
+
+    private func send(system: String, messages: [Any], maxTokens: Int,
+                      extras: [String: Any]) async throws -> String {
         guard let apiKey = KeychainHelper.read(Self.keychainKey), !apiKey.isEmpty else {
             throw ClaudeError.missingAPIKey
         }
@@ -59,12 +84,13 @@ struct ClaudeService {
         request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
 
-        let payload: [String: Any] = [
+        var payload: [String: Any] = [
             "model": Self.model,
             "max_tokens": maxTokens,
             "system": system,
-            "messages": [["role": "user", "content": content]],
+            "messages": messages,
         ]
+        payload.merge(extras) { _, new in new }
         request.httpBody = try JSONSerialization.data(withJSONObject: payload)
 
         let (data, response) = try await URLSession.shared.data(for: request)

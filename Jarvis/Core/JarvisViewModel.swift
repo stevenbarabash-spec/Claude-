@@ -48,6 +48,10 @@ final class JarvisViewModel: ObservableObject {
     private var lastSpeechActivity = Date()
     private var heardAnything = false
 
+    /// Rolling conversation memory so chat feels continuous, capped to keep
+    /// token costs flat.
+    private var chatHistory: [(role: String, content: String)] = []
+
     var isListening: Bool { state == .listening }
 
     /// Auto-send after the user stops talking (Settings toggle, default on).
@@ -167,6 +171,9 @@ final class JarvisViewModel: ObservableObject {
         case .speak(let text):
             say(text)
 
+        case .chatAnswer:
+            await chatAnswer()
+
         case .playMusic(let query):
             await playMusic(query: query)
 
@@ -213,6 +220,37 @@ final class JarvisViewModel: ObservableObject {
         }
     }
 
+    // MARK: - Conversation
+
+    /// Free-form chat with memory and live web search — Jarvis's direct line
+    /// to Claude, including news and current events.
+    private func chatAnswer() async {
+        chatHistory.append((role: "user", content: transcript))
+        if chatHistory.count > 24 {
+            chatHistory.removeFirst(chatHistory.count - 24)
+        }
+        do {
+            let system = """
+            You are JARVIS: the user's personal AI — composed, precise, dryly witty, with the understated \
+            manner of an impeccable British butler. Address the user as "sir" occasionally, never every sentence. \
+            Your replies are spoken aloud, so answer in natural speech: 1-4 sentences for most things, longer \
+            only when genuinely needed, never markdown, never lists read as bullets. \
+            You have live web search — use it for news, current events, weather, sports, prices, or anything \
+            time-sensitive, and mention when information is fresh from the web. \
+            Today is \(Date().formatted(date: .complete, time: .shortened)).
+            \(JarvisKnowledge.scheduleContext)
+            """
+            let reply = try await claude.chat(system: system,
+                                              history: chatHistory,
+                                              enableWebSearch: true)
+            chatHistory.append((role: "assistant", content: reply))
+            say(reply)
+        } catch {
+            chatHistory.removeLast()
+            say("I couldn't reach Claude just now. \(error.localizedDescription)")
+        }
+    }
+
     // MARK: - Music
 
     private func playMusic(query: String) async {
@@ -240,7 +278,9 @@ final class JarvisViewModel: ObservableObject {
             morning briefing: 2-4 sentences, natural speech, note conflicts or tight transitions, address the
             user as "sir" once at most, no markdown. Today is \(Date().formatted(date: .complete, time: .shortened)).
             """
-            let briefing = try await claude.complete(system: system, user: agenda)
+            let briefing = try await claude.complete(
+                system: system,
+                user: agenda + JarvisKnowledge.scheduleContext)
             say(briefing)
         } catch {
             say(agenda)
