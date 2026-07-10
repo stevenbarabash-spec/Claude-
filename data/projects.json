@@ -177,6 +177,10 @@
         {
           "date": "2026-07-10",
           "note": "System date resynced from Jul 2/3 to the real Jul 10 — this task's Jul 9 deadline was stated directly by Steven, not computed, so it's left as-is. It now reads as overdue; flagged for follow-up."
+        },
+        {
+          "date": "2026-07-10",
+          "note": "Orders not yet placed — rescheduled the order-placement task to Jul 11."
         }
       ],
       "tasks": [
@@ -184,7 +188,7 @@
         { "title": "File Ohio state tax for the month of July", "done": true, "due": "2026-07-05" },
         { "title": "File Florida state tax for the month of August", "done": false, "due": "2026-08-05" },
         { "title": "File Ohio state tax for the month of August", "done": false, "due": "2026-08-05" },
-        { "title": "Place new e-bike orders (received Jul 7)", "done": false, "due": "2026-07-09" }
+        { "title": "Place new e-bike orders (received Jul 7)", "done": false, "due": "2026-07-11" }
       ]
     }
   ],
