@@ -15,18 +15,23 @@ struct MessageDraft: Identifiable, Equatable {
 
 enum JarvisAction {
     case speak(String)
-    case openSpotify(query: String)
+    case playMusic(query: String)
     case composeEmail(EmailDraft)
     case composeMessage(MessageDraft)
     case scheduleReminder(text: String, date: Date)
+    case scheduleLocationReminder(text: String, placeName: String, onArrive: Bool)
+    case briefing
+    case checkEmail
+    case home(command: String)
+    case healthDigest
 }
 
 /// Decides what to do with a transcript.
 ///
 /// Strategy: ask Claude to classify the command into a small JSON action schema
 /// (which also lets it draft the email/message body in the same call). If no
-/// API key is configured, fall back to simple keyword matching so music and
-/// reminders still work offline.
+/// API key is configured, fall back to simple keyword matching so music,
+/// reminders, and home control still work offline.
 struct CommandRouter {
 
     private let claude = ClaudeService()
@@ -53,23 +58,34 @@ struct CommandRouter {
         let body: String?
         let reminderText: String?
         let reminderISODate: String?
+        let place: String?
+        let trigger: String?
+        let command: String?
         let reply: String?
     }
 
     private func claudeRoute(_ transcript: String) async throws -> JarvisAction {
         let now = ISO8601DateFormatter().string(from: Date())
+        let places = PlacesStore.all().map(\.name).joined(separator: ", ")
         let system = """
         You are Jarvis, a voice assistant on the user's iPhone. The current date-time is \(now) (device local time zone).
+        The user's saved places are: [\(places)].
         Classify the user's spoken command and respond with ONLY a JSON object, no prose, matching one of:
 
-        {"action":"play_music","query":"<song, artist or playlist to search on Spotify>"}
+        {"action":"play_music","query":"<song, artist or playlist>"}
         {"action":"email","recipient":"<name or address if spoken, else empty>","subject":"<subject line>","body":"<a complete, well-written email body signed off appropriately>"}
         {"action":"message","recipient":"<name or number if spoken, else empty>","body":"<a natural text message>"}
-        {"action":"reminder","reminderText":"<what to remind>","reminderISODate":"<ISO8601 date-time for the reminder>"}
-        {"action":"answer","reply":"<a concise spoken-style answer to the user's question, 1-3 sentences>"}
+        {"action":"reminder","reminderText":"<what to remind>","reminderISODate":"<ISO8601 date-time>"}
+        {"action":"location_reminder","reminderText":"<what to remind>","place":"<one of the saved places>","trigger":"arrive|leave"}
+        {"action":"briefing"}  // "what's my day look like", "morning briefing", "what's on my calendar"
+        {"action":"check_email"}  // "check my email", "any new emails", "triage my inbox"
+        {"action":"home","command":"<the home command verbatim>"}  // lights, scenes, thermostat, smart home
+        {"action":"health"}  // "how did I sleep", "health summary", "how active was I"
+        {"action":"answer","reply":"<a concise spoken-style answer, 1-3 sentences>"}
 
-        Rules: for email/message, write the full content yourself from the user's intent — do not include placeholders like [name].
-        If the command doesn't fit the first four actions, use "answer".
+        Rules: for email/message, write the full content yourself from the user's intent — no placeholders like [name].
+        Use location_reminder only when the reminder is tied to a saved place; otherwise use reminder.
+        If nothing else fits, use "answer".
         """
 
         let raw = try await claude.complete(system: system, user: transcript)
@@ -83,7 +99,7 @@ struct CommandRouter {
 
         switch routed.action {
         case "play_music":
-            return .openSpotify(query: routed.query ?? transcript)
+            return .playMusic(query: routed.query ?? transcript)
         case "email":
             return .composeEmail(EmailDraft(
                 recipient: routed.recipient ?? "",
@@ -99,6 +115,20 @@ struct CommandRouter {
             let date = routed.reminderISODate.flatMap { ISO8601DateFormatter().date(from: $0) }
                 ?? Date().addingTimeInterval(3600)
             return .scheduleReminder(text: routed.reminderText ?? transcript, date: date)
+        case "location_reminder":
+            return .scheduleLocationReminder(
+                text: routed.reminderText ?? transcript,
+                placeName: routed.place ?? "home",
+                onArrive: routed.trigger != "leave"
+            )
+        case "briefing":
+            return .briefing
+        case "check_email":
+            return .checkEmail
+        case "home":
+            return .home(command: routed.command ?? transcript)
+        case "health":
+            return .healthDigest
         default:
             return .speak(routed.reply ?? "I'm not sure how to help with that.")
         }
@@ -123,7 +153,23 @@ struct CommandRouter {
                 query.removeSubrange(range)
             }
             query = query.replacingOccurrences(of: "on spotify", with: "", options: .caseInsensitive)
-            return .openSpotify(query: query.trimmingCharacters(in: .whitespaces))
+            return .playMusic(query: query.trimmingCharacters(in: .whitespaces))
+        }
+
+        if lower.contains("briefing") || lower.contains("my day") || lower.contains("calendar") {
+            return .briefing
+        }
+
+        if lower.contains("email") && (lower.contains("check") || lower.contains("inbox") || lower.contains("new")) {
+            return .checkEmail
+        }
+
+        if lower.contains("light") || lower.contains("thermostat") || lower.contains("scene") {
+            return .home(command: transcript)
+        }
+
+        if lower.contains("sleep") || lower.contains("health") || lower.contains("workout") {
+            return .healthDigest
         }
 
         if lower.hasPrefix("remind me") {

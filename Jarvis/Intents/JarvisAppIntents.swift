@@ -40,6 +40,21 @@ struct JarvisPlayMusicIntent: AppIntent {
     }
 }
 
+/// "Hey Siri, Jarvis briefing" — calendar-aware morning briefing. Pair it with
+/// a Shortcuts personal automation (time of day → run this) for a hands-free
+/// spoken briefing every morning.
+struct JarvisBriefingIntent: AppIntent {
+    static var title: LocalizedStringResource = "Jarvis Briefing"
+    static var description = IntentDescription("Get your calendar-aware daily briefing, spoken aloud.")
+    static var openAppWhenRun = true
+
+    @MainActor
+    func perform() async throws -> some IntentResult {
+        NotificationCenter.default.post(name: .jarvisAsk, object: "Give me my briefing")
+        return .result()
+    }
+}
+
 struct JarvisShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
@@ -60,6 +75,15 @@ struct JarvisShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "Play Music",
             systemImageName: "music.note"
+        )
+        AppShortcut(
+            intent: JarvisBriefingIntent(),
+            phrases: [
+                "\(.applicationName) briefing",
+                "Get my briefing from \(.applicationName)",
+            ],
+            shortTitle: "Briefing",
+            systemImageName: "sun.max"
         )
     }
 }

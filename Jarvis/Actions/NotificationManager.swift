@@ -1,4 +1,5 @@
 import Foundation
+import CoreLocation
 import UserNotifications
 
 /// Local notifications: voice-created reminders and an optional daily briefing.
@@ -32,6 +33,27 @@ final class NotificationManager {
                                             content: content,
                                             trigger: trigger)
         try await center.add(request)
+    }
+
+    /// Geofenced reminder — fires when arriving at or leaving a saved place
+    /// ("remind me to take out the trash when I get home"). Requires
+    /// location-when-in-use permission, granted in Settings when saving places.
+    func scheduleLocationReminder(_ text: String, place: SavedPlace, onArrive: Bool) async throws {
+        let content = UNMutableNotificationContent()
+        content.title = "Jarvis reminder"
+        content.body = text
+        content.sound = .default
+
+        let center = CLLocationCoordinate2D(latitude: place.latitude, longitude: place.longitude)
+        let region = CLCircularRegion(center: center, radius: 150, identifier: UUID().uuidString)
+        region.notifyOnEntry = onArrive
+        region.notifyOnExit = !onArrive
+
+        let trigger = UNLocationNotificationTrigger(region: region, repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString,
+                                            content: content,
+                                            trigger: trigger)
+        try await self.center.add(request)
     }
 
     // MARK: - Daily briefing

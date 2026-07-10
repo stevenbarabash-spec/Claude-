@@ -3,26 +3,120 @@ options:
   bundleIdPrefix: com.yourname
   deploymentTarget:
     iOS: "17.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+
 targets:
   Jarvis:
     type: application
     platform: iOS
-    sources: [Jarvis]
+    sources: [Jarvis, Shared]
+    dependencies:
+      - target: JarvisWidget
+        embed: true
+      - target: JarvisShare
+        embed: true
+      - target: JarvisKeyboard
+        embed: true
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.yourname.Jarvis
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
-        SWIFT_VERSION: "5.9"
+    entitlements:
+      path: Jarvis/Jarvis.entitlements
+      properties:
+        com.apple.developer.healthkit: true
+        com.apple.developer.homekit: true
+        com.apple.security.application-groups:
+          - group.com.yourname.jarvis
     info:
       path: Jarvis/Info.plist
       properties:
         CFBundleDisplayName: Jarvis
         NSMicrophoneUsageDescription: Jarvis listens for your voice commands.
         NSSpeechRecognitionUsageDescription: Jarvis transcribes what you say.
+        NSCalendarsFullAccessUsageDescription: Jarvis reads your calendar to give you daily briefings.
+        NSContactsUsageDescription: Jarvis looks up contacts so "text Mike" reaches the right person.
+        NSCameraUsageDescription: Jarvis Vision answers questions about photos you take.
+        NSPhotoLibraryUsageDescription: Used as a camera fallback in the simulator.
+        NSHealthShareUsageDescription: Jarvis summarizes your sleep, workouts, and steps into a weekly digest.
+        NSHomeKitUsageDescription: Jarvis controls your lights and scenes by voice.
+        NSLocationWhenInUseUsageDescription: Jarvis uses saved places for location reminders like "when I get home".
+        NSAppleMusicUsageDescription: Jarvis plays songs on Apple Music by voice.
         LSApplicationQueriesSchemes: [spotify]
         CFBundleURLTypes:
           - CFBundleURLName: com.yourname.jarvis
             CFBundleURLSchemes: [jarvis]
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UILaunchScreen: {}
+
+  JarvisWidget:
+    type: app-extension
+    platform: iOS
+    sources: [JarvisWidget, Shared]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.yourname.Jarvis.widget
+    entitlements:
+      path: JarvisWidget/JarvisWidget.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.yourname.jarvis
+    info:
+      path: JarvisWidget/Info.plist
+      properties:
+        CFBundleDisplayName: Jarvis Agenda
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+
+  JarvisShare:
+    type: app-extension
+    platform: iOS
+    sources: [JarvisShare, Shared]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.yourname.Jarvis.share
+    entitlements:
+      path: JarvisShare/JarvisShare.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.yourname.jarvis
+    info:
+      path: JarvisShare/Info.plist
+      properties:
+        CFBundleDisplayName: Jarvis
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.share-services
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareViewController
+          NSExtensionAttributes:
+            NSExtensionActivationRule:
+              NSExtensionActivationSupportsText: true
+              NSExtensionActivationSupportsWebURLWithMaxCount: 1
+
+  JarvisKeyboard:
+    type: app-extension
+    platform: iOS
+    sources: [JarvisKeyboard, Shared]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.yourname.Jarvis.keyboard
+    entitlements:
+      path: JarvisKeyboard/JarvisKeyboard.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.yourname.jarvis
+    info:
+      path: JarvisKeyboard/Info.plist
+      properties:
+        CFBundleDisplayName: Jarvis Keyboard
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.keyboard-service
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).KeyboardViewController
+          NSExtensionAttributes:
+            IsASCIICapable: false
+            PrefersRightToLeft: false
+            PrimaryLanguage: en-US
+            RequestsOpenAccess: true

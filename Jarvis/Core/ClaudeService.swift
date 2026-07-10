@@ -30,6 +30,25 @@ struct ClaudeService {
     }
 
     func complete(system: String, user: String, maxTokens: Int = 1024) async throws -> String {
+        try await send(system: system,
+                       content: [["type": "text", "text": user]],
+                       maxTokens: maxTokens)
+    }
+
+    /// Vision: ask a question about a photo (JPEG data from the camera).
+    func complete(system: String, user: String, imageJPEG: Data, maxTokens: Int = 1024) async throws -> String {
+        try await send(system: system,
+                       content: [
+                           ["type": "image",
+                            "source": ["type": "base64",
+                                       "media_type": "image/jpeg",
+                                       "data": imageJPEG.base64EncodedString()]],
+                           ["type": "text", "text": user],
+                       ],
+                       maxTokens: maxTokens)
+    }
+
+    private func send(system: String, content: [[String: Any]], maxTokens: Int) async throws -> String {
         guard let apiKey = KeychainHelper.read(Self.keychainKey), !apiKey.isEmpty else {
             throw ClaudeError.missingAPIKey
         }
@@ -44,7 +63,7 @@ struct ClaudeService {
             "model": Self.model,
             "max_tokens": maxTokens,
             "system": system,
-            "messages": [["role": "user", "content": user]],
+            "messages": [["role": "user", "content": content]],
         ]
         request.httpBody = try JSONSerialization.data(withJSONObject: payload)
 

@@ -3,6 +3,8 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject private var viewModel: JarvisViewModel
     @State private var showSettings = false
+    @State private var showVision = false
+    @State private var showShared = false
 
     var body: some View {
         NavigationStack {
@@ -39,7 +41,24 @@ struct ContentView: View {
             .padding()
             .navigationTitle("Jarvis")
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItemGroup(placement: .topBarLeading) {
+                    Button {
+                        showVision = true
+                    } label: {
+                        Image(systemName: "camera")
+                    }
+                    Button {
+                        showShared = true
+                    } label: {
+                        Image(systemName: "tray.and.arrow.down")
+                    }
+                }
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Button {
+                        Task { await viewModel.handle(transcript: "check my email") }
+                    } label: {
+                        Image(systemName: "envelope")
+                    }
                     Button {
                         showSettings = true
                     } label: {
@@ -50,6 +69,16 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showSettings) {
             SettingsView()
+        }
+        .sheet(isPresented: $showVision) {
+            VisionView()
+        }
+        .sheet(isPresented: $showShared) {
+            SharedItemsView()
+        }
+        .sheet(isPresented: $viewModel.showInbox) {
+            InboxView()
+                .environmentObject(viewModel)
         }
         .sheet(item: $viewModel.emailDraft) { draft in
             if EmailComposer.canSendMail {

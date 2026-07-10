@@ -1,92 +1,93 @@
-# Jarvis — a personal voice assistant for iPhone
+# Jarvis — a personal AI voice assistant for iPhone
 
-A SwiftUI app you build and install yourself (free Apple ID works) that:
+A SwiftUI app (plus a widget, a share-sheet extension, and a custom keyboard) you build and install yourself. Speak to it, and it acts.
 
-- 🎙️ **Listens to voice commands** — tap the mic (or say "Hey Siri, ask Jarvis…") and speak naturally.
-- ✉️ **Writes emails for you** — "Email Sarah about moving the meeting to Friday" → Claude drafts it, the iOS mail sheet opens pre-filled, you hit send.
-- 💬 **Drafts text replies** — "Text Mike that I'm running 15 minutes late" → Claude writes the message, the iMessage sheet opens pre-filled.
-- 🔔 **Sends you notifications** — "Remind me to call the dentist at 3pm", plus an optional scheduled daily briefing.
-- 🎵 **Controls Spotify** — "Play Bohemian Rhapsody" opens Spotify straight into the song.
-- 🧠 **Answers anything else** — everything that isn't a command goes to Claude and the answer is spoken back with a synthesized voice.
-- 🗣️ **Siri integration** — App Intents expose "Ask Jarvis" so you can trigger it hands-free via Siri or the Action Button.
+## What it does
 
-## What iOS allows (honest capability matrix)
+| Say / do | What happens |
+|---|---|
+| "What's my day look like?" | Reads your **calendar** and speaks a Claude-written morning briefing |
+| "Email Sarah about moving the meeting" | Claude drafts the full email, recipient resolved from **Contacts**, mail sheet pre-filled — or **actually sent via Gmail** if connected |
+| "Check my email" | **Gmail autopilot**: reads unread mail, triages it (urgent/work/newsletter…), drafts replies, sends them when you approve — one tap, really sent |
+| "Text Anna I'm running late" | Claude writes the message, number resolved from Contacts, iMessage sheet pre-filled |
+| "Play Daft Punk" | **Spotify** deep link, or native in-app **Apple Music** playback (pick in Settings) |
+| "Turn off the living room lights" / "movie night" | **HomeKit** — scenes and switches, no confirmation needed |
+| "Remind me to call the dentist at 3" | Local **notification** at 3:00 |
+| "Remind me to water the plants when I get home" | **Geofenced** reminder at your saved Home location |
+| "How did I sleep this week?" | **HealthKit** digest: sleep, workouts, steps — narrated by Claude |
+| 📷 camera button | **Jarvis Vision** — photograph anything, ask about it (menus, plants, contracts) |
+| Share sheet → Jarvis | Send articles/text from any app; Jarvis summarizes and extracts action items |
+| **Jarvis Keyboard** in any app | Copy a received message → tap ✨ → three Claude-drafted replies, tap to insert (works inside iMessage/WhatsApp/Slack) |
+| Lock-screen **widget** | Your next events; tap for a spoken briefing |
+| "Hey Siri, ask Jarvis" / Action Button | Hands-free entry via App Intents ("Jarvis briefing" works too) |
+| Anything else | Claude answers, spoken aloud |
 
-| You asked for | What's possible on iOS | How this app does it |
-|---|---|---|
-| Voice commands | ✅ Fully, while app is open | `SFSpeechRecognizer` live transcription |
-| Always-on "Hey Jarvis" wake word | ❌ Apple doesn't allow background mic access | Use **"Hey Siri, ask Jarvis"** (App Intent) or map the **Action Button** to the Ask Jarvis shortcut |
-| Write & send emails | ⚠️ Apps can draft but can't send silently | Claude drafts → pre-filled mail sheet → you tap Send (one tap) |
-| Read incoming texts / auto-reply | ❌ Apps cannot read SMS/iMessage | You dictate the reply → Claude polishes it → pre-filled message sheet → you tap Send |
-| Notifications | ✅ Fully | `UserNotifications` — voice-created reminders + daily briefing |
-| Open Spotify & play a song | ✅ | `spotify:search:` deep link (or full playback control if you add the Spotify iOS SDK later) |
+## What iOS will never allow (so you don't chase it)
 
-## Project layout
+- ❌ Always-listening "Hey Jarvis" wake word (Siri is the only wake word — use "Hey Siri, ask Jarvis" or map the **Action Button** to the Ask Jarvis shortcut)
+- ❌ Reading incoming iMessages/SMS or sending texts silently (the keyboard extension is the legal workaround for drafting anywhere)
+- ❌ Sending via Apple Mail silently (Gmail API is the workaround — it *can* really send)
+
+## Repo layout
 
 ```
-Jarvis/
-├── JarvisApp.swift              # App entry point
-├── ContentView.swift            # Main UI: mic button, transcript, response
-├── SettingsView.swift           # Claude API key + daily briefing settings
-├── Core/
-│   ├── JarvisViewModel.swift    # Orchestrates listen → route → act → speak
-│   ├── CommandRouter.swift      # Turns a transcript into an action
-│   ├── ClaudeService.swift      # Claude API client (drafting + Q&A)
-│   └── KeychainHelper.swift     # Stores your API key in the Keychain
-├── Speech/
-│   ├── SpeechRecognizer.swift   # Live speech-to-text
-│   └── SpeechSynthesizer.swift  # Jarvis talks back
-├── Actions/
-│   ├── SpotifyController.swift  # Deep links into Spotify
-│   ├── EmailComposer.swift      # Pre-filled mail sheet
-│   ├── MessageComposer.swift    # Pre-filled iMessage sheet
-│   └── NotificationManager.swift# Reminders + daily briefing
-└── Intents/
-    └── JarvisAppIntents.swift   # "Hey Siri, ask Jarvis" shortcuts
+Jarvis/            Main app
+  Core/            View model, command router, Claude client, Keychain
+  Speech/          Speech-to-text + text-to-speech
+  Actions/         Spotify, mail/message sheets, notifications
+  Services/        Calendar, Contacts, Apple Music, HomeKit, Health, Gmail, Places
+  Views/           Inbox triage, Vision, Shared items
+  Intents/         Siri App Intents
+JarvisWidget/      Lock/home-screen agenda widget
+JarvisShare/       Share-sheet extension
+JarvisKeyboard/    Reply-drafting keyboard extension
+Shared/            App-group storage shared by all targets
+project.yml        XcodeGen project definition (4 targets)
 ```
 
-## Build & install (on your Mac)
+## Build & install
 
-You need: a Mac with **Xcode 15+**, an iPhone (iOS 17+), and a free Apple ID.
-
-### Option A — XcodeGen (recommended, zero clicking)
+You need a Mac with **Xcode 15+**, an iPhone on **iOS 17+**, and an Apple ID.
 
 ```bash
 brew install xcodegen
 git clone <this repo> && cd <repo>
+# 1. Pick your own identifiers (must be globally unique):
+#    - replace "com.yourname" in project.yml
+#    - replace "group.com.yourname.jarvis" in project.yml AND Shared/AppGroup.swift
 xcodegen generate
 open Jarvis.xcodeproj
 ```
 
-### Option B — manual
+Then in Xcode:
 
-1. Xcode → New Project → iOS App → name it `Jarvis`, SwiftUI, Swift.
-2. Delete the generated `ContentView.swift`/`JarvisApp.swift`, then drag the `Jarvis/` folder from this repo into the project (check "Copy items if needed").
-3. In the target's **Info** tab add:
-   - `NSMicrophoneUsageDescription` — "Jarvis listens for your voice commands."
-   - `NSSpeechRecognitionUsageDescription` — "Jarvis transcribes what you say."
-   - `LSApplicationQueriesSchemes` — array with one item: `spotify`
+1. For **each of the 4 targets**: Signing & Capabilities → set *Team* to your Apple ID.
+2. Plug in your iPhone, select it, **⌘R**.
+3. On the phone: Settings → General → VPN & Device Management → trust your certificate.
+4. In the app: Settings gear → paste your **Claude API key** ([console.anthropic.com](https://console.anthropic.com)).
+5. Grant permissions as prompted (mic, speech, notifications; calendar/contacts/health/home/location are requested on first use of each feature).
 
-### Then, for either option
+> **Free Apple ID note:** free "personal team" signing supports HealthKit, HomeKit, and App Groups, but builds expire after 7 days (re-run ⌘R). **Apple Music (MusicKit)** and push notifications need a paid developer account — leave music on Spotify otherwise. If signing complains about an entitlement, delete that entitlement from `project.yml`, regenerate, and that one feature degrades gracefully.
 
-1. Select the Jarvis target → **Signing & Capabilities** → set *Team* to your Apple ID (Personal Team).
-2. Plug in your iPhone, pick it as the run destination, press **⌘R**.
-3. On the phone: Settings → General → VPN & Device Management → trust your developer certificate.
-4. Open the app → Settings gear → paste your **Claude API key** (get one at [console.anthropic.com](https://console.anthropic.com)).
-5. Grant microphone, speech-recognition, and notification permissions when prompted.
+### Gmail autopilot setup (optional, ~5 minutes, free)
 
-> Free Apple ID builds expire after 7 days — just press ⌘R again to reinstall. A paid developer account ($99/yr) removes that limit and enables TestFlight.
+1. [console.cloud.google.com](https://console.cloud.google.com) → new project → **Enable APIs** → Gmail API.
+2. OAuth consent screen → External → add yourself as a test user.
+3. Credentials → **Create OAuth client ID** → type **iOS** → bundle ID `com.yourname.Jarvis`.
+4. Copy the client ID (`…apps.googleusercontent.com`) into Jarvis Settings → Connect Gmail.
 
-## Try saying
+### Keyboard setup (optional)
 
-- "Play Daft Punk"
-- "Email John about rescheduling tomorrow's standup to 2pm"
-- "Text Anna that I'll be there in 20 minutes"
-- "Remind me to take out the trash at 8pm"
-- "What's the capital of Mongolia?"
+iPhone Settings → General → Keyboard → Keyboards → Add New Keyboard → **Jarvis Keyboard** → tap it → **Allow Full Access** (needed for clipboard + network). Then enable "Share API key with Jarvis Keyboard" in the app's settings.
 
-## Extending it
+### Hands-free & automation ideas
 
-- **Real Spotify playback control** (play/pause/skip without leaving the app): add the [Spotify iOS SDK](https://developer.spotify.com/documentation/ios) and a Spotify developer app token.
-- **Calendar awareness**: add `EventKit` and feed today's events into the daily briefing prompt.
-- **Better hands-free**: map the iPhone **Action Button** to the "Ask Jarvis" shortcut for one-press activation.
+- Map the **Action Button** (Settings → Action Button → Shortcut → Ask Jarvis).
+- Shortcuts app → Automation → time of day → **Jarvis Briefing** = spoken briefing every morning when you pick up the phone.
+- Add the **Jarvis Agenda** widget to your lock screen.
+
+## Notes
+
+- Everything runs on-device except calls to the Claude API (and Gmail/Apple Music APIs when you use them). Keys live in the Keychain; the keyboard uses opt-in app-group storage.
+- The keyboard uses Haiku (fast/cheap) for reply suggestions; the app uses Sonnet — change models in `ClaudeService.swift` / `KeyboardViewController.swift`.
+- Not built here: a push-notification server for *proactive* alerts ("your 2pm was cancelled") — that requires a backend and a paid Apple developer account. Ask Jarvis's author (me) when you want it.

@@ -10,6 +10,10 @@ struct JarvisApp: App {
                 .environmentObject(viewModel)
                 .task {
                     await NotificationManager.shared.requestAuthorization()
+                    // Keep the lock-screen widget's agenda fresh on every launch.
+                    if await CalendarService.shared.requestAccess() {
+                        CalendarService.shared.refreshWidgetCache()
+                    }
                 }
                 .onOpenURL { url in
                     // jarvis://ask?q=... — used by the Siri App Intent to hand off a question.
