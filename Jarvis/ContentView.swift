@@ -51,6 +51,10 @@ struct ContentView: View {
                 withAnimation(.spring(duration: 0.9, bounce: 0.35)) {
                     booted = true
                 }
+                // Let the boot chime land, then speak.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    viewModel.greet()
+                }
             }
         }
         .preferredColorScheme(.dark)

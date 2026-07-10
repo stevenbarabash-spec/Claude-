@@ -61,6 +61,26 @@ final class JarvisViewModel: ObservableObject {
             : UserDefaults.standard.bool(forKey: "autoSend")
     }
 
+    /// Spoken greeting on launch — time-of-day aware, lightly varied.
+    func greet() {
+        guard state == .idle else { return }
+        let hour = Calendar.current.component(.hour, from: Date())
+        let salutation: String
+        switch hour {
+        case 5..<12: salutation = "Good morning, sir."
+        case 12..<17: salutation = "Good afternoon, sir."
+        default: salutation = "Good evening, sir."
+        }
+        let tails = [
+            "All systems online.",
+            "How can I help today?",
+            "What are we up to today?",
+            "At your service.",
+            "Ready when you are.",
+        ]
+        say("\(salutation) \(tails.randomElement() ?? "")")
+    }
+
     func toggleConversationMode() {
         conversationMode.toggle()
         if conversationMode {
