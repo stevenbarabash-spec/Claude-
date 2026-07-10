@@ -28,6 +28,27 @@ struct ContentView: View {
                         .foregroundStyle(.cyan.opacity(0.85))
                         .animation(.easeInOut(duration: 0.25), value: viewModel.state)
 
+                    Button {
+                        viewModel.toggleConversationMode()
+                    } label: {
+                        Label(viewModel.conversationMode ? "Hands-free on" : "Hands-free",
+                              systemImage: "infinity")
+                            .font(.caption.weight(.semibold))
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 7)
+                            .background(
+                                Capsule().fill(viewModel.conversationMode
+                                               ? Color.cyan.opacity(0.25)
+                                               : Color.white.opacity(0.06))
+                            )
+                            .overlay(
+                                Capsule().strokeBorder(
+                                    viewModel.conversationMode ? .cyan : .white.opacity(0.2),
+                                    lineWidth: 1)
+                            )
+                            .foregroundStyle(viewModel.conversationMode ? .cyan : .white.opacity(0.7))
+                    }
+
                     Spacer(minLength: 8)
 
                     conversationPanel
@@ -94,8 +115,8 @@ struct ContentView: View {
 
     private var statusText: String {
         switch viewModel.state {
-        case .idle: return "Tap to speak"
-        case .listening: return "Listening"
+        case .idle: return viewModel.conversationMode ? "Waiting" : "Tap to speak"
+        case .listening: return "Listening — just talk"
         case .thinking: return "Processing"
         case .speaking: return "Speaking"
         }

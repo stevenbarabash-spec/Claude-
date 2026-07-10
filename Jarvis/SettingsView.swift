@@ -8,6 +8,7 @@ struct SettingsView: View {
     @AppStorage("briefingHour") private var briefingHour = 8
     @AppStorage("briefingMinute") private var briefingMinute = 0
     @AppStorage("keyboardShareKey") private var keyboardShareKey = false
+    @AppStorage("autoSend") private var autoSend = true
 
     @State private var elevenLabsKey: String = KeychainHelper.read(ElevenLabsService.keychainKey) ?? ""
     @AppStorage(ElevenLabsService.voiceIDDefaultsKey) private var elevenLabsVoiceID = ""
@@ -23,6 +24,7 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 claudeSection
+                interactionSection
                 voiceSection
                 gmailSection
                 placesSection
@@ -53,6 +55,16 @@ struct SettingsView: View {
             Text("Claude API key")
         } footer: {
             Text("Stored in the iOS Keychain, only on this device. Get a key at console.anthropic.com.")
+        }
+    }
+
+    private var interactionSection: some View {
+        Section {
+            Toggle("Auto-send when you stop talking", isOn: $autoSend)
+        } header: {
+            Text("Voice interaction")
+        } footer: {
+            Text("With auto-send on, tap the orb once, speak, and Jarvis replies when you pause — no second tap. The ∞ Hands-free button on the main screen keeps the whole conversation going with no taps at all.")
         }
     }
 

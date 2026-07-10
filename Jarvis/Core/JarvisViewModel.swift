@@ -28,6 +28,8 @@ final class JarvisViewModel: ObservableObject {
     @Published var errorMessage: String?
     /// Live mic level (0…1) driving the orb while listening.
     @Published var audioLevel: CGFloat = 0
+    /// Hands-free conversation loop: listen → answer → listen again.
+    @Published var conversationMode = false
 
     // Compose sheets the UI presents when Jarvis has drafted something.
     @Published var emailDraft: EmailDraft?
@@ -42,7 +44,27 @@ final class JarvisViewModel: ObservableObject {
     private let router = CommandRouter()
     private let claude = ClaudeService()
 
+    private var silenceMonitor: Task<Void, Never>?
+    private var lastSpeechActivity = Date()
+    private var heardAnything = false
+
     var isListening: Bool { state == .listening }
+
+    /// Auto-send after the user stops talking (Settings toggle, default on).
+    private var autoSendEnabled: Bool {
+        UserDefaults.standard.object(forKey: "autoSend") == nil
+            ? true
+            : UserDefaults.standard.bool(forKey: "autoSend")
+    }
+
+    func toggleConversationMode() {
+        conversationMode.toggle()
+        if conversationMode {
+            if state == .idle { startListening() }
+        } else if isListening {
+            cancelListening()
+        }
+    }
 
     func toggleListening() {
         guard state != .thinking else { return }
@@ -57,10 +79,17 @@ final class JarvisViewModel: ObservableObject {
         errorMessage = nil
         response = ""
         transcript = ""
+        heardAnything = false
+        lastSpeechActivity = Date()
         do {
             try recognizer.start(
                 onTranscript: { [weak self] text in
-                    self?.transcript = text
+                    guard let self else { return }
+                    self.transcript = text
+                    if !text.isEmpty {
+                        self.heardAnything = true
+                        self.lastSpeechActivity = Date()
+                    }
                 },
                 onLevel: { [weak self] level in
                     // Light smoothing so the orb feels organic, not jittery.
@@ -69,13 +98,47 @@ final class JarvisViewModel: ObservableObject {
                 }
             )
             state = .listening
+            if autoSendEnabled || conversationMode {
+                startSilenceMonitor()
+            }
         } catch {
             errorMessage = error.localizedDescription
             state = .idle
         }
     }
 
+    /// Watches for a pause in speech and auto-sends, so there's no second tap.
+    private func startSilenceMonitor() {
+        silenceMonitor?.cancel()
+        silenceMonitor = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(nanoseconds: 250_000_000)
+                guard let self, self.state == .listening else { return }
+                let quietFor = Date().timeIntervalSince(self.lastSpeechActivity)
+                if self.heardAnything && quietFor > 1.6 {
+                    self.stopListeningAndHandle()
+                    return
+                }
+                if !self.heardAnything && quietFor > 10 {
+                    // Ten seconds of nothing — stand down instead of looping forever.
+                    self.cancelListening()
+                    self.conversationMode = false
+                    return
+                }
+            }
+        }
+    }
+
+    private func cancelListening() {
+        silenceMonitor?.cancel()
+        recognizer.stop()
+        audioLevel = 0
+        transcript = ""
+        state = .idle
+    }
+
     private func stopListeningAndHandle() {
+        silenceMonitor?.cancel()
         recognizer.stop()
         audioLevel = 0
         let heard = transcript.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -273,7 +336,14 @@ final class JarvisViewModel: ObservableObject {
         state = .speaking
         synthesizer.speak(text) { [weak self] in
             Task { @MainActor in
-                if self?.state == .speaking { self?.state = .idle }
+                guard let self, self.state == .speaking else { return }
+                self.state = .idle
+                // Hands-free loop: go straight back to listening, unless a
+                // compose sheet needs the user's attention first.
+                if self.conversationMode,
+                   self.emailDraft == nil, self.messageDraft == nil, !self.showInbox {
+                    self.startListening()
+                }
             }
         }
     }
