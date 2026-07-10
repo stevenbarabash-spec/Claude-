@@ -25,8 +25,10 @@ final class SpeechRecognizer {
     private var task: SFSpeechRecognitionTask?
 
     /// Starts transcribing; `onTranscript` is called on the main thread with the
-    /// best transcription so far, every time it updates.
-    func start(onTranscript: @escaping (String) -> Void) throws {
+    /// best transcription so far, and `onLevel` with the mic level (0…1) so the
+    /// UI can react to the user's voice.
+    func start(onTranscript: @escaping (String) -> Void,
+               onLevel: @escaping (CGFloat) -> Void = { _ in }) throws {
         stop()
 
         // Permissions are requested lazily on first use; iOS shows the system prompts.
@@ -55,6 +57,8 @@ final class SpeechRecognizer {
         let format = inputNode.outputFormat(forBus: 0)
         inputNode.installTap(onBus: 0, bufferSize: 1024, format: format) { buffer, _ in
             request.append(buffer)
+            let level = Self.normalizedLevel(of: buffer)
+            DispatchQueue.main.async { onLevel(level) }
         }
 
         audioEngine.prepare()
@@ -65,6 +69,19 @@ final class SpeechRecognizer {
             let text = result.bestTranscription.formattedString
             DispatchQueue.main.async { onTranscript(text) }
         }
+    }
+
+    /// Root-mean-square of the buffer mapped to a UI-friendly 0…1 range.
+    private static func normalizedLevel(of buffer: AVAudioPCMBuffer) -> CGFloat {
+        guard let channelData = buffer.floatChannelData?[0] else { return 0 }
+        let frames = Int(buffer.frameLength)
+        guard frames > 0 else { return 0 }
+        var sum: Float = 0
+        for i in 0..<frames { sum += channelData[i] * channelData[i] }
+        let rms = sqrt(sum / Float(frames))
+        let db = 20 * log10(max(rms, 0.000_01))
+        // Map roughly -50 dB (quiet room) … -10 dB (speaking close) to 0…1.
+        return CGFloat(min(max((db + 50) / 40, 0), 1))
     }
 
     func stop() {

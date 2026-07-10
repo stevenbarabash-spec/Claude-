@@ -8,65 +8,38 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 24) {
-                Spacer()
+            ZStack {
+                background
 
-                statusHeader
+                VStack(spacing: 18) {
+                    Spacer(minLength: 12)
 
-                if !viewModel.transcript.isEmpty {
-                    bubble(text: viewModel.transcript, label: "You", tint: .blue)
+                    JarvisOrb(state: viewModel.state, audioLevel: viewModel.audioLevel)
+                        .frame(width: 270, height: 270)
+                        .contentShape(Circle())
+                        .onTapGesture { viewModel.toggleListening() }
+                        .accessibilityLabel(viewModel.isListening ? "Stop listening" : "Start listening")
+                        .accessibilityAddTraits(.isButton)
+
+                    Text(statusText)
+                        .font(.footnote.weight(.semibold))
+                        .tracking(3)
+                        .textCase(.uppercase)
+                        .foregroundStyle(.cyan.opacity(0.85))
+                        .animation(.easeInOut(duration: 0.25), value: viewModel.state)
+
+                    Spacer(minLength: 8)
+
+                    conversationPanel
                 }
-
-                if !viewModel.response.isEmpty {
-                    bubble(text: viewModel.response, label: "Jarvis", tint: .purple)
-                }
-
-                if let error = viewModel.errorMessage {
-                    Text(error)
-                        .font(.footnote)
-                        .foregroundStyle(.red)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                }
-
-                Spacer()
-
-                micButton
-
-                Text(viewModel.isListening ? "Listening… tap to finish" : "Tap and speak")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .padding(.bottom, 8)
+                .padding()
             }
-            .padding()
-            .navigationTitle("Jarvis")
-            .toolbar {
-                ToolbarItemGroup(placement: .topBarLeading) {
-                    Button {
-                        showVision = true
-                    } label: {
-                        Image(systemName: "camera")
-                    }
-                    Button {
-                        showShared = true
-                    } label: {
-                        Image(systemName: "tray.and.arrow.down")
-                    }
-                }
-                ToolbarItemGroup(placement: .topBarTrailing) {
-                    Button {
-                        Task { await viewModel.handle(transcript: "check my email") }
-                    } label: {
-                        Image(systemName: "envelope")
-                    }
-                    Button {
-                        showSettings = true
-                    } label: {
-                        Image(systemName: "gearshape")
-                    }
-                }
-            }
+            .navigationTitle("JARVIS")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar { toolbarContent }
+            .toolbarBackground(.hidden, for: .navigationBar)
         }
+        .preferredColorScheme(.dark)
         .sheet(isPresented: $showSettings) {
             SettingsView()
         }
@@ -103,56 +76,89 @@ struct ContentView: View {
         }
     }
 
-    private var statusHeader: some View {
-        VStack(spacing: 8) {
-            Image(systemName: "waveform.circle.fill")
-                .font(.system(size: 56))
-                .foregroundStyle(.purple.gradient)
-                .symbolEffect(.pulse, isActive: viewModel.state == .thinking)
-            Text(statusText)
-                .font(.headline)
-                .foregroundStyle(.secondary)
+    // MARK: - Pieces
+
+    private var background: some View {
+        ZStack {
+            LinearGradient(colors: [Color(red: 0.01, green: 0.02, blue: 0.06),
+                                    Color(red: 0.02, green: 0.05, blue: 0.12),
+                                    .black],
+                           startPoint: .top, endPoint: .bottom)
+            // Faint ambient halo behind the orb.
+            RadialGradient(colors: [.cyan.opacity(0.08), .clear],
+                           center: UnitPoint(x: 0.5, y: 0.38),
+                           startRadius: 40, endRadius: 320)
         }
+        .ignoresSafeArea()
     }
 
     private var statusText: String {
         switch viewModel.state {
-        case .idle: return "At your service."
-        case .listening: return "Listening…"
-        case .thinking: return "Thinking…"
+        case .idle: return "Tap to speak"
+        case .listening: return "Listening"
+        case .thinking: return "Processing"
         case .speaking: return "Speaking"
         }
     }
 
-    private var micButton: some View {
-        Button {
-            viewModel.toggleListening()
-        } label: {
-            ZStack {
-                Circle()
-                    .fill(viewModel.isListening ? Color.red.gradient : Color.purple.gradient)
-                    .frame(width: 88, height: 88)
-                    .shadow(radius: 8)
-                Image(systemName: viewModel.isListening ? "stop.fill" : "mic.fill")
-                    .font(.system(size: 34))
-                    .foregroundStyle(.white)
+    private var conversationPanel: some View {
+        VStack(spacing: 10) {
+            if !viewModel.transcript.isEmpty {
+                bubble(text: viewModel.transcript, label: "YOU", tint: .blue)
+            }
+            if !viewModel.response.isEmpty {
+                bubble(text: viewModel.response, label: "JARVIS", tint: .cyan)
+            }
+            if let error = viewModel.errorMessage {
+                Text(error)
+                    .font(.footnote)
+                    .foregroundStyle(.red.opacity(0.9))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
             }
         }
-        .disabled(viewModel.state == .thinking)
-        .accessibilityLabel(viewModel.isListening ? "Stop listening" : "Start listening")
+        .frame(maxHeight: 240, alignment: .bottom)
     }
 
     private func bubble(text: String, label: String, tint: Color) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(label)
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(tint)
+                .font(.caption2.weight(.bold))
+                .tracking(2)
+                .foregroundStyle(tint.opacity(0.9))
             Text(text)
-                .font(.body)
+                .font(.callout)
+                .foregroundStyle(.white.opacity(0.92))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
-        .background(tint.opacity(0.1), in: RoundedRectangle(cornerRadius: 16))
+        .padding(14)
+        .background(.white.opacity(0.045), in: RoundedRectangle(cornerRadius: 18))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18)
+                .strokeBorder(tint.opacity(0.25), lineWidth: 1)
+        )
+    }
+
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        ToolbarItemGroup(placement: .topBarLeading) {
+            Button { showVision = true } label: {
+                Image(systemName: "camera")
+            }
+            Button { showShared = true } label: {
+                Image(systemName: "tray.and.arrow.down")
+            }
+        }
+        ToolbarItemGroup(placement: .topBarTrailing) {
+            Button {
+                Task { await viewModel.handle(transcript: "check my email") }
+            } label: {
+                Image(systemName: "envelope")
+            }
+            Button { showSettings = true } label: {
+                Image(systemName: "gearshape")
+            }
+        }
     }
 
     private func mailFallback(_ draft: EmailDraft) -> some View {

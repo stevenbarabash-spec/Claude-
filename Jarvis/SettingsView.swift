@@ -9,6 +9,9 @@ struct SettingsView: View {
     @AppStorage("briefingMinute") private var briefingMinute = 0
     @AppStorage("keyboardShareKey") private var keyboardShareKey = false
 
+    @State private var elevenLabsKey: String = KeychainHelper.read(ElevenLabsService.keychainKey) ?? ""
+    @AppStorage(ElevenLabsService.voiceIDDefaultsKey) private var elevenLabsVoiceID = ""
+
     @State private var gmailClientID: String = GmailService.shared.clientID ?? ""
     @State private var gmailConnected = GmailService.shared.isConnected
     @State private var gmailStatus: String?
@@ -20,6 +23,7 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 claudeSection
+                voiceSection
                 gmailSection
                 placesSection
                 briefingSection
@@ -49,6 +53,22 @@ struct SettingsView: View {
             Text("Claude API key")
         } footer: {
             Text("Stored in the iOS Keychain, only on this device. Get a key at console.anthropic.com.")
+        }
+    }
+
+    private var voiceSection: some View {
+        Section {
+            SecureField("ElevenLabs API key (optional)", text: $elevenLabsKey)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+            TextField("Voice ID (blank = Daniel, British)", text: $elevenLabsVoiceID)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .font(.footnote)
+        } header: {
+            Text("Jarvis voice")
+        } footer: {
+            Text("For a cinematic Jarvis voice, create a free account at elevenlabs.io and paste an API key — the default voice is Daniel, a deep British voice. Without a key, Jarvis uses the best British voice on your iPhone: download a premium one under Settings → Accessibility → Spoken Content → Voices → English (UK) for a big free upgrade.")
         }
     }
 
@@ -162,6 +182,8 @@ struct SettingsView: View {
     private func save() {
         let trimmed = apiKey.trimmingCharacters(in: .whitespacesAndNewlines)
         KeychainHelper.save(trimmed, for: ClaudeService.keychainKey)
+        KeychainHelper.save(elevenLabsKey.trimmingCharacters(in: .whitespacesAndNewlines),
+                            for: ElevenLabsService.keychainKey)
         // Opt-in mirror for the keyboard extension (app-group storage).
         AppGroup.defaults.set(keyboardShareKey ? trimmed : nil,
                               forKey: AppGroup.keyboardAPIKeyKey)

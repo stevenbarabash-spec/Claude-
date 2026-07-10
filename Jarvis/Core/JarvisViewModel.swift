@@ -26,6 +26,8 @@ final class JarvisViewModel: ObservableObject {
     @Published var transcript: String = ""
     @Published var response: String = ""
     @Published var errorMessage: String?
+    /// Live mic level (0…1) driving the orb while listening.
+    @Published var audioLevel: CGFloat = 0
 
     // Compose sheets the UI presents when Jarvis has drafted something.
     @Published var emailDraft: EmailDraft?
@@ -43,6 +45,7 @@ final class JarvisViewModel: ObservableObject {
     var isListening: Bool { state == .listening }
 
     func toggleListening() {
+        guard state != .thinking else { return }
         if isListening {
             stopListeningAndHandle()
         } else {
@@ -55,9 +58,16 @@ final class JarvisViewModel: ObservableObject {
         response = ""
         transcript = ""
         do {
-            try recognizer.start { [weak self] text in
-                self?.transcript = text
-            }
+            try recognizer.start(
+                onTranscript: { [weak self] text in
+                    self?.transcript = text
+                },
+                onLevel: { [weak self] level in
+                    // Light smoothing so the orb feels organic, not jittery.
+                    guard let self else { return }
+                    self.audioLevel = self.audioLevel * 0.7 + level * 0.3
+                }
+            )
             state = .listening
         } catch {
             errorMessage = error.localizedDescription
@@ -67,6 +77,7 @@ final class JarvisViewModel: ObservableObject {
 
     private func stopListeningAndHandle() {
         recognizer.stop()
+        audioLevel = 0
         let heard = transcript.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !heard.isEmpty else {
             state = .idle

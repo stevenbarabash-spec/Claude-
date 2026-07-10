@@ -22,6 +22,10 @@ A SwiftUI app (plus a widget, a share-sheet extension, and a custom keyboard) yo
 | "Hey Siri, ask Jarvis" / Action Button | Hands-free entry via App Intents ("Jarvis briefing" works too) |
 | Anything else | Claude answers, spoken aloud |
 
+The interface is a dark, futuristic **animated orb** — it breathes when idle, reacts to your voice level while listening, spins while processing, and ripples while speaking. Tap the orb to talk.
+
+**Jarvis's voice:** with a free [elevenlabs.io](https://elevenlabs.io) API key (Settings → Jarvis voice), Jarvis speaks with a deep cinematic British voice (ElevenLabs "Daniel"). Without one, it automatically picks the best British voice on your iPhone — download a premium one under Settings → Accessibility → Spoken Content → Voices → English (UK) for a big free upgrade.
+
 ## What iOS will never allow (so you don't chase it)
 
 - ❌ Always-listening "Hey Jarvis" wake word (Siri is the only wake word — use "Hey Siri, ask Jarvis" or map the **Action Button** to the Ask Jarvis shortcut)
