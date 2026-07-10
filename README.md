@@ -10,7 +10,7 @@ A SwiftUI app (plus a widget, a share-sheet extension, and a custom keyboard) yo
 | "Email Sarah about moving the meeting" | Claude drafts the full email, recipient resolved from **Contacts**, mail sheet pre-filled — or **actually sent via Gmail** if connected |
 | "Check my email" | **Gmail autopilot**: reads unread mail, triages it (urgent/work/newsletter…), drafts replies, sends them when you approve — one tap, really sent |
 | "Text Anna I'm running late" | Claude writes the message, number resolved from Contacts, iMessage sheet pre-filled |
-| "Play Daft Punk" | **Spotify** deep link, or native in-app **Apple Music** playback (pick in Settings) |
+| "Play Daft Punk" | Opens **Spotify** straight into the search results |
 | "Turn off the living room lights" / "movie night" | **HomeKit** — scenes and switches, no confirmation needed |
 | "Remind me to call the dentist at 3" | Local **notification** at 3:00 |
 | "Remind me to water the plants when I get home" | **Geofenced** reminder at your saved Home location |
@@ -35,7 +35,7 @@ Jarvis/            Main app
   Core/            View model, command router, Claude client, Keychain
   Speech/          Speech-to-text + text-to-speech
   Actions/         Spotify, mail/message sheets, notifications
-  Services/        Calendar, Contacts, Apple Music, HomeKit, Health, Gmail, Places
+  Services/        Calendar, Contacts, HomeKit, Health, Gmail, Places
   Views/           Inbox triage, Vision, Shared items
   Intents/         Siri App Intents
 JarvisWidget/      Lock/home-screen agenda widget
@@ -67,7 +67,7 @@ Then in Xcode:
 4. In the app: Settings gear → paste your **Claude API key** ([console.anthropic.com](https://console.anthropic.com)).
 5. Grant permissions as prompted (mic, speech, notifications; calendar/contacts/health/home/location are requested on first use of each feature).
 
-> **Free Apple ID note:** free "personal team" signing supports HealthKit, HomeKit, and App Groups, but builds expire after 7 days (re-run ⌘R). **Apple Music (MusicKit)** and push notifications need a paid developer account — leave music on Spotify otherwise. If signing complains about an entitlement, delete that entitlement from `project.yml`, regenerate, and that one feature degrades gracefully.
+> **Free Apple ID note:** free "personal team" signing supports HealthKit, HomeKit, and App Groups, but builds expire after 7 days (re-run ⌘R). Push notifications need a paid developer account. If signing complains about an entitlement, delete that entitlement from `project.yml`, regenerate, and that one feature degrades gracefully.
 
 ### Gmail autopilot setup (optional, ~5 minutes, free)
 
@@ -88,6 +88,6 @@ iPhone Settings → General → Keyboard → Keyboards → Add New Keyboard → 
 
 ## Notes
 
-- Everything runs on-device except calls to the Claude API (and Gmail/Apple Music APIs when you use them). Keys live in the Keychain; the keyboard uses opt-in app-group storage.
+- Everything runs on-device except calls to the Claude API (and the Gmail API when you use it). Keys live in the Keychain; the keyboard uses opt-in app-group storage.
 - The keyboard uses Haiku (fast/cheap) for reply suggestions; the app uses Sonnet — change models in `ClaudeService.swift` / `KeyboardViewController.swift`.
 - Not built here: a push-notification server for *proactive* alerts ("your 2pm was cancelled") — that requires a backend and a paid Apple developer account. Ask Jarvis's author (me) when you want it.

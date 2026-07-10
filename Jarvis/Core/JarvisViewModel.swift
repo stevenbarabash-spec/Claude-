@@ -142,19 +142,8 @@ final class JarvisViewModel: ObservableObject {
     // MARK: - Music
 
     private func playMusic(query: String) async {
-        let provider = UserDefaults.standard.string(forKey: "musicProvider") ?? "spotify"
-        if provider == "apple" {
-            do {
-                let confirmation = try await MusicController.play(query: query)
-                say(confirmation)
-            } catch {
-                say("Apple Music didn't work — trying Spotify. \(error.localizedDescription)")
-                SpotifyController.play(query: query)
-            }
-        } else {
-            say("Opening Spotify for \(query).")
-            SpotifyController.play(query: query)
-        }
+        say("Opening Spotify for \(query).")
+        SpotifyController.play(query: query)
     }
 
     // MARK: - Briefing

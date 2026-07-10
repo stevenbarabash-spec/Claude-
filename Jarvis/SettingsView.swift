@@ -7,7 +7,6 @@ struct SettingsView: View {
     @AppStorage("briefingEnabled") private var briefingEnabled = false
     @AppStorage("briefingHour") private var briefingHour = 8
     @AppStorage("briefingMinute") private var briefingMinute = 0
-    @AppStorage("musicProvider") private var musicProvider = "spotify"
     @AppStorage("keyboardShareKey") private var keyboardShareKey = false
 
     @State private var gmailClientID: String = GmailService.shared.clientID ?? ""
@@ -21,7 +20,6 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 claudeSection
-                musicSection
                 gmailSection
                 placesSection
                 briefingSection
@@ -51,19 +49,6 @@ struct SettingsView: View {
             Text("Claude API key")
         } footer: {
             Text("Stored in the iOS Keychain, only on this device. Get a key at console.anthropic.com.")
-        }
-    }
-
-    private var musicSection: some View {
-        Section {
-            Picker("Provider", selection: $musicProvider) {
-                Text("Spotify").tag("spotify")
-                Text("Apple Music").tag("apple")
-            }
-        } header: {
-            Text("Music")
-        } footer: {
-            Text("Spotify opens into search results. Apple Music plays songs natively inside Jarvis, but needs MusicKit enabled for your App ID (paid developer account).")
         }
     }
 

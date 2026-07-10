@@ -45,7 +45,6 @@ targets:
         NSHealthShareUsageDescription: Jarvis summarizes your sleep, workouts, and steps into a weekly digest.
         NSHomeKitUsageDescription: Jarvis controls your lights and scenes by voice.
         NSLocationWhenInUseUsageDescription: Jarvis uses saved places for location reminders like "when I get home".
-        NSAppleMusicUsageDescription: Jarvis plays songs on Apple Music by voice.
         LSApplicationQueriesSchemes: [spotify]
         CFBundleURLTypes:
           - CFBundleURLName: com.yourname.jarvis
