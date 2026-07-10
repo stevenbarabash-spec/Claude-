@@ -25,6 +25,7 @@ targets:
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        TARGETED_DEVICE_FAMILY: "1,2"
     entitlements:
       path: Jarvis/Jarvis.entitlements
       properties:
@@ -50,6 +51,11 @@ targets:
           - CFBundleURLName: com.yourname.jarvis
             CFBundleURLSchemes: [jarvis]
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
         UILaunchScreen: {}
 
   JarvisWidget:
@@ -59,6 +65,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.yourname.Jarvis.widget
+        TARGETED_DEVICE_FAMILY: "1,2"
     entitlements:
       path: JarvisWidget/JarvisWidget.entitlements
       properties:
@@ -78,6 +85,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.yourname.Jarvis.share
+        TARGETED_DEVICE_FAMILY: "1,2"
     entitlements:
       path: JarvisShare/JarvisShare.entitlements
       properties:
@@ -102,6 +110,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.yourname.Jarvis.keyboard
+        TARGETED_DEVICE_FAMILY: "1,2"
     entitlements:
       path: JarvisKeyboard/JarvisKeyboard.entitlements
       properties:
