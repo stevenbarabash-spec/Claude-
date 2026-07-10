@@ -174,6 +174,18 @@ final class JarvisViewModel: ObservableObject {
         case .chatAnswer:
             await chatAnswer()
 
+        case .remember(let fact):
+            await MemoryStore.shared.remember(fact)
+            say("Noted, sir. Committed to memory.")
+
+        case .delegateTask(let task):
+            do {
+                try await TaskDispatcher.dispatch(task)
+                say("Dispatched to headquarters, sir. It'll be picked up within the hour.")
+            } catch {
+                say(error.localizedDescription)
+            }
+
         case .playMusic(let query):
             await playMusic(query: query)
 
@@ -238,6 +250,7 @@ final class JarvisViewModel: ObservableObject {
             You have live web search — use it for news, current events, weather, sports, prices, or anything \
             time-sensitive, and mention when information is fresh from the web. \
             Today is \(Date().formatted(date: .complete, time: .shortened)).
+            \(MemoryStore.shared.contextBlock)
             \(JarvisKnowledge.scheduleContext)
             """
             let reply = try await claude.chat(system: system,
@@ -280,7 +293,7 @@ final class JarvisViewModel: ObservableObject {
             """
             let briefing = try await claude.complete(
                 system: system,
-                user: agenda + JarvisKnowledge.scheduleContext)
+                user: agenda + MemoryStore.shared.contextBlock + JarvisKnowledge.scheduleContext)
             say(briefing)
         } catch {
             say(agenda)

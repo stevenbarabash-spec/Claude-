@@ -11,6 +11,7 @@ struct SettingsView: View {
     @AppStorage("autoSend") private var autoSend = true
     @AppStorage(JarvisKnowledge.urlsKey) private var knowledgeURLs = ""
 
+    @State private var githubToken: String = KeychainHelper.read(MemoryStore.tokenKeychainKey) ?? ""
     @State private var elevenLabsKey: String = KeychainHelper.read(ElevenLabsService.keychainKey) ?? ""
     @AppStorage(ElevenLabsService.voiceIDDefaultsKey) private var elevenLabsVoiceID = ""
 
@@ -26,6 +27,7 @@ struct SettingsView: View {
             Form {
                 claudeSection
                 interactionSection
+                memorySection
                 knowledgeSection
                 voiceSection
                 gmailSection
@@ -67,6 +69,27 @@ struct SettingsView: View {
             Text("Voice interaction")
         } footer: {
             Text("With auto-send on, tap the orb once, speak, and Jarvis replies when you pause — no second tap. The ∞ Hands-free button on the main screen keeps the whole conversation going with no taps at all.")
+        }
+    }
+
+    private var memorySection: some View {
+        Section {
+            NavigationLink("View & edit memory") {
+                MemoryView()
+            }
+            SecureField("GitHub token for backup (optional)", text: $githubToken)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .font(.footnote)
+            if MemoryStore.shared.isSyncing {
+                Label("Backed up to a private GitHub Gist", systemImage: "checkmark.icloud")
+                    .font(.footnote)
+                    .foregroundStyle(.green)
+            }
+        } header: {
+            Text("Long-term memory")
+        } footer: {
+            Text("Say \"remember …\" and Jarvis stores it here, keeping it top of mind in every conversation. Memory works on-device out of the box. A GitHub token unlocks two extras: memory backup (survives reinstalls) and dispatching work to your Claude workspace (\"add X to my schedule tracker\"). Create one at github.com → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token, ticking the \"repo\" and \"gist\" scopes, and paste it here.")
         }
     }
 
@@ -212,6 +235,9 @@ struct SettingsView: View {
         KeychainHelper.save(trimmed, for: ClaudeService.keychainKey)
         KeychainHelper.save(elevenLabsKey.trimmingCharacters(in: .whitespacesAndNewlines),
                             for: ElevenLabsService.keychainKey)
+        KeychainHelper.save(githubToken.trimmingCharacters(in: .whitespacesAndNewlines),
+                            for: MemoryStore.tokenKeychainKey)
+        Task { await MemoryStore.shared.syncUp() }
         // Opt-in mirror for the keyboard extension (app-group storage).
         AppGroup.defaults.set(keyboardShareKey ? trimmed : nil,
                               forKey: AppGroup.keyboardAPIKeyKey)
@@ -223,6 +249,46 @@ struct SettingsView: View {
                     hour: briefingHour, minute: briefingMinute)
             } else {
                 NotificationManager.shared.cancelDailyBriefing()
+            }
+        }
+    }
+}
+
+/// Read and hand-edit everything Jarvis remembers.
+struct MemoryView: View {
+    @State private var text = MemoryStore.shared.memoryText
+    @State private var saved = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            if text.isEmpty {
+                ContentUnavailableView(
+                    "Nothing remembered yet",
+                    systemImage: "brain",
+                    description: Text("Say \"Jarvis, remember that…\" and it lands here.")
+                )
+            }
+            TextEditor(text: $text)
+                .font(.callout.monospaced())
+                .padding(8)
+                .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 12))
+            if saved {
+                Label("Saved", systemImage: "checkmark.circle.fill")
+                    .font(.footnote)
+                    .foregroundStyle(.green)
+            }
+        }
+        .padding()
+        .navigationTitle("Jarvis memory")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Save") {
+                    Task {
+                        await MemoryStore.shared.replaceMemory(with: text)
+                        saved = true
+                    }
+                }
             }
         }
     }

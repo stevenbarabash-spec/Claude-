@@ -17,6 +17,11 @@ enum JarvisAction {
     case speak(String)
     /// Free-form conversation — handled with chat history + live web search.
     case chatAnswer
+    /// Store a durable fact in long-term memory.
+    case remember(fact: String)
+    /// Send a work request to the user's Claude Code workspace (executed
+    /// within the hour by a scheduled session).
+    case delegateTask(task: String)
     case playMusic(query: String)
     case composeEmail(EmailDraft)
     case composeMessage(MessageDraft)
@@ -64,6 +69,8 @@ struct CommandRouter {
         let trigger: String?
         let command: String?
         let reply: String?
+        let memory: String?
+        let task: String?
     }
 
     private func claudeRoute(_ transcript: String) async throws -> JarvisAction {
@@ -73,6 +80,7 @@ struct CommandRouter {
         You are JARVIS: the user's personal AI — composed, precise, dryly witty, with the understated manner of an impeccable British butler. Address the user as "sir" occasionally (not every sentence). Never break character.
         You run on the user's iPhone. The current date-time is \(now) (device local time zone).
         The user's saved places are: [\(places)].
+        \(MemoryStore.shared.contextBlock)
         Classify the user's spoken command and respond with ONLY a JSON object, no prose, matching one of:
 
         {"action":"play_music","query":"<song, artist or playlist>"}
@@ -84,6 +92,8 @@ struct CommandRouter {
         {"action":"check_email"}  // "check my email", "any new emails", "triage my inbox"
         {"action":"home","command":"<the home command verbatim>"}  // lights, scenes, thermostat, smart home
         {"action":"health"}  // "how did I sleep", "health summary", "how active was I"
+        {"action":"remember","memory":"<the fact(s) distilled, short and factual, third person about the user>"}  // when the user shares a durable personal fact or says remember/note/store this — e.g. "my name is Steve", "remember that I built you"
+        {"action":"delegate","task":"<the full work request, verbatim plus any context needed to execute it>"}  // when the user asks for work in their Claude workspace/projects: updating the schedule tracker, Bytox social media posts, website edits, or any "go do this" request that no other action covers
         {"action":"answer","reply":"<a concise spoken-style answer in JARVIS's voice, 1-3 sentences>"}
 
         Rules: for email/message, write the full content yourself from the user's intent — no placeholders like [name].
@@ -132,6 +142,10 @@ struct CommandRouter {
             return .home(command: routed.command ?? transcript)
         case "health":
             return .healthDigest
+        case "remember":
+            return .remember(fact: routed.memory ?? transcript)
+        case "delegate":
+            return .delegateTask(task: routed.task ?? transcript)
         default:
             // Questions, chat, news — answered conversationally with history
             // and web search rather than the one-shot routing reply.
@@ -175,6 +189,14 @@ struct CommandRouter {
 
         if lower.contains("sleep") || lower.contains("health") || lower.contains("workout") {
             return .healthDigest
+        }
+
+        if lower.hasPrefix("remember ") || lower.contains("store this in memory") {
+            var fact = transcript
+            if let range = fact.range(of: "remember ", options: [.caseInsensitive, .anchored]) {
+                fact.removeSubrange(range)
+            }
+            return .remember(fact: fact.trimmingCharacters(in: .whitespaces))
         }
 
         if lower.hasPrefix("remind me") {

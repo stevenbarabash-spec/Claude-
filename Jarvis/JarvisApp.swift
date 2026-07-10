@@ -10,6 +10,7 @@ struct JarvisApp: App {
                 .environmentObject(viewModel)
                 .task {
                     await NotificationManager.shared.requestAuthorization()
+                    await MemoryStore.shared.syncDown()
                     await JarvisKnowledge.refreshIfStale()
                     // Keep the lock-screen widget's agenda fresh on every launch.
                     if await CalendarService.shared.requestAccess() {
