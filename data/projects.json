@@ -185,6 +185,10 @@
         {
           "date": "2026-06-09",
           "note": "Steven confirmed the actual current date is Thursday, Jun 9, 2026 (Florida, 11:36pm) — not Jul 10 as this system's clock had shown. Order-placement task reset to Jun 10 (tomorrow) per that. Note: several other dates in this project and others were set assuming Jul 2/3-10 as 'today' and may need re-checking against the real date once confirmed further."
+        },
+        {
+          "date": "2026-07-10",
+          "note": "All e-bike orders placed as of Jul 10 (confirms real date is Jul 10, not Jun 9). Marked complete. Next task: update orders with tracking, due Monday Jul 13."
         }
       ],
       "tasks": [
@@ -192,7 +196,8 @@
         { "title": "File Ohio state tax for the month of July", "done": true, "due": "2026-07-05" },
         { "title": "File Florida state tax for the month of August", "done": false, "due": "2026-08-05" },
         { "title": "File Ohio state tax for the month of August", "done": false, "due": "2026-08-05" },
-        { "title": "Place new e-bike orders", "done": false, "due": "2026-06-10" }
+        { "title": "Place new e-bike orders", "done": true, "due": "2026-07-10" },
+        { "title": "Update orders with tracking", "done": false, "due": "2026-07-13" }
       ]
     }
   ],
