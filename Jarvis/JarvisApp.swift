@@ -24,7 +24,7 @@ struct JarvisApp: App {
                           let query = components.queryItems?.first(where: { $0.name == "q" })?.value,
                           !query.isEmpty
                     else { return }
-                    Task { await viewModel.handle(transcript: query) }
+                    viewModel.submit(query)
                 }
         }
     }

@@ -93,7 +93,7 @@ struct ContentView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .jarvisAsk)) { note in
             guard let question = note.object as? String else { return }
-            Task { await viewModel.handle(transcript: question) }
+            viewModel.submit(question)
         }
     }
 
@@ -203,7 +203,7 @@ struct ContentView: View {
                 Image(systemName: "sparkles")
             }
             Button {
-                Task { await viewModel.handle(transcript: "check my email") }
+                viewModel.submit("check my email")
             } label: {
                 Image(systemName: "envelope")
             }

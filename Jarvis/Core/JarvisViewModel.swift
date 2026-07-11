@@ -52,6 +52,9 @@ final class JarvisViewModel: ObservableObject {
     /// token costs flat.
     private var chatHistory: [(role: String, content: String)] = []
 
+    /// The in-flight command, so a tap can interrupt mid-thought.
+    private var currentWork: Task<Void, Never>?
+
     var isListening: Bool { state == .listening }
 
     /// Auto-send after the user stops talking (Settings toggle, default on).
@@ -90,11 +93,26 @@ final class JarvisViewModel: ObservableObject {
         }
     }
 
+    /// Run a command, cancelling whatever was already in flight.
+    func submit(_ text: String) {
+        currentWork?.cancel()
+        currentWork = Task { await handle(transcript: text) }
+    }
+
+    /// Orb tap: start/stop listening — and interrupt Jarvis mid-speech or
+    /// mid-thought so he immediately listens instead.
     func toggleListening() {
-        guard state != .thinking else { return }
-        if isListening {
+        switch state {
+        case .listening:
             stopListeningAndHandle()
-        } else {
+        case .speaking:
+            synthesizer.stop()
+            startListening()
+        case .thinking:
+            currentWork?.cancel()
+            FX.shared.stopThinking()
+            startListening()
+        case .idle:
             startListening()
         }
     }
@@ -176,7 +194,7 @@ final class JarvisViewModel: ObservableObject {
             return
         }
         FX.shared.sendOff()
-        Task { await handle(transcript: heard) }
+        submit(heard)
     }
 
     /// Entry point for both spoken commands and Siri App Intent handoffs.
@@ -188,11 +206,16 @@ final class JarvisViewModel: ObservableObject {
             let action = try await router.route(transcript)
             try await perform(action, originalText: transcript)
         } catch {
+            if Self.isCancellation(error) { return }
             errorMessage = error.localizedDescription
             FX.shared.stopThinking()
             FX.shared.failure()
             say("Sorry, something went wrong. \(error.localizedDescription)")
         }
+    }
+
+    private static func isCancellation(_ error: Error) -> Bool {
+        error is CancellationError || (error as? URLError)?.code == .cancelled
     }
 
     private func perform(_ action: JarvisAction, originalText: String) async throws {
@@ -301,6 +324,7 @@ final class JarvisViewModel: ObservableObject {
             say(reply)
         } catch {
             chatHistory.removeLast()
+            if Self.isCancellation(error) { return }
             say("I couldn't reach Claude just now. \(error.localizedDescription)")
         }
     }
