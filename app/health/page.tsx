@@ -2,7 +2,7 @@
 // Health tab (guide §5.6): 30-day calorie log, averages over LOGGED days only.
 import { useEffect, useState } from "react";
 import { Panel } from "@/components/Panel";
-import { api } from "@/lib/client";
+import { api, fmt12 } from "@/lib/client";
 import { config } from "@/lib/config";
 import type { Meal } from "@/lib/types";
 
@@ -107,7 +107,7 @@ function RowGroup({
         d.meals.map((m) => (
           <tr key={m.id} style={{ background: "rgba(255,255,255,0.01)" }}>
             <td className="faint" style={{ paddingLeft: 28, fontFamily: "var(--sans)" }}>
-              {m.t} · {m.n}
+              {fmt12(m.t)} · {m.n}
             </td>
             <td className="faint">{m.kcal}</td>
             <td className="faint">{m.p}</td>

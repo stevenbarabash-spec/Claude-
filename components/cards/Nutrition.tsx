@@ -3,7 +3,7 @@
 // coupling — edit a macro and kcal recomputes (4p+4c+9f); edit kcal and the AI
 // redistributes macros for that food.
 import { useEffect, useRef, useState } from "react";
-import { api, clientDateKey, debounce } from "@/lib/client";
+import { api, clientDateKey, debounce, fmt12 } from "@/lib/client";
 import { config } from "@/lib/config";
 import type { Meal } from "@/lib/types";
 import { Panel } from "../Panel";
@@ -149,7 +149,7 @@ export function Nutrition() {
         {cutoffLeft && (
           <div style={{ textAlign: "right" }}>
             <span className="chip warm">cutoff in {cutoffLeft}</span>
-            <div className="label" style={{ marginTop: 4 }}>cutoff · {n.cutoff}</div>
+            <div className="label" style={{ marginTop: 4 }}>cutoff · {fmt12(n.cutoff)}</div>
           </div>
         )}
       </div>
@@ -182,7 +182,7 @@ export function Nutrition() {
               onClick={() => setEditing(editing === m.id ? null : m.id)}
             >
               <div className="row" style={{ gap: 8 }}>
-                <span className="num faint" style={{ fontSize: 11 }}>{m.t}</span>
+                <span className="num faint" style={{ fontSize: 11 }}>{fmt12(m.t)}</span>
                 <span style={{ fontSize: 13 }}>{m.n}</span>
               </div>
               <div className="num" style={{ fontSize: 12 }}>

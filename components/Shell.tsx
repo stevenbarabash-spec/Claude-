@@ -54,7 +54,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
               : ""}
           </span>
           <span suppressHydrationWarning className="num">
-            {now ? now.toTimeString().slice(0, 8) : "--:--:--"}
+            {now
+              ? now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", second: "2-digit" })
+              : "--:--"}
           </span>
           <span className="rail-avatar">
             {config.owner.avatar ? (

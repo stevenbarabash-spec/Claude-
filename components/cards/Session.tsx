@@ -73,8 +73,11 @@ export function Session() {
         </div>
         <div style={{ textAlign: "right" }}>
           <div className="num" style={{ fontSize: 32, fontWeight: 500 }} suppressHydrationWarning>
-            {now ? now.toTimeString().slice(0, 5) : "--:--"}
-            <span className="faint" style={{ fontSize: 15 }}>{now ? now.toTimeString().slice(5, 8) : ""}</span>
+            {now ? now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }).replace(/ (AM|PM)/, "") : "--:--"}
+            <span className="faint" style={{ fontSize: 15 }}>
+              {" "}
+              {now ? (now.getHours() >= 12 ? "PM" : "AM") : ""}
+            </span>
           </div>
           <div className="label">Local time</div>
         </div>

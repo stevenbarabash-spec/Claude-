@@ -24,10 +24,10 @@ export const config = {
     { id: "plan-tomorrow", label: "Plan tomorrow", category: "System" },
   ],
   nutrition: {
-    kcalTarget: 2800,
-    proteinTarget: 180,
-    carbsTarget: 300,
-    fatTarget: 80,
+    kcalTarget: 2000,
+    proteinTarget: 150, // 600 kcal
+    carbsTarget: 200, // 800 kcal
+    fatTarget: 65, // ~585 kcal
     cutoff: "17:00", // eating cutoff shown as a countdown on the card
   },
 };

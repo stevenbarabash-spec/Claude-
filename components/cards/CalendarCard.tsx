@@ -1,7 +1,7 @@
 "use client";
 // Calendar card (guide §5.2): 7-day strip, click a day to view its events.
 import { useEffect, useState } from "react";
-import { api, clientDateKey } from "@/lib/client";
+import { api, clientDateKey, fmtTime12 } from "@/lib/client";
 import type { CalendarEvent } from "@/lib/types";
 import { Panel } from "../Panel";
 
@@ -79,8 +79,8 @@ export function CalendarCard() {
           const end = new Date(e.end);
           return (
             <div key={e.id} className="row" style={{ padding: "9px 0", borderBottom: "1px solid var(--border-soft)", alignItems: "flex-start" }}>
-              <div className="num faint" style={{ fontSize: 11.5, width: 78, flexShrink: 0, lineHeight: 1.5 }}>
-                {e.allDay ? "ALL DAY" : `${start.toTimeString().slice(0, 5)} —\n${end.toTimeString().slice(0, 5)}`}
+              <div className="num faint" style={{ fontSize: 11.5, width: 84, flexShrink: 0, lineHeight: 1.5 }}>
+                {e.allDay ? "ALL DAY" : `${fmtTime12(start)} —\n${fmtTime12(end)}`}
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 13.5 }}>{e.title}</div>
