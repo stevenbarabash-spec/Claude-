@@ -1,51 +1,67 @@
 import SwiftUI
+import UIKit
 
-/// Blue "digital rain" — columns of glyphs falling continuously behind the
-/// orb. Pure Canvas drawing, deterministic per-column randomness (no stored
-/// state), throttled to 24fps to stay easy on the battery.
+/// Blue "digital rain" — dense columns of glyphs falling continuously.
+///
+/// Performance: glyphs are pre-rendered to images ONCE (text layout is the
+/// expensive part), then the Canvas just blits images each frame at 24fps.
 struct MatrixRainView: View {
 
-    /// Overall strength of the effect; the home screen passes something
-    /// subtle so the orb stays the hero.
+    /// Overall strength of the effect.
     var intensity: Double = 0.4
 
-    private static let glyphs = Array("アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ0123456789Z$#*+=<>")
+    private static let glyphs: [Character] = Array("アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789Z$#*+<>=")
+    private static let cell: CGFloat = 13
+
+    // Pre-rendered glyph images: bright heads and blue tails.
+    private static let tailImages: [Image] = glyphs.map {
+        renderGlyph(String($0), color: UIColor(red: 0.25, green: 0.62, blue: 1.0, alpha: 1))
+    }
+    private static let headImages: [Image] = glyphs.map {
+        renderGlyph(String($0), color: UIColor(red: 0.85, green: 1.0, blue: 1.0, alpha: 1))
+    }
+
+    private static func renderGlyph(_ glyph: String, color: UIColor) -> Image {
+        let size = CGSize(width: 13, height: 16)
+        let rendered = UIGraphicsImageRenderer(size: size).image { _ in
+            (glyph as NSString).draw(
+                at: .zero,
+                withAttributes: [
+                    .font: UIFont.monospacedSystemFont(ofSize: 12, weight: .semibold),
+                    .foregroundColor: color,
+                ])
+        }
+        return Image(uiImage: rendered)
+    }
 
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 24.0)) { timeline in
             Canvas { context, size in
                 let t = timeline.date.timeIntervalSinceReferenceDate
-                let cell: CGFloat = 16
-                let columns = Int(size.width / cell) + 1
+                let columns = Int(size.width / Self.cell) + 1
 
                 for column in 0..<columns {
                     let seed = Double(column) * 12.9898
-                    let speed = 55 + 95 * Self.fract(sin(seed) * 43758.5453)
-                    let trail = 10 + Int(12 * Self.fract(sin(seed * 1.7) * 9631.42))
-                    let loop = size.height + CGFloat(trail) * cell
+                    let speed = 70 + 120 * Self.fract(sin(seed) * 43758.5453)
+                    let trail = 12 + Int(14 * Self.fract(sin(seed * 1.7) * 9631.42))
+                    let loop = Double(size.height) + Double(trail) * Double(Self.cell)
                     let headY = CGFloat(
                         (t * speed + Double(column) * 53.7).truncatingRemainder(dividingBy: loop)
                     )
 
                     for i in 0..<trail {
-                        let y = headY - CGFloat(i) * cell
-                        guard y > -cell, y < size.height + cell else { continue }
+                        let y = headY - CGFloat(i) * Self.cell
+                        guard y > -Self.cell, y < size.height + Self.cell else { continue }
 
-                        // Glyphs mutate a few times per second, like the movie.
-                        let flicker = floor(t * 7) + Double(i * 31 + column * 17)
-                        let pick = Self.fract(sin(flicker) * 4375.85)
-                        let glyph = Self.glyphs[Int(pick * Double(Self.glyphs.count - 1))]
+                        // Glyphs mutate a few times per second.
+                        let flicker = floor(t * 3) + Double(i * 31 + column * 17)
+                        let index = Int(Self.fract(sin(flicker) * 4375.85) * Double(Self.glyphs.count - 1))
 
                         let fade = 1 - Double(i) / Double(trail)
-                        let color: Color = i == 0
-                            ? Color(red: 0.8, green: 1.0, blue: 1.0).opacity(0.95)
-                            : Color(red: 0.15, green: 0.6, blue: 1.0).opacity(fade * 0.55)
-
+                        context.opacity = i == 0 ? 0.95 : fade * 0.6
                         context.draw(
-                            Text(String(glyph))
-                                .font(.system(size: 12, weight: .semibold, design: .monospaced))
-                                .foregroundColor(color),
-                            at: CGPoint(x: CGFloat(column) * cell + cell / 2, y: y)
+                            i == 0 ? Self.headImages[index] : Self.tailImages[index],
+                            at: CGPoint(x: CGFloat(column) * Self.cell + Self.cell / 2, y: y)
                         )
                     }
                 }

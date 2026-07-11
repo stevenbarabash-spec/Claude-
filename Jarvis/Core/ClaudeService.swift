@@ -55,7 +55,15 @@ struct ClaudeService {
               history: [(role: String, content: String)],
               enableWebSearch: Bool = false,
               maxTokens: Int = 1024) async throws -> String {
-        let messages = history.map { ["role": $0.role, "content": $0.content] }
+        // The API rejects empty messages and requires the history to start
+        // with a user turn — sanitize so a stray entry can't poison the chat.
+        var cleaned = history.filter {
+            !$0.content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }
+        while cleaned.first?.role == "assistant" {
+            cleaned.removeFirst()
+        }
+        let messages = cleaned.map { ["role": $0.role, "content": $0.content] }
         var extras: [String: Any] = [:]
         if enableWebSearch {
             extras["tools"] = [

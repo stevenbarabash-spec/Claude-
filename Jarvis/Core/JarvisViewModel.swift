@@ -116,9 +116,13 @@ final class JarvisViewModel: ObservableObject {
                     }
                 },
                 onLevel: { [weak self] level in
-                    // Light smoothing so the orb feels organic, not jittery.
+                    // Smooth, and only publish meaningful changes — tiny deltas
+                    // at 40Hz just burn the GPU re-rendering the whole screen.
                     guard let self else { return }
-                    self.audioLevel = self.audioLevel * 0.7 + level * 0.3
+                    let smoothed = self.audioLevel * 0.7 + level * 0.3
+                    if abs(smoothed - self.audioLevel) > 0.02 {
+                        self.audioLevel = smoothed
+                    }
                 }
             )
             state = .listening
@@ -182,7 +186,7 @@ final class JarvisViewModel: ObservableObject {
         FX.shared.startThinking()
         do {
             let action = try await router.route(transcript)
-            try await perform(action)
+            try await perform(action, originalText: transcript)
         } catch {
             errorMessage = error.localizedDescription
             FX.shared.stopThinking()
@@ -191,13 +195,13 @@ final class JarvisViewModel: ObservableObject {
         }
     }
 
-    private func perform(_ action: JarvisAction) async throws {
+    private func perform(_ action: JarvisAction, originalText: String) async throws {
         switch action {
         case .speak(let text):
             say(text)
 
         case .chatAnswer:
-            await chatAnswer()
+            await chatAnswer(question: originalText)
 
         case .remember(let fact):
             await MemoryStore.shared.remember(fact)
@@ -267,8 +271,13 @@ final class JarvisViewModel: ObservableObject {
 
     /// Free-form chat with memory and live web search — Jarvis's direct line
     /// to Claude, including news and current events.
-    private func chatAnswer() async {
-        chatHistory.append((role: "user", content: transcript))
+    private func chatAnswer(question: String) async {
+        let question = question.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !question.isEmpty else {
+            state = .idle
+            return
+        }
+        chatHistory.append((role: "user", content: question))
         if chatHistory.count > 24 {
             chatHistory.removeFirst(chatHistory.count - 24)
         }

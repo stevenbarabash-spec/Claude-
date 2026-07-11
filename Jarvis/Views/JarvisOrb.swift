@@ -1,8 +1,11 @@
 import SwiftUI
 
-/// The Jarvis orb — a futuristic animated core that reflects what Jarvis is
-/// doing: breathing when idle, reacting to your voice level while listening,
-/// spinning while thinking, and rippling while speaking.
+/// The Jarvis arc reactor — a hollow, luminous core (no solid ball) with
+/// rotating arcs, spokes, and orbiting sparks.
+///
+/// Performance: no per-frame blurs or shadows (those killed the GPU in v1);
+/// glow comes from pre-computed radial gradients, the whole stack is
+/// flattened with drawingGroup(), and updates are capped at 30fps.
 struct JarvisOrb: View {
 
     let state: JarvisViewModel.State
@@ -10,28 +13,26 @@ struct JarvisOrb: View {
     let audioLevel: CGFloat
 
     var body: some View {
-        TimelineView(.animation) { timeline in
-            let t = timeline.date.timeIntervalSinceReferenceDate
-            orb(time: t)
+        TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { timeline in
+            orb(time: timeline.date.timeIntervalSinceReferenceDate)
         }
     }
 
     @ViewBuilder
     private func orb(time t: TimeInterval) -> some View {
-        let breathe = 0.04 * sin(t * 1.6)
+        let breathe = 0.03 * sin(t * 1.6)
         let speakPulse = state == .speaking ? 0.05 * sin(t * 9) : 0
-        let voiceBoost = state == .listening ? audioLevel * 0.22 : 0
+        let voiceBoost = state == .listening ? audioLevel * 0.2 : 0
         let coreScale = 1.0 + breathe + speakPulse + voiceBoost
 
         ZStack {
-            // Ambient glow.
+            // Ambient halo — a soft gradient, no blur needed.
             Circle()
                 .fill(
-                    RadialGradient(colors: [accent.opacity(0.55), accent.opacity(0.12), .clear],
-                                   center: .center, startRadius: 10, endRadius: 150)
+                    RadialGradient(colors: [accent.opacity(0.35), accent.opacity(0.08), .clear],
+                                   center: .center, startRadius: 30, endRadius: 135)
                 )
-                .scaleEffect(coreScale * 1.25)
-                .blur(radius: 18)
+                .scaleEffect(coreScale * 1.15)
 
             // Outer HUD tick ring, drifting slowly.
             Circle()
@@ -62,7 +63,7 @@ struct JarvisOrb: View {
                 .padding(34)
                 .rotationEffect(.radians(-t * (primarySpeed * 0.7)))
 
-            // Speaking / listening ripples expanding outward.
+            // Ripples while speaking or listening.
             if state == .speaking || state == .listening {
                 ForEach(0..<2, id: \.self) { index in
                     let phase = ((t * 0.55) + Double(index) * 0.5)
@@ -74,30 +75,49 @@ struct JarvisOrb: View {
                 }
             }
 
-            // Core.
+            // Reactor rim — bright ring around a translucent core.
             Circle()
-                .fill(
-                    RadialGradient(colors: [.white,
-                                            accent.opacity(0.9),
-                                            secondary.opacity(0.75),
-                                            Color(red: 0.02, green: 0.05, blue: 0.12)],
-                                   center: UnitPoint(x: 0.42, y: 0.38),
-                                   startRadius: 2, endRadius: 74)
+                .strokeBorder(
+                    AngularGradient(colors: [accent, .white.opacity(0.9), accent, secondary, accent],
+                                    center: .center),
+                    lineWidth: 4
                 )
-                .padding(52)
+                .padding(58)
                 .scaleEffect(coreScale)
-                .shadow(color: accent.opacity(0.8), radius: 22)
 
-            // Specular sheen sweeping the core.
+            // Hollow energy center — see-through, not a solid ball.
             Circle()
                 .fill(
-                    AngularGradient(colors: [.clear, .white.opacity(0.28), .clear, .clear],
-                                    center: .center)
+                    RadialGradient(colors: [.white.opacity(0.55),
+                                            accent.opacity(0.35),
+                                            accent.opacity(0.1),
+                                            .clear],
+                                   center: .center, startRadius: 2, endRadius: 78)
                 )
-                .padding(52)
-                .rotationEffect(.radians(t * 0.9))
-                .blendMode(.plusLighter)
+                .padding(62)
+                .scaleEffect(coreScale)
+
+            // Rotating inner spokes.
+            ForEach(0..<3, id: \.self) { k in
+                Circle()
+                    .trim(from: 0, to: 0.1)
+                    .stroke(accent.opacity(0.85),
+                            style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
+                    .padding(76)
+                    .rotationEffect(.radians(t * 1.3 + Double(k) * (2 * .pi / 3)))
+            }
+
+            // Orbiting sparks.
+            ForEach(0..<3, id: \.self) { k in
+                let angle = t * (0.9 + 0.3 * Double(k)) + Double(k) * 2.1
+                Circle()
+                    .fill(k == 0 ? Color.white : accent)
+                    .frame(width: 5, height: 5)
+                    .offset(x: cos(angle) * 96, y: sin(angle) * 96)
+                    .opacity(0.9)
+            }
         }
+        .drawingGroup()
         .animation(.easeInOut(duration: 0.35), value: state)
     }
 
@@ -137,6 +157,6 @@ struct JarvisOrb: View {
     ZStack {
         Color.black.ignoresSafeArea()
         JarvisOrb(state: .idle, audioLevel: 0)
-            .frame(width: 260, height: 260)
+            .frame(width: 270, height: 270)
     }
 }
