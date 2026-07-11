@@ -38,6 +38,7 @@ export interface Store {
 
   listIncome(months: number): Promise<IncomeEntry[]>;
   addIncome(e: Omit<IncomeEntry, "id" | "created_at">): Promise<IncomeEntry>;
+  updateIncome(id: string, patch: Partial<IncomeEntry>): Promise<IncomeEntry | null>;
   deleteIncome(id: string): Promise<void>;
 
   listReceivables(includePaid?: boolean): Promise<Receivable[]>;

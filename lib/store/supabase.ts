@@ -236,6 +236,18 @@ export class SupabaseStore implements Store {
     return data as IncomeEntry;
   }
 
+  async updateIncome(id: string, patch: Partial<IncomeEntry>): Promise<IncomeEntry | null> {
+    const { data, error } = await this.sb
+      .from("income_entries")
+      .update(patch)
+      .eq("id", id)
+      .eq("user_id", USER_ID)
+      .select()
+      .maybeSingle();
+    if (error) throw error;
+    return (data as IncomeEntry) ?? null;
+  }
+
   async deleteIncome(id: string): Promise<void> {
     await this.sb.from("income_entries").delete().eq("id", id).eq("user_id", USER_ID);
   }

@@ -245,6 +245,15 @@ export class LocalStore implements Store {
     return entry;
   }
 
+  async updateIncome(id: string, patch: Partial<IncomeEntry>): Promise<IncomeEntry | null> {
+    const db = load();
+    const e = db.income.find((x) => x.id === id);
+    if (!e) return null;
+    Object.assign(e, patch, { id: e.id });
+    persist();
+    return e;
+  }
+
   async deleteIncome(id: string): Promise<void> {
     const db = load();
     db.income = db.income.filter((e) => e.id !== id);

@@ -98,6 +98,17 @@ export interface DailyNotes {
   goals?: { week: GoalItem[]; month: GoalItem[] }; // only on sentinel date
   review?: WeeklyReview; // only on week-anchor (Monday) dates
   briefing?: { text: string; generated_at: string };
+  pending_command?: PendingCommand | null; // only on sentinel date — awaiting "confirm"
+}
+
+// A destructive change Jarvis has proposed but not yet executed.
+export interface PendingCommand {
+  action: "delete" | "update" | "mark_paid";
+  target: "receivable" | "income";
+  id: string;
+  patch?: Record<string, unknown>;
+  description: string;
+  expires_at: string;
 }
 
 export interface DailyLog {

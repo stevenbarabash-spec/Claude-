@@ -8,6 +8,14 @@ import { embed } from "@/lib/ai/embed";
 import { aiAvailable, llmJson, llmText } from "@/lib/ai/llm";
 import { config } from "@/lib/config";
 import { localDateKey } from "@/lib/dates";
+import {
+  clearPendingCommand,
+  executePendingCommand,
+  getPendingCommand,
+  isCancellation,
+  isConfirmation,
+  proposeCommand,
+} from "@/lib/jarvis/commands";
 import { runCapturePipeline } from "@/lib/pipeline";
 import { getStore } from "@/lib/store";
 
@@ -16,13 +24,15 @@ interface ChatMessage {
   content: string;
 }
 
-async function detectIntent(text: string): Promise<"capture" | "ask" | "chat"> {
+async function detectIntent(text: string): Promise<"capture" | "ask" | "chat" | "command"> {
   if (!aiAvailable()) {
+    if (/\b(delete|remove|change|update|edit|correct|mark .{0,20}paid|push .{0,20}date)\b/i.test(text)) return "command";
     return text.trim().endsWith("?") ? "ask" : "capture";
   }
-  const result = await llmJson<{ intent: "capture" | "ask" | "chat" }>(
+  const result = await llmJson<{ intent: "capture" | "ask" | "chat" | "command" }>(
     `Classify the user's message for a personal-OS assistant. Return {"intent": ...}:
-- "capture": a to-do, reminder, meal eaten, idea, decision, or journal entry to be FILED (statements about things to do or that happened)
+- "capture": a NEW to-do, reminder, meal eaten, money owed/received, idea, decision, or journal entry to be FILED (statements about things to do or that happened)
+- "command": modify, correct, or delete an EXISTING record — e.g. "delete the Meridian receivable", "change Acme's invoice to $5k", "mark the Relay invoice paid", "push the due date to next month", "actually remove that"
 - "ask": a question about the user's own data, history, tasks, or past captures
 - "chat": general conversation, greetings, requests for advice/summaries`,
     text,
@@ -84,8 +94,23 @@ export async function POST(req: Request) {
   if (!last?.content) return NextResponse.json({ error: "message required" }, { status: 400 });
   const text = last.content.trim();
 
+  // A pending destructive command takes priority: "confirm" executes, "cancel"
+  // (or any other message) clears it so a stale yes can never fire later.
+  const pending = await getPendingCommand();
+  if (pending) {
+    if (isConfirmation(text)) {
+      const reply = await executePendingCommand();
+      return NextResponse.json({ reply, action: { type: "command_executed" } });
+    }
+    await clearPendingCommand();
+    if (isCancellation(text)) {
+      return NextResponse.json({ reply: "Cancelled — nothing was changed.", action: { type: "command_cancelled" } });
+    }
+    // fall through: treat as a fresh message
+  }
+
   // Explicit prefixes let the user force a mode: "capture: ..." / "ask: ..."
-  let intent: "capture" | "ask" | "chat";
+  let intent: "capture" | "ask" | "chat" | "command";
   let payload = text;
   if (/^capture[:,]/i.test(text)) {
     intent = "capture";
@@ -95,6 +120,11 @@ export async function POST(req: Request) {
     payload = text.replace(/^ask[:,]\s*/i, "");
   } else {
     intent = await detectIntent(text);
+  }
+
+  if (intent === "command") {
+    const { reply, proposed } = await proposeCommand(payload);
+    return NextResponse.json({ reply, action: { type: proposed ? "command_proposed" : "command_failed" } });
   }
 
   if (intent === "capture") {

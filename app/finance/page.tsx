@@ -121,6 +121,31 @@ export default function FinancePage() {
 function ProjectsPanel({ projects, onChange }: { projects: ProjectRollup[]; onChange: () => void }) {
   const [form, setForm] = useState({ name: "", client: "", kind: "fixed", value: "" });
   const [adding, setAdding] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [edit, setEdit] = useState({ name: "", client: "", kind: "fixed", value: "" });
+
+  function openEditor(p: ProjectRollup) {
+    if (editingId === p.id) {
+      setEditingId(null);
+      return;
+    }
+    setEditingId(p.id);
+    setEdit({ name: p.name, client: p.client ?? "", kind: p.kind, value: String(p.value) });
+  }
+
+  async function saveEdit(id: string) {
+    await api(`/api/projects/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        name: edit.name.trim() || "Untitled",
+        client: edit.client.trim() || null,
+        kind: edit.kind,
+        value: Number(edit.value) || 0,
+      }),
+    });
+    setEditingId(null);
+    onChange();
+  }
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
@@ -172,29 +197,61 @@ function ProjectsPanel({ projects, onChange }: { projects: ProjectRollup[]; onCh
       )}
       <div className="stack">
         {active.map((p) => (
-          <div key={p.id} className="spread" style={{ padding: "10px 0", borderBottom: "1px solid var(--border-soft)", alignItems: "flex-start" }}>
-            <div>
-              <div style={{ fontSize: 13.5 }}>{p.name}</div>
-              <div className="faint" style={{ fontSize: 11, marginTop: 3, fontFamily: "var(--mono)" }}>
-                {(p.client ?? "—").toUpperCase()} · {p.kind === "retainer" ? `${fmtMoney(p.value)}/MO` : p.kind === "hourly" ? `${fmtMoney(p.value)}/HR` : fmtMoney(p.value)}
+          <div key={p.id} style={{ borderBottom: "1px solid var(--border-soft)" }}>
+            <div className="spread" style={{ padding: "10px 0", alignItems: "flex-start" }}>
+              <div style={{ cursor: "pointer" }} onClick={() => openEditor(p)} title="Click to edit">
+                <div style={{ fontSize: 13.5 }}>{p.name}</div>
+                <div className="faint" style={{ fontSize: 11, marginTop: 3, fontFamily: "var(--mono)" }}>
+                  {(p.client ?? "—").toUpperCase()} · {p.kind === "retainer" ? `${fmtMoney(p.value)}/MO` : p.kind === "hourly" ? `${fmtMoney(p.value)}/HR` : fmtMoney(p.value)} · CLICK TO EDIT
+                </div>
+                <div className="faint" style={{ fontSize: 10.5, marginTop: 3, fontFamily: "var(--mono)" }}>
+                  <span className="accent">{fmtMoney(p.received)} in</span>
+                  {p.owed > 0 && <> · <span style={{ color: "var(--warm)" }}>{fmtMoney(p.owed)} owed</span></>}
+                </div>
               </div>
-              <div className="faint" style={{ fontSize: 10.5, marginTop: 3, fontFamily: "var(--mono)" }}>
-                <span className="accent">{fmtMoney(p.received)} in</span>
-                {p.owed > 0 && <> · <span style={{ color: "var(--warm)" }}>{fmtMoney(p.owed)} owed</span></>}
+              <div className="stack" style={{ gap: 5, alignItems: "flex-end" }}>
+                <span className={`chip ${p.status === "active" ? "ok" : "warm"}`}>{p.status}</span>
+                <div className="row" style={{ gap: 4 }}>
+                  {p.status === "active" ? (
+                    <button className="btn small" onClick={() => setStatus(p.id, "paused")}>pause</button>
+                  ) : (
+                    <button className="btn small" onClick={() => setStatus(p.id, "active")}>resume</button>
+                  )}
+                  <button className="btn small" onClick={() => setStatus(p.id, "done")}>done</button>
+                  <button className="btn small" style={{ color: "var(--hot)" }} onClick={() => remove(p.id, p.name)}>✕</button>
+                </div>
               </div>
             </div>
-            <div className="stack" style={{ gap: 5, alignItems: "flex-end" }}>
-              <span className={`chip ${p.status === "active" ? "ok" : "warm"}`}>{p.status}</span>
-              <div className="row" style={{ gap: 4 }}>
-                {p.status === "active" ? (
-                  <button className="btn small" onClick={() => setStatus(p.id, "paused")}>pause</button>
-                ) : (
-                  <button className="btn small" onClick={() => setStatus(p.id, "active")}>resume</button>
-                )}
-                <button className="btn small" onClick={() => setStatus(p.id, "done")}>done</button>
-                <button className="btn small" style={{ color: "var(--hot)" }} onClick={() => remove(p.id, p.name)}>✕</button>
+            {editingId === p.id && (
+              <div className="stack" style={{ padding: "0 0 12px 2px" }}>
+                <div className="grid-2">
+                  <label>
+                    <span className="label" style={{ fontSize: 8.5 }}>Project name</span>
+                    <input className="input" value={edit.name} onChange={(e) => setEdit({ ...edit, name: e.target.value })} />
+                  </label>
+                  <label>
+                    <span className="label" style={{ fontSize: 8.5 }}>Client</span>
+                    <input className="input" value={edit.client} onChange={(e) => setEdit({ ...edit, client: e.target.value })} />
+                  </label>
+                  <label>
+                    <span className="label" style={{ fontSize: 8.5 }}>Type</span>
+                    <select className="input" value={edit.kind} onChange={(e) => setEdit({ ...edit, kind: e.target.value })}>
+                      <option value="fixed">Fixed price (total)</option>
+                      <option value="retainer">Retainer (per month)</option>
+                      <option value="hourly">Hourly (rate)</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span className="label" style={{ fontSize: 8.5 }}>Value ($)</span>
+                    <input className="input num" type="number" value={edit.value} onChange={(e) => setEdit({ ...edit, value: e.target.value })} />
+                  </label>
+                </div>
+                <div className="row">
+                  <button className="btn primary" onClick={() => saveEdit(p.id)}>Save</button>
+                  <button className="btn" onClick={() => setEditingId(null)}>Cancel</button>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         ))}
         {active.length === 0 && <div className="faint" style={{ fontSize: 13 }}>No active projects.</div>}
@@ -426,6 +483,8 @@ function IncomePanel({
   const [form, setForm] = useState({ source: "", amount: "", date: "" });
   const [adding, setAdding] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [edit, setEdit] = useState({ source: "", amount: "", date: "" });
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
@@ -452,6 +511,43 @@ function IncomePanel({
     if (!confirm(`Delete ${selected.size} payment${selected.size === 1 ? "" : "s"} from the log? This can't be undone.`)) return;
     await Promise.all([...selected].map((id) => api(`/api/income/${id}`, { method: "DELETE" })));
     setSelected(new Set());
+    onChange();
+  }
+
+  function openEditor(e: IncomeEntry) {
+    if (editingId === e.id) {
+      setEditingId(null);
+      return;
+    }
+    setEditingId(e.id);
+    setEdit({ source: e.source, amount: String(e.amount), date: e.date });
+  }
+
+  async function saveEdit(id: string) {
+    await api(`/api/income/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ source: edit.source.trim() || "Unknown", amount: Number(edit.amount) || 0, date: edit.date }),
+    });
+    setEditingId(null);
+    onChange();
+  }
+
+  async function deleteOne(id: string) {
+    if (!confirm("Delete this payment from the log? This can't be undone.")) return;
+    await api(`/api/income/${id}`, { method: "DELETE" });
+    setEditingId(null);
+    onChange();
+  }
+
+  // "Slide it back to owed": received → receivable (undo a payment).
+  async function moveToOwed(e: IncomeEntry) {
+    if (!confirm(`Move "${e.source}" (${fmtMoney(e.amount)}) back to Owed to you? It will leave the income log.`)) return;
+    await api("/api/receivables", {
+      method: "POST",
+      body: JSON.stringify({ client: e.source, amount: e.amount, project_id: e.project_id, status: "invoiced" }),
+    });
+    await api(`/api/income/${e.id}`, { method: "DELETE" });
+    setEditingId(null);
     onChange();
   }
 
@@ -482,19 +578,50 @@ function IncomePanel({
         <div className="stack">
           <div className="label" style={{ marginBottom: 2 }}>This month</div>
           {income.map((e) => (
-            <div key={e.id} className="spread" style={{ padding: "7px 0", borderBottom: "1px solid var(--border-soft)" }}>
-              <div className="row" style={{ gap: 8 }}>
-                <input
-                  type="checkbox"
-                  checked={selected.has(e.id)}
-                  onChange={() => toggleSelect(e.id)}
-                  style={{ accentColor: "var(--accent)", cursor: "pointer" }}
-                />
-                <span className="num faint" style={{ fontSize: 11 }}>{e.date.slice(5)}</span>
-                <span style={{ fontSize: 13 }}>{e.source}</span>
-                <span className="chip">{e.kind}</span>
+            <div key={e.id} style={{ borderBottom: "1px solid var(--border-soft)" }}>
+              <div className="spread" style={{ padding: "7px 0" }}>
+                <div className="row" style={{ gap: 8 }}>
+                  <input
+                    type="checkbox"
+                    checked={selected.has(e.id)}
+                    onChange={() => toggleSelect(e.id)}
+                    style={{ accentColor: "var(--accent)", cursor: "pointer" }}
+                  />
+                  <span className="num faint" style={{ fontSize: 11 }}>{e.date.slice(5)}</span>
+                  <span style={{ fontSize: 13, cursor: "pointer" }} onClick={() => openEditor(e)} title="Click to edit">
+                    {e.source}
+                  </span>
+                  <span className="chip">{e.kind}</span>
+                </div>
+                <span className="num accent" style={{ fontSize: 13.5, cursor: "pointer" }} onClick={() => openEditor(e)}>
+                  +{fmtMoney(e.amount)}
+                </span>
               </div>
-              <span className="num accent" style={{ fontSize: 13.5 }}>+{fmtMoney(e.amount)}</span>
+              {editingId === e.id && (
+                <div className="stack" style={{ padding: "0 0 10px 24px" }}>
+                  <div className="row">
+                    <label style={{ flex: 2 }}>
+                      <span className="label" style={{ fontSize: 8.5 }}>From</span>
+                      <input className="input" value={edit.source} onChange={(ev) => setEdit({ ...edit, source: ev.target.value })} />
+                    </label>
+                    <label style={{ flex: 1 }}>
+                      <span className="label" style={{ fontSize: 8.5 }}>Amount ($)</span>
+                      <input className="input num" type="number" value={edit.amount} onChange={(ev) => setEdit({ ...edit, amount: ev.target.value })} />
+                    </label>
+                    <label style={{ flex: 1 }}>
+                      <span className="label" style={{ fontSize: 8.5 }}>Date</span>
+                      <input className="input" type="date" value={edit.date} onChange={(ev) => setEdit({ ...edit, date: ev.target.value })} />
+                    </label>
+                  </div>
+                  <div className="row">
+                    <button className="btn primary" onClick={() => saveEdit(e.id)}>Save</button>
+                    <button className="btn" onClick={() => setEditingId(null)}>Cancel</button>
+                    <button className="btn small" onClick={() => moveToOwed(e)}>→ move to owed</button>
+                    <span style={{ flex: 1 }} />
+                    <button className="btn small" style={{ color: "var(--hot)" }} onClick={() => deleteOne(e.id)}>delete</button>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
           {income.length === 0 && <div className="faint" style={{ fontSize: 13 }}>Nothing received yet this month.</div>}
