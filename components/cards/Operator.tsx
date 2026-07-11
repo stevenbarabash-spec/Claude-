@@ -39,8 +39,13 @@ export function Operator() {
   return (
     <Panel idx="01" title="Operator" right={<span className="chip ok">online</span>}>
       <div className="row" style={{ gap: 12 }}>
-        <div className="rail-avatar" style={{ width: 44, height: 44, fontSize: 14 }}>
-          {config.owner.name[0]}
+        <div className="rail-avatar" style={{ width: 44, height: 44, fontSize: 14, borderRadius: 10 }}>
+          {config.owner.avatar ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={config.owner.avatar} alt={config.owner.name} />
+          ) : (
+            config.owner.name[0]
+          )}
         </div>
         <div>
           <div style={{ fontSize: 15, fontWeight: 600 }}>{config.owner.fullName}</div>

@@ -56,7 +56,14 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <span suppressHydrationWarning className="num">
             {now ? now.toTimeString().slice(0, 8) : "--:--:--"}
           </span>
-          <span className="rail-avatar">{initials}</span>
+          <span className="rail-avatar">
+            {config.owner.avatar ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={config.owner.avatar} alt={config.owner.name} />
+            ) : (
+              initials
+            )}
+          </span>
         </div>
       </nav>
       <main className="page">{children}</main>

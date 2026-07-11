@@ -7,6 +7,7 @@ export const config = {
     fullName: "Steven Barabash",
     role: "Operator",
     location: "Boca Raton, FL",
+    avatar: "/avatar.jpg", // set to "" to fall back to initials
   },
   timezone: process.env.USER_TIMEZONE || "America/New_York",
   // Default daily habits — used until the list is customized on the dashboard
