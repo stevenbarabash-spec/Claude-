@@ -34,22 +34,50 @@ export interface GoalItem {
   done: boolean;
 }
 
-export interface FinanceCategory {
+// ── Monthly cash-flow model ──────────────────────────────
+export type ProjectStatus = "active" | "paused" | "done";
+export type ProjectKind = "fixed" | "retainer" | "hourly";
+
+export interface Project {
+  id: string;
   name: string;
+  client: string | null;
+  status: ProjectStatus;
+  kind: ProjectKind;
+  // fixed: total contract value · retainer: amount per month · hourly: rate
   value: number;
-  kind: "liquid" | "invested" | "liability";
+  currency: string;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
-export interface FinanceSnapshot {
-  net_worth: number;
+export interface IncomeEntry {
+  id: string;
+  date: string; // YYYY-MM-DD received
+  source: string;
+  project_id: string | null;
+  amount: number;
   currency: string;
-  as_of: string;
-  liquid: number;
-  invested: number;
-  liabilities: number;
-  categories: FinanceCategory[];
-  notes?: string;
-  source: "sheet" | "manual" | "demo";
+  kind: "project" | "retainer" | "other";
+  created_at: string;
+}
+
+export type ReceivableStatus = "expected" | "invoiced" | "paid";
+
+export interface Receivable {
+  id: string;
+  project_id: string | null;
+  client: string;
+  description: string | null;
+  amount: number;
+  currency: string;
+  status: ReceivableStatus;
+  invoiced_at: string | null; // YYYY-MM-DD
+  due_date: string | null; // YYYY-MM-DD
+  paid_at: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface WeeklyReview {
@@ -67,7 +95,6 @@ export interface DailyNotes {
   focus?: string;
   habits?: { done: string[] };
   nutrition?: { meals: Meal[] };
-  finance?: FinanceSnapshot;
   goals?: { week: GoalItem[]; month: GoalItem[] }; // only on sentinel date
   review?: WeeklyReview; // only on week-anchor (Monday) dates
   briefing?: { text: string; generated_at: string };
@@ -80,7 +107,15 @@ export interface DailyLog {
   updated_at: string;
 }
 
-export type CaptureKind = "task" | "note" | "journal" | "meal" | "idea" | "decision";
+export type CaptureKind =
+  | "task"
+  | "note"
+  | "journal"
+  | "meal"
+  | "idea"
+  | "decision"
+  | "receivable"
+  | "income";
 
 export interface RawCapture {
   id: string;

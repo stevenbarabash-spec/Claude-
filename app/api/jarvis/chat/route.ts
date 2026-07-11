@@ -34,17 +34,26 @@ async function detectIntent(text: string): Promise<"capture" | "ask" | "chat"> {
 async function todayContext(): Promise<string> {
   const store = getStore();
   const today = localDateKey();
-  const [tasks, log] = await Promise.all([store.listTasks(false), store.getLog(today)]);
+  const [tasks, log, income, receivables] = await Promise.all([
+    store.listTasks(false),
+    store.getLog(today),
+    store.listIncome(1),
+    store.listReceivables(false),
+  ]);
   const top = tasks.filter((t) => t.urgency === "today").slice(0, 5);
   const habitsDone = log?.notes.habits?.done ?? [];
   const meals = log?.notes.nutrition?.meals ?? [];
   const kcal = meals.reduce((a, m) => a + m.kcal, 0);
+  const thisMonth = today.slice(0, 7);
+  const received = income.filter((e) => e.date.startsWith(thisMonth)).reduce((a, e) => a + e.amount, 0);
+  const owed = receivables.reduce((a, r) => a + r.amount, 0);
   return [
     `Date: ${today}. Owner: ${config.owner.name}.`,
     `Today's focus: ${log?.notes.focus || "not set"}.`,
     `Today's tasks: ${top.map((t) => t.title).join("; ") || "none"}.`,
     `Habits done: ${habitsDone.length}/${config.habits.length}.`,
     `Nutrition so far: ${kcal} kcal across ${meals.length} meals (target ${config.nutrition.kcalTarget}).`,
+    `Money this month: $${received.toLocaleString()} received; $${owed.toLocaleString()} owed across ${receivables.length} open receivables.`,
   ].join("\n");
 }
 

@@ -15,17 +15,17 @@ the bottom-right corner of every page.
 |---|---|
 | **Home** | Operator card, session greeting + daily focus, quick capture, 6-habit tracker, 7-day calendar, nutrition with AI macro estimation, finance pulse, key blockers, week/month goals |
 | **CRM** | 4-tier task kanban (Today / Week / Month / Later), drag-drop reorder, click-to-edit drawer, AI smart search ("what should I do this morning?") |
-| **Finance** | Net worth hero, runway, asset/liability breakdown, 24-month snapshot history. AI reads your *messy, unlabeled* Google Sheet and extracts everything — refreshed by button or daily cron only, never on page load |
+| **Finance** | Monthly cash-flow: money received this month, active projects (fixed / retainer / hourly), what's owed to you (with overdue flags), and projections for this month / next month / 3 months / 12 months built from unpaid invoices + active retainers |
 | **Health** | 30-day calorie/macro log with per-meal expansion, averages over logged days |
 | **Review** | Weekly review (wins / slipped / open loops / follow-ups / content / health / next top-3), auto-saved, sealable |
 | **Brain** | Semantic search over everything you've ever captured + the raw capture stream |
-| **Jarvis** | Voice + text assistant. Say *"remind me to call the accountant"* → task filed. *"Ate a chicken burrito"* → meal logged with macros. *"What did I say about Atlas?"* → answers from memory with citations. Also generates a cached morning briefing |
+| **Jarvis** | Voice + text assistant. Say *"remind me to call the accountant"* → task filed. *"Ate a chicken burrito"* → meal logged with macros. *"Acme owes me $6k, due the 21st"* → receivable filed. *"Relay paid me $4k"* → income logged. *"What did I say about Atlas?"* → answers from memory with citations. Also generates a cached morning briefing (which flags overdue money) |
 
 ## The capture pipeline
 
 ```
 voice/text → Jarvis → classify (Claude → OpenAI → regex fallback)
-           → route (tasks / meals / notes / ideas / decisions)
+           → route (tasks / meals / receivables / income / notes / ideas)
            → embed to memory (pgvector or local cosine)
            → audit log → confirmation reply
 ```
@@ -50,20 +50,13 @@ Copy `.env.example` → `.env.local` and add pieces as you go:
    nutrition estimation, smart search, briefings, and conversational Jarvis.
 2. **Database** — create a free [Supabase](https://supabase.com) project, enable the
    `vector` extension (Database → Extensions), run
-   `supabase/migrations/0001_init.sql` in the SQL editor, then set
-   `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
+   `supabase/migrations/0001_init.sql` **and** `0002_monthly_finance.sql` in the SQL
+   editor, then set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
    `SUPABASE_SERVICE_ROLE_KEY`. The store switches over automatically.
 3. **Auth** — set `AUTH_SECRET` (`openssl rand -hex 32`) + `DASHBOARD_PASSWORD`.
    Optional `API_SECRET` for programmatic access via the `x-api-secret` header.
 4. **Calendar** — Google Calendar → Settings → your calendar → *"Secret address in
    iCal format"* → `GOOGLE_CALENDAR_ICAL_URL`.
-5. **Finance sheet** — use a **service account**, never "publish to web":
-   [console.cloud.google.com](https://console.cloud.google.com) → new project → enable
-   **Sheets API** → IAM → Service Accounts → create + JSON key → share your finance
-   sheet with the service-account email as *Viewer* → set `GOOGLE_SHEETS_FINANCE_ID`
-   (between `/d/` and `/edit` in the URL), `GOOGLE_SERVICE_ACCOUNT_EMAIL`,
-   `GOOGLE_SERVICE_ACCOUNT_KEY` (the `private_key` field, keep the `\n` escapes).
-   Then hit **↻ Refresh from sheet** on the Finance tab.
 
 ## Deploy (Vercel)
 
@@ -73,9 +66,7 @@ vercel link
 vercel --prod
 ```
 
-Push every env var from `.env.example` (`vercel env add NAME production`), including
-`CRON_SECRET` — `vercel.json` schedules the finance snapshot daily at 05:00 UTC and
-Vercel sends `Authorization: Bearer $CRON_SECRET` automatically.
+Push every env var from `.env.example` (`vercel env add NAME production`).
 
 > Note: the local JSON store does not persist on serverless — configure Supabase
 > before deploying.

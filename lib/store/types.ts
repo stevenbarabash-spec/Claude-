@@ -1,4 +1,13 @@
-import type { DailyLog, DailyNotes, MemoryChunk, RawCapture, Task } from "../types";
+import type {
+  DailyLog,
+  DailyNotes,
+  IncomeEntry,
+  MemoryChunk,
+  Project,
+  RawCapture,
+  Receivable,
+  Task,
+} from "../types";
 
 export interface Store {
   listTasks(includeDone?: boolean): Promise<Task[]>;
@@ -20,6 +29,21 @@ export interface Store {
   searchMemoryByText(query: string, limit: number): Promise<MemoryChunk[]>;
 
   addAudit(action: string, resourceType: string, resourceId: string, metadata?: object): Promise<void>;
+
+  // ── Monthly cash-flow ──
+  listProjects(): Promise<Project[]>;
+  createProject(p: Partial<Project> & { name: string }): Promise<Project>;
+  updateProject(id: string, patch: Partial<Project>): Promise<Project | null>;
+  deleteProject(id: string): Promise<void>;
+
+  listIncome(months: number): Promise<IncomeEntry[]>;
+  addIncome(e: Omit<IncomeEntry, "id" | "created_at">): Promise<IncomeEntry>;
+  deleteIncome(id: string): Promise<void>;
+
+  listReceivables(includePaid?: boolean): Promise<Receivable[]>;
+  createReceivable(r: Partial<Receivable> & { client: string; amount: number }): Promise<Receivable>;
+  updateReceivable(id: string, patch: Partial<Receivable>): Promise<Receivable | null>;
+  deleteReceivable(id: string): Promise<void>;
 }
 
 export function newId(): string {

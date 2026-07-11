@@ -1,174 +1,370 @@
 "use client";
-// Finance tab: hero metrics + asset breakdown + monthly snapshot history.
-// Reads stored snapshots only — the AI pipeline runs solely via the refresh
-// button or the daily cron (guide §5.8).
-import { useEffect, useState } from "react";
+// Finance tab — monthly cash-flow: money in, projects, receivables, projections.
+import { useCallback, useEffect, useState } from "react";
 import { Spark } from "@/components/cards/FinancePulse";
 import { Panel } from "@/components/Panel";
-import { api, fmtMoney } from "@/lib/client";
-import type { FinanceSnapshot } from "@/lib/types";
+import { api, clientDateKey, fmtMoney } from "@/lib/client";
+import type { IncomeEntry, Project, Receivable } from "@/lib/types";
 
-type Snap = FinanceSnapshot & { date: string };
+interface Projection {
+  label: string;
+  received: number;
+  fromReceivables: number;
+  fromRetainers: number;
+  total: number;
+}
+type ProjectRollup = Project & { received: number; owed: number };
+
+interface Summary {
+  month: string;
+  receivedThisMonth: number;
+  owedTotal: number;
+  overdueTotal: number;
+  overdueCount: number;
+  retainerMonthly: number;
+  projections: Projection[];
+  monthlyHistory: { month: string; total: number }[];
+  projects: ProjectRollup[];
+  receivables: Receivable[];
+  incomeThisMonth: IncomeEntry[];
+}
 
 export default function FinancePage() {
-  const [latest, setLatest] = useState<Snap | null>(null);
-  const [monthly, setMonthly] = useState<Snap[]>([]);
-  const [configured, setConfigured] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const [msg, setMsg] = useState<string | null>(null);
+  const [s, setS] = useState<Summary | null>(null);
 
-  function load() {
-    api<{ latest: Snap | null; monthly: Snap[]; configured: boolean }>("/api/finance")
-      .then((r) => {
-        setLatest(r.latest);
-        setMonthly(r.monthly);
-        setConfigured(r.configured);
-      })
-      .catch(() => {});
-  }
-  useEffect(load, []);
+  const load = useCallback(() => {
+    api<Summary>("/api/finance").then(setS).catch(() => {});
+  }, []);
 
-  async function refresh() {
-    setRefreshing(true);
-    setMsg(null);
-    try {
-      await api("/api/finance/snapshot", { method: "POST" });
-      setMsg("Snapshot updated from your sheet.");
-      load();
-    } catch (err) {
-      setMsg(String(err));
-    } finally {
-      setRefreshing(false);
-    }
-  }
+  useEffect(() => {
+    load();
+    window.addEventListener("jarvis:capture", load);
+    return () => window.removeEventListener("jarvis:capture", load);
+  }, [load]);
 
-  const asc = [...monthly].reverse();
-  const prev = asc.at(-2);
-  const delta = latest && prev ? latest.net_worth - prev.net_worth : 0;
-  const burn = prev && delta < 0 ? -delta : 0;
-  const runway = latest && burn > 0 ? Math.floor(latest.liquid / burn) : null;
+  if (!s) return <div className="faint">Loading…</div>;
 
-  const cat = (kind: "liquid" | "invested" | "liability") =>
-    latest?.categories.filter((c) => c.kind === kind) ?? [];
+  const today = clientDateKey();
+  const monthLabel = new Date(s.month + "-15T12:00:00").toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  const projected = (label: string) => s.projections.find((p) => p.label === label);
+  const maxProj = Math.max(...s.projections.map((p) => p.total), 1);
 
   return (
     <div className="stack" style={{ gap: 16 }}>
       <div className="spread">
-        <span className="label" style={{ fontSize: 12 }}>Finance</span>
-        <div className="row">
-          {msg && <span className="faint" style={{ fontSize: 12 }}>{msg}</span>}
-          <button className="btn" onClick={refresh} disabled={refreshing || !configured}>
-            {refreshing ? "Extracting…" : "↻ Refresh from sheet"}
-          </button>
-        </div>
+        <span className="label" style={{ fontSize: 12 }}>Finance // {monthLabel}</span>
+        <span className="faint" style={{ fontSize: 11, fontFamily: "var(--mono)" }}>
+          tell Jarvis: &ldquo;Acme owes me $6k, due the 21st&rdquo; · &ldquo;Relay paid me $4k&rdquo;
+        </span>
       </div>
 
-      {!configured && (
-        <div className="panel" style={{ borderColor: "rgba(224,194,111,0.3)" }}>
-          <span className="chip warm">setup</span>
-          <p className="dim" style={{ fontSize: 13, marginTop: 10, lineHeight: 1.7 }}>
-            Connect your Google Sheet with a service account (never &ldquo;publish to web&rdquo;):
-            create a project at console.cloud.google.com → enable Sheets API → create a service
-            account + JSON key → share the sheet with the service account email as Viewer → set{" "}
-            <span className="num">GOOGLE_SHEETS_FINANCE_ID</span>,{" "}
-            <span className="num">GOOGLE_SERVICE_ACCOUNT_EMAIL</span> and{" "}
-            <span className="num">GOOGLE_SERVICE_ACCOUNT_KEY</span>. Claude reads every tab and
-            figures out your net worth — no labels needed.
-          </p>
-        </div>
-      )}
-
+      {/* ── Hero row ── */}
       <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 16 }}>
-        <Panel title="Net Worth · Live">
-          {latest ? (
-            <>
-              <div className="big-num" style={{ fontSize: 38 }}>{fmtMoney(latest.net_worth, latest.currency)}</div>
-              <div className="row" style={{ marginTop: 6 }}>
-                <span className={`chip ${delta >= 0 ? "ok" : "hot"}`}>
-                  {delta >= 0 ? "▲" : "▼"} {prev ? ((delta / prev.net_worth) * 100).toFixed(1) : "0"}% · 30D
-                </span>
-                <span className="faint num" style={{ fontSize: 11 }}>as of {latest.as_of}</span>
-              </div>
-              <Spark values={asc.map((m) => m.net_worth)} />
-            </>
-          ) : (
-            <div className="faint">No snapshots yet.</div>
-          )}
-        </Panel>
-        <Panel title="Runway">
-          <div className="big-num">{runway !== null ? `${runway}` : "∞"}<span className="faint" style={{ fontSize: 14 }}> mo</span></div>
-          <div className="faint" style={{ fontSize: 11, marginTop: 6 }}>@ current burn · static</div>
-        </Panel>
-        <Panel title="Monthly Δ">
-          <div className={`big-num ${delta >= 0 ? "accent" : ""}`} style={{ color: delta < 0 ? "var(--hot)" : undefined }}>
-            {latest ? `${delta >= 0 ? "+" : ""}${fmtMoney(delta, latest.currency)}` : "—"}
+        <Panel title="Received this month">
+          <div className="big-num" style={{ fontSize: 38 }}>{fmtMoney(s.receivedThisMonth)}</div>
+          <div className="faint" style={{ fontSize: 11, marginTop: 4 }}>
+            {s.incomeThisMonth.length} payment{s.incomeThisMonth.length === 1 ? "" : "s"} · retainers {fmtMoney(s.retainerMonthly)}/mo
           </div>
-          <div className="faint" style={{ fontSize: 11, marginTop: 6 }}>vs prior snapshot</div>
+          <Spark values={s.monthlyHistory.map((m) => m.total)} />
         </Panel>
-        <Panel title="Liabilities">
-          <div className="big-num">{latest ? fmtMoney(latest.liabilities, latest.currency) : "—"}</div>
+        <Panel title="Owed to you">
+          <div className="big-num">{fmtMoney(s.owedTotal)}</div>
+          <div className="faint" style={{ fontSize: 11, marginTop: 6 }}>{s.receivables.length} open receivables</div>
+        </Panel>
+        <Panel title="Overdue">
+          <div className="big-num" style={{ color: s.overdueCount ? "var(--hot)" : undefined }}>
+            {s.overdueCount ? fmtMoney(s.overdueTotal) : "—"}
+          </div>
           <div className="faint" style={{ fontSize: 11, marginTop: 6 }}>
-            {latest ? `${((latest.liabilities / latest.net_worth) * 100).toFixed(1)}% of net` : ""}
+            {s.overdueCount ? `${s.overdueCount} invoice${s.overdueCount === 1 ? "" : "s"} past due` : "nothing past due"}
           </div>
+        </Panel>
+        <Panel title="Projected · this month">
+          <div className="big-num accent">{fmtMoney(projected("This month")?.total ?? 0)}</div>
+          <div className="faint" style={{ fontSize: 11, marginTop: 6 }}>received + expected</div>
         </Panel>
       </div>
 
-      {latest && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
-          {(
-            [
-              ["a1", "Liquid Cash", "liquid", latest.liquid, "var(--accent)"],
-              ["a2", "Invested Assets", "invested", latest.invested, "var(--cool)"],
-              ["a3", "Liabilities", "liability", latest.liabilities, "var(--hot)"],
-            ] as const
-          ).map(([idx, title, kind, total]) => (
-            <Panel key={kind} idx={idx} title={title} right={<span>{((total / latest.net_worth) * 100).toFixed(0)}% of net</span>}>
-              <div className="big-num" style={{ fontSize: 26 }}>{fmtMoney(total, latest.currency)}</div>
-              <div className="grid-2" style={{ marginTop: 12 }}>
-                {cat(kind).map((c) => (
-                  <div key={c.name}>
-                    <div className="label" style={{ fontSize: 9 }}>{c.name}</div>
-                    <div className="num" style={{ fontSize: 14, marginTop: 2 }}>{fmtMoney(c.value, latest.currency)}</div>
-                  </div>
-                ))}
+      {/* ── Projections ── */}
+      <Panel idx="p1" title="Projections" right={<span>unpaid receivables + active retainers</span>}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+          {s.projections.map((p) => (
+            <div key={p.label}>
+              <div className="spread">
+                <span className="label">{p.label}</span>
+                <span className="num" style={{ fontSize: 15 }}>{fmtMoney(p.total)}</span>
               </div>
-            </Panel>
+              <div className="bar" style={{ marginTop: 8, height: 6 }}>
+                <div style={{ width: `${(p.total / maxProj) * 100}%` }} />
+              </div>
+              <div className="faint" style={{ fontSize: 10.5, marginTop: 6, fontFamily: "var(--mono)", lineHeight: 1.7 }}>
+                {p.received > 0 && <>received {fmtMoney(p.received)}<br /></>}
+                invoices {fmtMoney(p.fromReceivables)}
+                {p.fromRetainers > 0 && <><br />retainers {fmtMoney(p.fromRetainers)}</>}
+              </div>
+            </div>
           ))}
         </div>
-      )}
-
-      <Panel idx="a4" title="Snapshot History" right={<span>monthly · {monthly.length}mo</span>}>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Period</th>
-              <th>Net Worth</th>
-              <th>Liquid</th>
-              <th>Invested</th>
-              <th>Liabilities</th>
-              <th>Δ vs prior</th>
-            </tr>
-          </thead>
-          <tbody>
-            {monthly.map((m, i) => {
-              const prior = monthly[i + 1];
-              const d = prior ? m.net_worth - prior.net_worth : 0;
-              return (
-                <tr key={m.date}>
-                  <td>{new Date(m.date + "T12:00:00").toLocaleDateString("en-US", { month: "short", year: "numeric" })}</td>
-                  <td>{fmtMoney(m.net_worth, m.currency)}</td>
-                  <td className="faint">{fmtMoney(m.liquid, m.currency)}</td>
-                  <td className="faint">{fmtMoney(m.invested, m.currency)}</td>
-                  <td className="faint">{fmtMoney(m.liabilities, m.currency)}</td>
-                  <td style={{ color: d >= 0 ? "var(--accent)" : "var(--hot)" }}>
-                    {prior ? `${d >= 0 ? "+" : ""}${fmtMoney(d, m.currency)}` : "—"}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
       </Panel>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, alignItems: "start" }}>
+        <ProjectsPanel projects={s.projects} onChange={load} />
+        <ReceivablesPanel receivables={s.receivables} projects={s.projects} today={today} onChange={load} />
+      </div>
+
+      <IncomePanel income={s.incomeThisMonth} history={s.monthlyHistory} onChange={load} />
     </div>
+  );
+}
+
+/* ── Projects ─────────────────────────────────────────── */
+function ProjectsPanel({ projects, onChange }: { projects: ProjectRollup[]; onChange: () => void }) {
+  const [form, setForm] = useState({ name: "", client: "", kind: "fixed", value: "" });
+  const [adding, setAdding] = useState(false);
+
+  async function add(e: React.FormEvent) {
+    e.preventDefault();
+    if (!form.name.trim()) return;
+    await api("/api/projects", {
+      method: "POST",
+      body: JSON.stringify({
+        name: form.name.trim(),
+        client: form.client.trim() || null,
+        kind: form.kind,
+        value: Number(form.value) || 0,
+      }),
+    });
+    setForm({ name: "", client: "", kind: "fixed", value: "" });
+    setAdding(false);
+    onChange();
+  }
+
+  async function setStatus(id: string, status: Project["status"]) {
+    await api(`/api/projects/${id}`, { method: "PATCH", body: JSON.stringify({ status }) });
+    onChange();
+  }
+
+  const active = projects.filter((p) => p.status !== "done");
+  const done = projects.filter((p) => p.status === "done");
+
+  return (
+    <Panel idx="p2" title="Projects" right={<button className="btn small" onClick={() => setAdding(!adding)}>{adding ? "cancel" : "+ new"}</button>}>
+      {adding && (
+        <form className="stack" style={{ marginBottom: 14 }} onSubmit={add}>
+          <div className="grid-2">
+            <input className="input" placeholder="Project name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} autoFocus />
+            <input className="input" placeholder="Client" value={form.client} onChange={(e) => setForm({ ...form, client: e.target.value })} />
+            <select className="input" value={form.kind} onChange={(e) => setForm({ ...form, kind: e.target.value })}>
+              <option value="fixed">Fixed price (total)</option>
+              <option value="retainer">Retainer (per month)</option>
+              <option value="hourly">Hourly (rate)</option>
+            </select>
+            <input className="input num" type="number" placeholder="$ value" value={form.value} onChange={(e) => setForm({ ...form, value: e.target.value })} />
+          </div>
+          <button className="btn primary">Add project</button>
+        </form>
+      )}
+      <div className="stack">
+        {active.map((p) => (
+          <div key={p.id} className="spread" style={{ padding: "10px 0", borderBottom: "1px solid var(--border-soft)", alignItems: "flex-start" }}>
+            <div>
+              <div style={{ fontSize: 13.5 }}>{p.name}</div>
+              <div className="faint" style={{ fontSize: 11, marginTop: 3, fontFamily: "var(--mono)" }}>
+                {(p.client ?? "—").toUpperCase()} · {p.kind === "retainer" ? `${fmtMoney(p.value)}/MO` : p.kind === "hourly" ? `${fmtMoney(p.value)}/HR` : fmtMoney(p.value)}
+              </div>
+              <div className="faint" style={{ fontSize: 10.5, marginTop: 3, fontFamily: "var(--mono)" }}>
+                <span className="accent">{fmtMoney(p.received)} in</span>
+                {p.owed > 0 && <> · <span style={{ color: "var(--warm)" }}>{fmtMoney(p.owed)} owed</span></>}
+              </div>
+            </div>
+            <div className="stack" style={{ gap: 5, alignItems: "flex-end" }}>
+              <span className={`chip ${p.status === "active" ? "ok" : "warm"}`}>{p.status}</span>
+              <div className="row" style={{ gap: 4 }}>
+                {p.status === "active" ? (
+                  <button className="btn small" onClick={() => setStatus(p.id, "paused")}>pause</button>
+                ) : (
+                  <button className="btn small" onClick={() => setStatus(p.id, "active")}>resume</button>
+                )}
+                <button className="btn small" onClick={() => setStatus(p.id, "done")}>done</button>
+              </div>
+            </div>
+          </div>
+        ))}
+        {active.length === 0 && <div className="faint" style={{ fontSize: 13 }}>No active projects.</div>}
+        {done.length > 0 && (
+          <div className="faint" style={{ fontSize: 11, fontFamily: "var(--mono)", letterSpacing: "0.08em", paddingTop: 4 }}>
+            DONE: {done.map((p) => `${p.name} (${fmtMoney(p.received)})`).join(" · ")}
+          </div>
+        )}
+      </div>
+    </Panel>
+  );
+}
+
+/* ── Receivables ──────────────────────────────────────── */
+function ReceivablesPanel({
+  receivables,
+  projects,
+  today,
+  onChange,
+}: {
+  receivables: Receivable[];
+  projects: ProjectRollup[];
+  today: string;
+  onChange: () => void;
+}) {
+  const [form, setForm] = useState({ client: "", description: "", amount: "", due: "", project_id: "" });
+  const [adding, setAdding] = useState(false);
+
+  async function add(e: React.FormEvent) {
+    e.preventDefault();
+    if (!form.client.trim() || !Number(form.amount)) return;
+    await api("/api/receivables", {
+      method: "POST",
+      body: JSON.stringify({
+        client: form.client.trim(),
+        description: form.description.trim() || null,
+        amount: Number(form.amount),
+        due_date: form.due || null,
+        project_id: form.project_id || null,
+        status: "invoiced",
+      }),
+    });
+    setForm({ client: "", description: "", amount: "", due: "", project_id: "" });
+    setAdding(false);
+    onChange();
+  }
+
+  async function markPaid(id: string) {
+    await api(`/api/receivables/${id}`, { method: "PATCH", body: JSON.stringify({ status: "paid" }) });
+    onChange();
+  }
+
+  return (
+    <Panel idx="p3" title="Owed to you" right={<button className="btn small" onClick={() => setAdding(!adding)}>{adding ? "cancel" : "+ new"}</button>}>
+      {adding && (
+        <form className="stack" style={{ marginBottom: 14 }} onSubmit={add}>
+          <div className="grid-2">
+            <input className="input" placeholder="Client" value={form.client} onChange={(e) => setForm({ ...form, client: e.target.value })} autoFocus />
+            <input className="input num" type="number" placeholder="$ amount" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
+            <input className="input" placeholder="What for" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+            <input className="input" type="date" value={form.due} onChange={(e) => setForm({ ...form, due: e.target.value })} />
+          </div>
+          <select className="input" value={form.project_id} onChange={(e) => setForm({ ...form, project_id: e.target.value })}>
+            <option value="">No project</option>
+            {projects.map((p) => (
+              <option key={p.id} value={p.id}>{p.name}</option>
+            ))}
+          </select>
+          <button className="btn primary">Add receivable</button>
+        </form>
+      )}
+      <div className="stack">
+        {receivables.map((r) => {
+          const isOverdue = r.due_date && r.due_date < today;
+          return (
+            <div key={r.id} className="spread" style={{ padding: "10px 0", borderBottom: "1px solid var(--border-soft)", alignItems: "flex-start" }}>
+              <div>
+                <div style={{ fontSize: 13.5 }}>
+                  {r.client}
+                  {r.description && <span className="faint"> — {r.description}</span>}
+                </div>
+                <div className="faint" style={{ fontSize: 11, marginTop: 3, fontFamily: "var(--mono)" }}>
+                  {r.due_date ? (isOverdue ? `DUE ${r.due_date} · OVERDUE` : `DUE ${r.due_date}`) : "NO DUE DATE"}
+                </div>
+              </div>
+              <div className="stack" style={{ gap: 5, alignItems: "flex-end" }}>
+                <span className="num" style={{ fontSize: 15, color: isOverdue ? "var(--hot)" : undefined }}>{fmtMoney(r.amount)}</span>
+                <div className="row" style={{ gap: 4 }}>
+                  <span className={`chip ${isOverdue ? "hot" : r.status === "invoiced" ? "warm" : "cool"}`}>
+                    {isOverdue ? "overdue" : r.status}
+                  </span>
+                  <button className="btn small" onClick={() => markPaid(r.id)}>paid ✓</button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        {receivables.length === 0 && <div className="faint" style={{ fontSize: 13 }}>Nobody owes you anything. Ship more.</div>}
+      </div>
+    </Panel>
+  );
+}
+
+/* ── Income ───────────────────────────────────────────── */
+function IncomePanel({
+  income,
+  history,
+  onChange,
+}: {
+  income: IncomeEntry[];
+  history: { month: string; total: number }[];
+  onChange: () => void;
+}) {
+  const [form, setForm] = useState({ source: "", amount: "", date: "" });
+  const [adding, setAdding] = useState(false);
+
+  async function add(e: React.FormEvent) {
+    e.preventDefault();
+    if (!form.source.trim() || !Number(form.amount)) return;
+    await api("/api/income", {
+      method: "POST",
+      body: JSON.stringify({ source: form.source.trim(), amount: Number(form.amount), date: form.date || undefined }),
+    });
+    setForm({ source: "", amount: "", date: "" });
+    setAdding(false);
+    onChange();
+  }
+
+  return (
+    <Panel idx="p4" title="Money in" right={<button className="btn small" onClick={() => setAdding(!adding)}>{adding ? "cancel" : "+ log payment"}</button>}>
+      {adding && (
+        <form className="row" style={{ marginBottom: 14 }} onSubmit={add}>
+          <input className="input" placeholder="From (client / source)" value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} autoFocus />
+          <input className="input num" style={{ maxWidth: 130 }} type="number" placeholder="$ amount" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
+          <input className="input" style={{ maxWidth: 160 }} type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+          <button className="btn primary">Log</button>
+        </form>
+      )}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, alignItems: "start" }}>
+        <div className="stack">
+          <div className="label" style={{ marginBottom: 2 }}>This month</div>
+          {income.map((e) => (
+            <div key={e.id} className="spread" style={{ padding: "7px 0", borderBottom: "1px solid var(--border-soft)" }}>
+              <div className="row" style={{ gap: 8 }}>
+                <span className="num faint" style={{ fontSize: 11 }}>{e.date.slice(5)}</span>
+                <span style={{ fontSize: 13 }}>{e.source}</span>
+                <span className="chip">{e.kind}</span>
+              </div>
+              <span className="num accent" style={{ fontSize: 13.5 }}>+{fmtMoney(e.amount)}</span>
+            </div>
+          ))}
+          {income.length === 0 && <div className="faint" style={{ fontSize: 13 }}>Nothing received yet this month.</div>}
+        </div>
+        <div>
+          <div className="label" style={{ marginBottom: 8 }}>Last 12 months</div>
+          <table className="table">
+            <tbody>
+              {[...history].reverse().map((h) => {
+                const max = Math.max(...history.map((x) => x.total), 1);
+                return (
+                  <tr key={h.month}>
+                    <td className="faint" style={{ padding: "5px 8px" }}>
+                      {new Date(h.month + "-15T12:00:00").toLocaleDateString("en-US", { month: "short", year: "2-digit" })}
+                    </td>
+                    <td style={{ width: "55%", padding: "5px 8px" }}>
+                      <div className="bar">
+                        <div style={{ width: `${(h.total / max) * 100}%` }} />
+                      </div>
+                    </td>
+                    <td style={{ padding: "5px 8px" }}>{fmtMoney(h.total)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </Panel>
   );
 }

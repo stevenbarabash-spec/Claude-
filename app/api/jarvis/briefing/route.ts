@@ -20,25 +20,29 @@ export async function GET(req: Request) {
     return NextResponse.json({ briefing: null, cached: false });
   }
 
-  const [tasks, goalsLog, yesterdayLog, financeLogs] = await Promise.all([
+  const [tasks, goalsLog, yesterdayLog, income, receivables] = await Promise.all([
     store.listTasks(false),
     store.getLog("2000-01-01"),
     store.getLog(addDays(today, -1)),
-    store.listLogs(40),
+    store.listIncome(1),
+    store.listReceivables(false),
   ]);
   const todayTasks = tasks.filter((t) => t.urgency === "today");
   const goals = goalsLog?.notes.goals?.week ?? [];
   const habitsYesterday = yesterdayLog?.notes.habits?.done?.length ?? 0;
-  const finance = financeLogs.find((l) => l.notes.finance)?.notes.finance;
+  const thisMonth = today.slice(0, 7);
+  const receivedThisMonth = income.filter((e) => e.date.startsWith(thisMonth)).reduce((a, e) => a + e.amount, 0);
+  const owed = receivables.reduce((a, r) => a + r.amount, 0);
+  const overdue = receivables.filter((r) => r.due_date && r.due_date < today);
 
   const { text } = await llmText(
-    `You are Jarvis, ${config.owner.name}'s chief of staff. Write a crisp morning briefing: 3-5 short lines, no headers, no fluff. Prioritize what actually matters today.`,
+    `You are Jarvis, ${config.owner.name}'s chief of staff. Write a crisp morning briefing: 3-5 short lines, no headers, no fluff. Prioritize what actually matters today — overdue money always matters.`,
     [
       `Today: ${today}`,
       `Today's tasks: ${todayTasks.map((t) => `${t.title}${t.key ? " (KEY)" : ""}`).join("; ") || "none filed"}`,
       `Week goals: ${goals.map((g) => `${g.text}${g.done ? " ✓" : ""}`).join("; ") || "none"}`,
       `Habits completed yesterday: ${habitsYesterday}/${config.habits.length}`,
-      `Net worth (latest snapshot): ${finance ? `${finance.currency} ${finance.net_worth.toLocaleString()}` : "n/a"}`,
+      `Money: received $${receivedThisMonth.toLocaleString()} this month; owed $${owed.toLocaleString()} across ${receivables.length} receivables${overdue.length ? `; OVERDUE: ${overdue.map((r) => `${r.client} $${r.amount.toLocaleString()}`).join(", ")}` : ""}`,
     ].join("\n"),
     512,
   );

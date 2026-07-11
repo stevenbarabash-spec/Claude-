@@ -1,6 +1,15 @@
 // Supabase backend (guide §3). Requires the migration in supabase/migrations/0001_init.sql.
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import type { DailyLog, DailyNotes, MemoryChunk, RawCapture, Task } from "../types";
+import type {
+  DailyLog,
+  DailyNotes,
+  IncomeEntry,
+  MemoryChunk,
+  Project,
+  RawCapture,
+  Receivable,
+  Task,
+} from "../types";
 import { nowIso, type Store } from "./types";
 
 const USER_ID = process.env.USER_ID || "steven";
@@ -155,5 +164,123 @@ export class SupabaseStore implements Store {
       metadata: metadata ?? {},
       created_at: nowIso(),
     });
+  }
+
+  // ── Monthly cash-flow (migration 0002) ──
+  async listProjects(): Promise<Project[]> {
+    const { data, error } = await this.sb
+      .from("projects")
+      .select("*")
+      .eq("user_id", USER_ID)
+      .order("created_at", { ascending: false })
+      .limit(cacheBust());
+    if (error) throw error;
+    return (data ?? []) as Project[];
+  }
+
+  async createProject(p: Partial<Project> & { name: string }): Promise<Project> {
+    const row = {
+      user_id: USER_ID,
+      name: p.name,
+      client: p.client ?? null,
+      status: p.status ?? "active",
+      kind: p.kind ?? "fixed",
+      value: p.value ?? 0,
+      currency: p.currency ?? "USD",
+      notes: p.notes ?? null,
+      created_at: nowIso(),
+      updated_at: nowIso(),
+    };
+    const { data, error } = await this.sb.from("projects").insert(row).select().single();
+    if (error) throw error;
+    return data as Project;
+  }
+
+  async updateProject(id: string, patch: Partial<Project>): Promise<Project | null> {
+    const { data, error } = await this.sb
+      .from("projects")
+      .update({ ...patch, updated_at: nowIso() })
+      .eq("id", id)
+      .eq("user_id", USER_ID)
+      .select()
+      .maybeSingle();
+    if (error) throw error;
+    return (data as Project) ?? null;
+  }
+
+  async deleteProject(id: string): Promise<void> {
+    await this.sb.from("projects").delete().eq("id", id).eq("user_id", USER_ID);
+  }
+
+  async listIncome(months: number): Promise<IncomeEntry[]> {
+    const cutoff = new Date();
+    cutoff.setMonth(cutoff.getMonth() - months, 1);
+    const { data, error } = await this.sb
+      .from("income_entries")
+      .select("*")
+      .eq("user_id", USER_ID)
+      .gte("date", cutoff.toISOString().slice(0, 10))
+      .order("date", { ascending: false })
+      .limit(cacheBust());
+    if (error) throw error;
+    return (data ?? []) as IncomeEntry[];
+  }
+
+  async addIncome(e: Omit<IncomeEntry, "id" | "created_at">): Promise<IncomeEntry> {
+    const { data, error } = await this.sb
+      .from("income_entries")
+      .insert({ user_id: USER_ID, ...e, created_at: nowIso() })
+      .select()
+      .single();
+    if (error) throw error;
+    return data as IncomeEntry;
+  }
+
+  async deleteIncome(id: string): Promise<void> {
+    await this.sb.from("income_entries").delete().eq("id", id).eq("user_id", USER_ID);
+  }
+
+  async listReceivables(includePaid = false): Promise<Receivable[]> {
+    let q = this.sb.from("receivables").select("*").eq("user_id", USER_ID).limit(cacheBust());
+    if (!includePaid) q = q.neq("status", "paid");
+    const { data, error } = await q.order("due_date", { ascending: true, nullsFirst: false });
+    if (error) throw error;
+    return (data ?? []) as Receivable[];
+  }
+
+  async createReceivable(r: Partial<Receivable> & { client: string; amount: number }): Promise<Receivable> {
+    const row = {
+      user_id: USER_ID,
+      project_id: r.project_id ?? null,
+      client: r.client,
+      description: r.description ?? null,
+      amount: r.amount,
+      currency: r.currency ?? "USD",
+      status: r.status ?? "expected",
+      invoiced_at: r.invoiced_at ?? null,
+      due_date: r.due_date ?? null,
+      paid_at: null,
+      created_at: nowIso(),
+      updated_at: nowIso(),
+    };
+    const { data, error } = await this.sb.from("receivables").insert(row).select().single();
+    if (error) throw error;
+    return data as Receivable;
+  }
+
+  async updateReceivable(id: string, patch: Partial<Receivable>): Promise<Receivable | null> {
+    const { data, error } = await this.sb
+      .from("receivables")
+      .update({ ...patch, updated_at: nowIso() })
+      .eq("id", id)
+      .eq("user_id", USER_ID)
+      .select()
+      .maybeSingle();
+    if (error) throw error;
+    return (data as Receivable) ?? null;
+  }
+
+  async deleteReceivable(id: string): Promise<void> {
+    await this.sb.from("receivables").delete().eq("id", id).eq("user_id", USER_ID);
   }
 }

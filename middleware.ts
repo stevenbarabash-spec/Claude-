@@ -10,15 +10,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Programmatic access via x-api-secret for API routes (cron, scripts).
+  // Programmatic access via x-api-secret for API routes (scripts, shortcuts).
   if (pathname.startsWith("/api/") && process.env.API_SECRET) {
     if (req.headers.get("x-api-secret") === process.env.API_SECRET) return NextResponse.next();
-  }
-  // Vercel cron authenticates with Authorization: Bearer CRON_SECRET.
-  if (pathname === "/api/finance/snapshot" && process.env.CRON_SECRET) {
-    if (req.headers.get("authorization") === `Bearer ${process.env.CRON_SECRET}`) {
-      return NextResponse.next();
-    }
   }
 
   const ok = await verifySessionToken(req.cookies.get(AUTH_COOKIE)?.value);

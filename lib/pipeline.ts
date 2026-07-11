@@ -57,6 +57,45 @@ export async function runCapturePipeline(
       reply = `Meal logged: ${meal.n} — ~${meal.kcal} kcal (${meal.p}p / ${meal.c}c / ${meal.f}f)`;
       break;
     }
+    case "receivable": {
+      const money = classification.money;
+      if (!money?.amount) {
+        routedTo = "raw_captures";
+        reply = `Heard a receivable but couldn't parse the amount — captured as a note: ${classification.summary}`;
+        break;
+      }
+      const receivable = await store.createReceivable({
+        client: money.client ?? classification.title,
+        description: classification.summary,
+        amount: money.amount,
+        due_date: money.due_date ?? null,
+        status: "expected",
+      });
+      routedTo = "receivables";
+      routedId = receivable.id;
+      reply = `Receivable filed: $${money.amount.toLocaleString()} from ${receivable.client}${money.due_date ? `, due ${money.due_date}` : ""}`;
+      break;
+    }
+    case "income": {
+      const money = classification.money;
+      if (!money?.amount) {
+        routedTo = "raw_captures";
+        reply = `Heard income but couldn't parse the amount — captured as a note: ${classification.summary}`;
+        break;
+      }
+      const entry = await store.addIncome({
+        date: localDateKey(),
+        source: money.client ?? classification.title,
+        project_id: null,
+        amount: money.amount,
+        currency: "USD",
+        kind: "project",
+      });
+      routedTo = "income";
+      routedId = entry.id;
+      reply = `Income logged: $${money.amount.toLocaleString()} from ${entry.source}`;
+      break;
+    }
     default: {
       routedTo = "raw_captures";
       reply = `Captured as ${classification.kind}: ${classification.summary}`;
