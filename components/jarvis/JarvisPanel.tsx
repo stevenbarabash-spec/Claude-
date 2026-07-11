@@ -1,6 +1,8 @@
 "use client";
-// Jarvis — floating assistant panel. Voice notes use the browser's speech
-// recognition when available, else MediaRecorder → /api/jarvis/transcribe (Whisper).
+// Jarvis — floating assistant panel with full voice conversation.
+// Voice in: browser speech recognition (Whisper fallback via /api/jarvis/transcribe).
+// Voice out: browser speech synthesis. Voice mode chains them: listen → answer
+// aloud → listen again, hands-free.
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/client";
 
@@ -13,7 +15,7 @@ interface Msg {
 const GREETING: Msg = {
   role: "assistant",
   content:
-    "Online. Speak or type — I'll file tasks, meals, ideas and notes into the right place, or answer questions about your own data.\n\nTip: prefix with \"capture:\" or \"ask:\" to force a mode.",
+    "Online. Speak or type — I'll file tasks, meals, money and notes into the right place, or answer questions about your own data.\n\nTap the headset for hands-free voice mode.",
 };
 
 export function JarvisPanel() {
@@ -22,16 +24,71 @@ export function JarvisPanel() {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [recording, setRecording] = useState(false);
+  const [voiceMode, setVoiceMode] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const recRef = useRef<{ stop: () => void } | null>(null);
+  const voiceModeRef = useRef(false);
+  const lastInputWasVoice = useRef(false);
+  const openRef = useRef(false);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 999999, behavior: "smooth" });
   }, [msgs, open]);
 
+  useEffect(() => {
+    openRef.current = open;
+    if (!open) stopVoiceMode();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  /* ── Voice out ── */
+  function pickVoice(): SpeechSynthesisVoice | undefined {
+    const voices = window.speechSynthesis?.getVoices() ?? [];
+    return (
+      voices.find((v) => /en-GB/i.test(v.lang) && /daniel|arthur|male/i.test(v.name)) ??
+      voices.find((v) => /daniel|arthur/i.test(v.name)) ??
+      voices.find((v) => v.lang?.startsWith("en") && /google uk english male/i.test(v.name)) ??
+      voices.find((v) => v.lang?.startsWith("en"))
+    );
+  }
+
+  function speak(text: string, onDone?: () => void) {
+    if (!("speechSynthesis" in window)) {
+      onDone?.();
+      return;
+    }
+    try {
+      // Strip citation markers and cap length so replies stay listenable.
+      const clean = text.replace(/\[\d+\]/g, "").replace(/[*_#`]/g, "").slice(0, 800);
+      const u = new SpeechSynthesisUtterance(clean);
+      const voice = pickVoice();
+      if (voice) u.voice = voice;
+      u.rate = 1.03;
+      u.pitch = 0.95;
+      setSpeaking(true);
+      u.onend = () => {
+        setSpeaking(false);
+        onDone?.();
+      };
+      u.onerror = () => {
+        setSpeaking(false);
+        onDone?.();
+      };
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(u);
+    } catch {
+      setSpeaking(false);
+      onDone?.();
+    }
+  }
+
+  /* ── Chat ── */
   async function send(text: string) {
     const trimmed = text.trim();
     if (!trimmed || busy) return;
+    const spoken = lastInputWasVoice.current;
+    lastInputWasVoice.current = false;
     const history = [...msgs, { role: "user" as const, content: trimmed }];
     setMsgs(history);
     setInput("");
@@ -39,7 +96,7 @@ export function JarvisPanel() {
     try {
       const res = await api<{ reply: string; action?: { type: string; routed_to?: string } }>(
         "/api/jarvis/chat",
-        { method: "POST", body: JSON.stringify({ messages: history.filter((m) => !m.meta || m.role === "user") }) },
+        { method: "POST", body: JSON.stringify({ messages: history }) },
       );
       const meta =
         res.action?.type === "capture"
@@ -49,6 +106,12 @@ export function JarvisPanel() {
             : undefined;
       setMsgs((m) => [...m, { role: "assistant", content: res.reply, meta }]);
       window.dispatchEvent(new CustomEvent("jarvis:capture")); // let cards refresh
+      if (spoken || voiceModeRef.current) {
+        speak(res.reply, () => {
+          // Hands-free loop: after Jarvis finishes talking, listen again.
+          if (voiceModeRef.current && openRef.current) startListening();
+        });
+      }
     } catch (err) {
       setMsgs((m) => [...m, { role: "assistant", content: `Something went wrong: ${String(err)}` }]);
     } finally {
@@ -56,32 +119,41 @@ export function JarvisPanel() {
     }
   }
 
-  async function toggleVoice() {
-    if (recording) {
-      recRef.current?.stop();
-      return;
-    }
-    // Preferred: browser speech recognition (free, instant).
+  /* ── Voice in ── */
+  function getRecognizer(): SpeechRecognitionLike | null {
     const SR =
       (window as unknown as { webkitSpeechRecognition?: new () => SpeechRecognitionLike }).webkitSpeechRecognition ??
       (window as unknown as { SpeechRecognition?: new () => SpeechRecognitionLike }).SpeechRecognition;
-    if (SR) {
-      const rec = new SR();
+    return SR ? new SR() : null;
+  }
+
+  function startListening() {
+    if (recording || busy) return;
+    const rec = getRecognizer();
+    if (rec) {
       rec.lang = "en-US";
       rec.interimResults = false;
       rec.onresult = (e) => {
         const text = Array.from(e.results).map((r) => r[0].transcript).join(" ");
         setRecording(false);
+        lastInputWasVoice.current = true;
         void send(text);
       };
-      rec.onerror = () => setRecording(false);
+      rec.onerror = () => {
+        setRecording(false);
+        stopVoiceMode(); // don't loop forever on mic errors
+      };
       rec.onend = () => setRecording(false);
       recRef.current = rec;
       setRecording(true);
       rec.start();
       return;
     }
-    // Fallback: record audio, transcribe with Whisper server-side.
+    void recordAndTranscribe();
+  }
+
+  async function recordAndTranscribe() {
+    // Fallback for browsers without native speech recognition: Whisper server-side.
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
@@ -98,8 +170,12 @@ export function JarvisPanel() {
           const res = await fetch("/api/jarvis/transcribe", { method: "POST", body: form });
           const data = await res.json();
           setBusy(false);
-          if (data.text) void send(data.text);
-          else setMsgs((m) => [...m, { role: "assistant", content: data.error ?? "Transcription failed." }]);
+          if (data.text) {
+            lastInputWasVoice.current = true;
+            void send(data.text);
+          } else {
+            setMsgs((m) => [...m, { role: "assistant", content: data.error ?? "Transcription failed." }]);
+          }
         } catch {
           setBusy(false);
         }
@@ -109,7 +185,41 @@ export function JarvisPanel() {
       recorder.start();
     } catch {
       setMsgs((m) => [...m, { role: "assistant", content: "Microphone unavailable." }]);
+      stopVoiceMode();
     }
+  }
+
+  function toggleMic() {
+    if (recording) {
+      recRef.current?.stop();
+      return;
+    }
+    startListening();
+  }
+
+  /* ── Hands-free voice mode ── */
+  function toggleVoiceMode() {
+    if (voiceModeRef.current) {
+      stopVoiceMode();
+      return;
+    }
+    voiceModeRef.current = true;
+    setVoiceMode(true);
+    // A user gesture is required before speech synthesis works on mobile —
+    // this toggle IS the gesture, so prime it with a short confirmation.
+    speak("Voice mode on.", () => {
+      if (voiceModeRef.current && openRef.current) startListening();
+    });
+  }
+
+  function stopVoiceMode() {
+    voiceModeRef.current = false;
+    setVoiceMode(false);
+    try {
+      window.speechSynthesis?.cancel();
+    } catch {}
+    recRef.current?.stop();
+    setSpeaking(false);
   }
 
   return (
@@ -118,10 +228,18 @@ export function JarvisPanel() {
         <div className="jarvis-panel">
           <div className="jarvis-head">
             <span className="rail-brand">
-              <span className="dot" />
+              <span className="dot" style={speaking ? { boxShadow: "0 0 14px var(--accent)" } : undefined} />
               JARVIS
             </span>
-            <span className="rule" style={{ flex: 1 }} />
+            {voiceMode && <span className="chip ok">{speaking ? "speaking" : recording ? "listening" : "voice"}</span>}
+            <span style={{ flex: 1 }} />
+            <button
+              className={`btn small ${voiceMode ? "primary" : ""}`}
+              onClick={toggleVoiceMode}
+              title="Hands-free voice conversation"
+            >
+              🎧 voice
+            </button>
             <button className="btn small" onClick={() => setOpen(false)}>
               close
             </button>
@@ -142,12 +260,12 @@ export function JarvisPanel() {
               void send(input);
             }}
           >
-            <button type="button" className={`mic-btn ${recording ? "recording" : ""}`} onClick={toggleVoice} title="Voice capture">
+            <button type="button" className={`mic-btn ${recording ? "recording" : ""}`} onClick={toggleMic} title="Voice capture">
               {recording ? "◼" : "🎙"}
             </button>
             <input
               className="input"
-              placeholder={recording ? "Listening…" : "Talk to Jarvis…"}
+              placeholder={recording ? "Listening…" : voiceMode ? "Voice mode — just talk…" : "Talk to Jarvis…"}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               disabled={busy}
