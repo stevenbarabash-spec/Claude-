@@ -13,11 +13,11 @@ struct MessageComposer: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> MFMessageComposeViewController {
         let controller = MFMessageComposeViewController()
         controller.messageComposeDelegate = context.coordinator
-        // Only pre-fill recipients that look like phone numbers; spoken names
-        // are typed into the To field by the user with Contacts autocomplete.
-        let digits = draft.recipient.filter { $0.isNumber || $0 == "+" }
-        if digits.count >= 7 {
-            controller.recipients = [digits]
+        // Recipients arrive pre-resolved to numbers where Contacts matched;
+        // anything unresolved is passed through for the To field to match.
+        controller.recipients = draft.recipients.map { recipient in
+            let digits = recipient.filter { $0.isNumber || $0 == "+" }
+            return digits.count >= 7 ? digits : recipient
         }
         controller.body = draft.body
         return controller

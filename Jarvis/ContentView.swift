@@ -105,7 +105,7 @@ struct ContentView: View {
                                     Color(red: 0.02, green: 0.05, blue: 0.12),
                                     .black],
                            startPoint: .top, endPoint: .bottom)
-            MatrixRainView(intensity: 0.38)
+            MatrixRainView(intensity: 0.55)
             // Faint ambient halo behind the orb.
             RadialGradient(colors: [.cyan.opacity(0.08), .clear],
                            center: UnitPoint(x: 0.5, y: 0.38),

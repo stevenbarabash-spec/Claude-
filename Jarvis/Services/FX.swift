@@ -11,7 +11,6 @@ final class FX {
     private let engine = AVAudioEngine()
     private let player = AVAudioPlayerNode()
     private let format: AVAudioFormat
-    private var thinkingTimer: Timer?
 
     var enabled: Bool {
         UserDefaults.standard.object(forKey: "fxEnabled") == nil
@@ -57,23 +56,6 @@ final class FX {
     func dispatch() {
         tone([(660, 0.06), (990, 0.06), (1480, 0.12)], gain: 0.35)
         impact(.rigid)
-    }
-
-    /// Soft randomized processing ticks while Jarvis thinks.
-    func startThinking() {
-        stopThinking()
-        guard enabled else { return }
-        let timer = Timer.scheduledTimer(withTimeInterval: 0.8, repeats: true) { [weak self] _ in
-            let base = Double.random(in: 700...1500)
-            self?.tone([(base, 0.035), (base * 1.25, 0.045)], gain: 0.16)
-        }
-        timer.fire()
-        thinkingTimer = timer
-    }
-
-    func stopThinking() {
-        thinkingTimer?.invalidate()
-        thinkingTimer = nil
     }
 
     func impact(_ style: UIImpactFeedbackGenerator.FeedbackStyle) {

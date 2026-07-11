@@ -9,7 +9,7 @@ struct EmailDraft: Identifiable, Equatable {
 
 struct MessageDraft: Identifiable, Equatable {
     let id = UUID()
-    var recipient: String
+    var recipients: [String]
     var body: String
 }
 
@@ -63,6 +63,7 @@ struct CommandRouter {
         let action: String
         let query: String?
         let recipient: String?
+        let recipients: [String]?
         let subject: String?
         let body: String?
         let reminderText: String?
@@ -89,7 +90,7 @@ struct CommandRouter {
 
         {"action":"play_music","query":"<song, artist or playlist>"}
         {"action":"email","recipient":"<name or address if spoken, else empty>","subject":"<subject line>","body":"<a complete, well-written email body signed off appropriately>"}
-        {"action":"message","recipient":"<name or number if spoken, else empty>","body":"<a natural text message>"}
+        {"action":"message","recipients":["<each name or number spoken>"],"body":"<the final text message, ready to send>"}
         {"action":"reminder","reminderText":"<what to remind>","reminderISODate":"<ISO8601 date-time>"}
         {"action":"location_reminder","reminderText":"<what to remind>","place":"<one of the saved places>","trigger":"arrive|leave"}
         {"action":"briefing"}  // "what's my day look like", "morning briefing", "what's on my calendar"
@@ -101,9 +102,13 @@ struct CommandRouter {
         {"action":"feature_request","feature":"<a clear one-line description of the requested capability>"}  // when the user asks Jarvis itself to do something none of these actions can (a missing app capability), or says "add this to the wishlist"
         {"action":"answer","reply":"<a concise spoken-style answer in JARVIS's voice, 1-3 sentences>"}
 
-        Rules: for email/message, write the full content yourself from the user's intent — no placeholders like [name].
-        Use location_reminder only when the reminder is tied to a saved place; otherwise use reminder.
-        If nothing else fits, use "answer".
+        Rules — you are an agent that DOES things, not a chatbot:
+        - Prefer an action over "answer". Use "answer" ONLY for questions and conversation.
+        - Any request containing "text", "message", "tell <person> that", or "let <person> know" is ALWAYS the message action — never answer. Write the final send-ready copy, all recipients included.
+        - "Email <person>" is ALWAYS the email action. Write the complete email — no placeholders like [name].
+        - "Add/update/kick off/start <something>" about the user's projects, schedule tracker, or social media is ALWAYS delegate.
+        - Use location_reminder only when the reminder is tied to a saved place; otherwise reminder.
+        - Never describe what you would do — pick the action that does it.
         """
 
         let raw = try await claude.complete(system: system, user: transcript)
@@ -125,8 +130,12 @@ struct CommandRouter {
                 body: routed.body ?? ""
             ))
         case "message":
+            var recipients = routed.recipients ?? []
+            if recipients.isEmpty, let single = routed.recipient, !single.isEmpty {
+                recipients = [single]
+            }
             return .composeMessage(MessageDraft(
-                recipient: routed.recipient ?? "",
+                recipients: recipients,
                 body: routed.body ?? ""
             ))
         case "reminder":
@@ -218,7 +227,7 @@ struct CommandRouter {
         }
 
         if lower.hasPrefix("text ") || lower.hasPrefix("message ") {
-            return .composeMessage(MessageDraft(recipient: "", body: transcript))
+            return .composeMessage(MessageDraft(recipients: [], body: transcript))
         }
 
         return .speak("Add your Claude API key in Settings and I can answer questions and draft emails and texts for you.")

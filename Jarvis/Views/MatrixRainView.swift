@@ -11,7 +11,7 @@ struct MatrixRainView: View {
     var intensity: Double = 0.4
 
     private static let glyphs: [Character] = Array("アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789Z$#*+<>=")
-    private static let cell: CGFloat = 13
+    private static let cell: CGFloat = 11
 
     // Pre-rendered glyph images: bright heads and blue tails.
     private static let tailImages: [Image] = glyphs.map {
@@ -43,7 +43,7 @@ struct MatrixRainView: View {
                 for column in 0..<columns {
                     let seed = Double(column) * 12.9898
                     let speed = 70 + 120 * Self.fract(sin(seed) * 43758.5453)
-                    let trail = 12 + Int(14 * Self.fract(sin(seed * 1.7) * 9631.42))
+                    let trail = 16 + Int(16 * Self.fract(sin(seed * 1.7) * 9631.42))
                     let loop = Double(size.height) + Double(trail) * Double(Self.cell)
                     let headY = CGFloat(
                         (t * speed + Double(column) * 53.7).truncatingRemainder(dividingBy: loop)

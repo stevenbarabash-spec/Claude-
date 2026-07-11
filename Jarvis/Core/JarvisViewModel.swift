@@ -110,7 +110,6 @@ final class JarvisViewModel: ObservableObject {
             startListening()
         case .thinking:
             currentWork?.cancel()
-            FX.shared.stopThinking()
             startListening()
         case .idle:
             startListening()
@@ -201,14 +200,12 @@ final class JarvisViewModel: ObservableObject {
     func handle(transcript: String) async {
         self.transcript = transcript
         state = .thinking
-        FX.shared.startThinking()
         do {
             let action = try await router.route(transcript)
             try await perform(action, originalText: transcript)
         } catch {
             if Self.isCancellation(error) { return }
             errorMessage = error.localizedDescription
-            FX.shared.stopThinking()
             FX.shared.failure()
             say("Sorry, something went wrong. \(error.localizedDescription)")
         }
@@ -256,10 +253,17 @@ final class JarvisViewModel: ObservableObject {
             emailDraft = draft
 
         case .composeMessage(var draft):
-            if let match = await ContactsService.resolve(name: draft.recipient), let phone = match.phone {
-                draft.recipient = phone
+            // Resolve every spoken name to a real number from Contacts.
+            var resolved: [String] = []
+            for recipient in draft.recipients {
+                if let match = await ContactsService.resolve(name: recipient), let phone = match.phone {
+                    resolved.append(phone)
+                } else {
+                    resolved.append(recipient)
+                }
             }
-            say("Your message is ready. Review it and hit send.")
+            draft.recipients = resolved
+            say("Message drafted and addressed, sir — just hit send.")
             messageDraft = draft
 
         case .scheduleReminder(let text, let date):
@@ -451,7 +455,6 @@ final class JarvisViewModel: ObservableObject {
     // MARK: - Speech
 
     private func say(_ text: String) {
-        FX.shared.stopThinking()
         FX.shared.responseReady()
         response = text
         state = .speaking
