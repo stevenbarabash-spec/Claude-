@@ -6,9 +6,9 @@ export const config = {
     name: "Steven",
     fullName: "Steven Barabash",
     role: "Operator",
-    location: "Toronto",
+    location: "Boca Raton, FL",
   },
-  timezone: process.env.USER_TIMEZONE || "America/Toronto",
+  timezone: process.env.USER_TIMEZONE || "America/New_York",
   // Default daily habits — used until the list is customized on the dashboard
   // (the live list is stored in the DB and editable on the Habits card).
   habits: [
