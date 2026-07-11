@@ -11,6 +11,9 @@ final class SpeechSynthesizer: NSObject, AVSpeechSynthesizerDelegate, AVAudioPla
     private let elevenLabs = ElevenLabsService()
     private var player: AVAudioPlayer?
     private var completion: (() -> Void)?
+    /// Bumped on every speak/stop so late-arriving audio from a cancelled
+    /// utterance can't start playing after the user interrupted.
+    private var generation = 0
 
     override init() {
         super.init()
@@ -28,22 +31,34 @@ final class SpeechSynthesizer: NSObject, AVSpeechSynthesizerDelegate, AVAudioPla
             speakOnDevice(text)
             return
         }
+        let gen = generation
         Task { [weak self] in
             guard let self else { return }
             do {
                 let audio = try await elevenLabs.synthesize(text)
-                let player = try AVAudioPlayer(data: audio)
-                player.delegate = self
-                self.player = player
-                player.play()
+                await MainActor.run {
+                    // Interrupted while fetching? Drop the audio on the floor.
+                    guard gen == self.generation else { return }
+                    if let player = try? AVAudioPlayer(data: audio) {
+                        player.delegate = self
+                        self.player = player
+                        player.play()
+                    } else {
+                        self.speakOnDevice(text)
+                    }
+                }
             } catch {
                 // Network/quota hiccup — fall back to the on-device voice.
-                await MainActor.run { self.speakOnDevice(text) }
+                await MainActor.run {
+                    guard gen == self.generation else { return }
+                    self.speakOnDevice(text)
+                }
             }
         }
     }
 
     func stop() {
+        generation += 1
         synthesizer.stopSpeaking(at: .immediate)
         player?.stop()
         player = nil
