@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { aiAvailable, llmText } from "@/lib/ai/llm";
 import { config } from "@/lib/config";
 import { addDays, localDateKey } from "@/lib/dates";
+import { getHabitDefs } from "@/lib/habits";
 import { getStore } from "@/lib/store";
 
 export async function GET(req: Request) {
@@ -41,7 +42,7 @@ export async function GET(req: Request) {
       `Today: ${today}`,
       `Today's tasks: ${todayTasks.map((t) => `${t.title}${t.key ? " (KEY)" : ""}`).join("; ") || "none filed"}`,
       `Week goals: ${goals.map((g) => `${g.text}${g.done ? " ✓" : ""}`).join("; ") || "none"}`,
-      `Habits completed yesterday: ${habitsYesterday}/${config.habits.length}`,
+      `Habits completed yesterday: ${habitsYesterday}/${(await getHabitDefs()).length}`,
       `Money: received $${receivedThisMonth.toLocaleString()} this month; owed $${owed.toLocaleString()} across ${receivables.length} receivables${overdue.length ? `; OVERDUE: ${overdue.map((r) => `${r.client} $${r.amount.toLocaleString()}`).join(", ")}` : ""}`,
     ].join("\n"),
     512,

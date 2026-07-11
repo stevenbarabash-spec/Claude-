@@ -9,16 +9,16 @@ export const config = {
     location: "Toronto",
   },
   timezone: process.env.USER_TIMEZONE || "America/Toronto",
-  // Daily habits. Keys are stable ids stored in daily_logs — renaming a label
-  // is safe; changing an id orphans its history.
+  // Default daily habits — used until the list is customized on the dashboard
+  // (the live list is stored in the DB and editable on the Habits card).
   habits: [
     { id: "coffee-reading", label: "Coffee + free reading (30 min)", category: "Morning" },
     { id: "news", label: "Catch up on news", category: "Morning" },
     { id: "yoga", label: "Yoga", category: "Body" },
-    { id: "skate-evo", label: "Skate / scoot with Evo", category: "Play" },
+    { id: "skate-eva", label: "Skateboard + scooter with Eva", category: "Play" },
     { id: "pickleball-am", label: "Morning pickleball", category: "Body" },
     { id: "pickleball-pm", label: "Evening pickleball", category: "Body" },
-    { id: "show-night", label: "Show night with wife", category: "Evening" },
+    { id: "show-night", label: "Watch shows with wife at night (11 pm+)", category: "Evening" },
     { id: "unwind", label: "Unwind (10–11 pm)", category: "Evening" },
     { id: "plan-tomorrow", label: "Plan tomorrow", category: "System" },
   ],

@@ -91,9 +91,16 @@ export interface WeeklyReview {
   sealed: boolean;
 }
 
+export interface HabitDef {
+  id: string;
+  label: string;
+  category: string;
+}
+
 export interface DailyNotes {
   focus?: string;
   habits?: { done: string[] };
+  habit_defs?: HabitDef[]; // only on sentinel date — user-editable habit list
   nutrition?: { meals: Meal[] };
   goals?: { week: GoalItem[]; month: GoalItem[] }; // only on sentinel date
   review?: WeeklyReview; // only on week-anchor (Monday) dates

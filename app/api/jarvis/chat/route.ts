@@ -44,11 +44,12 @@ async function detectIntent(text: string): Promise<"capture" | "ask" | "chat" | 
 async function todayContext(): Promise<string> {
   const store = getStore();
   const today = localDateKey();
-  const [tasks, log, income, receivables] = await Promise.all([
+  const [tasks, log, income, receivables, habitDefs] = await Promise.all([
     store.listTasks(false),
     store.getLog(today),
     store.listIncome(1),
     store.listReceivables(false),
+    (await import("@/lib/habits")).getHabitDefs(),
   ]);
   const top = tasks.filter((t) => t.urgency === "today").slice(0, 5);
   const habitsDone = log?.notes.habits?.done ?? [];
@@ -61,7 +62,7 @@ async function todayContext(): Promise<string> {
     `Date: ${today}. Owner: ${config.owner.name}.`,
     `Today's focus: ${log?.notes.focus || "not set"}.`,
     `Today's tasks: ${top.map((t) => t.title).join("; ") || "none"}.`,
-    `Habits done: ${habitsDone.length}/${config.habits.length}.`,
+    `Habits done: ${habitsDone.length}/${habitDefs.length}.`,
     `Nutrition so far: ${kcal} kcal across ${meals.length} meals (target ${config.nutrition.kcalTarget}).`,
     `Money this month: $${received.toLocaleString()} received; $${owed.toLocaleString()} owed across ${receivables.length} open receivables.`,
   ].join("\n");
