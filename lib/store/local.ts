@@ -49,8 +49,12 @@ function load(): Db {
 }
 
 function persist() {
-  fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
-  fs.writeFileSync(DB_PATH, JSON.stringify(cache, null, 2));
+  // On serverless hosts the filesystem is read-only — demo mode degrades to
+  // in-memory (per-instance, non-durable). Configure Supabase for real persistence.
+  try {
+    fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
+    fs.writeFileSync(DB_PATH, JSON.stringify(cache, null, 2));
+  } catch {}
 }
 
 function cosine(a: number[], b: number[]): number {
