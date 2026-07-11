@@ -43,6 +43,7 @@ final class JarvisViewModel: ObservableObject {
     private let synthesizer = SpeechSynthesizer()
     private let router = CommandRouter()
     private let claude = ClaudeService()
+    private let lifeOS = LifeOSService()
 
     private var silenceMonitor: Task<Void, Never>?
     private var lastSpeechActivity = Date()
@@ -240,6 +241,25 @@ final class JarvisViewModel: ObservableObject {
             Wishlist.add(feature)
             try? await TaskDispatcher.addToWishlist(feature)
             say("That's beyond my current abilities, sir — I've added it to the feature wishlist for your next build session.")
+
+        case .dashboardCapture(let text):
+            do {
+                let result = try await lifeOS.chat(messages: [(role: "user", content: "capture: \(text)")])
+                FX.shared.dispatch()
+                say(result.reply)
+            } catch {
+                if Self.isCancellation(error) { return }
+                say(error.localizedDescription)
+            }
+
+        case .dashboardAsk(let question):
+            do {
+                let result = try await lifeOS.chat(messages: [(role: "user", content: "ask: \(question)")])
+                say(result.reply)
+            } catch {
+                if Self.isCancellation(error) { return }
+                say(error.localizedDescription)
+            }
 
         case .playMusic(let query):
             await playMusic(query: query)

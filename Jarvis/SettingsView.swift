@@ -11,6 +11,8 @@ struct SettingsView: View {
     @AppStorage("autoSend") private var autoSend = true
     @AppStorage("fxEnabled") private var fxEnabled = true
     @AppStorage(JarvisKnowledge.urlsKey) private var knowledgeURLs = ""
+    @AppStorage(LifeOSService.urlDefaultsKey) private var lifeOSURL = ""
+    @State private var lifeOSSecret: String = KeychainHelper.read(LifeOSService.secretKeychainKey) ?? ""
 
     @State private var githubToken: String = KeychainHelper.read(MemoryStore.tokenKeychainKey) ?? ""
     @State private var elevenLabsKey: String = KeychainHelper.read(ElevenLabsService.keychainKey) ?? ""
@@ -28,6 +30,7 @@ struct SettingsView: View {
             Form {
                 claudeSection
                 interactionSection
+                lifeOSSection
                 memorySection
                 knowledgeSection
                 voiceSection
@@ -71,6 +74,29 @@ struct SettingsView: View {
             Text("Voice interaction")
         } footer: {
             Text("With auto-send on, tap the orb once, speak, and Jarvis replies when you pause — no second tap. The ∞ Hands-free button on the main screen keeps the whole conversation going with no taps at all.")
+        }
+    }
+
+    private var lifeOSSection: some View {
+        Section {
+            TextField("https://your-dashboard.vercel.app", text: $lifeOSURL)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .keyboardType(.URL)
+                .font(.footnote)
+            SecureField("API secret (x-api-secret)", text: $lifeOSSecret)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+            if LifeOSService().isConfigured {
+                Label("Connected — to-dos, meals, money, and ideas file to your dashboard",
+                      systemImage: "checkmark.icloud")
+                    .font(.footnote)
+                    .foregroundStyle(.green)
+            }
+        } header: {
+            Text("Life OS dashboard")
+        } footer: {
+            Text("Connects Jarvis to your JARVIS Life OS dashboard so they share one brain: \"I need to call the accountant\" files a task, \"I ate a chicken bowl\" logs the meal, \"Acme owes me $2,000\" files a receivable, and \"what's owed to me?\" answers from your data.")
         }
     }
 
@@ -239,6 +265,8 @@ struct SettingsView: View {
                             for: ElevenLabsService.keychainKey)
         KeychainHelper.save(githubToken.trimmingCharacters(in: .whitespacesAndNewlines),
                             for: MemoryStore.tokenKeychainKey)
+        KeychainHelper.save(lifeOSSecret.trimmingCharacters(in: .whitespacesAndNewlines),
+                            for: LifeOSService.secretKeychainKey)
         Task { await MemoryStore.shared.syncUp() }
         // Opt-in mirror for the keyboard extension (app-group storage).
         AppGroup.defaults.set(keyboardShareKey ? trimmed : nil,

@@ -24,6 +24,10 @@ enum JarvisAction {
     case delegateTask(task: String)
     /// Log a capability Jarvis doesn't have yet to the feature wishlist.
     case featureRequest(feature: String)
+    /// File a statement (to-do, meal, money, idea) into the Life OS dashboard.
+    case dashboardCapture(text: String)
+    /// Answer a question from the Life OS dashboard's data and memory.
+    case dashboardAsk(question: String)
     case playMusic(query: String)
     case composeEmail(EmailDraft)
     case composeMessage(MessageDraft)
@@ -75,11 +79,18 @@ struct CommandRouter {
         let memory: String?
         let task: String?
         let feature: String?
+        let text: String?
+        let question: String?
     }
 
     private func claudeRoute(_ transcript: String) async throws -> JarvisAction {
         let now = ISO8601DateFormatter().string(from: Date())
         let places = PlacesStore.all().map(\.name).joined(separator: ", ")
+        // Dashboard actions only exist when the Life OS connection is set up.
+        let dashboardActions = LifeOSService().isConfigured ? """
+        {"action":"capture","text":"<the statement, verbatim>"}  // file into the user's Life OS dashboard: to-dos and "I need to…" items WITHOUT a specific clock time, meals eaten ("I ate…"), money owed/paid ("X owes me $N", "X paid me"), ideas, decisions, journal entries
+        {"action":"ask_dashboard","question":"<the question>"}  // questions about the user's OWN tasks, day plan, money owed, meals, history, or past captures
+        """ : ""
         let system = """
         You are JARVIS: the user's personal AI — composed, precise, dryly witty, with the understated manner of an impeccable British butler. Address the user as "sir" occasionally (not every sentence). Never break character.
         You run on the user's iPhone. The current date-time is \(now) (device local time zone).
@@ -100,6 +111,7 @@ struct CommandRouter {
         {"action":"remember","memory":"<the fact(s) distilled, short and factual, third person about the user>"}  // when the user shares a durable personal fact or says remember/note/store this — e.g. "my name is Steve", "remember that I built you"
         {"action":"delegate","task":"<the full work request, verbatim plus any context needed to execute it>"}  // when the user asks for work in their Claude workspace/projects: updating the schedule tracker, Bytox social media posts, website edits, or any "go do this" request that no other action covers
         {"action":"feature_request","feature":"<a clear one-line description of the requested capability>"}  // when the user asks Jarvis itself to do something none of these actions can (a missing app capability), or says "add this to the wishlist"
+        \(dashboardActions)
         {"action":"answer","reply":"<a concise spoken-style answer in JARVIS's voice, 1-3 sentences>"}
 
         Rules — you are an agent that DOES things, not a chatbot:
@@ -108,6 +120,7 @@ struct CommandRouter {
         - "Email <person>" is ALWAYS the email action. Write the complete email — no placeholders like [name].
         - "Add/update/kick off/start <something>" about the user's projects, schedule tracker, or social media is ALWAYS delegate.
         - Use location_reminder only when the reminder is tied to a saved place; otherwise reminder.
+        - Reminders with a specific clock time use reminder (a phone notification); time-less to-dos prefer capture when available.
         - Never describe what you would do — pick the action that does it.
         """
 
@@ -162,6 +175,10 @@ struct CommandRouter {
             return .delegateTask(task: routed.task ?? transcript)
         case "feature_request":
             return .featureRequest(feature: routed.feature ?? transcript)
+        case "capture":
+            return .dashboardCapture(text: routed.text ?? transcript)
+        case "ask_dashboard":
+            return .dashboardAsk(question: routed.question ?? transcript)
         default:
             // Questions, chat, news — answered conversationally with history
             // and web search rather than the one-shot routing reply.

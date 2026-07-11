@@ -37,6 +37,8 @@ enum JarvisCapabilities {
               examples: ["Remember that my name is Steve", "Remember I built you"]),
         .init(icon: "paperplane", title: "Dispatch work to Claude HQ",
               examples: ["Add the dentist appointment to my schedule tracker", "Kick off Bytox social media posts"]),
+        .init(icon: "rectangle.grid.2x2", title: "Life OS dashboard",
+              examples: ["I need to call the accountant", "I ate a chicken burrito", "Acme owes me $2,000 due Friday", "What's owed to me?"]),
         .init(icon: "square.and.arrow.down", title: "Share sheet & summaries (tray button)",
               examples: ["Share any article to Jarvis, then tap Summarize"]),
         .init(icon: "waveform", title: "Hands-free conversation",
