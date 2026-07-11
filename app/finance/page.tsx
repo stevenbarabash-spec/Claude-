@@ -144,6 +144,12 @@ function ProjectsPanel({ projects, onChange }: { projects: ProjectRollup[]; onCh
     onChange();
   }
 
+  async function remove(id: string, name: string) {
+    if (!confirm(`Delete project "${name}"? Its income history stays; only the project is removed.`)) return;
+    await api(`/api/projects/${id}`, { method: "DELETE" });
+    onChange();
+  }
+
   const active = projects.filter((p) => p.status !== "done");
   const done = projects.filter((p) => p.status === "done");
 
@@ -186,6 +192,7 @@ function ProjectsPanel({ projects, onChange }: { projects: ProjectRollup[]; onCh
                   <button className="btn small" onClick={() => setStatus(p.id, "active")}>resume</button>
                 )}
                 <button className="btn small" onClick={() => setStatus(p.id, "done")}>done</button>
+                <button className="btn small" style={{ color: "var(--hot)" }} onClick={() => remove(p.id, p.name)}>✕</button>
               </div>
             </div>
           </div>
@@ -215,6 +222,9 @@ function ReceivablesPanel({
 }) {
   const [form, setForm] = useState({ client: "", description: "", amount: "", due: "", project_id: "" });
   const [adding, setAdding] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [edit, setEdit] = useState({ client: "", description: "", amount: "", due: "", status: "invoiced" });
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
@@ -240,8 +250,75 @@ function ReceivablesPanel({
     onChange();
   }
 
+  function toggleSelect(id: string) {
+    setSelected((s) => {
+      const next = new Set(s);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  async function deleteSelected() {
+    if (!confirm(`Delete ${selected.size} receivable${selected.size === 1 ? "" : "s"}? This can't be undone.`)) return;
+    await Promise.all([...selected].map((id) => api(`/api/receivables/${id}`, { method: "DELETE" })));
+    setSelected(new Set());
+    setEditingId(null);
+    onChange();
+  }
+
+  function openEditor(r: Receivable) {
+    if (editingId === r.id) {
+      setEditingId(null);
+      return;
+    }
+    setEditingId(r.id);
+    setEdit({
+      client: r.client,
+      description: r.description ?? "",
+      amount: String(r.amount),
+      due: r.due_date ?? "",
+      status: r.status,
+    });
+  }
+
+  async function saveEdit(id: string) {
+    await api(`/api/receivables/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        client: edit.client.trim() || "Unknown",
+        description: edit.description.trim() || null,
+        amount: Number(edit.amount) || 0,
+        due_date: edit.due || null,
+        status: edit.status,
+      }),
+    });
+    setEditingId(null);
+    onChange();
+  }
+
+  async function deleteOne(id: string) {
+    if (!confirm("Delete this receivable? This can't be undone.")) return;
+    await api(`/api/receivables/${id}`, { method: "DELETE" });
+    setEditingId(null);
+    onChange();
+  }
+
   return (
-    <Panel idx="p3" title="Owed to you" right={<button className="btn small" onClick={() => setAdding(!adding)}>{adding ? "cancel" : "+ new"}</button>}>
+    <Panel
+      idx="p3"
+      title="Owed to you"
+      right={
+        <span className="row" style={{ gap: 6 }}>
+          {selected.size > 0 && (
+            <button className="btn small" style={{ color: "var(--hot)", borderColor: "var(--hot)" }} onClick={deleteSelected}>
+              delete {selected.size} selected
+            </button>
+          )}
+          <button className="btn small" onClick={() => setAdding(!adding)}>{adding ? "cancel" : "+ new"}</button>
+        </span>
+      }
+    >
       {adding && (
         <form className="stack" style={{ marginBottom: 14 }} onSubmit={add}>
           <div className="grid-2">
@@ -263,25 +340,70 @@ function ReceivablesPanel({
         {receivables.map((r) => {
           const isOverdue = r.due_date && r.due_date < today;
           return (
-            <div key={r.id} className="spread" style={{ padding: "10px 0", borderBottom: "1px solid var(--border-soft)", alignItems: "flex-start" }}>
-              <div>
-                <div style={{ fontSize: 13.5 }}>
-                  {r.client}
-                  {r.description && <span className="faint"> — {r.description}</span>}
+            <div key={r.id} style={{ borderBottom: "1px solid var(--border-soft)" }}>
+              <div className="spread" style={{ padding: "10px 0", alignItems: "flex-start" }}>
+                <div className="row" style={{ alignItems: "flex-start", gap: 10 }}>
+                  <input
+                    type="checkbox"
+                    checked={selected.has(r.id)}
+                    onChange={() => toggleSelect(r.id)}
+                    style={{ marginTop: 3, accentColor: "var(--accent)", cursor: "pointer" }}
+                  />
+                  <div style={{ cursor: "pointer" }} onClick={() => openEditor(r)} title="Click to edit">
+                    <div style={{ fontSize: 13.5 }}>
+                      {r.client}
+                      {r.description && <span className="faint"> — {r.description}</span>}
+                    </div>
+                    <div className="faint" style={{ fontSize: 11, marginTop: 3, fontFamily: "var(--mono)" }}>
+                      {r.due_date ? (isOverdue ? `DUE ${r.due_date} · OVERDUE` : `DUE ${r.due_date}`) : "NO DUE DATE"} · CLICK TO EDIT
+                    </div>
+                  </div>
                 </div>
-                <div className="faint" style={{ fontSize: 11, marginTop: 3, fontFamily: "var(--mono)" }}>
-                  {r.due_date ? (isOverdue ? `DUE ${r.due_date} · OVERDUE` : `DUE ${r.due_date}`) : "NO DUE DATE"}
+                <div className="stack" style={{ gap: 5, alignItems: "flex-end" }}>
+                  <span className="num" style={{ fontSize: 15, color: isOverdue ? "var(--hot)" : undefined }}>{fmtMoney(r.amount)}</span>
+                  <div className="row" style={{ gap: 4 }}>
+                    <span className={`chip ${isOverdue ? "hot" : r.status === "invoiced" ? "warm" : "cool"}`}>
+                      {isOverdue ? "overdue" : r.status}
+                    </span>
+                    <button className="btn small" onClick={() => markPaid(r.id)}>paid ✓</button>
+                  </div>
                 </div>
               </div>
-              <div className="stack" style={{ gap: 5, alignItems: "flex-end" }}>
-                <span className="num" style={{ fontSize: 15, color: isOverdue ? "var(--hot)" : undefined }}>{fmtMoney(r.amount)}</span>
-                <div className="row" style={{ gap: 4 }}>
-                  <span className={`chip ${isOverdue ? "hot" : r.status === "invoiced" ? "warm" : "cool"}`}>
-                    {isOverdue ? "overdue" : r.status}
-                  </span>
-                  <button className="btn small" onClick={() => markPaid(r.id)}>paid ✓</button>
+              {editingId === r.id && (
+                <div className="stack" style={{ padding: "0 0 12px 26px" }}>
+                  <div className="grid-2">
+                    <label>
+                      <span className="label" style={{ fontSize: 8.5 }}>Client</span>
+                      <input className="input" value={edit.client} onChange={(e) => setEdit({ ...edit, client: e.target.value })} />
+                    </label>
+                    <label>
+                      <span className="label" style={{ fontSize: 8.5 }}>Amount ($)</span>
+                      <input className="input num" type="number" value={edit.amount} onChange={(e) => setEdit({ ...edit, amount: e.target.value })} />
+                    </label>
+                    <label>
+                      <span className="label" style={{ fontSize: 8.5 }}>Due date</span>
+                      <input className="input" type="date" value={edit.due} onChange={(e) => setEdit({ ...edit, due: e.target.value })} />
+                    </label>
+                    <label>
+                      <span className="label" style={{ fontSize: 8.5 }}>Status</span>
+                      <select className="input" value={edit.status} onChange={(e) => setEdit({ ...edit, status: e.target.value })}>
+                        <option value="expected">expected</option>
+                        <option value="invoiced">invoiced</option>
+                      </select>
+                    </label>
+                  </div>
+                  <label>
+                    <span className="label" style={{ fontSize: 8.5 }}>Description</span>
+                    <input className="input" value={edit.description} onChange={(e) => setEdit({ ...edit, description: e.target.value })} />
+                  </label>
+                  <div className="row">
+                    <button className="btn primary" onClick={() => saveEdit(r.id)}>Save</button>
+                    <button className="btn" onClick={() => setEditingId(null)}>Cancel</button>
+                    <span style={{ flex: 1 }} />
+                    <button className="btn small" style={{ color: "var(--hot)" }} onClick={() => deleteOne(r.id)}>delete</button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           );
         })}
@@ -303,6 +425,7 @@ function IncomePanel({
 }) {
   const [form, setForm] = useState({ source: "", amount: "", date: "" });
   const [adding, setAdding] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
@@ -316,8 +439,37 @@ function IncomePanel({
     onChange();
   }
 
+  function toggleSelect(id: string) {
+    setSelected((s) => {
+      const next = new Set(s);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  async function deleteSelected() {
+    if (!confirm(`Delete ${selected.size} payment${selected.size === 1 ? "" : "s"} from the log? This can't be undone.`)) return;
+    await Promise.all([...selected].map((id) => api(`/api/income/${id}`, { method: "DELETE" })));
+    setSelected(new Set());
+    onChange();
+  }
+
   return (
-    <Panel idx="p4" title="Money in" right={<button className="btn small" onClick={() => setAdding(!adding)}>{adding ? "cancel" : "+ log payment"}</button>}>
+    <Panel
+      idx="p4"
+      title="Money in"
+      right={
+        <span className="row" style={{ gap: 6 }}>
+          {selected.size > 0 && (
+            <button className="btn small" style={{ color: "var(--hot)", borderColor: "var(--hot)" }} onClick={deleteSelected}>
+              delete {selected.size} selected
+            </button>
+          )}
+          <button className="btn small" onClick={() => setAdding(!adding)}>{adding ? "cancel" : "+ log payment"}</button>
+        </span>
+      }
+    >
       {adding && (
         <form className="row" style={{ marginBottom: 14 }} onSubmit={add}>
           <input className="input" placeholder="From (client / source)" value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} autoFocus />
@@ -332,6 +484,12 @@ function IncomePanel({
           {income.map((e) => (
             <div key={e.id} className="spread" style={{ padding: "7px 0", borderBottom: "1px solid var(--border-soft)" }}>
               <div className="row" style={{ gap: 8 }}>
+                <input
+                  type="checkbox"
+                  checked={selected.has(e.id)}
+                  onChange={() => toggleSelect(e.id)}
+                  style={{ accentColor: "var(--accent)", cursor: "pointer" }}
+                />
                 <span className="num faint" style={{ fontSize: 11 }}>{e.date.slice(5)}</span>
                 <span style={{ fontSize: 13 }}>{e.source}</span>
                 <span className="chip">{e.kind}</span>
