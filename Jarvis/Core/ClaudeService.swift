@@ -62,7 +62,13 @@ struct ClaudeService {
                 ["type": "web_search_20250305", "name": "web_search", "max_uses": 3]
             ]
         }
-        return try await send(system: system, messages: messages, maxTokens: maxTokens, extras: extras)
+        do {
+            return try await send(system: system, messages: messages, maxTokens: maxTokens, extras: extras)
+        } catch ClaudeError.badResponse(let status, _) where status == 400 && enableWebSearch {
+            // Some accounts have API web search disabled — degrade gracefully
+            // and answer from knowledge instead of surfacing an error.
+            return try await send(system: system, messages: messages, maxTokens: maxTokens, extras: [:])
+        }
     }
 
     private func send(system: String, content: [[String: Any]], maxTokens: Int) async throws -> String {
