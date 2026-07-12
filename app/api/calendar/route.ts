@@ -19,6 +19,19 @@ function feedHost(u: string): string {
   }
 }
 
+// Free/busy-only feeds (Workspace privacy caps) export every event as "Busy".
+// Translate that into a readable per-calendar label instead.
+const BUSY_LABEL: Record<string, string> = {
+  "steven@hydrogel.us": "HydroGel — scheduled",
+  "sales@globalbasemedia.com": "GlobalBaseMedia — scheduled",
+};
+
+function titleFor(summary: string | null, calName: string): string {
+  const s = (summary ?? "").trim();
+  if (/^busy$/i.test(s)) return BUSY_LABEL[calName] ?? `${calName} — scheduled`;
+  return s || "(untitled)";
+}
+
 function expand(icsText: string, fallbackName: string): CalendarEvent[] {
   const jcal = ICAL.parse(icsText);
   const comp = new ICAL.Component(jcal);
@@ -38,7 +51,7 @@ function expand(icsText: string, fallbackName: string): CalendarEvent[] {
         id: `${event.uid}-${start.toISOString()}`,
         uid: event.uid,
         calendar: calName,
-        title: event.summary || "(untitled)",
+        title: titleFor(event.summary, calName),
         start: start.toISOString(),
         end: end.toISOString(),
         allDay: event.startDate?.isDate ?? false,
