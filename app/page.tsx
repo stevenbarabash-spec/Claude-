@@ -1,6 +1,7 @@
 import { Blockers } from "@/components/cards/Blockers";
 import { CalendarCard } from "@/components/cards/CalendarCard";
 import { ClientWork } from "@/components/cards/ClientWork";
+import { CurrentlyWorkingOn } from "@/components/cards/CurrentlyWorkingOn";
 import { DayTasks } from "@/components/cards/DayTasks";
 import { DayTimeline } from "@/components/cards/DayTimeline";
 import { FinancePulse } from "@/components/cards/FinancePulse";
@@ -24,6 +25,7 @@ export default function Home() {
       <div className="col">
         <Session />
         <DayTimeline />
+        <CurrentlyWorkingOn />
         <DayTasks />
         <ClientWork />
         <Habits />

@@ -20,6 +20,10 @@ export interface NextItem {
   score: number;
   reason: string; // why it ranks here (Claude's line, or the deterministic one)
   href: string; // where to act on it
+  // routing back to the real record (for Currently Working On → Done)
+  taskId: string;
+  projectId?: string; // client-board tasks
+  date?: string; // day-task log date
 }
 
 function daysBetween(fromKey: string, toKey: string): number {
@@ -77,6 +81,8 @@ export async function collectCandidates(): Promise<{ today: string; nowHHMM: str
         score: dd.score + noDue + (p.status === "active" ? 6 : 0),
         reason: dd.reason || "client work",
         href: "/clients",
+        taskId: t.id,
+        projectId: p.id,
       });
     }
   }
@@ -95,6 +101,7 @@ export async function collectCandidates(): Promise<{ today: string; nowHHMM: str
       score: base + (t.key ? 22 : 0),
       reason: dd.reason || `no due date · ${t.urgency}`,
       href: "/crm",
+      taskId: t.id,
     });
   }
 
@@ -113,6 +120,8 @@ export async function collectCandidates(): Promise<{ today: string; nowHHMM: str
       score: (t.time ? 80 : 60) + (past ? 30 : 0),
       reason: t.time ? (past ? `was due ${t.time} today` : `today at ${t.time}`) : "on today's list",
       href: "/",
+      taskId: t.id,
+      date: today,
     });
   }
 

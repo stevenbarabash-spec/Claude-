@@ -149,6 +149,7 @@ export interface DailyNotes {
   pending_capture?: PendingCapture | null; // only on sentinel date — awaiting "confirm"
   history?: HistoryEvent[]; // only on the history sentinel date
   muted_events?: string[]; // only on sentinel date — calendar series UIDs to hide
+  working_on?: WorkingItem[]; // only on sentinel date — the Currently Working On strip
 }
 
 // A capture Jarvis has understood and read back, but not yet filed.
@@ -156,6 +157,20 @@ export interface PendingCapture {
   text: string; // the capture text that will run through the pipeline on confirm
   description: string; // human-readable "here's what I'll file"
   expires_at: string;
+}
+
+// A task the user pulled from Next Up into "Currently Working On". Carries the
+// routing back to its real home so "Done" checks it off at the source.
+export interface WorkingItem {
+  key: string; // NextItem composite id (e.g. "client:g1") — dedup key
+  source: "client" | "crm" | "day";
+  title: string;
+  who: string | null;
+  href: string;
+  taskId: string; // underlying task id
+  projectId?: string; // client-board tasks
+  date?: string; // day-task log date
+  startedAt: string; // ISO
 }
 
 // ── Change history (lives on its own sentinel log) ──────
