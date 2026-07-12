@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Spark } from "@/components/cards/FinancePulse";
 import { Panel } from "@/components/Panel";
+import { PinShield } from "@/components/PinShield";
 import { api, clientDateKey, fmtMoney } from "@/lib/client";
 import type { IncomeEntry, Project, Receivable } from "@/lib/types";
 
@@ -50,6 +51,8 @@ export default function FinancePage() {
   const maxProj = Math.max(...s.projections.map((p) => p.total), 1);
 
   return (
+    // Whole page behind the PIN; navigating away unmounts and relocks it.
+    <PinShield hint="enter PIN to open finances">
     <div className="stack" style={{ gap: 16 }}>
       <div className="spread">
         <span className="label" style={{ fontSize: 12 }}>Finance // {monthLabel}</span>
@@ -114,6 +117,7 @@ export default function FinancePage() {
 
       <IncomePanel income={s.incomeThisMonth} history={s.monthlyHistory} onChange={load} />
     </div>
+    </PinShield>
   );
 }
 

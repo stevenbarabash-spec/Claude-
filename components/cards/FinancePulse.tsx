@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { api, fmtMoney } from "@/lib/client";
 import { Panel } from "../Panel";
+import { PinShield } from "../PinShield";
 
 export function Spark({ values, color = "var(--accent)" }: { values: number[]; color?: string }) {
   if (values.length < 2) return <svg className="spark" />;
@@ -42,6 +43,7 @@ export function FinancePulse() {
 
   return (
     <Panel idx="07" title="Cashflow" right={<Link href="/finance" className="chip">this month →</Link>}>
+      <PinShield autoLockMs={30000} hint="PIN to view">
       <div className="label">Received this month</div>
       {s ? (
         <>
@@ -64,6 +66,7 @@ export function FinancePulse() {
       ) : (
         <div className="faint" style={{ fontSize: 13, marginTop: 6 }}>Loading…</div>
       )}
+      </PinShield>
     </Panel>
   );
 }
