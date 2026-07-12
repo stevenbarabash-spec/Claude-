@@ -29,11 +29,14 @@ interface ChatMessage {
   content: string;
 }
 
-type Intent = "capture" | "ask" | "chat" | "command" | "start_work";
+type Intent = "capture" | "ask" | "chat" | "command" | "start_work" | "next";
+
+const NEXT_RE = /what('?s| should| do| to| shall).*(next|work on|do now|do first|priorit|focus on|tackle)|what'?s next|what do i do|plan my day|where (should|do) i start/i;
 
 async function detectIntent(text: string): Promise<Intent> {
   if (!aiAvailable()) {
-    if (/\b(work on|working on|start (on|working)|let'?s do|i want to do|i'?ll do|tackle|focus on)\b/i.test(text) && /\b(today|now|next|this)\b/i.test(text)) {
+    if (NEXT_RE.test(text)) return "next";
+    if (/\b(work on|working on|start (on|working|the)|let'?s do|i want to do|i'?ll do|tackle|focus on)\b/i.test(text) && /\b(today|now|next|this|first|top|one)\b/i.test(text)) {
       return "start_work";
     }
     if (/\b(delete|remove|change|update|edit|correct|mark .{0,20}paid|push .{0,20}date)\b/i.test(text)) return "command";
@@ -41,9 +44,10 @@ async function detectIntent(text: string): Promise<Intent> {
   }
   const result = await llmJson<{ intent: Intent }>(
     `Classify the user's message for a personal-OS assistant. Return {"intent": ...}:
-- "start_work": the user wants to START or focus on a specific task now/today — "let me work on the BYTOX newsletter", "I want to do the funnel today", "start the essay", "let's tackle the redesign"
-- "capture": a NEW to-do, reminder, meal eaten, money owed/received, idea, decision, or journal entry to be FILED (statements about things to do or that happened)
-- "command": modify/delete an EXISTING money record, OR act on the CLIENT BOARD — e.g. "delete the Meridian receivable", "change Acme's invoice to $5k", "mark the Relay invoice paid", "add a task to BYTOX to send the invoice", "mark the Greenwich homepage task done", "check off the funnel task for HydroGel"
+- "next": the user asks what to work on or do next / what to prioritize / where to start / to plan their day — "what should I work on?", "what's next?", "what should I do now?", "prioritize my day"
+- "start_work": the user wants to START a specific task now/today — "let me work on the BYTOX newsletter", "I want to do the funnel today", "start the essay", "let's do the first one"
+- "capture": a NEW to-do, reminder, meal eaten, money owed/received, idea, decision, or journal entry to be FILED
+- "command": modify/delete an EXISTING money record, OR act on the CLIENT BOARD — e.g. "delete the Meridian receivable", "change Acme's invoice to $5k", "mark the Relay invoice paid", "add a task to BYTOX to send the invoice", "mark the Greenwich homepage task done"
 - "ask": a question about the user's own data, history, tasks, or past captures
 - "chat": general conversation, greetings, requests for advice/summaries`,
     text,
@@ -52,8 +56,34 @@ async function detectIntent(text: string): Promise<Intent> {
   return result?.data.intent ?? "capture";
 }
 
+// Speak the Next Up ranking aloud.
+async function answerWhatsNext(): Promise<string> {
+  const { buildNextUp } = await import("@/lib/nextup");
+  const r = await buildNextUp(5);
+  if (r.items.length === 0) return "You're all clear — nothing open right now. Nice work.";
+  const list = r.items
+    .map((it, i) => `${i + 1}. ${it.title}${it.who ? ` (${it.who})` : ""} — ${it.reason}`)
+    .join("\n");
+  const head = r.headline ? `${r.headline}\n\n` : "Here's what to tackle next:\n\n";
+  return `${head}${list}\n\nSay "start the first one" and I'll pull it into Currently Working On.`;
+}
+
 // Turn "I want to work on the BYTOX newsletter today" into a staged working item.
 async function stageFromUtterance(text: string): Promise<{ reply: string; staged: boolean }> {
+  const store = getStore();
+  const { collectCandidates, buildNextUp } = await import("@/lib/nextup");
+  const { stageWorking } = await import("@/lib/working");
+
+  // "start the first / top / number one" → stage the #1 Next Up suggestion.
+  if (/\b(first|top|number one|1st|next one)\b/i.test(text) && text.trim().split(/\s+/).length <= 6) {
+    const r = await buildNextUp(1);
+    const top = r.items[0];
+    if (top) {
+      await stageWorking({ key: top.id, source: top.source, title: top.title, who: top.who, href: top.href, taskId: top.taskId, projectId: top.projectId, date: top.date });
+      return { reply: `Staged “${top.title}” in Currently Working On — tap Confirm to start the clock.`, staged: true };
+    }
+  }
+
   const q = text
     .replace(/^\s*(hey\s+)?(jarvis[,\s]*)?/i, "")
     .replace(/\b(i want to|i'd like to|i would like to|let me|let'?s|lets|can you|could you|please|start|begin|working on|work on|do|tackle|focus on|today|right now|now|next|this)\b/gi, " ")
@@ -61,9 +91,6 @@ async function stageFromUtterance(text: string): Promise<{ reply: string; staged
     .trim();
   if (!q) return { reply: "Sure — what would you like to work on?", staged: false };
 
-  const store = getStore();
-  const { collectCandidates } = await import("@/lib/nextup");
-  const { stageWorking } = await import("@/lib/working");
   const { items } = await collectCandidates();
   const tokens = q.toLowerCase().split(/\s+/);
   const match = items.find((it) => {
@@ -194,6 +221,10 @@ export async function POST(req: Request) {
     payload = text.replace(/^ask[:,]\s*/i, "");
   } else {
     intent = await detectIntent(text);
+  }
+
+  if (intent === "next") {
+    return NextResponse.json({ reply: await answerWhatsNext(), action: { type: "next" } });
   }
 
   if (intent === "start_work") {
