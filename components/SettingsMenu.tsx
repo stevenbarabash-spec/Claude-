@@ -90,6 +90,16 @@ export function SettingsMenu() {
             className="btn small"
             style={{ width: "100%", justifyContent: "center" }}
             onClick={() => {
+              window.dispatchEvent(new CustomEvent("focus:toggle"));
+              setOpen(false);
+            }}
+          >
+            🎯 Toggle focus mode
+          </button>
+          <button
+            className="btn small"
+            style={{ width: "100%", justifyContent: "center" }}
+            onClick={() => {
               window.dispatchEvent(new CustomEvent("layout:reset"));
               setOpen(false);
             }}

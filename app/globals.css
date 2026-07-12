@@ -378,6 +378,9 @@ textarea.input { resize: vertical; min-height: 68px; line-height: 1.5; }
   align-items: start;
 }
 .col { display: flex; flex-direction: column; gap: 16px; }
+.focus-view { max-width: 720px; margin: 0 auto; }
+.focus-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.focus-stack { display: flex; flex-direction: column; gap: 16px; }
 @media (max-width: 1100px) { .home-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 760px) { .home-grid { grid-template-columns: 1fr; } .rail { flex-wrap: wrap; } }
 
@@ -534,6 +537,23 @@ textarea.input { resize: vertical; min-height: 68px; line-height: 1.5; }
   overflow-y: auto;
   display: flex; flex-direction: column; gap: 14px;
 }
+
+/* ── Currently Working On search ──────────────────────── */
+.work-results {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 15;
+  background: var(--bg-raise); border: 1px solid var(--border);
+  border-radius: 10px; padding: 5px; overflow: hidden;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+  display: flex; flex-direction: column; gap: 2px;
+}
+.work-result {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; text-align: left;
+  padding: 8px 10px; border-radius: 7px; font-size: 12.5px;
+  transition: background 0.12s;
+}
+.work-result:hover { background: var(--panel); }
+.work-create { border-top: 1px solid var(--border-soft); margin-top: 2px; color: var(--text-dim); }
 
 /* ── Currently-working status light ───────────────────── */
 @keyframes statusBlink {

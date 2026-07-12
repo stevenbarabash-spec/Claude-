@@ -65,9 +65,13 @@ function reconcile(layout: string[][]): string[][] {
   return cols.slice(0, 3);
 }
 
+// Focus mode: only these cards, for heads-down work (alerts banner stays via Shell).
+const FOCUS_SET = ["working", "nextup", "calendar"];
+
 export function DashboardGrid() {
   const [cols, setCols] = useState<string[][]>(DEFAULT_LAYOUT);
   const [mounted, setMounted] = useState(false);
+  const [focus, setFocus] = useState(false);
   const dragId = useRef<string | null>(null);
   const [dragging, setDragging] = useState<string | null>(null);
   const [over, setOver] = useState<{ card?: string; col?: number } | null>(null);
@@ -76,6 +80,7 @@ export function DashboardGrid() {
     try {
       const raw = localStorage.getItem(STORE_KEY);
       if (raw) setCols(reconcile(JSON.parse(raw)));
+      setFocus(localStorage.getItem("jarvis-focus") === "1");
     } catch {}
     setMounted(true);
     const onReset = () => {
@@ -84,9 +89,28 @@ export function DashboardGrid() {
         localStorage.removeItem(STORE_KEY);
       } catch {}
     };
+    const onFocus = () =>
+      setFocus((f) => {
+        const next = !f;
+        try {
+          localStorage.setItem("jarvis-focus", next ? "1" : "0");
+        } catch {}
+        return next;
+      });
     window.addEventListener("layout:reset", onReset);
-    return () => window.removeEventListener("layout:reset", onReset);
+    window.addEventListener("focus:toggle", onFocus);
+    return () => {
+      window.removeEventListener("layout:reset", onReset);
+      window.removeEventListener("focus:toggle", onFocus);
+    };
   }, []);
+
+  function exitFocus() {
+    setFocus(false);
+    try {
+      localStorage.setItem("jarvis-focus", "0");
+    } catch {}
+  }
 
   function persist(next: string[][]) {
     setCols(next);
@@ -117,6 +141,24 @@ export function DashboardGrid() {
     dragId.current = null;
     setDragging(null);
     setOver(null);
+  }
+
+  if (focus) {
+    return (
+      <div className="focus-view">
+        <div className="focus-head">
+          <span className="label" style={{ color: "var(--accent)" }}>🎯 Focus mode</span>
+          <span className="faint" style={{ fontSize: 12 }}>Heads-down — everything else is hidden.</span>
+          <span style={{ flex: 1 }} />
+          <button className="btn small" onClick={exitFocus}>exit focus</button>
+        </div>
+        <div className="focus-stack">
+          {FOCUS_SET.map((id) => (
+            <div key={id}>{CARDS[id]}</div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
