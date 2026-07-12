@@ -3,6 +3,7 @@
 // one Done routes back to its real home (client board / CRM / day-tasks) so it
 // checks off everywhere, and records the change in history.
 import { listClientProjects, saveClientProjects } from "./clientProjects";
+import { localDateKey } from "./dates";
 import { recordHistory } from "./history";
 import { getStore } from "./store";
 import { GOALS_SENTINEL_DATE, type DayTask, type WorkingItem } from "./types";
@@ -19,8 +20,29 @@ async function save(items: WorkingItem[]): Promise<void> {
 export async function addWorking(item: Omit<WorkingItem, "startedAt">): Promise<WorkingItem[]> {
   const items = await listWorking();
   if (!items.find((x) => x.key === item.key)) {
-    items.unshift({ ...item, startedAt: new Date().toISOString() });
+    items.unshift({ ...item, status: "active", startedAt: new Date().toISOString() });
   }
+  await save(items);
+  return items;
+}
+
+// Stage an item as pending — shows in the strip with a Confirm button, clock
+// not yet running. Used when Jarvis is told "I want to work on X today".
+export async function stageWorking(item: Omit<WorkingItem, "startedAt" | "status">): Promise<WorkingItem[]> {
+  const items = await listWorking();
+  const existing = items.find((x) => x.key === item.key);
+  if (!existing) {
+    items.unshift({ ...item, status: "pending", startedAt: new Date().toISOString() });
+  }
+  await save(items);
+  return items;
+}
+
+// Confirm a pending item → active, clock starts now.
+export async function confirmWorking(key: string): Promise<WorkingItem[]> {
+  const items = (await listWorking()).map((x) =>
+    x.key === key ? { ...x, status: "active" as const, startedAt: new Date().toISOString() } : x,
+  );
   await save(items);
   return items;
 }
@@ -38,16 +60,21 @@ export async function completeWorking(key: string): Promise<{ items: WorkingItem
   if (!item) return { items, ok: false, message: "Not in the working list." };
   const store = getStore();
 
+  const finishedAt = new Date().toISOString();
+  const startedAt = item.status === "pending" ? finishedAt : item.startedAt;
+  const today = localDateKey();
+
   try {
     if (item.source === "crm") {
       const before = await store.getTask(item.taskId);
-      const after = await store.updateTask(item.taskId, { completed_at: new Date().toISOString() });
+      const after = await store.updateTask(item.taskId, { completed_at: finishedAt });
       if (before) {
         await recordHistory({
           action: "update", resource: "task", resource_id: item.taskId,
           label: `Task completed: ${item.title}`, before, after,
         });
       }
+      await logToToday(today, item, startedAt, finishedAt);
     } else if (item.source === "client" && item.projectId) {
       const projects = await listClientProjects();
       const p = projects.find((x) => x.id === item.projectId);
@@ -62,10 +89,14 @@ export async function completeWorking(key: string): Promise<{ items: WorkingItem
           before, after: p,
         });
       }
+      await logToToday(today, item, startedAt, finishedAt);
     } else if (item.source === "day" && item.date) {
+      // The task already lives in a day; just mark it done and stamp the times.
       const log = await store.getLog(item.date);
       const before: DayTask[] = log?.notes.day_tasks ?? [];
-      const after = before.map((t) => (t.id === item.taskId ? { ...t, done: true } : t));
+      const after = before.map((t) =>
+        t.id === item.taskId ? { ...t, done: true, startedAt, finishedAt } : t,
+      );
       await store.mergeLogNotes(item.date, { day_tasks: after });
       await recordHistory({
         action: "update", resource: "day_tasks", resource_id: item.date,
@@ -79,4 +110,22 @@ export async function completeWorking(key: string): Promise<{ items: WorkingItem
   const remaining = items.filter((x) => x.key !== key);
   await save(remaining);
   return { items: remaining, ok: true, message: `Done: ${item.title}` };
+}
+
+// Drop a completed entry into today's Tasks so the day shows what got done,
+// with the start and finish times.
+async function logToToday(today: string, item: WorkingItem, startedAt: string | undefined, finishedAt: string): Promise<void> {
+  const store = getStore();
+  const log = await store.getLog(today);
+  const tasks: DayTask[] = log?.notes.day_tasks ?? [];
+  tasks.push({
+    id: crypto.randomUUID(),
+    title: item.who ? `${item.title} · ${item.who}` : item.title,
+    time: null,
+    done: true,
+    startedAt,
+    finishedAt,
+    fromWork: true,
+  });
+  await store.mergeLogNotes(today, { day_tasks: tasks });
 }

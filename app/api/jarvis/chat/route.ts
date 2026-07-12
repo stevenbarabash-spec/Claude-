@@ -29,21 +29,61 @@ interface ChatMessage {
   content: string;
 }
 
-async function detectIntent(text: string): Promise<"capture" | "ask" | "chat" | "command"> {
+type Intent = "capture" | "ask" | "chat" | "command" | "start_work";
+
+async function detectIntent(text: string): Promise<Intent> {
   if (!aiAvailable()) {
+    if (/\b(work on|working on|start (on|working)|let'?s do|i want to do|i'?ll do|tackle|focus on)\b/i.test(text) && /\b(today|now|next|this)\b/i.test(text)) {
+      return "start_work";
+    }
     if (/\b(delete|remove|change|update|edit|correct|mark .{0,20}paid|push .{0,20}date)\b/i.test(text)) return "command";
     return text.trim().endsWith("?") ? "ask" : "capture";
   }
-  const result = await llmJson<{ intent: "capture" | "ask" | "chat" | "command" }>(
+  const result = await llmJson<{ intent: Intent }>(
     `Classify the user's message for a personal-OS assistant. Return {"intent": ...}:
+- "start_work": the user wants to START or focus on a specific task now/today — "let me work on the BYTOX newsletter", "I want to do the funnel today", "start the essay", "let's tackle the redesign"
 - "capture": a NEW to-do, reminder, meal eaten, money owed/received, idea, decision, or journal entry to be FILED (statements about things to do or that happened)
-- "command": modify, correct, or delete an EXISTING record — e.g. "delete the Meridian receivable", "change Acme's invoice to $5k", "mark the Relay invoice paid", "push the due date to next month", "actually remove that"
+- "command": modify/delete an EXISTING money record, OR act on the CLIENT BOARD — e.g. "delete the Meridian receivable", "change Acme's invoice to $5k", "mark the Relay invoice paid", "add a task to BYTOX to send the invoice", "mark the Greenwich homepage task done", "check off the funnel task for HydroGel"
 - "ask": a question about the user's own data, history, tasks, or past captures
 - "chat": general conversation, greetings, requests for advice/summaries`,
     text,
     128,
   );
   return result?.data.intent ?? "capture";
+}
+
+// Turn "I want to work on the BYTOX newsletter today" into a staged working item.
+async function stageFromUtterance(text: string): Promise<{ reply: string; staged: boolean }> {
+  const q = text
+    .replace(/^\s*(hey\s+)?(jarvis[,\s]*)?/i, "")
+    .replace(/\b(i want to|i'd like to|i would like to|let me|let'?s|lets|can you|could you|please|start|begin|working on|work on|do|tackle|focus on|today|right now|now|next|this)\b/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!q) return { reply: "Sure — what would you like to work on?", staged: false };
+
+  const store = getStore();
+  const { collectCandidates } = await import("@/lib/nextup");
+  const { stageWorking } = await import("@/lib/working");
+  const { items } = await collectCandidates();
+  const tokens = q.toLowerCase().split(/\s+/);
+  const match = items.find((it) => {
+    const hay = `${it.title} ${it.who ?? ""}`.toLowerCase();
+    return tokens.every((t) => hay.includes(t));
+  });
+
+  let staged;
+  if (match) {
+    staged = { key: match.id, source: match.source, title: match.title, who: match.who, href: match.href, taskId: match.taskId, projectId: match.projectId, date: match.date };
+  } else {
+    const title = q.charAt(0).toUpperCase() + q.slice(1);
+    const task = await store.createTask({ title, urgency: "today" });
+    staged = { key: `crm:${task.id}`, source: "crm" as const, title, who: null, href: "/crm", taskId: task.id };
+  }
+  await stageWorking(staged);
+  return {
+    reply: `Staged “${staged.title}” in Currently Working On — tap Confirm to start the clock.`,
+    staged: true,
+  };
 }
 
 async function todayContext(): Promise<string> {
@@ -144,7 +184,7 @@ export async function POST(req: Request) {
   }
 
   // Explicit prefixes let the user force a mode: "capture: ..." / "ask: ..."
-  let intent: "capture" | "ask" | "chat" | "command";
+  let intent: Intent;
   let payload = text;
   if (/^capture[:,]/i.test(text)) {
     intent = "capture";
@@ -154,6 +194,11 @@ export async function POST(req: Request) {
     payload = text.replace(/^ask[:,]\s*/i, "");
   } else {
     intent = await detectIntent(text);
+  }
+
+  if (intent === "start_work") {
+    const { reply, staged } = await stageFromUtterance(payload);
+    return NextResponse.json({ reply, action: { type: staged ? "work_staged" : "chat" } });
   }
 
   if (intent === "command") {

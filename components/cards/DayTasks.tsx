@@ -3,7 +3,7 @@
 // ("BYTOX — send draft" at 3:00 PM). Lives between Session and Client Work.
 // Timed entries also show up as notches on the day timeline.
 import { useEffect, useRef, useState } from "react";
-import { api, clientDateKey, fmt12 } from "@/lib/client";
+import { api, clientDateKey, fmt12, fmtTime12 } from "@/lib/client";
 import type { DayTask } from "@/lib/types";
 import { Panel } from "../Panel";
 
@@ -115,37 +115,49 @@ export function DayTasks() {
         </div>
       ) : (
         <div className="stack" style={{ gap: 0 }}>
-          {tasks.map((t) => {
+          {/* Open tasks first, then a "done today" log at the bottom. */}
+          {[...tasks].sort((a, b) => Number(a.done) - Number(b.done)).map((t) => {
             const late = !t.done && t.time !== null && t.time < now;
+            const span =
+              t.finishedAt
+                ? `started ${t.startedAt ? fmtTime12(new Date(t.startedAt)) : "—"} · finished ${fmtTime12(new Date(t.finishedAt))}`
+                : null;
             return (
               <div
                 key={t.id}
                 className="spread"
-                style={{ padding: "7px 0", borderBottom: "1px solid var(--border-soft)" }}
+                style={{ padding: "7px 0", borderBottom: "1px solid var(--border-soft)", alignItems: "flex-start" }}
               >
                 <div
                   className="row"
-                  style={{ cursor: "pointer", minWidth: 0 }}
+                  style={{ cursor: "pointer", minWidth: 0, alignItems: "flex-start" }}
                   onClick={() => toggle(t)}
                   title={t.done ? "Mark as not done" : "Mark done"}
                 >
-                  <span className={`habit ${t.done ? "done" : ""}`} style={{ padding: 0, border: "none", background: "none" }}>
+                  <span className={`habit ${t.done ? "done" : ""}`} style={{ padding: 0, border: "none", background: "none", marginTop: 1 }}>
                     <span className="box">{t.done ? "✓" : ""}</span>
                   </span>
-                  <span
-                    style={{
-                      fontSize: 13,
-                      textDecoration: t.done ? "line-through" : "none",
-                      color: t.done ? "var(--text-faint)" : undefined,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {t.title}
+                  <span style={{ minWidth: 0 }}>
+                    <span
+                      style={{
+                        fontSize: 13,
+                        textDecoration: t.done ? "line-through" : "none",
+                        color: t.done ? "var(--text-faint)" : undefined,
+                        display: "block",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {t.title}
+                    </span>
+                    {span && (
+                      <span className="num" style={{ fontSize: 10, color: "var(--accent)", opacity: 0.8 }}>{span}</span>
+                    )}
                   </span>
                 </div>
                 <div className="row" style={{ flexShrink: 0 }}>
+                  {t.fromWork && t.done && <span className="chip ok">done</span>}
                   {t.time && (
                     <span className={`chip ${t.done ? "" : late ? "hot" : "warm"}`}>{fmt12(t.time)}</span>
                   )}

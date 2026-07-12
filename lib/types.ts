@@ -133,6 +133,9 @@ export interface DayTask {
   title: string;
   time: string | null; // HH:MM (24h) or null = anytime today
   done: boolean;
+  startedAt?: string; // ISO — set when finished via Currently Working On
+  finishedAt?: string; // ISO — set when finished via Currently Working On
+  fromWork?: boolean; // logged here by completing a Currently Working On item
 }
 
 export interface DailyNotes {
@@ -172,6 +175,7 @@ export interface WorkingItem {
   projectId?: string; // client-board tasks
   date?: string; // day-task log date
   startedAt: string; // ISO
+  status?: "pending" | "active"; // pending = staged, awaiting Confirm (default active)
 }
 
 // A parked idea for improving the dashboard — reviewed later, not a task.
@@ -206,11 +210,11 @@ export interface HistoryEvent {
   is_revert?: boolean; // revert events themselves can't be re-reverted
 }
 
-// A destructive change Jarvis has proposed but not yet executed.
+// A change Jarvis has proposed but not yet executed (confirm-gated).
 export interface PendingCommand {
-  action: "delete" | "update" | "mark_paid";
-  target: "receivable" | "income";
-  id: string;
+  action: "delete" | "update" | "mark_paid" | "add_client_task" | "complete_client_task";
+  target: "receivable" | "income" | "client";
+  id: string; // money: record id · add_client_task: project id · complete: task id
   patch?: Record<string, unknown>;
   description: string;
   expires_at: string;

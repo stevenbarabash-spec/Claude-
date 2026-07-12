@@ -86,8 +86,8 @@ export async function clearPendingCommand(): Promise<void> {
 }
 
 interface ProposedCommand {
-  action: "delete" | "update" | "mark_paid" | "none";
-  target?: "receivable" | "income";
+  action: "delete" | "update" | "mark_paid" | "add_client_task" | "complete_client_task" | "none";
+  target?: "receivable" | "income" | "client";
   id?: string;
   patch?: Record<string, unknown>;
   description?: string;
@@ -97,6 +97,10 @@ interface ProposedCommand {
 const RECEIVABLE_PATCH_KEYS = ["client", "description", "amount", "due_date", "status"];
 const INCOME_PATCH_KEYS = ["source", "amount", "date"];
 
+function clientOf(name: string): string {
+  return name.split("—")[0].trim();
+}
+
 export async function proposeCommand(text: string): Promise<{ reply: string; proposed: boolean }> {
   if (!aiAvailable()) {
     return {
@@ -105,7 +109,13 @@ export async function proposeCommand(text: string): Promise<{ reply: string; pro
     };
   }
   const store = getStore();
-  const [receivables, income] = await Promise.all([store.listReceivables(false), store.listIncome(2)]);
+  const { listClientProjects } = await import("../clientProjects");
+  const [receivables, income, projects] = await Promise.all([
+    store.listReceivables(false),
+    store.listIncome(2),
+    listClientProjects(),
+  ]);
+  const activeProjects = projects.filter((p) => p.status !== "done");
 
   const records = [
     ...receivables.map(
@@ -113,24 +123,34 @@ export async function proposeCommand(text: string): Promise<{ reply: string; pro
         `receivable | ${r.id} | ${r.client} | $${r.amount} | due ${r.due_date ?? "none"} | ${r.status}${r.description ? ` | ${r.description}` : ""}`,
     ),
     ...income.map((e) => `income | ${e.id} | ${e.source} | $${e.amount} | received ${e.date}`),
+    ...activeProjects.map((p) => `client_project | ${p.id} | ${clientOf(p.name)} — ${p.name}`),
+    ...activeProjects.flatMap((p) =>
+      p.tasks.filter((t) => !t.done).map((t) => `client_task | ${t.id} | in project ${p.id} (${p.name}) | ${t.title}`),
+    ),
   ].join("\n");
+
+  // Maps for validation.
+  const projectIds = new Set(activeProjects.map((p) => p.id));
+  const taskToProject = new Map<string, string>();
+  for (const p of activeProjects) for (const t of p.tasks) taskToProject.set(t.id, p.id);
 
   const today = localDateKey();
   const result = await llmJson<ProposedCommand>(
-    `You translate a user's request to modify their financial records into a single command.
-You are given their records, one per line: type | id | details.
+    `You translate a user's request into a single command over their records.
+Records are given one per line: type | id | details.
 Return JSON:
-{"action": "delete" | "update" | "mark_paid" | "none",
- "target": "receivable" | "income",
+{"action": "delete" | "update" | "mark_paid" | "add_client_task" | "complete_client_task" | "none",
+ "target": "receivable" | "income" | "client",
  "id": "<exact id from the list>",
- "patch": { changed fields only },
- "description": "one plain sentence describing EXACTLY what will happen, with names and amounts"}
+ "patch": { changed/new fields only },
+ "description": "one plain sentence describing EXACTLY what will happen"}
 Rules:
-- patch keys for receivable: client, description, amount (number), due_date (YYYY-MM-DD), status ("expected"|"invoiced")
-- patch keys for income: source, amount (number), date (YYYY-MM-DD)
-- "mark_paid" is only for receivables (books the income automatically); no patch needed
-- resolve relative dates against today
-- if the request is ambiguous between records or matches nothing, return {"action":"none","reason":"..."}
+- Money: patch keys for receivable = client, description, amount (number), due_date (YYYY-MM-DD), status ("expected"|"invoiced"); for income = source, amount, date. "mark_paid" (receivable only) books income; no patch.
+- Client board:
+  - "add_client_task": target "client", id = the client_project id to add to, patch = { "title": "...", "due": "YYYY-MM-DD" | null }. Match the project by client/name in the request.
+  - "complete_client_task": target "client", id = the exact client_task id to check off.
+- resolve relative dates against today.
+- if ambiguous or nothing matches, return {"action":"none","reason":"..."}.
 - NEVER invent an id.`,
     `Today is ${today}.\nRequest: ${text}\n\nRecords:\n${records || "(no records)"}`,
     768,
@@ -140,13 +160,44 @@ Rules:
   if (!cmd || cmd.action === "none" || !cmd.id || !cmd.target) {
     return {
       reply: cmd?.reason
-        ? `I couldn't pin down which record you mean: ${cmd.reason}`
-        : "I couldn't match that to a record. Try naming the client and amount.",
+        ? `I couldn't pin that down: ${cmd.reason}`
+        : "I couldn't match that to a record. Try naming the client, task, or amount.",
       proposed: false,
     };
   }
 
-  // Never trust a hallucinated id, target, or patch key.
+  // ── Client-board actions ──
+  if (cmd.action === "add_client_task") {
+    if (cmd.target !== "client" || !projectIds.has(cmd.id)) {
+      return { reply: "I couldn't tell which client project to add that to.", proposed: false };
+    }
+    const title = String((cmd.patch as { title?: unknown })?.title ?? "").trim();
+    if (!title) return { reply: "What's the task you want to add?", proposed: false };
+    const dueRaw = (cmd.patch as { due?: unknown })?.due;
+    const due = typeof dueRaw === "string" && /^\d{4}-\d{2}-\d{2}$/.test(dueRaw) ? dueRaw : null;
+    await setPendingCommand({
+      action: "add_client_task", target: "client", id: cmd.id,
+      patch: { title, due },
+      description: cmd.description ?? `Add "${title}" to that client project`,
+      expires_at: new Date(Date.now() + PENDING_TTL_MS).toISOString(),
+    });
+    return { reply: `${cmd.description ?? `Add "${title}"`}\n\nSay "confirm" and I'll add it — or "cancel".`, proposed: true };
+  }
+  if (cmd.action === "complete_client_task") {
+    const projectId = taskToProject.get(cmd.id);
+    if (cmd.target !== "client" || !projectId) {
+      return { reply: "I couldn't match that to an open client task.", proposed: false };
+    }
+    await setPendingCommand({
+      action: "complete_client_task", target: "client", id: cmd.id,
+      patch: { projectId },
+      description: cmd.description ?? "Check off that client task",
+      expires_at: new Date(Date.now() + PENDING_TTL_MS).toISOString(),
+    });
+    return { reply: `${cmd.description ?? "Check off that client task"}\n\nSay "confirm" and I'll do it — or "cancel".`, proposed: true };
+  }
+
+  // ── Money actions (existing) ──
   const validIds = new Set(
     cmd.target === "receivable" ? receivables.map((r) => r.id) : income.map((e) => e.id),
   );
@@ -183,6 +234,46 @@ export async function executePendingCommand(): Promise<string> {
   const store = getStore();
   await clearPendingCommand();
   const { recordHistory } = await import("../history");
+
+  // ── Client-board actions ──
+  if (cmd.target === "client") {
+    const { listClientProjects, saveClientProjects } = await import("../clientProjects");
+    const projects = await listClientProjects();
+
+    if (cmd.action === "add_client_task") {
+      const p = projects.find((x) => x.id === cmd.id);
+      if (!p) return "That client project no longer exists — nothing added.";
+      const before = JSON.parse(JSON.stringify(p));
+      const title = String(cmd.patch?.title ?? "").trim();
+      const due = (cmd.patch?.due as string | null) ?? null;
+      p.tasks.push({ id: crypto.randomUUID(), title, done: false, due });
+      p.updated_at = new Date().toISOString();
+      await saveClientProjects(projects);
+      await recordHistory({
+        action: "update", resource: "client_project", resource_id: p.id,
+        label: `Client task added by Jarvis: ${title} (${clientOf(p.name)})`,
+        before, after: p, source: "jarvis",
+      });
+      return `Done — added "${title}" to ${clientOf(p.name)}. (${cmd.description})`;
+    }
+
+    // complete_client_task
+    const projectId = (cmd.patch?.projectId as string) ?? "";
+    const p = projects.find((x) => x.id === projectId);
+    if (!p) return "That client task no longer exists — nothing changed.";
+    const task = p.tasks.find((t) => t.id === cmd.id);
+    if (!task) return "That client task no longer exists — nothing changed.";
+    const before = JSON.parse(JSON.stringify(p));
+    task.done = true;
+    p.updated_at = new Date().toISOString();
+    await saveClientProjects(projects);
+    await recordHistory({
+      action: "update", resource: "client_project", resource_id: p.id,
+      label: `Client task checked off by Jarvis: ${task.title} (${clientOf(p.name)})`,
+      before, after: p, source: "jarvis",
+    });
+    return `Done — checked off "${task.title}" for ${clientOf(p.name)}. (${cmd.description})`;
+  }
 
   if (cmd.target === "receivable") {
     const before = (await store.listReceivables(true)).find((r) => r.id === cmd.id) ?? null;

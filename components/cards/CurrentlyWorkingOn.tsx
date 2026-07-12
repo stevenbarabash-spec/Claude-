@@ -136,6 +136,16 @@ export function CurrentlyWorkingOn() {
     }
   }
 
+  async function confirm(item: WorkingItem) {
+    setBusy(item.key);
+    const r = await api<{ items: WorkingItem[] }>("/api/working/confirm", {
+      method: "POST",
+      body: JSON.stringify({ key: item.key }),
+    }).catch(() => null);
+    setBusy(null);
+    if (r) setItems(r.items);
+  }
+
   async function stop(item: WorkingItem) {
     const r = await api<{ items: WorkingItem[] }>("/api/working", {
       method: "DELETE",
@@ -144,11 +154,20 @@ export function CurrentlyWorkingOn() {
     if (r) setItems(r.items);
   }
 
+  const activeCount = items?.filter((i) => i.status !== "pending").length ?? 0;
+  const pendingCount = items?.filter((i) => i.status === "pending").length ?? 0;
+
   return (
     <Panel
       idx="13"
       title="Currently Working On"
-      right={items && items.length > 0 ? <span className="chip ok">{items.length} active</span> : undefined}
+      right={
+        items && items.length > 0 ? (
+          <span className="chip ok">
+            {activeCount} active{pendingCount ? ` · ${pendingCount} to confirm` : ""}
+          </span>
+        ) : undefined
+      }
     >
       {/* Search existing tasks or create a new one to start on */}
       <div ref={searchRef} style={{ position: "relative", marginBottom: items && items.length ? 12 : 8 }}>
@@ -190,44 +209,62 @@ export function CurrentlyWorkingOn() {
         </div>
       ) : (
         <div className="stack" style={{ gap: 10 }}>
-          {items.map((it) => (
-            <div
-              key={it.key}
-              className="row"
-              style={{
-                gap: 11,
-                padding: "11px 12px",
-                borderRadius: 10,
-                border: "1px solid var(--border)",
-                background: "rgba(255,255,255,0.02)",
-                alignItems: "flex-start",
-              }}
-            >
-              <span className="status-live" style={{ marginTop: 4 }} title="In progress" />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <Link href={it.href} style={{ fontSize: 14, lineHeight: 1.4, display: "block" }}>
-                  {it.title}
-                </Link>
-                <div className="row" style={{ gap: 8, marginTop: 4, flexWrap: "wrap" }}>
-                  <span className="faint" style={{ fontSize: 10, fontFamily: "var(--mono)" }}>
-                    {it.who ? `${it.who.toUpperCase()} · ` : ""}
-                    {SOURCE_LABEL[it.source].toUpperCase()}
-                  </span>
-                  <span className="num" style={{ fontSize: 10.5, color: "var(--accent)" }}>
-                    ● {elapsed(it.startedAt, now)}
-                  </span>
+          {items.map((it) => {
+            const pending = it.status === "pending";
+            return (
+              <div
+                key={it.key}
+                className="row"
+                style={{
+                  gap: 11,
+                  padding: "11px 12px",
+                  borderRadius: 10,
+                  border: `1px solid ${pending ? "var(--warm)" : "var(--border)"}`,
+                  background: pending ? "var(--warm-dim)" : "rgba(255,255,255,0.02)",
+                  alignItems: "flex-start",
+                }}
+              >
+                <span
+                  className={pending ? undefined : "status-live"}
+                  style={pending ? { width: 10, height: 10, borderRadius: "50%", background: "var(--warm)", marginTop: 4, flexShrink: 0 } : { marginTop: 4 }}
+                  title={pending ? "Staged — confirm to start" : "In progress"}
+                />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <Link href={it.href} style={{ fontSize: 14, lineHeight: 1.4, display: "block" }}>
+                    {it.title}
+                  </Link>
+                  <div className="row" style={{ gap: 8, marginTop: 4, flexWrap: "wrap" }}>
+                    <span className="faint" style={{ fontSize: 10, fontFamily: "var(--mono)" }}>
+                      {it.who ? `${it.who.toUpperCase()} · ` : ""}
+                      {SOURCE_LABEL[it.source].toUpperCase()}
+                    </span>
+                    {pending ? (
+                      <span className="num" style={{ fontSize: 10.5, color: "var(--warm)" }}>staged — confirm to start</span>
+                    ) : (
+                      <span className="num" style={{ fontSize: 10.5, color: "var(--accent)" }}>● {elapsed(it.startedAt, now)}</span>
+                    )}
+                  </div>
+                </div>
+                <div className="stack" style={{ gap: 5, flexShrink: 0 }}>
+                  {pending ? (
+                    <>
+                      <button className="btn small primary" disabled={busy === it.key} onClick={() => confirm(it)}>
+                        {busy === it.key ? "…" : "✓ confirm"}
+                      </button>
+                      <button className="btn small" onClick={() => stop(it)} title="Discard">discard</button>
+                    </>
+                  ) : (
+                    <>
+                      <button className="btn small primary" disabled={busy === it.key} onClick={() => done(it)}>
+                        {busy === it.key ? "…" : "✓ done"}
+                      </button>
+                      <button className="btn small" onClick={() => stop(it)} title="Remove without completing">stop</button>
+                    </>
+                  )}
                 </div>
               </div>
-              <div className="stack" style={{ gap: 5, flexShrink: 0 }}>
-                <button className="btn small primary" disabled={busy === it.key} onClick={() => done(it)}>
-                  {busy === it.key ? "…" : "✓ done"}
-                </button>
-                <button className="btn small" onClick={() => stop(it)} title="Remove without completing">
-                  stop
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </Panel>
