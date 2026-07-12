@@ -58,9 +58,8 @@ export default function ClientsPage() {
   if (projects === null) return <div className="faint">Loading…</div>;
 
   const active = projects.filter((p) => p.status === "active");
-  const openTasks = projects
-    .filter((p) => p.status !== "done")
-    .flatMap((p) => p.tasks.filter((t) => !t.done).map((t) => ({ p, t })));
+  // Open tasks across ALL projects — a done project can still have loose ends.
+  const openTasks = projects.flatMap((p) => p.tasks.filter((t) => !t.done).map((t) => ({ p, t })));
   const doneTasks = projects.flatMap((p) => p.tasks.filter((t) => t.done).map((t) => ({ p, t })));
   const overdueCount = openTasks.filter(({ t }) => t.due && t.due < today).length;
 
