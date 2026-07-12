@@ -486,6 +486,27 @@ textarea.input { resize: vertical; min-height: 68px; line-height: 1.5; }
 .mic-btn.recording { color: var(--hot); border-color: var(--hot); animation: pulse 1.2s infinite; }
 @keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(224, 112, 111, 0.15); } }
 
+/* ── Live voice listening panel ───────────────────────── */
+.voice-live {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; margin: 0 12px;
+  border: 1px solid var(--accent); border-radius: 11px;
+  background: var(--accent-dim);
+}
+.voice-viz {
+  display: flex; align-items: center; gap: 2px;
+  height: 42px; flex-shrink: 0;
+}
+.voice-bar {
+  width: 3px; border-radius: 2px; background: var(--accent);
+  transition: height 0.06s linear, opacity 0.06s linear;
+}
+.voice-heard {
+  flex: 1; min-width: 0; font-size: 13px; line-height: 1.4;
+  color: var(--text); max-height: 42px; overflow-y: auto;
+}
+.voice-live .btn { flex-shrink: 0; }
+
 /* ── Misc ─────────────────────────────────────────────── */
 .toast {
   position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
