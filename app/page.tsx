@@ -6,6 +6,7 @@ import { DayTimeline } from "@/components/cards/DayTimeline";
 import { FinancePulse } from "@/components/cards/FinancePulse";
 import { GoalsCard } from "@/components/cards/Goals";
 import { Habits } from "@/components/cards/Habits";
+import { NextUp } from "@/components/cards/NextUp";
 import { Nutrition } from "@/components/cards/Nutrition";
 import { Operator } from "@/components/cards/Operator";
 import { Session } from "@/components/cards/Session";
@@ -29,6 +30,7 @@ export default function Home() {
         <CalendarCard />
       </div>
       <div className="col">
+        <NextUp />
         <Nutrition />
         <GoalsCard />
       </div>
