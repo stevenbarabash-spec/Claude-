@@ -147,8 +147,9 @@ body {
 .help-dot { color: var(--accent); flex-shrink: 0; }
 /* Right-column cards: open the widget leftward so it stays on-screen. */
 .help-pop.flip { left: auto; right: 0; }
-/* Lift a card (and its overflowing help popover) above its neighbors. */
-.card-wrap.help-open { z-index: 60; }
+/* Lift a card (and its overflowing popovers) above its neighbors. */
+.card-wrap.help-open,
+.card-wrap.raised { z-index: 60; }
 
 /* ── Draggable dashboard cards ────────────────────────── */
 .card-wrap { position: relative; }

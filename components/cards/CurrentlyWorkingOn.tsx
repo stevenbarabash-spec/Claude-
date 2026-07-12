@@ -41,6 +41,17 @@ export function CurrentlyWorkingOn() {
   const [query, setQuery] = useState("");
   const [hits, setHits] = useState<SearchHit[]>([]);
   const [adding, setAdding] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  // While the results dropdown is open, lift the whole card above its
+  // neighbors so the dropdown isn't trapped behind them (backdrop-filter
+  // gives each card its own stacking context).
+  useEffect(() => {
+    const wrap = searchRef.current?.closest(".card-wrap");
+    if (!wrap) return;
+    wrap.classList.toggle("raised", query.trim().length >= 2);
+    return () => wrap.classList.remove("raised");
+  }, [query]);
 
   function load() {
     api<{ items: WorkingItem[] }>("/api/working").then((r) => setItems(r.items)).catch(() => setItems([]));
@@ -140,7 +151,7 @@ export function CurrentlyWorkingOn() {
       right={items && items.length > 0 ? <span className="chip ok">{items.length} active</span> : undefined}
     >
       {/* Search existing tasks or create a new one to start on */}
-      <div style={{ position: "relative", marginBottom: items && items.length ? 12 : 8 }}>
+      <div ref={searchRef} style={{ position: "relative", marginBottom: items && items.length ? 12 : 8 }}>
         <input
           className="input"
           placeholder="Search a task (e.g. “newsletter BYTOX”) or type a new one…"

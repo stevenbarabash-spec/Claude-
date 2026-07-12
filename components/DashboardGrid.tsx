@@ -154,7 +154,7 @@ export function DashboardGrid() {
         </div>
         <div className="focus-stack">
           {FOCUS_SET.map((id) => (
-            <div key={id}>{CARDS[id]}</div>
+            <div key={id} className="card-wrap">{CARDS[id]}</div>
           ))}
         </div>
       </div>
