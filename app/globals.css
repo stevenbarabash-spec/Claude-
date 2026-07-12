@@ -381,11 +381,12 @@ textarea.input { resize: vertical; min-height: 68px; line-height: 1.5; }
   box-shadow: 0 0 10px var(--accent);
 }
 .tl-notch {
-  position: absolute; top: 24px; width: 16px; height: 25px;
+  position: absolute; top: 24px; width: 12px; height: 25px;
   transform: translateX(-50%);
   display: flex; justify-content: center; align-items: flex-end;
   cursor: pointer;
 }
+.tl-notch:hover { z-index: 7; }
 .tl-notch .bar { width: 3px; height: 18px; border-radius: 2px; transition: all 0.12s; }
 .tl-notch:hover .bar { height: 24px; filter: brightness(1.35); }
 .tl-notch.past .bar { opacity: 0.4; }

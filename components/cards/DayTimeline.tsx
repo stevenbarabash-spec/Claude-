@@ -130,12 +130,13 @@ export function DayTimeline() {
   const pct = (min: number) => ((min - startH * 60) / span) * 100;
   const labelStep = endH - startH > 12 ? 3 : 2;
 
-  // Nudge notches apart when two land at (almost) the same minute.
+  // Nudge notches fully apart when two land at (almost) the same minute,
+  // so each stays hoverable on its own.
   let lastPct = -10;
   let lastOffset = 0;
   const positioned = notches.map((n) => {
     const p = pct(n.minutes);
-    const offset = p - lastPct < 1.6 ? lastOffset + 7 : 0;
+    const offset = p - lastPct < 1.6 ? lastOffset + 12 : 0;
     lastPct = p;
     lastOffset = offset;
     return { ...n, p, offset };
