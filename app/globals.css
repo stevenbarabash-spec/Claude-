@@ -87,6 +87,41 @@ body {
   --border: rgba(255, 255, 255, 0.1); --border-soft: rgba(255, 255, 255, 0.06);
 }
 
+/* ── Card help (eye widget) ───────────────────────────── */
+.panel-help { position: relative; display: inline-flex; }
+.panel-eye {
+  display: inline-grid; place-items: center;
+  width: 20px; height: 20px; padding: 0;
+  color: var(--text-faint); cursor: pointer;
+  transition: color 0.15s;
+}
+.panel-eye:hover { color: var(--accent); }
+.help-pop {
+  position: absolute; top: 26px; left: 0;
+  width: 280px; max-height: 60vh; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 12px;
+  background: var(--bg-raise);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  z-index: 30;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.6);
+  text-transform: none; letter-spacing: normal;
+}
+.help-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.help-title {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text);
+}
+.help-section { display: flex; flex-direction: column; gap: 5px; }
+.help-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--accent);
+}
+.help-what { font-size: 12.5px; line-height: 1.55; color: var(--text-dim); }
+.help-bullet { display: flex; gap: 7px; font-size: 12.5px; line-height: 1.5; color: var(--text-dim); }
+.help-dot { color: var(--accent); flex-shrink: 0; }
+
 /* ── Draggable dashboard cards ────────────────────────── */
 .card-wrap { position: relative; }
 .card-grip {

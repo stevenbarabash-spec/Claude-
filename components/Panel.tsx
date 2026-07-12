@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { PanelHelp } from "./PanelHelp";
 
 export function Panel({
   idx,
@@ -18,6 +19,7 @@ export function Panel({
       <header className="panel-head">
         {idx && <span className="idx">{idx} //</span>}
         <span className="title">{title}</span>
+        <PanelHelp title={title} />
         <span className="rule" />
         {right && <span className="right">{right}</span>}
       </header>
