@@ -76,6 +76,16 @@ export function SettingsMenu() {
           >
             ↻ Refresh page
           </button>
+          <button
+            className="btn small"
+            style={{ width: "100%", justifyContent: "center" }}
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent("layout:reset"));
+              setOpen(false);
+            }}
+          >
+            ⤢ Reset card layout
+          </button>
           <div>
             <div className="label" style={{ fontSize: 10, marginBottom: 8 }}>Color theme</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>

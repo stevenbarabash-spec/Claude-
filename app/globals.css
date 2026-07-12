@@ -87,6 +87,27 @@ body {
   --border: rgba(255, 255, 255, 0.1); --border-soft: rgba(255, 255, 255, 0.06);
 }
 
+/* ── Draggable dashboard cards ────────────────────────── */
+.card-wrap { position: relative; }
+.card-grip {
+  position: absolute; top: 8px; left: 8px; z-index: 4;
+  width: 22px; height: 22px; border-radius: 6px;
+  display: grid; place-items: center;
+  font-size: 12px; line-height: 1; color: var(--text-faint);
+  background: var(--bg-raise); border: 1px solid var(--border-soft);
+  cursor: grab; opacity: 0; transition: opacity 0.15s, color 0.15s;
+}
+.card-wrap:hover .card-grip { opacity: 0.85; }
+.card-grip:hover { color: var(--accent); border-color: var(--accent); }
+.card-grip:active { cursor: grabbing; }
+.card-wrap.dragging { opacity: 0.35; }
+.card-wrap.drop-before::before {
+  content: ""; position: absolute; top: -9px; left: 0; right: 0;
+  height: 2px; border-radius: 2px; background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+.col.col-drop-target { outline: 1px dashed var(--border); outline-offset: 6px; border-radius: 12px; }
+
 /* ── Settings menu ────────────────────────────────────── */
 .settings-pop {
   position: absolute; top: 44px; right: 0;
