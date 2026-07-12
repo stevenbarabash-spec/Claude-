@@ -146,6 +146,14 @@ export interface DailyNotes {
   review?: WeeklyReview; // only on week-anchor (Monday) dates
   briefing?: { text: string; generated_at: string };
   pending_command?: PendingCommand | null; // only on sentinel date — awaiting "confirm"
+  pending_capture?: PendingCapture | null; // only on sentinel date — awaiting "confirm"
+}
+
+// A capture Jarvis has understood and read back, but not yet filed.
+export interface PendingCapture {
+  text: string; // the capture text that will run through the pipeline on confirm
+  description: string; // human-readable "here's what I'll file"
+  expires_at: string;
 }
 
 // A destructive change Jarvis has proposed but not yet executed.

@@ -4,6 +4,7 @@
 // task lists, collapsible updates log), and a right sidebar with week strip,
 // upcoming deadlines, and the master open-tasks checklist.
 import { useEffect, useState } from "react";
+import { UndoToast } from "@/components/UndoToast";
 import { api, clientDateKey } from "@/lib/client";
 import type { ClientProject, ClientTask } from "@/lib/types";
 
@@ -29,6 +30,8 @@ export default function ClientsPage() {
   const [projects, setProjects] = useState<ClientProject[] | null>(null);
   const [adding, setAdding] = useState(false);
   const [newName, setNewName] = useState("");
+  // Last checked-off task, so a stray click is one tap away from coming back.
+  const [undo, setUndo] = useState<{ projectId: string; task: ClientTask } | null>(null);
   const today = clientDateKey();
 
   function load() {
@@ -42,8 +45,17 @@ export default function ClientsPage() {
     window.dispatchEvent(new CustomEvent("jarvis:capture"));
   }
 
+  function setTaskDone(projectId: string, task: ClientTask, done: boolean) {
+    const p = projects?.find((x) => x.id === projectId);
+    if (!p) return;
+    void patch(p.id, { tasks: p.tasks.map((t) => (t.id === task.id ? { ...t, done } : t)) });
+  }
+
   function toggleTask(p: ClientProject, task: ClientTask) {
-    void patch(p.id, { tasks: p.tasks.map((t) => (t.id === task.id ? { ...t, done: !t.done } : t)) });
+    const nowDone = !task.done;
+    setTaskDone(p.id, task, nowDone);
+    // Only checking OFF hides the row — that's the click worth an undo.
+    setUndo(nowDone ? { projectId: p.id, task } : null);
   }
 
   async function addProject(e: React.FormEvent) {
@@ -146,7 +158,7 @@ export default function ClientsPage() {
           ).map(([n, label]) => (
             <div key={label} style={{ textAlign: "right" }}>
               <div className="num" style={{ fontSize: 18, color: label === "Urgent" && n > 0 ? "var(--hot)" : undefined }}>{n}</div>
-              <div className="label" style={{ fontSize: 8.5 }}>{label}</div>
+              <div className="label" style={{ fontSize: 9.5 }}>{label}</div>
             </div>
           ))}
         </div>
@@ -168,7 +180,7 @@ export default function ClientsPage() {
                 {items.map((i, idx) => (
                   <div key={idx} style={{ marginTop: 7, fontSize: 12, background: "rgba(255,255,255,0.03)", borderRadius: 6, padding: "6px 8px" }}>
                     {i.title}
-                    <div className="label" style={{ fontSize: 8, marginTop: 3, color: i.overdue ? "var(--hot)" : "var(--warm)" }}>
+                    <div className="label" style={{ fontSize: 9.5, marginTop: 3, color: i.overdue ? "var(--hot)" : "var(--warm)" }}>
                       {i.overdue ? "overdue" : "due today"}
                     </div>
                   </div>
@@ -208,7 +220,7 @@ export default function ClientsPage() {
                     background: key === today ? "var(--accent-dim)" : "transparent",
                   }}
                 >
-                  <div className="label" style={{ fontSize: 7.5 }}>{date.toLocaleDateString("en-US", { weekday: "short" }).toUpperCase()}</div>
+                  <div className="label" style={{ fontSize: 9 }}>{date.toLocaleDateString("en-US", { weekday: "short" }).toUpperCase()}</div>
                   <div className="num" style={{ fontSize: 13, marginTop: 2, color: key === today ? "var(--accent)" : undefined }}>{date.getDate()}</div>
                 </div>
               ))}
@@ -239,7 +251,7 @@ export default function ClientsPage() {
                   <input type="checkbox" checked={false} onChange={() => toggleTask(p, t)} style={{ marginTop: 2, accentColor: "var(--accent)", cursor: "pointer" }} />
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 12, lineHeight: 1.4 }}>{t.title}</div>
-                    <div className="label" style={{ fontSize: 7.5, marginTop: 2 }}>{clientOf(p.name)}</div>
+                    <div className="label" style={{ fontSize: 9, marginTop: 2 }}>{clientOf(p.name)}</div>
                   </div>
                   {dueChip(t)}
                 </div>
@@ -249,7 +261,7 @@ export default function ClientsPage() {
                   <input type="checkbox" checked onChange={() => toggleTask(p, t)} style={{ marginTop: 2, accentColor: "var(--accent)", cursor: "pointer" }} />
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 12, lineHeight: 1.4, textDecoration: "line-through" }}>{t.title}</div>
-                    <div className="label" style={{ fontSize: 7.5, marginTop: 2 }}>{clientOf(p.name)}</div>
+                    <div className="label" style={{ fontSize: 9, marginTop: 2 }}>{clientOf(p.name)}</div>
                   </div>
                 </div>
               ))}
@@ -257,6 +269,14 @@ export default function ClientsPage() {
           </div>
         </div>
       </div>
+
+      {undo && (
+        <UndoToast
+          label={`Marked done: ${undo.task.title}`}
+          onUndo={() => setTaskDone(undo.projectId, undo.task, false)}
+          onExpire={() => setUndo(null)}
+        />
+      )}
     </div>
   );
 }
@@ -317,7 +337,7 @@ function ProjectCard({
   const field = (label: string, value: string | null) =>
     value ? (
       <div>
-        <div className="label" style={{ fontSize: 8 }}>{label}</div>
+        <div className="label" style={{ fontSize: 9.5 }}>{label}</div>
         <div style={{ fontSize: 12, fontFamily: "var(--mono)", marginTop: 3, lineHeight: 1.45 }}>{value}</div>
       </div>
     ) : null;
@@ -327,7 +347,7 @@ function ProjectCard({
       <div className="spread" style={{ alignItems: "flex-start" }}>
         <div>
           <div style={{ fontSize: 15, fontWeight: 600 }}>{p.name}</div>
-          <div className="label" style={{ fontSize: 8.5, marginTop: 3 }}>PRJ-{String(idx + 1).padStart(3, "0")}</div>
+          <div className="label" style={{ fontSize: 9.5, marginTop: 3 }}>PRJ-{String(idx + 1).padStart(3, "0")}</div>
         </div>
         <span className={`chip ${p.status === "done" ? "ok" : p.status === "active" ? "ok" : "warm"}`} style={p.status === "active" ? { background: "var(--accent-dim)" } : undefined}>
           {p.status}
@@ -350,7 +370,7 @@ function ProjectCard({
 
       {/* Tasks */}
       <div style={{ marginTop: 14 }}>
-        <div className="label" style={{ fontSize: 8.5, marginBottom: 6 }}>
+        <div className="label" style={{ fontSize: 9.5, marginBottom: 6 }}>
           Tasks · {doneCount}/{p.tasks.length} done
         </div>
         <div className="stack" style={{ gap: 3 }}>
@@ -419,12 +439,12 @@ function ProjectCard({
           {editing && (
             <div className="stack">
               <div className="grid-2">
-                <label><span className="label" style={{ fontSize: 8 }}>Name</span><input className="input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></label>
-                <label><span className="label" style={{ fontSize: 8 }}>Phase</span><input className="input" value={form.phase} onChange={(e) => setForm({ ...form, phase: e.target.value })} /></label>
-                <label><span className="label" style={{ fontSize: 8 }}>Deadline</span><input className="input" type="date" value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} /></label>
-                <label><span className="label" style={{ fontSize: 8 }}>Progress %</span><input className="input num" type="number" min={0} max={100} value={form.progress} onChange={(e) => setForm({ ...form, progress: e.target.value })} /></label>
-                <label><span className="label" style={{ fontSize: 8 }}>Next milestone</span><input className="input" value={form.next_milestone} onChange={(e) => setForm({ ...form, next_milestone: e.target.value })} /></label>
-                <label><span className="label" style={{ fontSize: 8 }}>Budget</span><input className="input" value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })} /></label>
+                <label><span className="label" style={{ fontSize: 9.5 }}>Name</span><input className="input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></label>
+                <label><span className="label" style={{ fontSize: 9.5 }}>Phase</span><input className="input" value={form.phase} onChange={(e) => setForm({ ...form, phase: e.target.value })} /></label>
+                <label><span className="label" style={{ fontSize: 9.5 }}>Deadline</span><input className="input" type="date" value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} /></label>
+                <label><span className="label" style={{ fontSize: 9.5 }}>Progress %</span><input className="input num" type="number" min={0} max={100} value={form.progress} onChange={(e) => setForm({ ...form, progress: e.target.value })} /></label>
+                <label><span className="label" style={{ fontSize: 9.5 }}>Next milestone</span><input className="input" value={form.next_milestone} onChange={(e) => setForm({ ...form, next_milestone: e.target.value })} /></label>
+                <label><span className="label" style={{ fontSize: 9.5 }}>Budget</span><input className="input" value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })} /></label>
               </div>
               <div className="row">
                 <button

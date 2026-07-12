@@ -38,9 +38,13 @@ body {
   background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(111, 224, 174, 0.05), transparent);
 }
 
-/* Everything a notch bigger on desktop screens. */
+/* Everything a notch bigger — and more so the wider the screen. */
+.app-scale { zoom: 1.06; }
 @media (min-width: 1280px) {
-  .app-scale { zoom: 1.12; }
+  .app-scale { zoom: 1.13; }
+}
+@media (min-width: 1600px) {
+  .app-scale { zoom: 1.22; }
 }
 
 a { color: inherit; text-decoration: none; }
@@ -150,7 +154,7 @@ input, textarea, select { font: inherit; color: var(--text); }
 /* ── Typography helpers ───────────────────────────────── */
 .label {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 10.5px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--text-faint);
@@ -165,7 +169,7 @@ input, textarea, select { font: inherit; color: var(--text); }
 /* ── Tags / chips ─────────────────────────────────────── */
 .chip {
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   padding: 3px 8px;
@@ -210,7 +214,7 @@ textarea.input { resize: vertical; min-height: 68px; line-height: 1.5; }
 .btn.primary { color: #06110b; background: var(--accent); border-color: var(--accent); }
 .btn.primary:hover { filter: brightness(1.08); }
 .btn:disabled { opacity: 0.4; cursor: default; }
-.btn.small { padding: 4px 9px; font-size: 9px; }
+.btn.small { padding: 4px 9px; font-size: 10px; }
 
 /* ── Layout ───────────────────────────────────────────── */
 .page { max-width: 1440px; margin: 0 auto; padding: 20px; }
@@ -275,7 +279,7 @@ textarea.input { resize: vertical; min-height: 68px; line-height: 1.5; }
 }
 .table th:first-child, .table td:first-child { text-align: left; }
 .table td {
-  font-family: var(--mono); font-size: 12.5px;
+  font-family: var(--mono); font-size: 13px;
   font-variant-numeric: tabular-nums;
   text-align: right; padding: 10px 12px;
   border-bottom: 1px solid var(--border-soft);
@@ -316,7 +320,7 @@ textarea.input { resize: vertical; min-height: 68px; line-height: 1.5; }
   border-bottom: 1px solid var(--border-soft);
 }
 .jarvis-msgs { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-.msg { max-width: 85%; padding: 9px 12px; border-radius: 11px; font-size: 13px; line-height: 1.5; white-space: pre-wrap; }
+.msg { max-width: 85%; padding: 9px 12px; border-radius: 11px; font-size: 13.5px; line-height: 1.5; white-space: pre-wrap; }
 .msg.user { align-self: flex-end; background: var(--accent-dim); border: 1px solid rgba(111, 224, 174, 0.2); }
 .msg.jarvis { align-self: flex-start; background: var(--panel); border: 1px solid var(--border-soft); }
 .msg .meta { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: var(--text-faint); margin-top: 5px; text-transform: uppercase; }

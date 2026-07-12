@@ -2,19 +2,68 @@
 // Two-phase for safety — propose (Claude picks the record, we describe the exact
 // change) → the user says "confirm" → execute. The pending command lives in the
 // store (sentinel log) so it works statelessly from any client, phone app included.
-import { aiAvailable, llmJson } from "../ai/llm";
+// Captures use the same two-phase gate (propose → confirm) via PendingCapture.
+import { aiAvailable, llmJson, llmText } from "../ai/llm";
 import { localDateKey } from "../dates";
 import { getStore } from "../store";
-import { GOALS_SENTINEL_DATE, type PendingCommand } from "../types";
+import { GOALS_SENTINEL_DATE, type PendingCapture, type PendingCommand } from "../types";
 
 const PENDING_TTL_MS = 10 * 60 * 1000;
 
 export function isConfirmation(text: string): boolean {
-  return /^(yes|yep|yeah|yup|confirm|confirmed|do it|go ahead|sure|correct|ok|okay)\b/i.test(text.trim());
+  return /^(yes|yep|yeah|yup|confirm|confirmed|do it|go ahead|sure|correct|ok|okay|file it|send it)\b/i.test(text.trim());
 }
 
 export function isCancellation(text: string): boolean {
-  return /^(no|nope|cancel|cancelled|nevermind|never mind|stop|don'?t|wait)\b/i.test(text.trim());
+  return /^(no|nope|cancel|cancelled|nevermind|never mind|forget it|stop|don'?t|wait)\b/i.test(text.trim());
+}
+
+// "No, make it $500" / "actually tomorrow" — an edit to the pending item,
+// not a cancellation. Checked BEFORE isCancellation wherever both apply.
+export function isCorrection(text: string): boolean {
+  const t = text.trim();
+  if (/\b(cancel|nevermind|never mind|forget it|drop it|scratch that)\b/i.test(t)) return false;
+  return (
+    /^(no[,\s]|nope[,\s]|actually|wait[,\s]|change|make (it|that)|instead|not |it should|i meant|rather)/i.test(t) &&
+    t.split(/\s+/).length >= 3
+  );
+}
+
+/* ── Pending capture (confirm-gated filing) ─────────────── */
+
+export async function getPendingCapture(): Promise<PendingCapture | null> {
+  const log = await getStore().getLog(GOALS_SENTINEL_DATE);
+  const cap = log?.notes.pending_capture;
+  if (!cap) return null;
+  if (new Date(cap.expires_at).getTime() < Date.now()) {
+    await clearPendingCapture();
+    return null;
+  }
+  return cap;
+}
+
+export async function setPendingCapture(text: string, description: string): Promise<void> {
+  const cap: PendingCapture = {
+    text,
+    description,
+    expires_at: new Date(Date.now() + PENDING_TTL_MS).toISOString(),
+  };
+  await getStore().mergeLogNotes(GOALS_SENTINEL_DATE, { pending_capture: cap });
+}
+
+export async function clearPendingCapture(): Promise<void> {
+  await getStore().mergeLogNotes(GOALS_SENTINEL_DATE, { pending_capture: null });
+}
+
+// Fold a spoken correction into the original capture, returning the new text.
+export async function reviseCaptureText(original: string, correction: string): Promise<string> {
+  if (!aiAvailable()) return correction;
+  const { text } = await llmText(
+    `The user dictated a capture, then corrected part of it. Combine them into ONE final capture sentence that says what they actually meant. Return ONLY that sentence — no quotes, no commentary.`,
+    `Original: ${original}\nCorrection: ${correction}`,
+    256,
+  );
+  return text.trim() || correction;
 }
 
 export async function getPendingCommand(): Promise<PendingCommand | null> {

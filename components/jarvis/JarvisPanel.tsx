@@ -26,6 +26,8 @@ export function JarvisPanel() {
   const [recording, setRecording] = useState(false);
   const [voiceMode, setVoiceMode] = useState(false);
   const [speaking, setSpeaking] = useState(false);
+  // Set when Jarvis has read a capture back and is waiting on confirm/cancel.
+  const [proposal, setProposal] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const recRef = useRef<{ stop: () => void } | null>(null);
   const voiceModeRef = useRef(false);
@@ -93,18 +95,22 @@ export function JarvisPanel() {
     setMsgs(history);
     setInput("");
     setBusy(true);
+    setProposal(null);
     try {
-      const res = await api<{ reply: string; action?: { type: string; routed_to?: string } }>(
+      const res = await api<{ reply: string; action?: { type: string; routed_to?: string; proposal_text?: string } }>(
         "/api/jarvis/chat",
         { method: "POST", body: JSON.stringify({ messages: history }) },
       );
       const meta =
         res.action?.type === "capture"
           ? `filed → ${res.action.routed_to}`
-          : res.action?.type === "ask"
-            ? "from memory"
-            : undefined;
+          : res.action?.type === "capture_proposed"
+            ? "awaiting your confirm"
+            : res.action?.type === "ask"
+              ? "from memory"
+              : undefined;
       setMsgs((m) => [...m, { role: "assistant", content: res.reply, meta }]);
+      if (res.action?.type === "capture_proposed") setProposal(res.action.proposal_text ?? "");
       window.dispatchEvent(new CustomEvent("jarvis:capture")); // let cards refresh
       if (spoken || voiceModeRef.current) {
         speak(res.reply, () => {
@@ -131,19 +137,51 @@ export function JarvisPanel() {
     if (recording || busy) return;
     const rec = getRecognizer();
     if (rec) {
+      // Continuous mode + a silence window: keep listening while the user
+      // talks (pauses included) and only send after ~2s of quiet — so Jarvis
+      // waits for the whole thought instead of firing on the first pause.
       rec.lang = "en-US";
-      rec.interimResults = false;
+      rec.continuous = true;
+      rec.interimResults = true;
+      let transcript = "";
+      let silenceTimer: ReturnType<typeof setTimeout> | null = null;
+      let sent = false;
+      const finish = () => {
+        if (silenceTimer) clearTimeout(silenceTimer);
+        try {
+          rec.stop();
+        } catch {}
+      };
       rec.onresult = (e) => {
-        const text = Array.from(e.results).map((r) => r[0].transcript).join(" ");
-        setRecording(false);
-        lastInputWasVoice.current = true;
-        void send(text);
+        transcript = Array.from(e.results).map((r) => r[0].transcript).join(" ").replace(/\s+/g, " ").trim();
+        setInput(transcript); // live read-along while speaking
+        if (silenceTimer) clearTimeout(silenceTimer);
+        silenceTimer = setTimeout(finish, 2000);
       };
-      rec.onerror = () => {
-        setRecording(false);
-        stopVoiceMode(); // don't loop forever on mic errors
+      let fatal = false;
+      rec.onerror = (e) => {
+        // "no-speech" just means a quiet room — everything else kills the loop.
+        if (e?.error !== "no-speech" && e?.error !== "aborted") fatal = true;
       };
-      rec.onend = () => setRecording(false);
+      // onend always fires (after onerror too) — the single place we act.
+      rec.onend = () => {
+        setRecording(false);
+        if (silenceTimer) clearTimeout(silenceTimer);
+        if (sent) return;
+        sent = true;
+        setInput("");
+        if (fatal) {
+          stopVoiceMode();
+          return;
+        }
+        if (transcript.trim()) {
+          lastInputWasVoice.current = true;
+          void send(transcript);
+        } else if (voiceModeRef.current && openRef.current) {
+          // heard nothing — keep the hands-free loop alive
+          setTimeout(() => startListening(), 400);
+        }
+      };
       recRef.current = rec;
       setRecording(true);
       rec.start();
@@ -252,6 +290,25 @@ export function JarvisPanel() {
               </div>
             ))}
             {busy && <div className="msg jarvis faint">thinking…</div>}
+            {proposal !== null && !busy && (
+              <div className="row" style={{ gap: 8, alignSelf: "flex-start", flexWrap: "wrap" }}>
+                <button className="btn small primary" onClick={() => void send("confirm")}>
+                  ✓ confirm
+                </button>
+                <button
+                  className="btn small"
+                  onClick={() => {
+                    setInput(proposal);
+                    setProposal(null);
+                  }}
+                >
+                  ✎ edit
+                </button>
+                <button className="btn small" style={{ color: "var(--hot)" }} onClick={() => void send("cancel")}>
+                  ✕ cancel
+                </button>
+              </div>
+            )}
           </div>
           <form
             className="jarvis-input"
@@ -286,9 +343,10 @@ export function JarvisPanel() {
 // Minimal typing for the vendor-prefixed Web Speech API.
 interface SpeechRecognitionLike {
   lang: string;
+  continuous: boolean;
   interimResults: boolean;
   onresult: ((e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
-  onerror: (() => void) | null;
+  onerror: ((e: { error?: string }) => void) | null;
   onend: (() => void) | null;
   start(): void;
   stop(): void;

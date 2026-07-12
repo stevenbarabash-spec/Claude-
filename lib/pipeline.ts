@@ -13,6 +13,34 @@ export interface CaptureResult {
   reply: string;
 }
 
+// Classify only — NO writes. Used by Jarvis to read a capture back for
+// confirmation before anything is filed.
+export async function previewCapture(text: string): Promise<{ description: string; kind: string }> {
+  const { classification: c } = await classifyCapture(text);
+  let description: string;
+  switch (c.kind) {
+    case "task":
+      description = `Task — "${c.title}" under ${c.urgency === "someday" ? "later" : c.urgency}`;
+      break;
+    case "meal":
+      description = `Meal — ${c.title}, ~${c.meal?.kcal ?? 0} kcal`;
+      break;
+    case "receivable":
+      description = c.money?.amount
+        ? `Money owed to you — $${c.money.amount.toLocaleString()} from ${c.money.client ?? c.title}${c.money.due_date ? `, due ${c.money.due_date}` : ""}`
+        : `Note (couldn't parse an amount) — ${c.summary}`;
+      break;
+    case "income":
+      description = c.money?.amount
+        ? `Income received — $${c.money.amount.toLocaleString()} from ${c.money.client ?? c.title}`
+        : `Note (couldn't parse an amount) — ${c.summary}`;
+      break;
+    default:
+      description = `${c.kind[0].toUpperCase()}${c.kind.slice(1)} — ${c.summary}`;
+  }
+  return { description, kind: c.kind };
+}
+
 export async function runCapturePipeline(
   text: string,
   source: RawCapture["source"],

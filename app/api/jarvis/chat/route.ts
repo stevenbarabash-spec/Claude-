@@ -9,14 +9,19 @@ import { aiAvailable, llmJson, llmText } from "@/lib/ai/llm";
 import { config } from "@/lib/config";
 import { localDateKey } from "@/lib/dates";
 import {
+  clearPendingCapture,
   clearPendingCommand,
   executePendingCommand,
+  getPendingCapture,
   getPendingCommand,
   isCancellation,
   isConfirmation,
+  isCorrection,
   proposeCommand,
+  reviseCaptureText,
+  setPendingCapture,
 } from "@/lib/jarvis/commands";
-import { runCapturePipeline } from "@/lib/pipeline";
+import { previewCapture, runCapturePipeline } from "@/lib/pipeline";
 import { getStore } from "@/lib/store";
 
 interface ChatMessage {
@@ -110,6 +115,34 @@ export async function POST(req: Request) {
     // fall through: treat as a fresh message
   }
 
+  // A pending capture awaiting read-back confirmation: "confirm" files it,
+  // a correction revises it, "cancel" (or anything else) drops it.
+  const pendingCap = await getPendingCapture();
+  if (pendingCap) {
+    if (isConfirmation(text)) {
+      await clearPendingCapture();
+      const result = await runCapturePipeline(pendingCap.text, "jarvis");
+      return NextResponse.json({
+        reply: `Filed. ${result.reply}`,
+        action: { type: "capture", routed_to: result.routed_to, kind: result.capture.classification?.kind },
+      });
+    }
+    if (isCorrection(text)) {
+      const revised = await reviseCaptureText(pendingCap.text, text);
+      const preview = await previewCapture(revised);
+      await setPendingCapture(revised, preview.description);
+      return NextResponse.json({
+        reply: `Updated — here's what I'll file now:\n\n${preview.description}\n\nSay "confirm" to file it, or correct me again.`,
+        action: { type: "capture_proposed", proposal_text: revised },
+      });
+    }
+    await clearPendingCapture();
+    if (isCancellation(text)) {
+      return NextResponse.json({ reply: "Dropped it — nothing was filed.", action: { type: "capture_cancelled" } });
+    }
+    // fall through: treat as a fresh message
+  }
+
   // Explicit prefixes let the user force a mode: "capture: ..." / "ask: ..."
   let intent: "capture" | "ask" | "chat" | "command";
   let payload = text;
@@ -129,10 +162,13 @@ export async function POST(req: Request) {
   }
 
   if (intent === "capture") {
-    const result = await runCapturePipeline(payload, "jarvis");
+    // Never file straight away — read back what was understood and wait for
+    // a "confirm" (voice or button) so a misheard phrase can't become a record.
+    const preview = await previewCapture(payload);
+    await setPendingCapture(payload, preview.description);
     return NextResponse.json({
-      reply: result.reply,
-      action: { type: "capture", routed_to: result.routed_to, kind: result.capture.classification?.kind },
+      reply: `Here's what I heard — I'll file:\n\n${preview.description}\n\nSay "confirm" and it's in, "cancel" to drop it, or correct me (e.g. "no, make it Friday").`,
+      action: { type: "capture_proposed", proposal_text: payload },
     });
   }
 

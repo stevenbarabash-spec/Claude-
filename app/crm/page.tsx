@@ -1,9 +1,12 @@
 "use client";
 // CRM (guide §5.4): four urgency tiers, kanban + list views, drag-drop reorder,
-// click-to-edit drawer, and AI smart search.
+// click-to-edit drawer, and AI smart search. Client-board tasks flow in too,
+// slotted into tiers by due date — the CRM is the follow-up view of everything.
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { api } from "@/lib/client";
-import type { Task, Urgency } from "@/lib/types";
+import { UndoToast } from "@/components/UndoToast";
+import { api, clientDateKey } from "@/lib/client";
+import type { ClientProject, ClientTask, Task, Urgency } from "@/lib/types";
 
 const TIERS: { key: Urgency; label: string; color: string }[] = [
   { key: "today", label: "Today", color: "var(--hot)" },
@@ -12,18 +15,35 @@ const TIERS: { key: Urgency; label: string; color: string }[] = [
   { key: "someday", label: "Later", color: "var(--text-faint)" },
 ];
 
+// Where a client task lands on the board, by its due date.
+function clientTier(due: string | null, today: string): Urgency {
+  if (!due) return "someday";
+  if (due <= today) return "today";
+  const d = new Date(today + "T12:00:00");
+  const endOfWeek = new Date(d);
+  endOfWeek.setDate(d.getDate() + (7 - (d.getDay() === 0 ? 7 : d.getDay())));
+  if (due <= clientDateKey(endOfWeek)) return "week";
+  const endOfMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+  if (due <= clientDateKey(endOfMonth)) return "month";
+  return "someday";
+}
+
 export default function CrmPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [projects, setProjects] = useState<ClientProject[]>([]);
   const [view, setView] = useState<"kanban" | "list">("kanban");
   const [drawer, setDrawer] = useState<Task | null>(null);
   const [search, setSearch] = useState("");
   const [smartIds, setSmartIds] = useState<string[] | null>(null);
   const [smartBusy, setSmartBusy] = useState(false);
   const [newTitle, setNewTitle] = useState("");
+  const [undo, setUndo] = useState<{ label: string; revert: () => void } | null>(null);
   const dragId = useRef<string | null>(null);
+  const today = clientDateKey();
 
   function load() {
     api<{ tasks: Task[] }>("/api/tasks").then((r) => setTasks(r.tasks)).catch(() => {});
+    api<{ projects: ClientProject[] }>("/api/clients").then((r) => setProjects(r.projects)).catch(() => {});
   }
 
   useEffect(() => {
@@ -46,6 +66,34 @@ export default function CrmPage() {
   async function patchTask(id: string, patch: Partial<Task>) {
     setTasks((ts) => ts.map((t) => (t.id === id ? { ...t, ...patch } : t)).filter((t) => !t.completed_at));
     await api(`/api/tasks/${id}`, { method: "PATCH", body: JSON.stringify(patch) }).catch(() => load());
+  }
+
+  function completeTask(t: Task) {
+    void patchTask(t.id, { completed_at: new Date().toISOString() });
+    setUndo({
+      label: `Completed: ${t.title}`,
+      revert: () => {
+        void api(`/api/tasks/${t.id}`, { method: "PATCH", body: JSON.stringify({ completed_at: null }) }).then(load);
+      },
+    });
+  }
+
+  // Mark a client-board task done/undone — syncs straight to the Clients tab.
+  async function setClientTaskDone(projectId: string, task: ClientTask, done: boolean) {
+    const p = projects.find((x) => x.id === projectId);
+    if (!p) return;
+    const nextTasks = p.tasks.map((t) => (t.id === task.id ? { ...t, done } : t));
+    setProjects((ps) => ps.map((x) => (x.id === projectId ? { ...x, tasks: nextTasks } : x)));
+    await api(`/api/clients/${projectId}`, { method: "PATCH", body: JSON.stringify({ tasks: nextTasks }) }).catch(load);
+    window.dispatchEvent(new CustomEvent("jarvis:capture"));
+  }
+
+  function completeClientTask(projectId: string, task: ClientTask, client: string) {
+    void setClientTaskDone(projectId, task, true);
+    setUndo({
+      label: `Done: ${task.title} (${client})`,
+      revert: () => void setClientTaskDone(projectId, task, false),
+    });
   }
 
   async function addTask(e: React.FormEvent) {
@@ -91,12 +139,31 @@ export default function CrmPage() {
 
   const visible = smartIds ? smartIds.map((id) => tasks.find((t) => t.id === id)).filter((t): t is Task => Boolean(t)) : tasks;
 
+  // Client-board follow-ups, slotted into tiers by due date (hidden during smart search).
+  const clientItems = smartIds
+    ? []
+    : projects.flatMap((p) =>
+        p.tasks
+          .filter((t) => !t.done)
+          .map((t) => ({
+            projectId: p.id,
+            client: p.name.split("—")[0].trim(),
+            project: p.name,
+            task: t,
+            tier: clientTier(t.due, today),
+            overdue: Boolean(t.due && t.due < today),
+          })),
+      );
+
   return (
     <div>
       <div className="spread" style={{ marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
         <div className="row">
           <span className="label" style={{ fontSize: 12 }}>CRM //</span>
           <span className="chip ok">{tasks.length} open</span>
+          {clientItems.length > 0 && (
+            <Link href="/clients" className="chip warm">{clientItems.length} client →</Link>
+          )}
         </div>
         <form className="row" style={{ flex: 1, maxWidth: 480 }} onSubmit={runSmart}>
           <input
@@ -173,6 +240,39 @@ export default function CrmPage() {
                     </div>
                   </div>
                 ))}
+                {clientItems
+                  .filter((c) => c.tier === tier.key)
+                  .map((c) => (
+                    <div
+                      key={c.task.id}
+                      className="task-card"
+                      style={{ borderLeft: `2px solid ${c.overdue ? "var(--hot)" : "var(--warm)"}` }}
+                    >
+                      <div style={{ fontSize: 13, lineHeight: 1.4 }}>{c.task.title}</div>
+                      <div className="faint" style={{ fontSize: 11, marginTop: 3 }}>{c.client} · client work</div>
+                      <div className="row" style={{ marginTop: 8, gap: 5 }}>
+                        {c.task.due && (
+                          <span className={`chip ${c.overdue ? "hot" : "warm"}`}>
+                            {c.overdue ? "overdue " : "due "}
+                            {c.task.due.slice(5)}
+                          </span>
+                        )}
+                        <span style={{ flex: 1 }} />
+                        <button
+                          className="btn small"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            completeClientTask(c.projectId, c.task, c.client);
+                          }}
+                        >
+                          ✓
+                        </button>
+                        <Link href="/clients" className="btn small" onClick={(e) => e.stopPropagation()}>
+                          →
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
               </div>
             );
           })}
@@ -203,8 +303,27 @@ export default function CrmPage() {
                     className="btn small"
                     onClick={(e) => {
                       e.stopPropagation();
-                      void patchTask(t.id, { completed_at: new Date().toISOString() });
+                      completeTask(t);
                     }}
+                  >
+                    ✓
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {clientItems.map((c) => (
+              <tr key={c.task.id}>
+                <td style={{ fontFamily: "var(--sans)" }}>
+                  <span style={{ color: c.overdue ? "var(--hot)" : "var(--warm)" }}>■ </span>
+                  {c.task.title}
+                </td>
+                <td className="faint">{c.tier}</td>
+                <td className="faint">{c.client}</td>
+                <td className="faint">client work{c.task.due ? ` · due ${c.task.due.slice(5)}` : ""}</td>
+                <td>
+                  <button
+                    className="btn small"
+                    onClick={() => completeClientTask(c.projectId, c.task, c.client)}
                   >
                     ✓
                   </button>
@@ -214,6 +333,8 @@ export default function CrmPage() {
           </tbody>
         </table>
       )}
+
+      {undo && <UndoToast label={undo.label} onUndo={undo.revert} onExpire={() => setUndo(null)} />}
 
       {drawer && (
         <TaskDrawer
