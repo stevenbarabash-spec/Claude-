@@ -13,7 +13,8 @@ function expand(icsText: string, windowDays: number): CalendarEvent[] {
   const comp = new ICAL.Component(jcal);
   const vevents = comp.getAllSubcomponents("vevent");
   const now = new Date();
-  const windowStart = new Date(now.getTime() - 1 * 86400000);
+  // Wide enough for the month view to page back and forward.
+  const windowStart = new Date(now.getTime() - 45 * 86400000);
   const windowEnd = new Date(now.getTime() + windowDays * 86400000);
   const out: CalendarEvent[] = [];
 
@@ -34,7 +35,7 @@ function expand(icsText: string, windowDays: number): CalendarEvent[] {
 
     try {
       if (event.isRecurring()) {
-        const iterator = event.iterator();
+        const iterator = event.iterator(ICAL.Time.fromJSDate(windowStart, false));
         let next;
         let guard = 0;
         while ((next = iterator.next()) && guard++ < 500) {
@@ -79,7 +80,7 @@ export async function GET() {
     urls.map(async (u) => {
       const res = await fetch(u.replace(/^webcal:\/\//i, "https://"), { cache: "no-store" });
       if (!res.ok) throw new Error(`ical fetch ${res.status}`);
-      return expand(await res.text(), 14);
+      return expand(await res.text(), 75);
     }),
   );
   const events = results
