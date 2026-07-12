@@ -7,6 +7,8 @@ import { JarvisPanel } from "./jarvis/JarvisPanel";
 
 const TABS = [
   { href: "/", label: "HOME" },
+  { href: "/clients", label: "CLIENTS" },
+  { href: "/schedule", label: "SCHEDULE" },
   { href: "/crm", label: "CRM" },
   { href: "/finance", label: "FINANCE" },
   { href: "/health", label: "HEALTH" },

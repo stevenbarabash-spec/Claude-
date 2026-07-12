@@ -97,10 +97,40 @@ export interface HabitDef {
   category: string;
 }
 
+// ── Client work (migrated from the schedule-tracker) ──
+export interface ClientTask {
+  id: string;
+  title: string;
+  done: boolean;
+  due: string | null; // YYYY-MM-DD
+}
+
+export interface ClientIteration {
+  date: string;
+  note: string;
+}
+
+export interface ClientProject {
+  id: string;
+  name: string; // "Client — Project"
+  status: "active" | "done" | "paused";
+  progress: number; // 0-100
+  phase: string | null;
+  deadline: string | null;
+  next_milestone: string | null;
+  team: string[];
+  budget: string | null;
+  iterations: ClientIteration[];
+  tasks: ClientTask[];
+  created_at: string;
+  updated_at: string;
+}
+
 export interface DailyNotes {
   focus?: string;
   habits?: { done: string[] };
   habit_defs?: HabitDef[]; // only on sentinel date — user-editable habit list
+  client_projects?: ClientProject[]; // only on sentinel date — the client work board
   nutrition?: { meals: Meal[] };
   goals?: { week: GoalItem[]; month: GoalItem[] }; // only on sentinel date
   review?: WeeklyReview; // only on week-anchor (Monday) dates

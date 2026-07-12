@@ -18,19 +18,23 @@ interface Group {
   hasOverdue: boolean;
 }
 
-const TRACKER_URL = "https://claude.ai/code/artifact/468a77a7-19b0-4149-9977-2436e7413801";
+const TRACKER_URL = "/clients";
 
 export function ClientWork() {
   const [groups, setGroups] = useState<Group[] | null>(null);
   const [activeProjects, setActiveProjects] = useState(0);
 
   useEffect(() => {
-    api<{ groups: Group[]; activeProjects: number; ok: boolean }>("/api/clientwork")
-      .then((r) => {
-        setGroups(r.ok ? r.groups : []);
-        setActiveProjects(r.activeProjects);
-      })
-      .catch(() => setGroups([]));
+    const load = () =>
+      api<{ groups: Group[]; activeProjects: number; ok: boolean }>("/api/clientwork")
+        .then((r) => {
+          setGroups(r.ok ? r.groups : []);
+          setActiveProjects(r.activeProjects);
+        })
+        .catch(() => setGroups([]));
+    load();
+    window.addEventListener("jarvis:capture", load);
+    return () => window.removeEventListener("jarvis:capture", load);
   }, []);
 
   const chip = (kind: Row["kind"]) =>
@@ -47,8 +51,8 @@ export function ClientWork() {
       idx="09"
       title="Client Work · Due Today"
       right={
-        <a href={TRACKER_URL} target="_blank" rel="noreferrer" className="chip">
-          {activeProjects} active · tracker ↗
+        <a href={TRACKER_URL} className="chip">
+          {activeProjects} active · view all →
         </a>
       }
     >
