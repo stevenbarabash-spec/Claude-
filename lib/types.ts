@@ -126,8 +126,18 @@ export interface ClientProject {
   updated_at: string;
 }
 
+// Quick daily to-dos with an optional clock time ("BYTOX — send draft @ 3 PM").
+// They live on the day's log, so each day starts with a fresh list.
+export interface DayTask {
+  id: string;
+  title: string;
+  time: string | null; // HH:MM (24h) or null = anytime today
+  done: boolean;
+}
+
 export interface DailyNotes {
   focus?: string;
+  day_tasks?: DayTask[];
   habits?: { done: string[] };
   habit_defs?: HabitDef[]; // only on sentinel date — user-editable habit list
   client_projects?: ClientProject[]; // only on sentinel date — the client work board

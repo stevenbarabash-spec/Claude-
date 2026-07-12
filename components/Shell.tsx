@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { config } from "@/lib/config";
 import { JarvisPanel } from "./jarvis/JarvisPanel";
+import { MatrixRain } from "./MatrixRain";
 
 const TABS = [
   { href: "/", label: "HOME" },
@@ -37,6 +38,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <MatrixRain />
+      <div className="app-scale">
       <nav className="rail">
         <Link href="/" className="rail-brand">
           <span className="dot" />
@@ -72,6 +75,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       </nav>
       <main className="page">{children}</main>
       <JarvisPanel />
+      </div>
     </>
   );
 }

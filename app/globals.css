@@ -1,10 +1,10 @@
 :root {
-  --bg: #071120;
-  --bg-raise: #0b182c;
-  --panel: rgba(148, 190, 255, 0.04);
-  --panel-solid: #0d1b31;
-  --border: rgba(148, 190, 255, 0.12);
-  --border-soft: rgba(148, 190, 255, 0.07);
+  --bg: #060907;
+  --bg-raise: #0a0e0c;
+  --panel: rgba(255, 255, 255, 0.025);
+  --panel-solid: #0c110e;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-soft: rgba(255, 255, 255, 0.05);
   --text: #d9e0da;
   --text-dim: #8a948c;
   --text-faint: #57605a;
@@ -24,15 +24,23 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
-  background: var(--bg);
   color: var(--text);
   font-family: var(--sans);
   font-size: 14px;
   min-height: 100%;
 }
 
+html { background: var(--bg); }
+
+/* body stays transparent so the matrix rain canvas (z-index -1) shows through */
 body {
-  background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(96, 165, 250, 0.08), transparent);
+  background: transparent;
+  background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(111, 224, 174, 0.05), transparent);
+}
+
+/* Everything a notch bigger on desktop screens. */
+@media (min-width: 1280px) {
+  .app-scale { zoom: 1.12; }
 }
 
 a { color: inherit; text-decoration: none; }
@@ -52,7 +60,7 @@ input, textarea, select { font: inherit; color: var(--text); }
   position: sticky;
   top: 0;
   backdrop-filter: blur(12px);
-  background: rgba(7, 17, 32, 0.8);
+  background: rgba(6, 9, 7, 0.8);
   z-index: 50;
 }
 .rail-brand {
@@ -348,3 +356,47 @@ textarea.input { resize: vertical; min-height: 68px; line-height: 1.5; }
   overflow-y: auto;
   display: flex; flex-direction: column; gap: 14px;
 }
+
+/* ── Matrix rain backdrop ─────────────────────────────── */
+.matrix-rain {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ── Day timeline ─────────────────────────────────────── */
+.tl { position: relative; height: 78px; }
+.tl-axis { position: absolute; left: 0; right: 0; top: 48px; height: 1px; background: var(--border); }
+.tl-hour { position: absolute; top: 44px; width: 1px; height: 5px; background: var(--border); }
+.tl-hlabel {
+  position: absolute; top: 56px; transform: translateX(-50%);
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em;
+  color: var(--text-faint); white-space: nowrap;
+}
+.tl-now {
+  position: absolute; top: 16px; height: 33px; width: 2px;
+  background: var(--accent); border-radius: 1px;
+  box-shadow: 0 0 10px var(--accent);
+}
+.tl-notch {
+  position: absolute; top: 24px; width: 16px; height: 25px;
+  transform: translateX(-50%);
+  display: flex; justify-content: center; align-items: flex-end;
+  cursor: pointer;
+}
+.tl-notch .bar { width: 3px; height: 18px; border-radius: 2px; transition: all 0.12s; }
+.tl-notch:hover .bar { height: 24px; filter: brightness(1.35); }
+.tl-notch.past .bar { opacity: 0.4; }
+.tl-tip {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+  background: var(--bg-raise); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 11px;
+  font-size: 12px; line-height: 1.45; white-space: nowrap;
+  opacity: 0; pointer-events: none; transition: opacity 0.12s;
+  z-index: 6; box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+}
+.tl-tip.edge-left { left: -6px; transform: none; }
+.tl-tip.edge-right { left: auto; right: -6px; transform: none; }
+.tl-notch:hover .tl-tip { opacity: 1; }

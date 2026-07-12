@@ -1,6 +1,8 @@
 import { Blockers } from "@/components/cards/Blockers";
 import { CalendarCard } from "@/components/cards/CalendarCard";
 import { ClientWork } from "@/components/cards/ClientWork";
+import { DayTasks } from "@/components/cards/DayTasks";
+import { DayTimeline } from "@/components/cards/DayTimeline";
 import { FinancePulse } from "@/components/cards/FinancePulse";
 import { GoalsCard } from "@/components/cards/Goals";
 import { Habits } from "@/components/cards/Habits";
@@ -18,6 +20,8 @@ export default function Home() {
       </div>
       <div className="col">
         <Session />
+        <DayTimeline />
+        <DayTasks />
         <ClientWork />
         <Habits />
         <CalendarCard />
