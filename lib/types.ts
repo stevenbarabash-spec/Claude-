@@ -150,6 +150,7 @@ export interface DailyNotes {
   history?: HistoryEvent[]; // only on the history sentinel date
   muted_events?: string[]; // only on sentinel date — calendar series UIDs to hide
   working_on?: WorkingItem[]; // only on sentinel date — the Currently Working On strip
+  feature_requests?: FeatureRequest[]; // only on sentinel date — the idea parking lot
 }
 
 // A capture Jarvis has understood and read back, but not yet filed.
@@ -171,6 +172,15 @@ export interface WorkingItem {
   projectId?: string; // client-board tasks
   date?: string; // day-task log date
   startedAt: string; // ISO
+}
+
+// A parked idea for improving the dashboard — reviewed later, not a task.
+export interface FeatureRequest {
+  id: string;
+  text: string;
+  status: "new" | "considering" | "planned" | "passed";
+  source: "you" | "claude";
+  created_at: string;
 }
 
 // ── Change history (lives on its own sentinel log) ──────

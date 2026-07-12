@@ -171,4 +171,15 @@ export const CARD_HELP: Record<string, CardHelp> = {
       "Operator — your streak and daily score come from here.",
     ],
   },
+  "Feature Enhancement Requests": {
+    what: "A parking lot for ideas to improve the dashboard — reviewed later, not tasks.",
+    how: [
+      "Type an idea and Add it; it's saved and shows on any device.",
+      "Click the status chip to cycle New → Considering → Planned → Passed.",
+      "× deletes one. Jarvis can drop suggestions here too.",
+    ],
+    interacts: [
+      "Stands alone — a backlog you and Jarvis review to decide what to build next.",
+    ],
+  },
 };

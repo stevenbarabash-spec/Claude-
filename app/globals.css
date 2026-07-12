@@ -99,6 +99,7 @@ body {
 .help-pop {
   position: absolute; top: 26px; left: 0;
   width: 280px; max-height: 60vh; overflow-y: auto;
+  text-align: left;
   display: flex; flex-direction: column; gap: 12px;
   background: var(--bg-raise);
   border: 1px solid var(--border);
@@ -121,6 +122,10 @@ body {
 .help-what { font-size: 12.5px; line-height: 1.55; color: var(--text-dim); }
 .help-bullet { display: flex; gap: 7px; font-size: 12.5px; line-height: 1.5; color: var(--text-dim); }
 .help-dot { color: var(--accent); flex-shrink: 0; }
+/* Right-column cards: open the widget leftward so it stays on-screen. */
+.help-pop.flip { left: auto; right: 0; }
+/* Lift a card (and its overflowing help popover) above its neighbors. */
+.card-wrap.help-open { z-index: 60; }
 
 /* ── Draggable dashboard cards ────────────────────────── */
 .card-wrap { position: relative; }

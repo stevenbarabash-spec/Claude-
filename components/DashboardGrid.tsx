@@ -10,6 +10,7 @@ import { ClientWork } from "@/components/cards/ClientWork";
 import { CurrentlyWorkingOn } from "@/components/cards/CurrentlyWorkingOn";
 import { DayTasks } from "@/components/cards/DayTasks";
 import { DayTimeline } from "@/components/cards/DayTimeline";
+import { FeatureRequests } from "@/components/cards/FeatureRequests";
 import { FinancePulse } from "@/components/cards/FinancePulse";
 import { GoalsCard } from "@/components/cards/Goals";
 import { Habits } from "@/components/cards/Habits";
@@ -34,12 +35,13 @@ const CARDS: Record<string, React.ReactNode> = {
   nextup: <NextUp />,
   nutrition: <Nutrition />,
   goals: <GoalsCard />,
+  features: <FeatureRequests />,
 };
 
 const DEFAULT_LAYOUT: string[][] = [
   ["operator", "cashflow", "blockers", "timers"],
   ["session", "timeline", "working", "daytasks", "clientwork", "habits", "calendar"],
-  ["nextup", "nutrition", "goals"],
+  ["nextup", "nutrition", "goals", "features"],
 ];
 
 const STORE_KEY = "jarvis-layout-v1";

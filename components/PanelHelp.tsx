@@ -26,8 +26,31 @@ function spokenText(title: string, h: CardHelp): string {
 export function PanelHelp({ title }: { title: string }) {
   const help = CARD_HELP[title];
   const [open, setOpen] = useState(false);
+  const [flip, setFlip] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  function toggleOpen() {
+    if (open) {
+      setOpen(false);
+      return;
+    }
+    // Open leftward if there isn't room on the right (right-column cards).
+    const rect = btnRef.current?.getBoundingClientRect();
+    const vw = document.documentElement.getBoundingClientRect().width;
+    setFlip(!!rect && vw - rect.right < 300);
+    setOpen(true);
+  }
+
+  // Raise the whole card above its neighbors while the widget is open, so the
+  // popover escapes each card's backdrop-filter stacking context.
+  useEffect(() => {
+    const wrap = ref.current?.closest(".card-wrap");
+    if (!wrap) return;
+    wrap.classList.toggle("help-open", open);
+    return () => wrap.classList.remove("help-open");
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -70,8 +93,9 @@ export function PanelHelp({ title }: { title: string }) {
   return (
     <span className="panel-help" ref={ref}>
       <button
+        ref={btnRef}
         className="panel-eye"
-        onClick={() => setOpen((o) => !o)}
+        onClick={toggleOpen}
         aria-label={`How ${title} works`}
         title="How do I use this?"
       >
@@ -81,7 +105,7 @@ export function PanelHelp({ title }: { title: string }) {
         </svg>
       </button>
       {open && (
-        <span className="help-pop">
+        <span className={`help-pop ${flip ? "flip" : ""}`}>
           <span className="help-head">
             <span className="help-title">{title}</span>
             <button className={`btn small ${speaking ? "primary" : ""}`} onClick={toggleSpeak}>
