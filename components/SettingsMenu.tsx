@@ -33,13 +33,23 @@ export function applyTheme(id: string) {
 export function SettingsMenu() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
+  const [notif, setNotif] = useState<NotificationPermission | "unsupported">("default");
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
       setActive(localStorage.getItem("jarvis-theme") ?? "");
     } catch {}
+    setNotif(typeof Notification === "undefined" ? "unsupported" : Notification.permission);
   }, []);
+
+  function enableNotifications() {
+    if (typeof Notification === "undefined") return;
+    Notification.requestPermission().then((p) => {
+      setNotif(p);
+      if (p === "granted") new Notification("Alerts on", { body: "You'll get a heads-up before timed tasks and meetings." });
+    });
+  }
 
   useEffect(() => {
     if (!open) return;
@@ -85,6 +95,20 @@ export function SettingsMenu() {
             }}
           >
             ⤢ Reset card layout
+          </button>
+          <button
+            className={`btn small ${notif === "granted" ? "primary" : ""}`}
+            style={{ width: "100%", justifyContent: "center" }}
+            disabled={notif === "granted" || notif === "unsupported" || notif === "denied"}
+            onClick={enableNotifications}
+          >
+            {notif === "granted"
+              ? "🔔 Alerts on"
+              : notif === "denied"
+                ? "🔔 Alerts blocked (browser)"
+                : notif === "unsupported"
+                  ? "🔔 Alerts unsupported"
+                  : "🔔 Enable meeting alerts"}
           </button>
           <div>
             <div className="label" style={{ fontSize: 10, marginBottom: 8 }}>Color theme</div>

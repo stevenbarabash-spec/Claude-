@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { config } from "@/lib/config";
+import { ImminentBanner } from "./ImminentBanner";
 import { JarvisPanel } from "./jarvis/JarvisPanel";
 import { MatrixRain } from "./MatrixRain";
 import { SettingsMenu } from "./SettingsMenu";
@@ -76,7 +77,10 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <SettingsMenu />
         </div>
       </nav>
-      <main className="page">{children}</main>
+      <main className="page">
+        <ImminentBanner />
+        {children}
+      </main>
       <JarvisPanel />
       </div>
     </>

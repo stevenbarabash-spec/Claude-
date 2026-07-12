@@ -87,6 +87,29 @@ body {
   --border: rgba(255, 255, 255, 0.1); --border-soft: rgba(255, 255, 255, 0.06);
 }
 
+/* ── Imminent alert bar ───────────────────────────────── */
+.imminent-bar {
+  position: sticky; top: 56px; z-index: 40;
+  display: flex; align-items: center; gap: 12px;
+  margin: 0 0 16px; padding: 11px 16px;
+  border-radius: 10px;
+  background: var(--hot-dim);
+  border: 1px solid var(--hot);
+  box-shadow: 0 8px 28px rgba(224, 112, 111, 0.25);
+}
+.imminent-bar.now { animation: imminentPulse 1s ease-in-out infinite; }
+@keyframes imminentPulse { 50% { box-shadow: 0 0 0 4px rgba(224, 112, 111, 0.18); } }
+.imminent-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--hot); box-shadow: 0 0 10px var(--hot); flex-shrink: 0; animation: imminentPulse 1.2s infinite; }
+.imminent-label {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--hot); flex-shrink: 0;
+}
+.imminent-title { font-size: 14px; font-weight: 600; color: var(--hot); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.imminent-count { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 15px; font-weight: 600; color: var(--hot); flex-shrink: 0; }
+.imminent-at { font-family: var(--mono); font-size: 11px; color: var(--hot); opacity: 0.7; flex-shrink: 0; }
+.imminent-x { color: var(--hot); opacity: 0.6; font-size: 12px; flex-shrink: 0; padding: 2px 4px; }
+.imminent-x:hover { opacity: 1; }
+
 /* ── Card help (eye widget) ───────────────────────────── */
 .panel-help { position: relative; display: inline-flex; }
 .panel-eye {
