@@ -20,6 +20,10 @@ interface DayItem {
   time?: string; // sortable HH:MM for day view
   kind: "client" | "deadline" | "task" | "event";
   overdue?: boolean;
+  // payload for the click-through details drawer
+  ev?: CalendarEvent;
+  who?: string; // client / project name for tasks & deadlines
+  due?: string | null;
 }
 
 function addDays(key: string, n: number): string {
@@ -39,8 +43,10 @@ export default function SchedulePage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [gcalConfigured, setGcalConfigured] = useState(true);
+  const [failedFeeds, setFailedFeeds] = useState<string[]>([]);
   const [view, setView] = useState<View>("month");
   const [anchor, setAnchor] = useState(clientDateKey());
+  const [detail, setDetail] = useState<DayItem | null>(null);
   const today = clientDateKey();
 
   useEffect(() => {
@@ -50,13 +56,20 @@ export default function SchedulePage() {
     } catch {}
     api<{ projects: ClientProject[] }>("/api/clients").then((r) => setProjects(r.projects)).catch(() => {});
     api<{ tasks: Task[] }>("/api/tasks").then((r) => setTasks(r.tasks)).catch(() => {});
-    api<{ events: CalendarEvent[]; configured: boolean }>("/api/calendar")
+    api<{ events: CalendarEvent[]; configured: boolean; failedFeeds?: string[] }>("/api/calendar")
       .then((r) => {
         setEvents(r.events);
         setGcalConfigured(r.configured);
+        setFailedFeeds(r.failedFeeds ?? []);
       })
       .catch(() => {});
   }, []);
+
+  async function hideSeries(ev: CalendarEvent) {
+    await api("/api/calendar/mute", { method: "POST", body: JSON.stringify({ uid: ev.uid }) }).catch(() => {});
+    setEvents((es) => es.filter((e) => e.uid !== ev.uid));
+    setDetail(null);
+  }
 
   function switchView(v: View) {
     setView(v);
@@ -87,13 +100,14 @@ export default function SchedulePage() {
           sub: e.allDay ? "all day" : fmtTime12(s),
           time: e.allDay ? "00:00" : `${String(s.getHours()).padStart(2, "0")}:${String(s.getMinutes()).padStart(2, "0")}`,
           kind: "event",
+          ev: e,
         });
       }
     }
     for (const p of projects) {
       if (p.status === "done") continue;
       if (p.deadline === dayKey) {
-        items.push({ key: p.id + "dl", label: `${clientOf(p.name)} — deadline`, kind: "deadline" });
+        items.push({ key: p.id + "dl", label: `${clientOf(p.name)} — deadline`, kind: "deadline", who: p.name, due: p.deadline });
       }
       for (const t of p.tasks) {
         if (!t.done && t.due === dayKey) {
@@ -103,13 +117,15 @@ export default function SchedulePage() {
             sub: clientOf(p.name),
             kind: "client",
             overdue: dayKey < today,
+            who: p.name,
+            due: t.due,
           });
         }
       }
     }
     for (const t of tasks) {
       if (t.due_date === dayKey && !t.completed_at) {
-        items.push({ key: t.id, label: t.title, sub: "personal", kind: "task", overdue: dayKey < today });
+        items.push({ key: t.id, label: t.title, sub: "personal", kind: "task", overdue: dayKey < today, who: t.entity ?? undefined, due: t.due_date });
       }
     }
     return items.sort((a, b) => (a.time ?? "99:98").localeCompare(b.time ?? "99:98"));
@@ -189,6 +205,11 @@ export default function SchedulePage() {
           TIP: connect your calendars (GOOGLE_CALENDAR_ICAL_URL — multiple iCal links, comma-separated) to see events here too.
         </div>
       )}
+      {failedFeeds.length > 0 && (
+        <div style={{ fontSize: 11.5, fontFamily: "var(--mono)", color: "var(--hot)" }}>
+          ⚠ {failedFeeds.length} calendar feed{failedFeeds.length > 1 ? "s" : ""} failed to load: {failedFeeds.join(" · ")} — check those links in Vercel.
+        </div>
+      )}
 
       {/* ── DAY ── */}
       {view === "day" && (
@@ -203,7 +224,8 @@ export default function SchedulePage() {
                   <div
                     key={item.key}
                     className="row"
-                    style={{ gap: 12, padding: "10px 0", borderBottom: "1px solid var(--border-soft)", alignItems: "flex-start" }}
+                    style={{ gap: 12, padding: "10px 0", borderBottom: "1px solid var(--border-soft)", alignItems: "flex-start", cursor: "pointer" }}
+                    onClick={() => setDetail(item)}
                   >
                     <span className="num" style={{ width: 76, flexShrink: 0, fontSize: 12, color: "var(--text-dim)" }}>
                       {item.kind === "event" ? (item.sub === "all day" ? "all day" : item.sub) : "—"}
@@ -259,6 +281,10 @@ export default function SchedulePage() {
                     <div
                       key={item.key}
                       style={{ borderLeft: `2px solid ${color(item.kind, item.overdue)}`, paddingLeft: 7, fontSize: 11.5, lineHeight: 1.4 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDetail(item);
+                      }}
                     >
                       <div style={{ color: item.overdue ? "var(--hot)" : undefined }}>{item.label}</div>
                       {item.sub && <div className="faint" style={{ fontSize: 9.5, fontFamily: "var(--mono)" }}>{item.sub.toUpperCase()}</div>}
@@ -321,6 +347,10 @@ export default function SchedulePage() {
                           textOverflow: "ellipsis",
                           color: item.overdue ? "var(--hot)" : undefined,
                         }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDetail(item);
+                        }}
                       >
                         {item.label}
                       </div>
@@ -334,6 +364,99 @@ export default function SchedulePage() {
             })}
           </div>
         </div>
+      )}
+
+      {/* ── Item details drawer ── */}
+      {detail && (
+        <>
+          <div className="drawer-overlay" onClick={() => setDetail(null)} />
+          <div className="drawer">
+            <div className="spread">
+              <span className="label" style={{ fontSize: 11 }}>
+                {detail.kind === "event" ? "Calendar event" : detail.kind === "client" ? "Client work" : detail.kind === "deadline" ? "Project deadline" : "Personal task"}
+              </span>
+              <button className="btn small" onClick={() => setDetail(null)}>close</button>
+            </div>
+
+            <div style={{ fontSize: 17, fontWeight: 600, lineHeight: 1.4 }}>{detail.label}</div>
+
+            <div className="stack" style={{ gap: 10 }}>
+              {detail.ev ? (
+                <>
+                  <div>
+                    <div className="label" style={{ fontSize: 9 }}>When</div>
+                    <div style={{ fontSize: 13.5, marginTop: 3 }}>
+                      {new Date(detail.ev.start).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+                      {detail.ev.allDay
+                        ? " · all day"
+                        : ` · ${fmtTime12(new Date(detail.ev.start))} – ${fmtTime12(new Date(detail.ev.end))}`}
+                    </div>
+                  </div>
+                  {detail.ev.calendar && (
+                    <div>
+                      <div className="label" style={{ fontSize: 9 }}>From calendar</div>
+                      <div style={{ fontSize: 13.5, marginTop: 3 }}>
+                        <span className="chip cool">{detail.ev.calendar}</span>
+                      </div>
+                    </div>
+                  )}
+                  {detail.ev.location && (
+                    <div>
+                      <div className="label" style={{ fontSize: 9 }}>Where</div>
+                      <div style={{ fontSize: 13.5, marginTop: 3 }}>{detail.ev.location}</div>
+                    </div>
+                  )}
+                  {detail.ev.description && (
+                    <div>
+                      <div className="label" style={{ fontSize: 9 }}>Details</div>
+                      <div className="dim" style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
+                        {detail.ev.description}
+                      </div>
+                    </div>
+                  )}
+                  <div className="divider" />
+                  <button
+                    className="btn"
+                    style={{ color: "var(--hot)" }}
+                    onClick={() => void hideSeries(detail.ev!)}
+                  >
+                    🚫 Hide this event everywhere (whole series)
+                  </button>
+                  <div className="faint" style={{ fontSize: 11, lineHeight: 1.5 }}>
+                    Hiding only affects this dashboard — the event stays in the “{detail.ev.calendar}” calendar. To remove it
+                    for real, delete the series in that calendar app.
+                  </div>
+                </>
+              ) : (
+                <>
+                  {detail.who && (
+                    <div>
+                      <div className="label" style={{ fontSize: 9 }}>{detail.kind === "task" ? "Related to" : "Project"}</div>
+                      <div style={{ fontSize: 13.5, marginTop: 3 }}>{detail.who}</div>
+                    </div>
+                  )}
+                  {detail.due && (
+                    <div>
+                      <div className="label" style={{ fontSize: 9 }}>Due</div>
+                      <div style={{ fontSize: 13.5, marginTop: 3, color: detail.overdue ? "var(--hot)" : undefined }}>
+                        {new Date(detail.due + "T12:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+                        {detail.overdue ? " · OVERDUE" : ""}
+                      </div>
+                    </div>
+                  )}
+                  <div className="divider" />
+                  <a
+                    className="btn primary"
+                    style={{ textAlign: "center" }}
+                    href={detail.kind === "task" ? "/crm" : "/clients"}
+                  >
+                    {detail.kind === "task" ? "Open in CRM →" : "Open the client board →"}
+                  </a>
+                </>
+              )}
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

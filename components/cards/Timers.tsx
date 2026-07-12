@@ -106,14 +106,21 @@ export function Timers() {
     if (beepingRef.current.has(id)) return;
     beepingRef.current.add(id);
     const ctx = ensureAudio();
+    const startedAt = Date.now();
     const ring = () => {
       if (!beepingRef.current.has(id)) return;
+      const elapsed = Date.now() - startedAt;
+      if (elapsed >= 30000) {
+        // Nobody's here — stop ringing and clear the alarm by itself.
+        beepingRef.current.delete(id);
+        setTimers((ts) => ts.filter((t) => t.id !== id));
+        return;
+      }
       if (ctx) beepOnce(ctx);
-      setTimeout(ring, 1000);
+      // First 20s: steady. Last 10s: urgent double-time.
+      setTimeout(ring, elapsed < 20000 ? 1000 : 450);
     };
     ring();
-    // Auto-silence after 60s so a missed alarm doesn't beep forever.
-    setTimeout(() => beepingRef.current.delete(id), 60000);
   }
 
   function start(minutes: number, label: string) {

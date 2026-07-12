@@ -148,6 +148,7 @@ export interface DailyNotes {
   pending_command?: PendingCommand | null; // only on sentinel date — awaiting "confirm"
   pending_capture?: PendingCapture | null; // only on sentinel date — awaiting "confirm"
   history?: HistoryEvent[]; // only on the history sentinel date
+  muted_events?: string[]; // only on sentinel date — calendar series UIDs to hide
 }
 
 // A capture Jarvis has understood and read back, but not yet filed.
@@ -234,6 +235,8 @@ export interface MemoryChunk {
 
 export interface CalendarEvent {
   id: string;
+  uid: string; // series UID — stable across recurrences, used for muting
+  calendar?: string; // source calendar name (X-WR-CALNAME) or feed host
   title: string;
   start: string; // ISO
   end: string; // ISO
