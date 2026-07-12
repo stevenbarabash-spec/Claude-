@@ -62,9 +62,12 @@ export function DayTimeline() {
     window.addEventListener("jarvis:capture", load);
     setNow(new Date());
     const t = setInterval(() => setNow(new Date()), 30000);
+    // Re-pull sources every 5 minutes so new meetings appear on their own.
+    const iv = setInterval(load, 5 * 60 * 1000);
     return () => {
       window.removeEventListener("jarvis:capture", load);
       clearInterval(t);
+      clearInterval(iv);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

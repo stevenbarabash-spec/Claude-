@@ -54,15 +54,21 @@ export default function SchedulePage() {
       const v = localStorage.getItem("jarvis-schedule-view");
       if (v === "day" || v === "week" || v === "month") setView(v);
     } catch {}
-    api<{ projects: ClientProject[] }>("/api/clients").then((r) => setProjects(r.projects)).catch(() => {});
-    api<{ tasks: Task[] }>("/api/tasks").then((r) => setTasks(r.tasks)).catch(() => {});
-    api<{ events: CalendarEvent[]; configured: boolean; failedFeeds?: string[] }>("/api/calendar")
-      .then((r) => {
-        setEvents(r.events);
-        setGcalConfigured(r.configured);
-        setFailedFeeds(r.failedFeeds ?? []);
-      })
-      .catch(() => {});
+    const load = () => {
+      api<{ projects: ClientProject[] }>("/api/clients").then((r) => setProjects(r.projects)).catch(() => {});
+      api<{ tasks: Task[] }>("/api/tasks").then((r) => setTasks(r.tasks)).catch(() => {});
+      api<{ events: CalendarEvent[]; configured: boolean; failedFeeds?: string[] }>("/api/calendar")
+        .then((r) => {
+          setEvents(r.events);
+          setGcalConfigured(r.configured);
+          setFailedFeeds(r.failedFeeds ?? []);
+        })
+        .catch(() => {});
+    };
+    load();
+    // Keep the schedule live while it sits open — re-check every 5 minutes.
+    const iv = setInterval(load, 5 * 60 * 1000);
+    return () => clearInterval(iv);
   }, []);
 
   async function hideSeries(ev: CalendarEvent) {

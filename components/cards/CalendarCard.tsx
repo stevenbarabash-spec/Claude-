@@ -11,12 +11,17 @@ export function CalendarCard() {
   const [selected, setSelected] = useState(clientDateKey());
 
   useEffect(() => {
-    api<{ events: CalendarEvent[]; configured: boolean }>("/api/calendar")
-      .then((r) => {
-        setEvents(r.events);
-        setConfigured(r.configured);
-      })
-      .catch(() => {});
+    const load = () =>
+      api<{ events: CalendarEvent[]; configured: boolean }>("/api/calendar")
+        .then((r) => {
+          setEvents(r.events);
+          setConfigured(r.configured);
+        })
+        .catch(() => {});
+    load();
+    // Keep an always-open dashboard current: re-check every 5 minutes.
+    const iv = setInterval(load, 5 * 60 * 1000);
+    return () => clearInterval(iv);
   }, []);
 
   const days: { key: string; label: string; num: string }[] = [];
