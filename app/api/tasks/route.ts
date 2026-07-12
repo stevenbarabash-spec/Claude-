@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { recordHistory } from "@/lib/history";
 import { getStore } from "@/lib/store";
 
 export async function GET(req: Request) {
@@ -13,5 +14,13 @@ export async function POST(req: Request) {
   if (!body.title) return NextResponse.json({ error: "title required" }, { status: 400 });
   const task = await getStore().createTask(body);
   await getStore().addAudit("create", "task", task.id);
+  await recordHistory({
+    action: "create",
+    resource: "task",
+    resource_id: task.id,
+    label: `Task added: ${task.title}`,
+    before: null,
+    after: task,
+  });
   return NextResponse.json({ task });
 }

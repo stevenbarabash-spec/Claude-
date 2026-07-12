@@ -182,20 +182,28 @@ export async function executePendingCommand(): Promise<string> {
   if (!cmd) return "There's nothing pending to confirm — it may have expired. Tell me again what to change.";
   const store = getStore();
   await clearPendingCommand();
+  const { recordHistory } = await import("../history");
 
   if (cmd.target === "receivable") {
+    const before = (await store.listReceivables(true)).find((r) => r.id === cmd.id) ?? null;
     if (cmd.action === "delete") {
       await store.deleteReceivable(cmd.id);
       await store.addAudit("jarvis_delete", "receivable", cmd.id);
+      if (before) {
+        await recordHistory({
+          action: "delete", resource: "receivable", resource_id: cmd.id,
+          label: `Jarvis: ${cmd.description}`, before, after: null, source: "jarvis",
+        });
+      }
       return `Done — deleted. (${cmd.description})`;
     }
     if (cmd.action === "mark_paid") {
-      const existing = (await store.listReceivables(true)).find((r) => r.id === cmd.id);
+      const existing = before;
       if (!existing) return "That receivable no longer exists — nothing to do.";
       if (existing.status !== "paid") {
         const today = localDateKey();
-        await store.updateReceivable(cmd.id, { status: "paid", paid_at: today });
-        await store.addIncome({
+        const updated = await store.updateReceivable(cmd.id, { status: "paid", paid_at: today });
+        const entry = await store.addIncome({
           date: today,
           source: `${existing.client}${existing.description ? ` — ${existing.description}` : ""}`,
           project_id: existing.project_id,
@@ -203,22 +211,51 @@ export async function executePendingCommand(): Promise<string> {
           currency: existing.currency,
           kind: "project",
         });
+        await recordHistory({
+          action: "update", resource: "receivable", resource_id: cmd.id,
+          label: `Jarvis marked paid: $${existing.amount.toLocaleString()} from ${existing.client}`,
+          before: existing, after: updated, source: "jarvis",
+        });
+        await recordHistory({
+          action: "create", resource: "income", resource_id: entry.id,
+          label: `Income booked: $${entry.amount.toLocaleString()} from ${entry.source}`,
+          before: null, after: entry, source: "jarvis",
+        });
       }
       await store.addAudit("jarvis_paid", "receivable", cmd.id);
       return `Done — marked paid and booked $${(await store.listIncome(1))[0]?.amount.toLocaleString() ?? ""} as income.`;
     }
     const updated = await store.updateReceivable(cmd.id, cmd.patch ?? {});
     await store.addAudit("jarvis_update", "receivable", cmd.id, cmd.patch);
+    if (updated && before) {
+      await recordHistory({
+        action: "update", resource: "receivable", resource_id: cmd.id,
+        label: `Jarvis: ${cmd.description}`, before, after: updated, source: "jarvis",
+      });
+    }
     return updated ? `Done — updated. (${cmd.description})` : "That receivable no longer exists — nothing changed.";
   }
 
   // income
+  const beforeIncome = (await store.listIncome(36)).find((e) => e.id === cmd.id) ?? null;
   if (cmd.action === "delete") {
     await store.deleteIncome(cmd.id);
     await store.addAudit("jarvis_delete", "income", cmd.id);
+    if (beforeIncome) {
+      await recordHistory({
+        action: "delete", resource: "income", resource_id: cmd.id,
+        label: `Jarvis: ${cmd.description}`, before: beforeIncome, after: null, source: "jarvis",
+      });
+    }
     return `Done — removed from the income log. (${cmd.description})`;
   }
   const updated = await store.updateIncome(cmd.id, cmd.patch ?? {});
   await store.addAudit("jarvis_update", "income", cmd.id, cmd.patch);
+  if (updated && beforeIncome) {
+    await recordHistory({
+      action: "update", resource: "income", resource_id: cmd.id,
+      label: `Jarvis: ${cmd.description}`, before: beforeIncome, after: updated, source: "jarvis",
+    });
+  }
   return updated ? `Done — updated. (${cmd.description})` : "That income entry no longer exists — nothing changed.";
 }

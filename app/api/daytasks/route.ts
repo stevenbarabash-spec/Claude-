@@ -1,6 +1,7 @@
 // Quick daily tasks with optional times — stored on the day's log so each day
 // starts clean. Feeds the Tasks card and the day timeline.
 import { NextResponse } from "next/server";
+import { recordHistory } from "@/lib/history";
 import { getStore } from "@/lib/store";
 import type { DayTask } from "@/lib/types";
 
@@ -26,11 +27,20 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "date + title required" }, { status: 400 });
   }
   const time = body.time && TIME_RE.test(body.time) ? body.time : null;
-  const tasks = await readTasks(date);
+  const before = await readTasks(date);
+  const tasks = [...before];
   const task: DayTask = { id: crypto.randomUUID(), title, time, done: false };
   tasks.push(task);
   tasks.sort((a, b) => (a.time ?? "99:99").localeCompare(b.time ?? "99:99"));
   await getStore().mergeLogNotes(date, { day_tasks: tasks });
+  await recordHistory({
+    action: "create",
+    resource: "day_tasks",
+    resource_id: date,
+    label: `Day task added: ${title}`,
+    before,
+    after: tasks,
+  });
   return NextResponse.json({ task, tasks });
 }
 
@@ -44,15 +54,28 @@ export async function PATCH(req: Request) {
   if (!DATE_RE.test(date) || !body.id) {
     return NextResponse.json({ error: "date + id required" }, { status: 400 });
   }
-  const tasks = await readTasks(date);
+  const before = await readTasks(date);
+  const tasks = JSON.parse(JSON.stringify(before)) as DayTask[];
   const task = tasks.find((t) => t.id === body.id);
   if (!task) return NextResponse.json({ error: "not found" }, { status: 404 });
   const patch = body.patch ?? {};
+  const wasDone = task.done;
   if (typeof patch.title === "string" && patch.title.trim()) task.title = patch.title.trim();
   if ("time" in patch) task.time = patch.time && TIME_RE.test(patch.time) ? patch.time : null;
   if (typeof patch.done === "boolean") task.done = patch.done;
   tasks.sort((a, b) => (a.time ?? "99:99").localeCompare(b.time ?? "99:99"));
   await getStore().mergeLogNotes(date, { day_tasks: tasks });
+  await recordHistory({
+    action: "update",
+    resource: "day_tasks",
+    resource_id: date,
+    label:
+      typeof patch.done === "boolean" && patch.done !== wasDone
+        ? `Day task ${patch.done ? "checked off" : "reopened"}: ${task.title}`
+        : `Day task edited: ${task.title}`,
+    before,
+    after: tasks,
+  });
   return NextResponse.json({ task, tasks });
 }
 
@@ -62,7 +85,19 @@ export async function DELETE(req: Request) {
   if (!DATE_RE.test(date) || !body.id) {
     return NextResponse.json({ error: "date + id required" }, { status: 400 });
   }
-  const tasks = (await readTasks(date)).filter((t) => t.id !== body.id);
+  const before = await readTasks(date);
+  const removed = before.find((t) => t.id === body.id);
+  const tasks = before.filter((t) => t.id !== body.id);
   await getStore().mergeLogNotes(date, { day_tasks: tasks });
+  if (removed) {
+    await recordHistory({
+      action: "delete",
+      resource: "day_tasks",
+      resource_id: date,
+      label: `Day task deleted: ${removed.title}`,
+      before,
+      after: tasks,
+    });
+  }
   return NextResponse.json({ ok: true, tasks });
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { recordHistory } from "@/lib/history";
 import { getStore } from "@/lib/store";
 
 export async function GET(req: Request) {
@@ -15,5 +16,13 @@ export async function POST(req: Request) {
   }
   const receivable = await getStore().createReceivable(body);
   await getStore().addAudit("create", "receivable", receivable.id, { amount: receivable.amount });
+  await recordHistory({
+    action: "create",
+    resource: "receivable",
+    resource_id: receivable.id,
+    label: `Receivable added: $${receivable.amount.toLocaleString()} from ${receivable.client}`,
+    before: null,
+    after: receivable,
+  });
   return NextResponse.json({ receivable });
 }

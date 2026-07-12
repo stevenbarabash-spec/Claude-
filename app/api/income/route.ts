@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { localDateKey } from "@/lib/dates";
+import { recordHistory } from "@/lib/history";
 import { getStore } from "@/lib/store";
 
 export async function GET(req: Request) {
@@ -23,5 +24,13 @@ export async function POST(req: Request) {
     kind: body.kind ?? "project",
   });
   await getStore().addAudit("create", "income", entry.id, { amount: entry.amount });
+  await recordHistory({
+    action: "create",
+    resource: "income",
+    resource_id: entry.id,
+    label: `Income added: $${entry.amount.toLocaleString()} from ${entry.source}`,
+    before: null,
+    after: entry,
+  });
   return NextResponse.json({ entry });
 }

@@ -9,6 +9,7 @@ import { Habits } from "@/components/cards/Habits";
 import { Nutrition } from "@/components/cards/Nutrition";
 import { Operator } from "@/components/cards/Operator";
 import { Session } from "@/components/cards/Session";
+import { Timers } from "@/components/cards/Timers";
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
         <Operator />
         <FinancePulse />
         <Blockers />
+        <Timers />
       </div>
       <div className="col">
         <Session />

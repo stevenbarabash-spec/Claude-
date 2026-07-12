@@ -3,6 +3,7 @@
 import { classifyCapture } from "./ai/classify";
 import { embed } from "./ai/embed";
 import { localDateKey, localTime } from "./dates";
+import { recordHistory } from "./history";
 import { getStore } from "./store";
 import type { Meal, RawCapture } from "./types";
 
@@ -63,6 +64,15 @@ export async function runCapturePipeline(
       routedTo = "tasks";
       routedId = task.id;
       reply = `Task filed under "${classification.urgency}": ${task.title}`;
+      await recordHistory({
+        action: "create",
+        resource: "task",
+        resource_id: task.id,
+        label: `Task added by Jarvis: ${task.title}`,
+        before: null,
+        after: task,
+        source: "jarvis",
+      });
       break;
     }
     case "meal": {
@@ -102,6 +112,15 @@ export async function runCapturePipeline(
       routedTo = "receivables";
       routedId = receivable.id;
       reply = `Receivable filed: $${money.amount.toLocaleString()} from ${receivable.client}${money.due_date ? `, due ${money.due_date}` : ""}`;
+      await recordHistory({
+        action: "create",
+        resource: "receivable",
+        resource_id: receivable.id,
+        label: `Receivable added by Jarvis: $${money.amount.toLocaleString()} from ${receivable.client}`,
+        before: null,
+        after: receivable,
+        source: "jarvis",
+      });
       break;
     }
     case "income": {
@@ -122,6 +141,15 @@ export async function runCapturePipeline(
       routedTo = "income";
       routedId = entry.id;
       reply = `Income logged: $${money.amount.toLocaleString()} from ${entry.source}`;
+      await recordHistory({
+        action: "create",
+        resource: "income",
+        resource_id: entry.id,
+        label: `Income added by Jarvis: $${money.amount.toLocaleString()} from ${entry.source}`,
+        before: null,
+        after: entry,
+        source: "jarvis",
+      });
       break;
     }
     default: {

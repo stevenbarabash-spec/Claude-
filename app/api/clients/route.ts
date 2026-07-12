@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { listClientProjects, saveClientProjects } from "@/lib/clientProjects";
+import { recordHistory } from "@/lib/history";
 import type { ClientProject } from "@/lib/types";
 
 export async function GET() {
@@ -28,5 +29,13 @@ export async function POST(req: Request) {
     updated_at: now,
   };
   await saveClientProjects([project, ...projects]);
+  await recordHistory({
+    action: "create",
+    resource: "client_project",
+    resource_id: project.id,
+    label: `Project added: ${project.name}`,
+    before: null,
+    after: project,
+  });
   return NextResponse.json({ project });
 }

@@ -79,7 +79,7 @@ export function DayTimeline() {
       minutes: h * 60 + m,
       title: (t.done ? "✓ " : "") + t.title,
       detail: `${fmt12(t.time)} · TASK`,
-      color: "var(--accent)",
+      color: "var(--hot)",
       done: t.done,
     });
   }
@@ -207,9 +207,10 @@ export function DayTimeline() {
       )}
 
       <div className="row" style={{ gap: 12, marginTop: 10, fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.1em" }}>
-        <span style={{ color: "var(--accent)" }}>■ TASKS</span>
+        <span style={{ color: "var(--hot)" }}>■ TASKS</span>
         <span style={{ color: "var(--cool)" }}>■ CALENDAR</span>
         <span style={{ color: "var(--warm)" }}>■ CLIENT WORK</span>
+        <span style={{ color: "var(--accent)" }}>| NOW</span>
       </div>
     </Panel>
   );

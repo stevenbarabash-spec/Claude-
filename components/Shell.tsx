@@ -15,6 +15,7 @@ const TABS = [
   { href: "/health", label: "HEALTH" },
   { href: "/review", label: "REVIEW" },
   { href: "/brain", label: "BRAIN" },
+  { href: "/history", label: "HISTORY" },
 ];
 
 export function Shell({ children }: { children: React.ReactNode }) {

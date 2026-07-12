@@ -56,8 +56,14 @@ function expand(icsText: string, windowDays: number): CalendarEvent[] {
 }
 
 export async function GET() {
-  const url = process.env.GOOGLE_CALENDAR_ICAL_URL;
-  if (!url) {
+  // One or MANY feeds: separate multiple iCal URLs with commas or newlines —
+  // every Gmail, Outlook, iCloud and birthday calendar merges into one view.
+  const raw = process.env.GOOGLE_CALENDAR_ICAL_URL ?? "";
+  const urls = raw
+    .split(/[\n,]+/)
+    .map((u) => u.trim())
+    .filter((u) => /^https?:\/\//i.test(u) || u.startsWith("webcal://"));
+  if (urls.length === 0) {
     return NextResponse.json(
       { events: [], configured: false },
       { headers: { "cache-control": "no-store" } },
@@ -69,19 +75,28 @@ export async function GET() {
       { headers: { "cache-control": "no-store" } },
     );
   }
-  try {
-    const res = await fetch(url, { cache: "no-store" });
-    if (!res.ok) throw new Error(`ical fetch ${res.status}`);
-    const events = expand(await res.text(), 14);
+  const results = await Promise.allSettled(
+    urls.map(async (u) => {
+      const res = await fetch(u.replace(/^webcal:\/\//i, "https://"), { cache: "no-store" });
+      if (!res.ok) throw new Error(`ical fetch ${res.status}`);
+      return expand(await res.text(), 14);
+    }),
+  );
+  const events = results
+    .filter((r): r is PromiseFulfilledResult<CalendarEvent[]> => r.status === "fulfilled")
+    .flatMap((r) => r.value)
+    .sort((a, b) => (a.start < b.start ? -1 : 1));
+  const failed = results.filter((r) => r.status === "rejected").length;
+  if (results.some((r) => r.status === "fulfilled")) {
     cached = { at: Date.now(), events };
-    return NextResponse.json(
-      { events, configured: true },
-      { headers: { "cache-control": "no-store" } },
-    );
-  } catch (err) {
-    return NextResponse.json(
-      { events: cached?.events ?? [], configured: true, error: String(err) },
-      { headers: { "cache-control": "no-store" } },
-    );
   }
+  return NextResponse.json(
+    {
+      events: events.length > 0 ? events : (cached?.events ?? []),
+      configured: true,
+      feeds: urls.length,
+      ...(failed > 0 ? { error: `${failed} of ${urls.length} calendar feeds failed to load` } : {}),
+    },
+    { headers: { "cache-control": "no-store" } },
+  );
 }

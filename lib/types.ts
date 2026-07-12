@@ -147,6 +147,7 @@ export interface DailyNotes {
   briefing?: { text: string; generated_at: string };
   pending_command?: PendingCommand | null; // only on sentinel date — awaiting "confirm"
   pending_capture?: PendingCapture | null; // only on sentinel date — awaiting "confirm"
+  history?: HistoryEvent[]; // only on the history sentinel date
 }
 
 // A capture Jarvis has understood and read back, but not yet filed.
@@ -154,6 +155,29 @@ export interface PendingCapture {
   text: string; // the capture text that will run through the pipeline on confirm
   description: string; // human-readable "here's what I'll file"
   expires_at: string;
+}
+
+// ── Change history (lives on its own sentinel log) ──────
+export type HistoryResource =
+  | "task"
+  | "client_project"
+  | "receivable"
+  | "income"
+  | "project"
+  | "day_tasks";
+
+export interface HistoryEvent {
+  id: string;
+  ts: string; // ISO timestamp of the change
+  action: "create" | "update" | "delete";
+  resource: HistoryResource;
+  resource_id: string; // for day_tasks this is the date (YYYY-MM-DD)
+  label: string; // human-readable "what happened"
+  before: unknown | null; // snapshot pre-change (null on create)
+  after: unknown | null; // snapshot post-change (null on delete)
+  source: "web" | "jarvis";
+  reverted?: boolean;
+  is_revert?: boolean; // revert events themselves can't be re-reverted
 }
 
 // A destructive change Jarvis has proposed but not yet executed.
