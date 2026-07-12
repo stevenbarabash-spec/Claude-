@@ -129,21 +129,60 @@
 
   .today-strip-list {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .client-col {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    min-width: 200px;
+    max-width: 260px;
+    flex: 1 1 200px;
+  }
+
+  .client-col-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .client-col-name {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--ink);
+  }
+
+  .client-col-count {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .client-col-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
 
   .today-chip {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: var(--surface);
-    border: 1px solid var(--rule);
     border-left: 3px solid var(--accent);
-    border-radius: var(--radius);
-    padding: 8px 12px;
+    border-radius: 3px;
+    padding: 5px 8px;
     font-size: 12px;
-    max-width: 320px;
+    background: var(--surface2);
   }
 
   .today-chip.overdue { border-left-color: var(--urgent); }
@@ -715,7 +754,7 @@
 
 <section class="today-strip" id="today-strip-wrap">
   <div class="today-strip-header">
-    <span class="today-strip-title">Today · <span id="today-strip-date"></span></span>
+    <span class="today-strip-title">Due Today by Client · <span id="today-strip-date"></span></span>
   </div>
   <div class="today-strip-list" id="today-strip-list"></div>
 </section>
@@ -1208,15 +1247,40 @@ function buildTodayStrip() {
     return;
   }
 
+  // Group by client/project so each client's due-today items sit under its own name.
+  const byClient = new Map();
   items.forEach(it => {
-    const chip = document.createElement('div');
-    chip.className = 'today-chip' + (it.kind === 'overdue' ? ' overdue' : it.kind === 'deadline' ? ' deadline' : '');
-    chip.innerHTML = `
-      <div>
-        <div class="today-chip-title">${it.title}</div>
-        <div class="today-chip-sub">${it.kind === 'overdue' ? 'Overdue' : it.kind === 'deadline' ? 'Deadline' : 'Due today'}${it._project ? ` · ${it._project.split('—')[0].trim()}` : ''}</div>
+    const client = it._project ? it._project.split('—')[0].trim() : 'General';
+    if (!byClient.has(client)) byClient.set(client, []);
+    byClient.get(client).push(it);
+  });
+
+  // Clients with overdue items lead, then by item count.
+  const clients = [...byClient.entries()].sort((a, b) => {
+    const aOverdue = a[1].some(it => it.kind === 'overdue');
+    const bOverdue = b[1].some(it => it.kind === 'overdue');
+    if (aOverdue !== bOverdue) return aOverdue ? -1 : 1;
+    return b[1].length - a[1].length;
+  });
+
+  clients.forEach(([client, clientItems]) => {
+    const col = document.createElement('div');
+    col.className = 'client-col';
+    col.innerHTML = `
+      <div class="client-col-header">
+        <span class="client-col-name">${client}</span>
+        <span class="client-col-count">${clientItems.length}</span>
+      </div>
+      <div class="client-col-items">
+        ${clientItems.map(it => `
+          <div class="today-chip ${it.kind === 'overdue' ? 'overdue' : it.kind === 'deadline' ? 'deadline' : ''}">
+            <div>
+              <div class="today-chip-title">${it.title}</div>
+              <div class="today-chip-sub">${it.kind === 'overdue' ? 'Overdue' : it.kind === 'deadline' ? 'Deadline' : 'Due today'}</div>
+            </div>
+          </div>`).join('')}
       </div>`;
-    list.appendChild(chip);
+    list.appendChild(col);
   });
 }
 
