@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { config } from "@/lib/config";
 import { JarvisPanel } from "./jarvis/JarvisPanel";
 import { MatrixRain } from "./MatrixRain";
+import { SettingsMenu } from "./SettingsMenu";
 
 const TABS = [
   { href: "/", label: "HOME" },
@@ -72,6 +73,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
               initials
             )}
           </span>
+          <SettingsMenu />
         </div>
       </nav>
       <main className="page">{children}</main>

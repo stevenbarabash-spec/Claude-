@@ -17,6 +17,15 @@ export function MatrixRain() {
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
 
+    // Rain color follows the active theme's accent.
+    let rgb = "111, 224, 174";
+    const readColor = () => {
+      const v = getComputedStyle(document.documentElement).getPropertyValue("--accent-rgb").trim();
+      if (v) rgb = v;
+    };
+    readColor();
+    window.addEventListener("theme:change", readColor);
+
     let w = 0;
     let h = 0;
     let drops: number[] = [];
@@ -43,7 +52,7 @@ export function MatrixRain() {
       ctx.font = `${FONT_SIZE}px monospace`;
       for (let i = 0; i < drops.length; i++) {
         const glyph = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-        ctx.fillStyle = Math.random() < 0.06 ? "rgba(183, 245, 216, 0.95)" : "rgba(111, 224, 174, 0.5)";
+        ctx.fillStyle = Math.random() < 0.06 ? `rgba(${rgb}, 0.95)` : `rgba(${rgb}, 0.5)`;
         ctx.fillText(glyph, i * FONT_SIZE, drops[i] * FONT_SIZE);
         if (drops[i] * FONT_SIZE > h && Math.random() > 0.972) drops[i] = 0;
         drops[i]++;
@@ -54,6 +63,7 @@ export function MatrixRain() {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
+      window.removeEventListener("theme:change", readColor);
     };
   }, []);
 

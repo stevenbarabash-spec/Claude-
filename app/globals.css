@@ -9,7 +9,9 @@
   --text-dim: #8a948c;
   --text-faint: #57605a;
   --accent: #6fe0ae;
+  --accent-rgb: 111, 224, 174;
   --accent-dim: rgba(111, 224, 174, 0.14);
+  --glow: rgba(111, 224, 174, 0.05);
   --hot: #e0706f;
   --hot-dim: rgba(224, 112, 111, 0.14);
   --warm: #e0c26f;
@@ -35,8 +37,75 @@ html { background: var(--bg); }
 /* body stays transparent so the matrix rain canvas (z-index -1) shows through */
 body {
   background: transparent;
-  background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(111, 224, 174, 0.05), transparent);
+  background-image: radial-gradient(ellipse 80% 50% at 50% -10%, var(--glow), transparent);
 }
+
+/* ── Color themes (set data-theme on <html>) ──────────────
+   Each theme swaps the accent family + tints cards/glow/matrix so the
+   whole dashboard — buttons, highlights, borders, background rain — recolors.
+   The default (no data-theme) is Matrix Green, unchanged. */
+:root[data-theme="blue"] {
+  --bg: #05080e; --bg-raise: #0a1019;
+  --accent: #6fa9e0; --accent-rgb: 111, 169, 224;
+  --accent-dim: rgba(111, 169, 224, 0.16); --glow: rgba(111, 169, 224, 0.07);
+  --panel: rgba(111, 169, 224, 0.05); --panel-solid: #0c1523;
+  --border: rgba(111, 169, 224, 0.16); --border-soft: rgba(111, 169, 224, 0.09);
+}
+:root[data-theme="cyan"] {
+  --bg: #04090b; --bg-raise: #081215;
+  --accent: #5fd7e0; --accent-rgb: 95, 215, 224;
+  --accent-dim: rgba(95, 215, 224, 0.16); --glow: rgba(95, 215, 224, 0.07);
+  --panel: rgba(95, 215, 224, 0.05); --panel-solid: #0a1719;
+  --border: rgba(95, 215, 224, 0.16); --border-soft: rgba(95, 215, 224, 0.09);
+}
+:root[data-theme="purple"] {
+  --bg: #08060e; --bg-raise: #0e0b18;
+  --accent: #b58cf0; --accent-rgb: 181, 140, 240;
+  --accent-dim: rgba(181, 140, 240, 0.16); --glow: rgba(181, 140, 240, 0.07);
+  --panel: rgba(181, 140, 240, 0.05); --panel-solid: #140f22;
+  --border: rgba(181, 140, 240, 0.16); --border-soft: rgba(181, 140, 240, 0.09);
+}
+:root[data-theme="amber"] {
+  --bg: #0a0805; --bg-raise: #120e08;
+  --accent: #e0b34f; --accent-rgb: 224, 179, 79;
+  --accent-dim: rgba(224, 179, 79, 0.16); --glow: rgba(224, 179, 79, 0.07);
+  --panel: rgba(224, 179, 79, 0.05); --panel-solid: #17130a;
+  --border: rgba(224, 179, 79, 0.15); --border-soft: rgba(224, 179, 79, 0.08);
+}
+:root[data-theme="red"] {
+  --bg: #0b0606; --bg-raise: #140a0a;
+  --accent: #ef6f6f; --accent-rgb: 239, 111, 111;
+  --accent-dim: rgba(239, 111, 111, 0.16); --glow: rgba(239, 111, 111, 0.07);
+  --panel: rgba(239, 111, 111, 0.05); --panel-solid: #190c0c;
+  --border: rgba(239, 111, 111, 0.16); --border-soft: rgba(239, 111, 111, 0.09);
+}
+:root[data-theme="mono"] {
+  --bg: #070809; --bg-raise: #0c0e10;
+  --accent: #cfd6da; --accent-rgb: 207, 214, 218;
+  --accent-dim: rgba(207, 214, 218, 0.14); --glow: rgba(207, 214, 218, 0.05);
+  --panel: rgba(255, 255, 255, 0.03); --panel-solid: #101315;
+  --border: rgba(255, 255, 255, 0.1); --border-soft: rgba(255, 255, 255, 0.06);
+}
+
+/* ── Settings menu ────────────────────────────────────── */
+.settings-pop {
+  position: absolute; top: 44px; right: 0;
+  width: 240px;
+  background: var(--bg-raise);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  z-index: 95;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.6);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.swatch {
+  width: 26px; height: 26px; border-radius: 50%;
+  cursor: pointer; border: 2px solid transparent;
+  transition: transform 0.12s;
+}
+.swatch:hover { transform: scale(1.12); }
+.swatch.active { border-color: var(--text); }
 
 /* Everything a notch bigger — and more so the wider the screen. */
 .app-scale { zoom: 1.06; }
