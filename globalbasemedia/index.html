@@ -28,6 +28,8 @@
 <!-- shared SVG filters/gradients for the electric border -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <linearGradient id="eg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#60a5fa"/><stop offset="50%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#818cf8"/></linearGradient>
+  <linearGradient id="chartStroke" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#2f6bff"/><stop offset="70%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#22e0a0"/></linearGradient>
+  <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(34,224,160,.35)"/><stop offset="100%" stop-color="rgba(34,224,160,0)"/></linearGradient>
   <filter id="electric" x="-20%" y="-20%" width="140%" height="140%">
     <feTurbulence type="fractalNoise" baseFrequency="0.014 0.04" numOctaves="2" seed="2" result="n"><animate attributeName="baseFrequency" dur="5s" values="0.014 0.038;0.03 0.07;0.014 0.038" repeatCount="indefinite"/></feTurbulence>
     <feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G"/>
@@ -53,7 +55,8 @@
   <section class="hero" id="top">
     <div class="dots"></div><div class="noise"></div><div class="bloom spectrum"></div>
     <div class="wrap" style="position:relative;z-index:2">
-      <div style="max-width:770px">
+      <div class="hero-grid2">
+        <div>
         <h1><span class="serif warm">Dream website?</span><br/>We build it — and rank it.</h1>
         <div style="display:flex;align-items:center;gap:16px;margin:26px 0 22px;flex-wrap:wrap">
           <div class="avatars"><div class="a">MR</div><div class="a">AS</div><div class="a">DC</div></div>
@@ -68,6 +71,72 @@
           <a class="btn ghost" href="tel:+15615569190"><span class="t">Call (561) 556-9190</span></a>
         </div>
         <p class="hero-note"><b>●</b> Free 30-min consult &middot; you own everything &middot; no lock-in</p>
+        </div>
+        <div class="hero-visual reveal r-scale">
+          <div class="browser">
+            <div class="bar"><i></i><i></i><i></i><span class="u">yourbusiness.com</span></div>
+            <div class="shot">
+              <div class="wsite-hero"><b>Book your service in 30 seconds</b><span>online booking &middot; instant callback</span><br/><span class="wsite-cta">Book Now →</span></div>
+              <div class="wsite-row">
+                <div class="wsite-tile"><div class="n">476</div><div class="l">5-star reviews</div></div>
+                <div class="wsite-tile"><div class="n">98</div><div class="l">PageSpeed</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="ba-badge">Before → After &middot; +312% leads</div>
+          <div class="chip c1"><span class="stars">★★★★★</span><small>4.9 on Google</small></div>
+          <div class="chip c2">📈 #8 → #1<small>local rankings</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOW, DON'T TELL -->
+  <section style="background:var(--bg2)">
+    <div class="bloom emerald"></div>
+    <div class="wrap" style="position:relative;z-index:2">
+      <div class="center" style="margin-bottom:44px">
+        <span class="eyebrow">See it, don't just read it</span>
+        <h2 style="margin-top:12px">Real <span class="serif warm">redesigns</span>, real <span class="serif blu">rankings</span></h2>
+      </div>
+      <div class="showcase-grid">
+        <div class="viz reveal" style="padding:0;overflow:hidden">
+          <div class="browser" style="border:0;box-shadow:none;border-radius:20px">
+            <div class="bar"><i></i><i></i><i></i><span class="u">threevalleylakes.com</span></div>
+            <div class="shot" style="padding:22px">
+              <div class="wsite-hero" style="padding:26px"><b style="font-size:1.3rem">Welcome to Three Valley Lakes</b><span>Book tickets &middot; plan your visit &middot; today's hours</span><br/><span class="wsite-cta">Get Tickets →</span></div>
+              <div class="wsite-row">
+                <div class="wsite-tile"><div class="n">+61%</div><div class="l">visitor → booking</div></div>
+                <div class="wsite-tile"><div class="n">1.2s</div><div class="l">load time</div></div>
+                <div class="wsite-tile"><div class="n" style="color:#ff8ab8">4.9★</div><div class="l">rated by guests</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="ba-badge">Redesigned by GBM</div>
+        </div>
+        <div class="stackcol">
+          <div class="viz reveal">
+            <h4>Rankings that climb</h4>
+            <div class="sub">Local pack &amp; organic — up and to the right.</div>
+            <svg class="chart" viewBox="0 0 300 150" preserveAspectRatio="none" aria-hidden="true">
+              <line class="cgrid" x1="0" y1="40" x2="300" y2="40"/><line class="cgrid" x1="0" y1="80" x2="300" y2="80"/><line class="cgrid" x1="0" y1="120" x2="300" y2="120"/>
+              <path class="area" d="M8,132 L60,112 L112,116 L164,84 L214,58 L268,24 L268,146 L8,146 Z"/>
+              <path class="line" d="M8,132 L60,112 L112,116 L164,84 L214,58 L268,24"/>
+              <circle class="end" cx="268" cy="24" r="5"/>
+              <polygon class="arrow" points="278,8 278,30 256,30"/>
+            </svg>
+            <div class="big">#8 → <em>#1</em> &nbsp;<span class="up">+184% traffic ▲</span></div>
+          </div>
+          <div class="viz reveal">
+            <h4>Google Ads that print jobs</h4>
+            <div class="sub">You, right at the top — when they're ready to buy.</div>
+            <div class="serp">
+              <div class="q"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#857e9e" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg> emergency ac repair near me</div>
+              <div class="ad"><span class="spon">Sponsored</span><div class="biz">Your HVAC Co. — 24/7 Fast Repair</div><div class="url">yourhvac.com/ac-repair</div><div class="rev">★★★★★ <span>4.9 (476) · Open now</span></div><span class="callbtn">Call now →</span></div>
+            </div>
+            <div class="big" style="font-size:1.15rem;margin-top:14px">Cost per lead <em style="color:#7fb0ff">↓ 63%</em> &middot; Calls <span class="up">▲ 3.2×</span></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -122,7 +191,7 @@
 
         <div class="pkg feat reveal"><span class="glowpulse"></span><span class="badge">Popular</span>
           <svg class="elec" preserveAspectRatio="none" viewBox="0 0 300 560" aria-hidden="true"><rect class="base" x="3" y="3" width="294" height="554" rx="22"/><rect class="bolt" x="3" y="3" width="294" height="554" rx="22"/></svg>
-          <div class="pic" style="border-color:#60a5fa55">🌐</div><h3>Website <span class="serif blu">Pro</span></h3><p class="sub">Everything your business needs online.</p><div class="price">Book a consult</div><ul><li><b>✓</b>Everything in Start</li><li><b>✓</b>5–10 custom pages</li><li><b>✓</b>Advanced SEO &amp; review automation</li><li><b>✓</b>Free design draft first</li></ul><a class="go" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1" style="background:var(--btn);border-color:transparent">Get My Free Draft →</a></div>
+          <div class="pic" style="border-color:#60a5fa55">🌐</div><h3>Website <span class="serif blu">Pro</span></h3><p class="sub">Everything your business needs online.</p><div class="price">Book a consult</div><ul><li><b>✓</b>Everything in Start</li><li><b>✓</b>5–10 custom pages</li><li><b>✓</b>Advanced SEO &amp; review automation</li><li><b>✓</b>Free design draft first</li></ul><a class="go" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1" style="background:var(--btn);border-color:transparent;color:var(--btn-ink)">Get My Free Draft →</a></div>
 
         <div class="pkg reveal"><div class="pic">🛍️</div><h3>Online <span class="serif" style="background:linear-gradient(90deg,#ff6aa6,#ff3d8b);-webkit-background-clip:text;background-clip:text;color:transparent">Shop</span></h3><p class="sub">Sells around the clock, all year.</p><div class="price" style="background:linear-gradient(90deg,#ff6aa6,#ff3d8b);-webkit-background-clip:text;background-clip:text;color:transparent">Book a consult</div><ul><li><b>✓</b>Products, cart &amp; orders</li><li><b>✓</b>Secure payment &amp; shipping</li><li><b>✓</b>Intuitive admin</li><li><b>✓</b>Free design draft first</li></ul><a class="go" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Get My Free Draft →</a></div>
 
