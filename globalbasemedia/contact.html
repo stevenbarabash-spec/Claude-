@@ -12,28 +12,29 @@
 
 <header class="site-header">
   <div class="wrap nav">
-    <a class="logo" href="index.html">
-      <span class="logo-mark">GB</span>
+    <a class="logo" href="index.html" aria-label="Global Base Media home">
+      <span class="logo-mark" aria-hidden="true">GB</span>
       <span>Global Base Media<small>AI Marketing Systems</small></span>
     </a>
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span></button>
-    <ul class="nav-links">
+    <button class="nav-toggle" aria-label="Toggle menu" aria-controls="menu" aria-expanded="false"><span></span></button>
+    <ul class="nav-links" id="menu">
       <li class="dropdown">
-        <a href="index.html#services">Services ▾</a>
+        <a href="index.html#services" aria-haspopup="true">Services &#9662;</a>
         <div class="dropdown-menu">
-          <a href="ai-receptionist.html">AI Receptionist &amp; Chatbot<small>24/7 virtual office assistant</small></a>
+          <a href="ai-receptionist.html">AI &amp; Automation<small>CRM, AI assistants &amp; custom workflows</small></a>
           <a href="website-design.html">Website Design<small>Sites built to convert</small></a>
           <a href="seo.html">SEO Services<small>Own your local search</small></a>
-          <a href="google-reviews.html">Google Reviews &amp; Automation<small>Hands-free reputation growth</small></a>
-          <a href="ads.html">Social Media &amp; Google Ads<small>Insight-driven advertising</small></a>
+          <a href="google-reviews.html">Google Reviews &amp; Automation<small>Reputation on autopilot</small></a>
+          <a href="ads.html">Google &amp; YouTube Ads<small>High-intent paid traffic</small></a>
         </div>
       </li>
-      <li><a href="index.html#results">Results</a></li>
-      <li><a href="pricing.html">Pricing</a></li>
-      <li><a href="contact.html">Contact</a></li>
+      <li><a href="testimonials.html">Our Work</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" aria-current="page">Contact</a></li>
+      <li><a href="tel:+15615569190">Call (561) 556-9190</a></li>
     </ul>
     <div class="nav-cta">
-      <a class="nav-phone" href="tel:+15615569190"><span>📞</span> (561) 556-9190</a>
+      <a class="nav-phone" href="tel:+15615569190"><span aria-hidden="true">&#128222;</span> (561) 556-9190</a>
       <a class="btn btn-primary" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Book a Strategy Call</a>
     </div>
   </div>
@@ -81,11 +82,11 @@
             <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" required /></div>
             <div class="field"><label for="f-service">I'm interested in</label>
               <select id="f-service" name="service">
-                <option>AI Receptionist &amp; Chatbot</option>
                 <option>Website Design</option>
                 <option>SEO Services</option>
                 <option>Google Reviews &amp; Automation</option>
-                <option>Social Media &amp; Google Ads</option>
+                <option>AI &amp; Automation</option>
+                <option>Google &amp; YouTube Ads</option>
                 <option>The whole system</option>
               </select>
             </div>
@@ -115,30 +116,31 @@
   <div class="wrap">
     <div class="footer-grid">
       <div class="footer-about">
-        <a class="logo" href="index.html">
-          <span class="logo-mark">GB</span>
+        <a class="logo" href="index.html" aria-label="Global Base Media home">
+          <span class="logo-mark" aria-hidden="true">GB</span>
           <span>Global Base Media<small>AI Marketing Systems</small></span>
         </a>
-        <p>All-in-one marketing systems for service businesses. AI-powered websites &amp; systems that turn clicks into customers.</p>
-        <a class="footer-phone" href="tel:+15615569190">📞 (561) 556-9190</a>
+        <p>All-in-one marketing systems for service businesses. Over 5K websites built &middot; 10K AI bots live.</p>
+        <a class="footer-phone" href="tel:+15615569190"><span aria-hidden="true">&#128222;</span> (561) 556-9190</a><br />
+        <a href="mailto:hello@globalbasemedia.com">hello@globalbasemedia.com</a>
       </div>
       <div>
         <h4>Services</h4>
         <ul>
-          <li><a href="ai-receptionist.html">AI Receptionist &amp; Chatbot</a></li>
           <li><a href="website-design.html">Website Design</a></li>
           <li><a href="seo.html">SEO Services</a></li>
           <li><a href="google-reviews.html">Google Reviews &amp; Automation</a></li>
-          <li><a href="ads.html">Social Media &amp; Google Ads</a></li>
+          <li><a href="ai-receptionist.html">AI &amp; Automation</a></li>
+          <li><a href="ads.html">Google &amp; YouTube Ads</a></li>
         </ul>
       </div>
       <div>
         <h4>Company</h4>
         <ul>
-          <li><a href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Book a Strategy Call</a></li>
-          <li><a href="index.html#results">Case Studies</a></li>
-          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="testimonials.html">Our Work</a></li>
           <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Book a Strategy Call</a></li>
         </ul>
       </div>
       <div>
@@ -151,8 +153,8 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© <span class="year">2026</span> Global Base Media. All rights reserved.</span>
-      <span><a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms &amp; Conditions</a></span>
+      <span>&copy; <span class="year">2026</span> Global Base Media. All rights reserved.</span>
+      <span><a href="#">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="#">Terms &amp; Conditions</a></span>
     </div>
   </div>
 </footer>
