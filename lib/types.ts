@@ -164,6 +164,7 @@ export interface DailyNotes {
   working_on?: WorkingItem[]; // only on sentinel date — the Currently Working On strip
   feature_requests?: FeatureRequest[]; // only on sentinel date — the idea parking lot
   routines?: Routine[]; // only on sentinel date — recurring day-of-week tasks
+  builds?: BuildRequest[]; // only on sentinel date — Build Console request log
 }
 
 // A capture Jarvis has understood and read back, but not yet filed.
@@ -186,6 +187,16 @@ export interface WorkingItem {
   date?: string; // day-task log date
   startedAt: string; // ISO
   status?: "pending" | "active"; // pending = staged, awaiting Confirm (default active)
+}
+
+// A feature request submitted from the in-WARROOM Build Console.
+export interface BuildRequest {
+  id: string;
+  text: string;
+  status: "requested" | "building" | "shipped" | "failed" | "reverted";
+  createdAt: string;
+  issueUrl?: string; // GitHub issue that drives the autonomous build
+  note?: string; // status detail (error, PR link, etc.)
 }
 
 // A parked idea for improving the dashboard — reviewed later, not a task.

@@ -1,0 +1,35 @@
+# WARROOM Build Console → autonomous build.
+# When the Build tab files an issue labeled "warroom-build" (or you @claude on
+# any issue), Claude Code implements the request and opens a PR / pushes.
+# Setup once: install the Claude GitHub app on this repo and add ANTHROPIC_API_KEY
+# as a repository secret (Settings → Secrets and variables → Actions).
+name: WARROOM Build
+
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  build:
+    if: contains(github.event.issue.labels.*.name, 'warroom-build')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run Claude Code on the request
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Implement the issue, run the build, and open a PR for review.
+          prompt: |
+            Implement the feature described in this issue for the WARROOM Next.js
+            dashboard. Match the existing code style. Run `npx next build` and fix
+            any type errors before finishing. Then commit and open a pull request
+            summarizing the change.
