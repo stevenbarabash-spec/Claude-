@@ -84,13 +84,13 @@
    Dependency-free: system + serif-fallback fonts, inline SVG textures.
    ============================================================ */
 :root{
-  --bg:#050208; --bg2:#0a0512; --ink:#f6f4fb; --muted:#b7b0cf; --muted2:#857e9e;
+  --bg:#050208; --bg2:#0a0512; --ink:#f6f4fb; --muted:#cdc7e6; --muted2:#a49dc0;
   --blue:#2f6bff; --pink:#ff3d8b; --magenta:#e11d74; --green:#22e0a0; --cyan:#22d3ee; --purple:#a855f7;
   /* brand spectrum = blue -> purple -> pink (green is reserved for buttons/CTAs) */
   --spectrum:linear-gradient(90deg,#2f6bff 0%,#a855f7 52%,#ff3d8b 100%);
-  /* GREEN is the standout CTA color — bright green with dark ink text for pop */
+  /* GREEN is the standout CTA color — bright green with near-black text for max contrast */
   --btn:linear-gradient(100deg,#12c98a 0%,#22e0a0 55%,#57f0c0 100%);
-  --btn-ink:#032018;
+  --btn-ink:#08130d;
   --serif:"Fraunces",Georgia,"Times New Roman",serif;
   --display:"Clash Display",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --sans:"Cabinet Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -151,7 +151,7 @@ h3{font-size:1.22rem;letter-spacing:-.01em}
 .nav .links a:hover::after{width:100%}
 .nav .brand{position:absolute;left:50%;top:50%;translate:-50% -50%;display:flex;align-items:center;gap:9px;font-weight:800;color:#111;font-size:.98rem}
 .nav .brand img{width:32px;height:32px;border-radius:8px}
-.pillcta{position:relative;overflow:hidden;border:0;border-radius:12px;color:var(--btn-ink);font-weight:800;font-size:.72rem;letter-spacing:.03em;
+.pillcta{position:relative;overflow:hidden;border:0;border-radius:12px;color:#08130d;font-weight:800;font-size:.72rem;letter-spacing:.03em;
   padding:11px 18px;background:#0a0a0a;box-shadow:0 10px 30px -8px rgba(34,224,160,.55),0 6px 22px -6px rgba(18,201,138,.4)}
 .pillcta .g{position:absolute;inset:0;background:var(--btn);opacity:.98}
 .pillcta .sh{position:absolute;top:0;left:-60%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:transform .7s ease}
@@ -170,9 +170,10 @@ h3{font-size:1.22rem;letter-spacing:-.01em}
 }
 
 /* ---------- buttons ---------- */
-.btn{position:relative;display:inline-flex;align-items:center;gap:9px;overflow:hidden;border:0;border-radius:14px;color:var(--btn-ink);
-  font-weight:700;font-size:1rem;padding:15px 28px;background:#0a0a0a;transition:transform .25s ease;
+.btn{position:relative;display:inline-flex;align-items:center;gap:9px;overflow:hidden;border:0;border-radius:14px;color:#08130d;
+  font-weight:800;font-size:1rem;padding:15px 28px;background:#0a0a0a;transition:transform .25s ease;
   box-shadow:0 12px 34px -8px rgba(34,224,160,.6),0 8px 26px -6px rgba(18,201,138,.4)}
+.btn .t{color:#08130d}
 .btn:hover{transform:translateY(-2px)}
 .btn:focus-visible{outline:2px solid #22e0a0;outline-offset:3px}
 .btn .g{position:absolute;inset:0;background:var(--btn)}
@@ -183,6 +184,7 @@ h3{font-size:1.22rem;letter-spacing:-.01em}
 .btn.ghost{background:rgba(255,255,255,.06);box-shadow:none;border:1.5px solid rgba(160,178,255,.45);color:#fff}
 .btn.ghost:hover{background:rgba(255,255,255,.1);border-color:rgba(160,178,255,.7)}
 .btn.ghost .g,.btn.ghost .ring{display:none}
+.btn.ghost,.btn.ghost .t{color:#fff}
 
 /* ---------- sections & stacking ---------- */
 section{position:relative;padding:110px 0}
@@ -333,12 +335,12 @@ a.skip:focus{left:0}
 .wsite-hero{border-radius:10px;padding:18px;background:linear-gradient(135deg,rgba(47,107,255,.32),rgba(255,61,139,.2));border:1px solid rgba(255,255,255,.08)}
 .wsite-hero b{font-family:var(--display);font-size:1.05rem;display:block;color:#fff}
 .wsite-hero span{font-size:.72rem;color:var(--muted)}
-.wsite-cta{display:inline-block;margin-top:10px;font-size:.66rem;font-weight:800;color:var(--btn-ink);background:var(--btn);padding:6px 12px;border-radius:7px}
+.wsite-cta{display:inline-block;margin-top:10px;font-size:.66rem;font-weight:800;color:#08130d;background:var(--btn);padding:6px 12px;border-radius:7px}
 .wsite-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .wsite-tile{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:12px}
 .wsite-tile .n{font-family:var(--display);font-size:1.3rem;color:#7fb0ff}
 .wsite-tile .l{font-size:.62rem;color:var(--muted2)}
-.ba-badge{position:absolute;top:12px;right:12px;z-index:3;background:var(--btn);color:var(--btn-ink);font-weight:800;font-size:.72rem;padding:6px 12px;border-radius:999px;box-shadow:0 6px 20px rgba(34,224,160,.45)}
+.ba-badge{position:absolute;top:12px;right:12px;z-index:3;background:var(--btn);color:#08130d;font-weight:800;font-size:.72rem;padding:6px 12px;border-radius:999px;box-shadow:0 6px 20px rgba(34,224,160,.45)}
 
 /* floating chips around hero visual */
 .chip{position:absolute;z-index:4;background:#100c1c;border:1px solid rgba(255,255,255,.12);border-radius:13px;padding:11px 14px;box-shadow:0 16px 40px rgba(0,0,0,.5);font-size:.8rem;font-weight:600}
@@ -380,7 +382,7 @@ a.skip:focus{left:0}
 .serp .url{font-size:.66rem;color:var(--muted2)}
 .serp .rev{color:#ffc107;font-size:.74rem;margin-top:5px}
 .serp .rev span{color:var(--muted2)}
-.serp .callbtn{display:inline-block;margin-top:9px;font-size:.66rem;font-weight:800;color:var(--btn-ink);background:var(--btn);padding:6px 13px;border-radius:8px}
+.serp .callbtn{display:inline-block;margin-top:9px;font-size:.66rem;font-weight:800;color:#08130d;background:var(--btn);padding:6px 13px;border-radius:8px}
 
 .showcase-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:18px;text-align:left}
 .showcase-grid .stackcol{display:grid;gap:18px}
