@@ -3,9 +3,16 @@
 // ("BYTOX — send draft" at 3:00 PM). Lives between Session and Client Work.
 // Timed entries also show up as notches on the day timeline.
 import { useEffect, useRef, useState } from "react";
-import { api, clientDateKey, fmt12, fmtTime12 } from "@/lib/client";
+import { api, clientDateKey, debounce, fmt12, fmtTime12 } from "@/lib/client";
 import type { DayTask, Routine } from "@/lib/types";
 import { Panel } from "../Panel";
+
+interface SearchHit {
+  key: string;
+  source: "client" | "crm" | "day";
+  title: string;
+  who: string | null;
+}
 
 function nowHHMM(): string {
   const d = new Date();
@@ -19,8 +26,32 @@ export function DayTasks() {
   const [title, setTitle] = useState("");
   const [time, setTime] = useState("");
   const [busy, setBusy] = useState(false);
+  const [hits, setHits] = useState<SearchHit[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
   const today = clientDateKey();
+
+  // Search existing tasks (client board + CRM + today) as you type, so you can
+  // pull one into today's plan — same as Currently Working On.
+  const runSearch = useRef(
+    debounce((q: string) => {
+      if (q.trim().length < 2) {
+        setHits([]);
+        return;
+      }
+      api<{ results: SearchHit[] }>(`/api/working/search?q=${encodeURIComponent(q)}`)
+        .then((r) => setHits(r.results))
+        .catch(() => setHits([]));
+    }, 250),
+  ).current;
+
+  // Lift the card above its neighbors while the dropdown is open.
+  useEffect(() => {
+    const wrap = searchRef.current?.closest(".card-wrap");
+    if (!wrap) return;
+    wrap.classList.toggle("raised", title.trim().length >= 2 && hits.length > 0);
+    return () => wrap.classList.remove("raised");
+  });
 
   // Recurring-routines manager.
   const [routines, setRoutines] = useState<Routine[]>([]);
@@ -70,8 +101,8 @@ export function DayTasks() {
 
   const changed = () => window.dispatchEvent(new CustomEvent("jarvis:capture"));
 
-  async function add() {
-    const t = title.trim();
+  async function addTask(taskTitle: string) {
+    const t = taskTitle.trim();
     if (!t || busy) return;
     setBusy(true);
     try {
@@ -82,12 +113,22 @@ export function DayTasks() {
       setTasks(r.tasks);
       setTitle("");
       setTime("");
+      setHits([]);
       changed();
       inputRef.current?.focus();
     } catch {
       /* keep input so nothing is lost */
     }
     setBusy(false);
+  }
+
+  function add() {
+    void addTask(title);
+  }
+
+  // Pull an existing task into today's plan (keeps the client for context).
+  function pull(hit: SearchHit) {
+    void addTask(hit.who ? `${hit.title} · ${hit.who}` : hit.title);
   }
 
   async function toggle(task: DayTask) {
@@ -121,26 +162,47 @@ export function DayTasks() {
       title="Tasks · Today"
       right={<span>{tasks === null ? "…" : `${open} open`}</span>}
     >
-      <div className="row" style={{ marginBottom: 12 }}>
-        <input
-          ref={inputRef}
-          className="input"
-          placeholder='Add a task… e.g. "BYTOX — send the draft"'
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && add()}
-        />
-        <input
-          className="input"
-          type="time"
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
-          style={{ width: 120, flexShrink: 0 }}
-          title="Optional time"
-        />
-        <button className="btn primary" onClick={add} disabled={busy || !title.trim()}>
-          Add
-        </button>
+      <div ref={searchRef} style={{ position: "relative", marginBottom: 12 }}>
+        <div className="row">
+          <input
+            ref={inputRef}
+            className="input"
+            placeholder='Search a task or add one… e.g. "newsletter BYTOX"'
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              runSearch(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") add();
+              if (e.key === "Escape") setHits([]);
+            }}
+          />
+          <input
+            className="input"
+            type="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            style={{ width: 120, flexShrink: 0 }}
+            title="Optional time"
+          />
+          <button className="btn primary" onClick={add} disabled={busy || !title.trim()}>
+            Add
+          </button>
+        </div>
+        {title.trim().length >= 2 && hits.length > 0 && (
+          <div className="work-results">
+            {hits.map((h) => (
+              <button key={h.key} className="work-result" onClick={() => pull(h)} disabled={busy}>
+                <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{h.title}</span>
+                <span className="faint" style={{ fontSize: 9.5, fontFamily: "var(--mono)", flexShrink: 0 }}>
+                  {h.who ? `${h.who.toUpperCase()} · ` : ""}
+                  {h.source === "client" ? "CLIENT" : h.source === "crm" ? "CRM" : "TODAY"}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {tasks === null ? (
