@@ -261,6 +261,37 @@ section { padding: 88px 0; position: relative; }
 .setup { font-size: 0.82rem; color: var(--muted-2); margin: 2px 0 0; }
 .setup em { font-style: normal; color: var(--green); }
 
+/* ---------- Google Partner badge ----------
+   Placeholder built in CSS. Replace .gbadge markup with the official
+   Google Partner badge image (PNG/SVG) from the Partners dashboard. */
+.gbadge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: #fff; color: #202124;
+  border-radius: 999px; padding: 8px 16px 8px 13px;
+  font-weight: 700; font-size: 0.9rem; letter-spacing: -0.01em;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35); white-space: nowrap;
+}
+.gbadge .gdots { display: inline-grid; grid-template-columns: 9px 9px; gap: 3px; }
+.gbadge .gdots i { width: 9px; height: 9px; border-radius: 50%; }
+.gbadge .gdots i:nth-child(1) { background: #4285F4; }
+.gbadge .gdots i:nth-child(2) { background: #EA4335; }
+.gbadge .gdots i:nth-child(3) { background: #FBBC05; }
+.gbadge .gdots i:nth-child(4) { background: #34A853; }
+.gbadge b { font-weight: 800; }
+.gbadge span { color: #5f6368; font-weight: 600; }
+
+.gpartner-band {
+  display: flex; align-items: center; gap: 26px; flex-wrap: wrap;
+  justify-content: center; text-align: left;
+  background: var(--surface); border: 1px solid var(--line-strong);
+  border-radius: var(--radius); padding: 26px 30px; box-shadow: var(--shadow);
+}
+.gpartner-band .gp-copy { flex: 1; min-width: 240px; }
+.gpartner-band h3 { margin-bottom: 4px; }
+.gpartner-band p { color: var(--muted); font-size: 0.94rem; }
+.gpartner-badge-lg { flex-shrink: 0; }
+@media (max-width: 620px) { .gpartner-band { justify-content: flex-start; } }
+
 /* ---------- cards / grids ---------- */
 .grid { display: grid; gap: 20px; }
 .grid-2 { grid-template-columns: repeat(2, 1fr); }
