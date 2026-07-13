@@ -1,0 +1,66 @@
+<!-- ===== GLOBAL FOOTER (paste into your site-wide / footer code) ===== -->
+<!-- STICKY FOOTER REVEAL -->
+<div class="footwrap">
+  <div class="footsticky">
+    <div class="dots2"></div>
+    <div class="footlinks"><a href="index.html#services">Services</a><a href="testimonials.html">Work</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="tel:+15615569190">Call</a></div>
+    <div class="footcopy">© <span class="year">2026</span> Global Base Media &middot; Boca Raton, FL &middot; (561) 556-9190</div>
+    <div class="footword">Global Base Media</div>
+    <div class="footglow"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var t=document.querySelector(".nav-toggle");
+  if(t){t.addEventListener("click",function(){var o=document.body.classList.toggle("nav-open");t.setAttribute("aria-expanded",o?"true":"false")});
+    document.querySelectorAll(".nav .links a").forEach(function(a){a.addEventListener("click",function(){document.body.classList.remove("nav-open");t.setAttribute("aria-expanded","false")})});}
+
+  /* Reveal on scroll — replays every time an element enters the viewport (up or down) */
+  var els=document.querySelectorAll(".reveal");
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(e.isIntersecting)e.target.classList.add("in");
+      else if(e.intersectionRatio===0)e.target.classList.remove("in");
+    })},{threshold:[0,.14],rootMargin:"0px 0px -8% 0px"});
+    els.forEach(function(el){io.observe(el)});
+  } else {els.forEach(function(el){el.classList.add("in")});}
+
+  /* Cursor-reactive aura — two soft color blobs easing toward the pointer */
+  var aura=document.querySelector(".cursor-aura");
+  if(aura&&!reduce){
+    var b1=aura.querySelector(".b1"),b2=aura.querySelector(".b2");
+    var w=innerWidth,h=innerHeight,tx=w*0.5,ty=h*0.35,x1=tx,y1=ty,x2=tx,y2=ty,moved=false,ang=0;
+    addEventListener("resize",function(){w=innerWidth;h=innerHeight});
+    addEventListener("pointermove",function(e){moved=true;tx=e.clientX;ty=e.clientY},{passive:true});
+    (function loop(){
+      if(!moved){ang+=0.006;tx=w*(0.5+0.28*Math.cos(ang));ty=h*(0.4+0.22*Math.sin(ang*1.3));} /* idle drift */
+      x1+=(tx-x1)*0.08; y1+=(ty-y1)*0.08;
+      x2+=(tx-x2)*0.035; y2+=(ty-y2)*0.035;
+      b1.style.transform="translate("+x1+"px,"+y1+"px) translate(-50%,-50%)";
+      b2.style.transform="translate("+x2+"px,"+y2+"px) translate(-50%,-50%)";
+      requestAnimationFrame(loop);
+    })();
+  }
+  /* Parallax — decorative layers drift at different speeds & directions as you scroll */
+  if(!reduce){
+    var layers=[];
+    document.querySelectorAll(".bloom").forEach(function(el,i){layers.push({el:el,sp:0.20+(i%3)*0.05,x:(i%2?0.06:-0.06)})});
+    document.querySelectorAll(".dots").forEach(function(el,i){layers.push({el:el,sp:0.07,x:(i%2?0.05:-0.05)})});
+    document.querySelectorAll(".footglow").forEach(function(el){layers.push({el:el,sp:0.12,x:0})});
+    document.querySelectorAll(".hero .avatars,.badge").forEach(function(el){layers.push({el:el,sp:-0.06,x:0})});
+    var vh=innerHeight,ticking=false;
+    function park(){
+      vh=innerHeight;
+      for(var i=0;i<layers.length;i++){var L=layers[i];var r=L.el.getBoundingClientRect();var d=(r.top+r.height/2)-vh/2;
+        L.el.style.transform="translate3d("+(d*L.x).toFixed(1)+"px,"+(-d*L.sp).toFixed(1)+"px,0)";}
+      ticking=false;
+    }
+    addEventListener("scroll",function(){if(!ticking){ticking=true;requestAnimationFrame(park)}},{passive:true});
+    addEventListener("resize",park); park();
+  }
+
+  document.querySelectorAll(".year").forEach(function(el){el.textContent=new Date().getFullYear()});
+})();
+</script>
