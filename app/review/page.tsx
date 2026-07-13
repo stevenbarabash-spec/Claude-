@@ -26,6 +26,7 @@ export default function ReviewPage() {
   const [review, setReview] = useState<WeeklyReview | null>(null);
   const [anchor, setAnchor] = useState("");
   const [saved, setSaved] = useState(true);
+  const [drafting, setDrafting] = useState(false);
 
   useEffect(() => {
     api<{ anchor: string; review: WeeklyReview }>(`/api/review?week=${clientDateKey()}`)
@@ -52,6 +53,29 @@ export default function ReviewPage() {
     persist(next);
   }
 
+  // Draft the week from real data — fills only the EMPTY boxes, so anything
+  // you've already written stays put.
+  async function draftWeek() {
+    if (!review || drafting) return;
+    setDrafting(true);
+    try {
+      const r = await api<{ draft: Partial<WeeklyReview> }>("/api/review/draft", { method: "POST" });
+      const merged = { ...review };
+      (Object.keys(r.draft) as (keyof WeeklyReview)[]).forEach((k) => {
+        const v = r.draft[k];
+        if (typeof v === "string" && !String(merged[k] ?? "").trim()) {
+          (merged as Record<string, unknown>)[k] = v;
+        }
+      });
+      setReview(merged);
+      setSaved(false);
+      persist(merged);
+    } catch {
+      /* leave the review untouched on failure */
+    }
+    setDrafting(false);
+  }
+
   if (!review) return <div className="faint">Loading…</div>;
 
   const sundayLabel = anchor
@@ -75,6 +99,11 @@ export default function ReviewPage() {
             <span className="faint" style={{ fontSize: 11, fontFamily: "var(--mono)", letterSpacing: "0.1em" }}>
               {saved ? "AUTO-SAVED" : "SAVING…"}
             </span>
+            {!review.sealed && (
+              <button className="btn" onClick={draftWeek} disabled={drafting} title="Fill the empty boxes from this week's data">
+                {drafting ? "drafting…" : "✨ Draft my week"}
+              </button>
+            )}
             <button
               className={`btn ${review.sealed ? "" : "primary"}`}
               onClick={() => update({ sealed: !review.sealed })}
