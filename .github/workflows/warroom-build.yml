@@ -31,5 +31,7 @@ jobs:
           prompt: |
             Implement the feature described in this issue for the WARROOM Next.js
             dashboard. Match the existing code style. Run `npx next build` and fix
-            any type errors before finishing. Then commit and open a pull request
-            summarizing the change.
+            any type errors before finishing. Before committing, run
+            `node scripts/bump-version.mjs` to increment the WARROOM version and
+            include that change. Then commit and open a pull request summarizing
+            the change.
