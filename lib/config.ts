@@ -1,7 +1,7 @@
 // Personal configuration — edit these to make the OS yours.
 export const config = {
-  brand: "JARVIS",
-  version: "v1.0",
+  brand: "WARROOM",
+  version: "v2.0",
   owner: {
     name: "Steven",
     fullName: "Steven Barabash",

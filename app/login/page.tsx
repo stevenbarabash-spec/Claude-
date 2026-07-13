@@ -22,7 +22,7 @@ export default function Login() {
       <form className="panel" style={{ width: 340, padding: 28 }} onSubmit={submit}>
         <div className="rail-brand" style={{ marginBottom: 18 }}>
           <span className="dot" />
-          JARVIS <span className="ver">// LIFE OS</span>
+          WARROOM <span className="ver">// LIFE OS</span>
         </div>
         <input
           className="input"

@@ -3,7 +3,7 @@ import { Shell } from "@/components/Shell";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "JARVIS // Life OS",
+  title: "WARROOM // Life OS",
   description: "Personal AI-native operating system",
 };
 
