@@ -1,9 +1,25 @@
 <!-- ===== PAGE BODY: HOME (paste into the page body / custom-code area) ===== -->
 <main id="main">
+  <style>
+  /* Home component styles — kept inside the body so the global Header stays frozen */
+  .flip{perspective:1500px}
+  .flip-inner{position:relative;transform-style:preserve-3d;transition:transform .95s cubic-bezier(.4,.05,.2,1)}
+  .flip.flipped .flip-inner{transform:rotateY(180deg)}
+  .flip-front{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+  .flip-back{position:relative;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(180deg)}
+  .flip-front .browser{display:flex;flex-direction:column;height:100%}
+  .flipvid{display:block;width:100%;flex:1;min-height:0;object-fit:cover;background:#0a0812}
+  .flip-hint{position:absolute;left:14px;bottom:12px;z-index:2;font-size:.66rem;font-weight:700;color:#fff;background:rgba(0,0,0,.5);padding:5px 10px;border-radius:8px;backdrop-filter:blur(4px);transition:opacity .4s}
+  .flip.flipped .flip-hint{opacity:0}
+  .hero-visual .chip{opacity:0;transition:opacity .6s ease .15s}
+  .hero-visual.flipped .chip{opacity:1}
+  .cardphoto{display:block;width:100%;height:190px;object-fit:cover;border-radius:12px;margin-top:16px;background:#0a0812}
+  .cardphoto.ph{display:grid;place-items:center;background:linear-gradient(135deg,rgba(47,107,255,.18),rgba(255,61,139,.14));border:1px dashed rgba(255,255,255,.22);color:var(--muted);font-size:.82rem;font-weight:600}
+  @media(prefers-reduced-motion:reduce){.flip-inner{transition:none}}
+  </style>
 
   <!-- HERO -->
   <section class="hero" id="top">
-    <div class="hero-video"><video autoplay muted loop playsinline preload="metadata" aria-hidden="true" src="https://assets.cdn.filesafe.space/zPMFoWE7Sa0FnTxcLYBp/media/68ed9bf26d717d233a8a543b.mp4"></video></div>
     <div class="dots"></div><div class="noise"></div><div class="bloom spectrum"></div>
     <div class="wrap" style="position:relative;z-index:2">
       <div class="hero-grid2">
@@ -12,8 +28,8 @@
         <div style="display:flex;align-items:center;gap:16px;margin:26px 0 22px;flex-wrap:wrap">
           <div class="avatars"><div class="a">MR</div><div class="a">AS</div><div class="a">DC</div></div>
           <div class="rating">
-            <span style="font-size:.9rem"><b style="font-weight:700">50+</b> happy clients</span>
-            <span class="stars"><svg class="gicon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.7 1.2 9.2 3.6l6.9-6.9C35.9 2.4 30.5 0 24 0 14.6 0 6.5 5.4 2.6 13.2l8 6.2C12.4 13.7 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M47 24.6c0-1.6-.2-3.1-.4-4.6H24v9h12.9c-.6 3-2.3 5.5-4.8 7.2l7.7 6c4.5-4.2 7.1-10.4 7.1-17.6z"/><path fill="#FBBC05" d="M10.5 28.6c-.5-1.5-.8-3-.8-4.6s.3-3.1.8-4.6l-8-6.2C.9 16.5 0 20.1 0 24s.9 7.5 2.6 10.8l7.9-6.2z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.7-6c-2.1 1.5-4.9 2.3-8.2 2.3-6.3 0-11.6-4.2-13.5-9.9l-8 6.2C6.5 42.6 14.6 48 24 48z"/></svg>★★★★★ on Google</span>
+            <span style="font-size:.92rem"><b style="font-weight:800;color:#fff">50+</b> happy clients</span>
+            <span class="stars"><svg class="gicon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.7 1.2 9.2 3.6l6.9-6.9C35.9 2.4 30.5 0 24 0 14.6 0 6.5 5.4 2.6 13.2l8 6.2C12.4 13.7 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M47 24.6c0-1.6-.2-3.1-.4-4.6H24v9h12.9c-.6 3-2.3 5.5-4.8 7.2l7.7 6c4.5-4.2 7.1-10.4 7.1-17.6z"/><path fill="#FBBC05" d="M10.5 28.6c-.5-1.5-.8-3-.8-4.6s.3-3.1.8-4.6l-8-6.2C.9 16.5 0 20.1 0 24s.9 7.5 2.6 10.8l7.9-6.2z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.7-6c-2.1 1.5-4.9 2.3-8.2 2.3-6.3 0-11.6-4.2-13.5-9.9l-8 6.2C6.5 42.6 14.6 48 24 48z"/></svg>★★★★★ <b style="color:#fff;font-weight:800">4.9</b> on Google</span>
           </div>
         </div>
         <p class="lede">Professional <b style="color:#fff">websites</b>, <b style="color:#fff">SEO</b> &amp; <b style="color:#fff">Google Ads</b> for service businesses. Get your first design in 7 days — <b style="color:#fff">free &amp; no obligation</b>.</p>
@@ -24,17 +40,30 @@
         <p class="hero-note"><b>●</b> Free 30-min consult &middot; you own everything &middot; no lock-in</p>
         </div>
         <div class="hero-visual reveal r-scale">
-          <div class="browser">
-            <div class="bar"><i></i><i></i><i></i><span class="u">yourbusiness.com</span></div>
-            <div class="shot">
-              <div class="wsite-hero"><b>Book your service in 30 seconds</b><span>online booking &middot; instant callback</span><br/><span class="wsite-cta">Book Now →</span></div>
-              <div class="wsite-row">
-                <div class="wsite-tile"><div class="n">476</div><div class="l">5-star reviews</div></div>
-                <div class="wsite-tile"><div class="n">98</div><div class="l">PageSpeed</div></div>
+          <div class="flip" id="heroFlip">
+            <div class="flip-inner">
+              <div class="flip-front">
+                <div class="browser">
+                  <div class="bar"><i></i><i></i><i></i><span class="u">yourbusiness.com</span></div>
+                  <video id="heroFlipVid" class="flipvid" autoplay muted playsinline preload="metadata" aria-label="A website we built, shown in action" src="https://assets.cdn.filesafe.space/zPMFoWE7Sa0FnTxcLYBp/media/68ed9bf26d717d233a8a543b.mp4"></video>
+                  <span class="flip-hint">▶ Watch, then flip →</span>
+                </div>
+              </div>
+              <div class="flip-back">
+                <div class="browser">
+                  <div class="bar"><i></i><i></i><i></i><span class="u">yourbusiness.com</span></div>
+                  <div class="shot">
+                    <div class="wsite-hero"><b>Book your service in 30 seconds</b><span>online booking &middot; instant callback</span><br/><span class="wsite-cta">Book Now →</span></div>
+                    <div class="wsite-row">
+                      <div class="wsite-tile"><div class="n">476</div><div class="l">5-star reviews</div></div>
+                      <div class="wsite-tile"><div class="n">98</div><div class="l">PageSpeed</div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="ba-badge">Before → After &middot; +312% leads</div>
               </div>
             </div>
           </div>
-          <div class="ba-badge">Before → After &middot; +312% leads</div>
           <div class="chip c1"><span class="stars">★★★★★</span><small>4.9 on Google</small></div>
           <div class="chip c2">📈 #8 → #1<small>local rankings</small></div>
         </div>
@@ -53,15 +82,16 @@
       <div class="showcase-grid">
         <div class="viz reveal" style="padding:0;overflow:hidden">
           <div class="browser" style="border:0;box-shadow:none;border-radius:20px">
-            <div class="bar"><i></i><i></i><i></i><span class="u">sparkcarwash.com</span></div>
+            <div class="bar"><i></i><i></i><i></i><span class="u">brightsmiledental.com</span></div>
             <div class="shot" style="padding:22px">
-              <div class="wsite-hero" style="padding:26px"><b style="font-size:1.3rem">Spark Car Wash</b><span>Join unlimited &middot; find a location &middot; today's hours</span><br/><span class="wsite-cta">Join Unlimited →</span></div>
+              <div class="wsite-hero" style="padding:26px"><b style="font-size:1.3rem">Bright Smile Dental</b><span>Book an appointment &middot; new patients welcome</span><br/><span class="wsite-cta">Book Appointment →</span></div>
               <div class="wsite-row">
-                <div class="wsite-tile"><div class="n">+61%</div><div class="l">visitor → member</div></div>
-                <div class="wsite-tile"><div class="n">1.2s</div><div class="l">load time</div></div>
+                <div class="wsite-tile"><div class="n">+64%</div><div class="l">more visitors</div></div>
                 <div class="wsite-tile"><div class="n" style="color:#ff8ab8">4.9★</div><div class="l">customer rating</div></div>
+                <div class="wsite-tile"><div class="n">1.2s</div><div class="l">faster load time</div></div>
+                <div class="wsite-tile"><div class="n">−41%</div><div class="l">cost / new patient</div></div>
               </div>
-              <video class="cardphoto" autoplay muted loop playsinline preload="metadata" aria-label="Spark Car Wash" src="https://assets.cdn.filesafe.space/zPMFoWE7Sa0FnTxcLYBp/media/6a54731ad74b27c6af0c1a1f.mp4"></video>
+              <video class="cardphoto" autoplay muted loop playsinline preload="metadata" aria-label="Bright Smile Dental" src="https://assets.cdn.filesafe.space/zPMFoWE7Sa0FnTxcLYBp/media/6a547691524a3ec4c6049448.mp4"></video>
             </div>
           </div>
           <div class="ba-badge">Redesigned by GBM</div>
@@ -185,5 +215,25 @@
       </div>
     </div>
   </section>
+
+  <script>
+  /* Hero flip card — video plays on the front, then flips to reveal the website card.
+     Lives in the body so the global Footer stays frozen. */
+  (function(){
+    var wrap=document.querySelector(".hero-visual");
+    var flip=document.getElementById("heroFlip");
+    var v=document.getElementById("heroFlipVid");
+    if(!flip)return;
+    var done=false;
+    function doFlip(){ if(done)return; done=true; flip.classList.add("flipped"); if(wrap)wrap.classList.add("flipped"); }
+    if(v){
+      v.addEventListener("ended",doFlip);
+      v.addEventListener("error",doFlip);
+      var p=v.play&&v.play(); if(p&&p.catch)p.catch(function(){});
+      setTimeout(function(){ if(!v.currentTime) doFlip(); },4000); /* video hasn't started (blocked/no codec) -> reveal card */
+      setTimeout(doFlip,35000); /* safety cap for a long/looping source */
+    } else { doFlip(); }
+  })();
+  </script>
 
 </main>
