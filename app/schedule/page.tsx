@@ -4,8 +4,8 @@
 // tasks with due dates, and Google Calendar events. Click a month cell to
 // zoom into that day.
 import { useEffect, useState } from "react";
-import { api, clientDateKey, fmtTime12 } from "@/lib/client";
-import type { CalendarEvent, ClientProject, Task } from "@/lib/types";
+import { api, clientDateKey, fmt12, fmtTime12 } from "@/lib/client";
+import type { CalendarEvent, ClientProject, Routine, Task } from "@/lib/types";
 
 function clientOf(name: string): string {
   return name.split("—")[0].trim();
@@ -41,6 +41,7 @@ function sundayOf(key: string): string {
 export default function SchedulePage() {
   const [projects, setProjects] = useState<ClientProject[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [routines, setRoutines] = useState<Routine[]>([]);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [gcalConfigured, setGcalConfigured] = useState(true);
   const [failedFeeds, setFailedFeeds] = useState<string[]>([]);
@@ -57,6 +58,7 @@ export default function SchedulePage() {
     const load = () => {
       api<{ projects: ClientProject[] }>("/api/clients").then((r) => setProjects(r.projects)).catch(() => {});
       api<{ tasks: Task[] }>("/api/tasks").then((r) => setTasks(r.tasks)).catch(() => {});
+      api<{ routines: Routine[] }>("/api/routines").then((r) => setRoutines(r.routines)).catch(() => {});
       api<{ events: CalendarEvent[]; configured: boolean; failedFeeds?: string[] }>("/api/calendar")
         .then((r) => {
           setEvents(r.events);
@@ -97,6 +99,18 @@ export default function SchedulePage() {
 
   function itemsFor(dayKey: string): DayItem[] {
     const items: DayItem[] = [];
+    // Recurring routines land on every matching weekday, forward and back.
+    const wd = new Date(dayKey + "T12:00:00Z").getUTCDay();
+    for (const r of routines) {
+      if (!r.days.includes(wd)) continue;
+      items.push({
+        key: `routine-${r.id}-${dayKey}`,
+        label: r.title,
+        sub: r.time ? `by ${fmt12(r.time)}` : "repeats",
+        time: r.time ?? "00:00",
+        kind: "task",
+      });
+    }
     for (const e of events) {
       if (clientDateKey(new Date(e.start)) === dayKey) {
         const s = new Date(e.start);

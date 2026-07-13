@@ -4,13 +4,15 @@
 // Timed entries also show up as notches on the day timeline.
 import { useEffect, useRef, useState } from "react";
 import { api, clientDateKey, fmt12, fmtTime12 } from "@/lib/client";
-import type { DayTask } from "@/lib/types";
+import type { DayTask, Routine } from "@/lib/types";
 import { Panel } from "../Panel";
 
 function nowHHMM(): string {
   const d = new Date();
   return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 }
+
+const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
 
 export function DayTasks() {
   const [tasks, setTasks] = useState<DayTask[] | null>(null);
@@ -20,10 +22,19 @@ export function DayTasks() {
   const inputRef = useRef<HTMLInputElement>(null);
   const today = clientDateKey();
 
-  const load = () =>
+  // Recurring-routines manager.
+  const [routines, setRoutines] = useState<Routine[]>([]);
+  const [showRepeat, setShowRepeat] = useState(false);
+  const [rTitle, setRTitle] = useState("");
+  const [rDays, setRDays] = useState<number[]>([]);
+  const [rTime, setRTime] = useState("");
+
+  const load = () => {
     api<{ tasks: DayTask[] }>(`/api/daytasks?date=${today}`)
       .then((r) => setTasks(r.tasks))
       .catch(() => setTasks([]));
+    api<{ routines: Routine[] }>("/api/routines").then((r) => setRoutines(r.routines)).catch(() => {});
+  };
 
   useEffect(() => {
     load();
@@ -31,6 +42,31 @@ export function DayTasks() {
     return () => window.removeEventListener("jarvis:capture", load);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  async function addRoutine() {
+    const t = rTitle.trim();
+    if (!t || rDays.length === 0) return;
+    const r = await api<{ routines: Routine[] }>("/api/routines", {
+      method: "POST",
+      body: JSON.stringify({ title: t, days: rDays, time: rTime || null }),
+    }).catch(() => null);
+    if (r) {
+      setRoutines(r.routines);
+      setRTitle("");
+      setRDays([]);
+      setRTime("");
+      changed();
+      load();
+    }
+  }
+
+  async function removeRoutine(id: string) {
+    const r = await api<{ routines: Routine[] }>("/api/routines", {
+      method: "DELETE",
+      body: JSON.stringify({ id }),
+    }).catch(() => null);
+    if (r) setRoutines(r.routines);
+  }
 
   const changed = () => window.dispatchEvent(new CustomEvent("jarvis:capture"));
 
@@ -175,6 +211,76 @@ export function DayTasks() {
           })}
         </div>
       )}
+
+      {/* ── Repeating routines ── */}
+      <div style={{ marginTop: 12, borderTop: "1px solid var(--border-soft)", paddingTop: 10 }}>
+        <button
+          className="label"
+          style={{ fontSize: 9, cursor: "pointer", color: "var(--text-dim)" }}
+          onClick={() => setShowRepeat((s) => !s)}
+        >
+          {showRepeat ? "▼" : "▶"} ↻ Repeating {routines.length > 0 ? `(${routines.length})` : ""}
+        </button>
+        {showRepeat && (
+          <div className="stack" style={{ gap: 8, marginTop: 10 }}>
+            {routines.map((r) => (
+              <div key={r.id} className="spread" style={{ fontSize: 12.5 }}>
+                <span className="row" style={{ gap: 8, minWidth: 0 }}>
+                  <span className="row" style={{ gap: 2 }}>
+                    {DAY_LABELS.map((d, i) => (
+                      <span
+                        key={i}
+                        style={{
+                          fontFamily: "var(--mono)", fontSize: 9, width: 12, textAlign: "center",
+                          color: r.days.includes(i) ? "var(--accent)" : "var(--text-faint)",
+                          fontWeight: r.days.includes(i) ? 700 : 400,
+                        }}
+                      >
+                        {d}
+                      </span>
+                    ))}
+                  </span>
+                  <span>{r.title}</span>
+                  {r.time && <span className="chip">{fmt12(r.time)}</span>}
+                </span>
+                <button className="faint" onClick={() => removeRoutine(r.id)} title="Remove" style={{ fontSize: 14, padding: "0 2px" }}>×</button>
+              </div>
+            ))}
+            <div className="stack" style={{ gap: 6 }}>
+              <input
+                className="input"
+                placeholder="Repeating task… e.g. Take out the trash"
+                value={rTitle}
+                onChange={(e) => setRTitle(e.target.value)}
+                style={{ fontSize: 12.5, padding: "6px 9px" }}
+              />
+              <div className="row" style={{ gap: 6, flexWrap: "wrap" }}>
+                <div className="row" style={{ gap: 3 }}>
+                  {DAY_LABELS.map((d, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setRDays((ds) => (ds.includes(i) ? ds.filter((x) => x !== i) : [...ds, i]))}
+                      style={{
+                        width: 24, height: 24, borderRadius: 6, fontSize: 11, fontFamily: "var(--mono)",
+                        border: `1px solid ${rDays.includes(i) ? "var(--accent)" : "var(--border-soft)"}`,
+                        color: rDays.includes(i) ? "var(--accent)" : "var(--text-dim)",
+                        background: rDays.includes(i) ? "var(--accent-dim)" : "transparent",
+                      }}
+                      title={["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][i]}
+                    >
+                      {d}
+                    </button>
+                  ))}
+                </div>
+                <input className="input" type="time" value={rTime} onChange={(e) => setRTime(e.target.value)} style={{ width: 110, fontSize: 12, padding: "5px 8px" }} title="Due-by time (optional)" />
+                <button className="btn small primary" onClick={addRoutine} disabled={!rTitle.trim() || rDays.length === 0}>
+                  add repeat
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </Panel>
   );
 }

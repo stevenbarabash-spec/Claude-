@@ -136,6 +136,15 @@ export interface DayTask {
   startedAt?: string; // ISO — set when finished via Currently Working On
   finishedAt?: string; // ISO — set when finished via Currently Working On
   fromWork?: boolean; // logged here by completing a Currently Working On item
+  routineId?: string; // materialized from a recurring Routine
+}
+
+// A recurring task that auto-appears on its weekdays (e.g. trash Mon/Thu 9am).
+export interface Routine {
+  id: string;
+  title: string;
+  days: number[]; // 0=Sun … 6=Sat
+  time: string | null; // HH:MM
 }
 
 export interface DailyNotes {
@@ -154,6 +163,7 @@ export interface DailyNotes {
   muted_events?: string[]; // only on sentinel date — calendar series UIDs to hide
   working_on?: WorkingItem[]; // only on sentinel date — the Currently Working On strip
   feature_requests?: FeatureRequest[]; // only on sentinel date — the idea parking lot
+  routines?: Routine[]; // only on sentinel date — recurring day-of-week tasks
 }
 
 // A capture Jarvis has understood and read back, but not yet filed.

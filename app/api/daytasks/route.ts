@@ -2,6 +2,7 @@
 // starts clean. Feeds the Tasks card and the day timeline.
 import { NextResponse } from "next/server";
 import { recordHistory } from "@/lib/history";
+import { materializeForDay } from "@/lib/routines";
 import { getStore } from "@/lib/store";
 import type { DayTask } from "@/lib/types";
 
@@ -16,7 +17,9 @@ async function readTasks(date: string): Promise<DayTask[]> {
 export async function GET(req: Request) {
   const date = new URL(req.url).searchParams.get("date") ?? "";
   if (!DATE_RE.test(date)) return NextResponse.json({ error: "date=YYYY-MM-DD required" }, { status: 400 });
-  return NextResponse.json({ tasks: await readTasks(date) }, { headers: { "cache-control": "no-store" } });
+  // Auto-add any recurring routines due today (trash Mon/Thu, etc.).
+  const tasks = await materializeForDay(date);
+  return NextResponse.json({ tasks }, { headers: { "cache-control": "no-store" } });
 }
 
 export async function POST(req: Request) {
