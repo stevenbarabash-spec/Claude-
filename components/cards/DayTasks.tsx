@@ -27,6 +27,7 @@ export function DayTasks() {
   const [time, setTime] = useState("");
   const [busy, setBusy] = useState(false);
   const [hits, setHits] = useState<SearchHit[]>([]);
+  const [timeEditId, setTimeEditId] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const today = clientDateKey();
@@ -142,6 +143,18 @@ export function DayTasks() {
     }
   }
 
+  async function setTaskTime(task: DayTask, hhmm: string) {
+    setTimeEditId(null);
+    const r = await api<{ tasks: DayTask[] }>("/api/daytasks", {
+      method: "PATCH",
+      body: JSON.stringify({ date: today, id: task.id, patch: { time: hhmm || null } }),
+    }).catch(() => null);
+    if (r) {
+      setTasks(r.tasks);
+      changed();
+    }
+  }
+
   async function remove(task: DayTask) {
     const r = await api<{ tasks: DayTask[] }>("/api/daytasks", {
       method: "DELETE",
@@ -223,8 +236,8 @@ export function DayTasks() {
             return (
               <div
                 key={t.id}
-                className="spread"
-                style={{ padding: "7px 0", borderBottom: "1px solid var(--border-soft)", alignItems: "flex-start" }}
+                className={`spread ${late ? "task-late" : ""}`}
+                style={{ padding: late ? "8px 8px" : "7px 0", borderBottom: "1px solid var(--border-soft)", alignItems: "flex-start" }}
               >
                 <div
                   className="row"
@@ -256,8 +269,46 @@ export function DayTasks() {
                 </div>
                 <div className="row" style={{ flexShrink: 0 }}>
                   {t.fromWork && t.done && <span className="chip ok">done</span>}
-                  {t.time && (
-                    <span className={`chip ${t.done ? "" : late ? "hot" : "warm"}`}>{fmt12(t.time)}</span>
+                  {timeEditId === t.id ? (
+                    <input
+                      className="input"
+                      type="time"
+                      defaultValue={t.time ?? ""}
+                      autoFocus
+                      onBlur={(e) => setTaskTime(t, e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") setTaskTime(t, (e.target as HTMLInputElement).value);
+                        if (e.key === "Escape") setTimeEditId(null);
+                      }}
+                      style={{ width: 110, padding: "3px 6px", fontSize: 12 }}
+                    />
+                  ) : late ? (
+                    <>
+                      <span className="chip hot">{fmt12(t.time!)} · overdue</span>
+                      <button
+                        className="btn small"
+                        style={{ color: "var(--hot)", borderColor: "var(--hot)" }}
+                        onClick={() => setTimeEditId(t.id)}
+                        title="Pick a new time"
+                      >
+                        ⟳ reschedule
+                      </button>
+                    </>
+                  ) : t.time ? (
+                    <span
+                      className={`chip ${t.done ? "" : "warm"}`}
+                      onClick={() => !t.done && setTimeEditId(t.id)}
+                      style={{ cursor: t.done ? "default" : "pointer" }}
+                      title={t.done ? undefined : "Change time"}
+                    >
+                      {fmt12(t.time)}
+                    </span>
+                  ) : (
+                    !t.done && (
+                      <button className="btn small" onClick={() => setTimeEditId(t.id)} title="Set a time">
+                        🕐 set time
+                      </button>
+                    )
                   )}
                   <button
                     className="faint"

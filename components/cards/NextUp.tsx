@@ -3,7 +3,7 @@
 // today's tasks) by what's due and what matters, and tells you what to do
 // next. Hybrid: instant scoring, sharpened by Claude's sequencing + reasons.
 import { useState } from "react";
-import { api, fmtTime12 } from "@/lib/client";
+import { api, clientDateKey, fmtTime12 } from "@/lib/client";
 import { Panel } from "../Panel";
 
 interface NextItem {
@@ -77,6 +77,19 @@ export function NextUp() {
     window.dispatchEvent(new CustomEvent("jarvis:capture"));
   }
 
+  // Schedule it for today (Tasks · Today) without starting the clock — you pick
+  // the time over there.
+  async function addToToday(it: NextItem) {
+    setStarting(it.id);
+    await api("/api/daytasks", {
+      method: "POST",
+      body: JSON.stringify({ date: clientDateKey(), title: it.who ? `${it.title} · ${it.who}` : it.title, time: null }),
+    }).catch(() => {});
+    setStarting(null);
+    setResult((r) => (r ? { ...r, items: r.items.filter((x) => x.id !== it.id) } : r));
+    window.dispatchEvent(new CustomEvent("jarvis:capture"));
+  }
+
   return (
     <Panel
       idx="11"
@@ -131,15 +144,24 @@ export function NextUp() {
                   </span>
                 </div>
               </div>
-              <button
-                className="btn small primary"
-                style={{ flexShrink: 0 }}
-                disabled={starting === it.id}
-                onClick={() => startWorking(it)}
-                title="Pull into Currently Working On"
-              >
-                {starting === it.id ? "…" : "work on"}
-              </button>
+              <div className="stack" style={{ gap: 4, flexShrink: 0 }}>
+                <button
+                  className="btn small primary"
+                  disabled={starting === it.id}
+                  onClick={() => startWorking(it)}
+                  title="Start now — pull into Currently Working On"
+                >
+                  {starting === it.id ? "…" : "work on"}
+                </button>
+                <button
+                  className="btn small"
+                  disabled={starting === it.id}
+                  onClick={() => addToToday(it)}
+                  title="Schedule for today — add to Tasks · Today, then pick a time"
+                >
+                  ＋ today
+                </button>
+              </div>
             </div>
           ))}
           <div className="faint" style={{ fontSize: 10, fontFamily: "var(--mono)", marginTop: 10 }}>

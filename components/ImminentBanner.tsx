@@ -41,9 +41,48 @@ export function ImminentBanner() {
   const [dismissed, setDismissed] = useState<string | null>(null);
   const [canNotify, setCanNotify] = useState(false);
   const lastLoad = useRef(0);
+  const audioRef = useRef<AudioContext | null>(null);
+  const soundedRef = useRef<Set<string>>(new Set());
+
+  // A short chime for the top alert (independent of OS notifications). Web
+  // Audio needs a user gesture first, so prime it on the first interaction.
+  function ensureAudio(): AudioContext | null {
+    try {
+      if (!audioRef.current) {
+        const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        if (!Ctx) return null;
+        audioRef.current = new Ctx();
+      }
+      void audioRef.current.resume();
+      return audioRef.current;
+    } catch {
+      return null;
+    }
+  }
+  function chime(urgent: boolean) {
+    const ctx = ensureAudio();
+    if (!ctx) return;
+    const notes = urgent ? [880, 1174, 880] : [660, 988];
+    notes.forEach((f, i) => {
+      const t0 = ctx.currentTime + i * 0.18;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = f;
+      gain.gain.setValueAtTime(0.0001, t0);
+      gain.gain.exponentialRampToValueAtTime(0.22, t0 + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.28);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t0);
+      osc.stop(t0 + 0.3);
+    });
+  }
 
   useEffect(() => {
     setCanNotify(typeof Notification !== "undefined" && Notification.permission === "granted");
+    const prime = () => ensureAudio();
+    window.addEventListener("pointerdown", prime, { once: true });
+    window.addEventListener("keydown", prime, { once: true });
 
     const load = () => {
       const today = clientDateKey();
@@ -80,6 +119,8 @@ export function ImminentBanner() {
     return () => {
       clearInterval(tick);
       window.removeEventListener("jarvis:capture", load);
+      window.removeEventListener("pointerdown", prime);
+      window.removeEventListener("keydown", prime);
     };
   }, []);
 
@@ -91,20 +132,28 @@ export function ImminentBanner() {
     })
     .sort((a, b) => a.start - b.start);
 
-  // Fire notifications at ~lead and at start (once each).
+  // Chime (always) + OS notification (if granted) at ~lead and at start, once each.
   useEffect(() => {
-    if (!canNotify) return;
     const done = getNotified();
+    const sounded = soundedRef.current;
     for (const it of windowed) {
       const m = (it.start - now) / 60000;
       const label = it.kind === "meeting" ? "Meeting" : "Task";
-      if (m <= LEAD_MIN && m > 1 && !done.has(`${it.id}:soon`)) {
-        new Notification(`⏰ ${label} in ${Math.round(m)} min`, { body: it.title });
-        markNotified(`${it.id}:soon`);
+      if (m <= LEAD_MIN && m > 1 && !sounded.has(`${it.id}:soon`)) {
+        chime(false);
+        sounded.add(`${it.id}:soon`);
+        if (canNotify && !done.has(`${it.id}:soon`)) {
+          new Notification(`⏰ ${label} in ${Math.round(m)} min`, { body: it.title });
+          markNotified(`${it.id}:soon`);
+        }
       }
-      if (m <= 1 && m > -GRACE_MIN && !done.has(`${it.id}:now`)) {
-        new Notification(`⏰ ${label} starting now`, { body: it.title });
-        markNotified(`${it.id}:now`);
+      if (m <= 1 && m > -GRACE_MIN && !sounded.has(`${it.id}:now`)) {
+        chime(true);
+        sounded.add(`${it.id}:now`);
+        if (canNotify && !done.has(`${it.id}:now`)) {
+          new Notification(`⏰ ${label} starting now`, { body: it.title });
+          markNotified(`${it.id}:now`);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
