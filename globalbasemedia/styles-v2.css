@@ -101,7 +101,8 @@ h3{font-size:1.22rem;letter-spacing:-.01em}
 .btn:hover .sh{transform:skewX(-20deg) translateX(360%)}
 .btn .ring{position:absolute;inset:0;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.4)}
 .btn .t,.btn svg{position:relative;z-index:1}
-.btn.ghost{background:rgba(255,255,255,.04);box-shadow:none;border:1.5px solid rgba(120,148,255,.28);color:var(--ink)}
+.btn.ghost{background:rgba(255,255,255,.06);box-shadow:none;border:1.5px solid rgba(160,178,255,.45);color:#fff}
+.btn.ghost:hover{background:rgba(255,255,255,.1);border-color:rgba(160,178,255,.7)}
 .btn.ghost .g,.btn.ghost .ring{display:none}
 
 /* ---------- sections & stacking ---------- */
@@ -184,8 +185,9 @@ section{position:relative;padding:110px 0}
 .pkg .price{font-family:var(--serif);font-style:italic;font-size:1.5rem;margin:18px 0 16px}
 .pkg ul{display:grid;gap:11px;flex:1;margin-bottom:22px}
 .pkg li{display:flex;gap:10px;font-size:.92rem;color:var(--muted)}
-.pkg li b{flex:none;width:20px;height:20px;border-radius:50%;background:rgba(47,107,255,.18);color:#7fb0ff;display:grid;place-items:center;font-size:.7rem;font-weight:800}
-.pkg .go{position:relative;overflow:hidden;text-align:center;border-radius:12px;padding:13px;font-weight:700;font-size:.9rem;color:#fff;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12)}
+.pkg li b{flex:none;width:20px;height:20px;border-radius:50%;background:rgba(47,107,255,.55);color:#fff;display:grid;place-items:center;font-size:.7rem;font-weight:800}
+.pkg .go{position:relative;overflow:hidden;text-align:center;border-radius:12px;padding:13px;font-weight:700;font-size:.9rem;color:#fff;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);transition:background .18s ease}
+.pkg .go:hover{background:rgba(255,255,255,.15)}
 .pkg.feat{border-color:transparent}
 .badge{position:absolute;top:-13px;left:50%;translate:-50% 0;background:var(--blue);color:#fff;font-size:.66rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;border-radius:999px;z-index:4;box-shadow:0 0 18px rgba(47,107,255,.7)}
 /* electric border — a continuous base ring + a jittering bolt on top, fully wrapping the card */
