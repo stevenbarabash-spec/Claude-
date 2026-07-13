@@ -243,6 +243,24 @@ section { padding: 88px 0; position: relative; }
 .trust-logos { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 30px; }
 .trust-logos span { font-weight: 800; font-size: 1rem; color: var(--muted-2); opacity: 0.85; }
 
+/* brands-worked-with wordmark band */
+.brand-logos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px 44px; }
+.brand-logos span { font-weight: 800; font-size: 1.35rem; letter-spacing: 0.01em; color: #cfc9e8; opacity: 0.72; transition: opacity 0.2s ease, color 0.2s ease; }
+.brand-logos span:hover { opacity: 1; color: #fff; }
+@media (max-width: 760px) { .brand-logos span { font-size: 1.1rem; } .brand-logos { gap: 16px 28px; } }
+
+/* featured-client cards (name + location + industry) */
+.clients { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.client-card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px 20px; text-align: center; transition: border-color 0.18s ease, transform 0.18s ease; }
+.client-card:hover { border-color: var(--line-strong); transform: translateY(-3px); }
+.client-card .name { font-weight: 800; font-size: 1.1rem; color: #fff; }
+.client-card .meta { color: var(--muted-2); font-size: 0.82rem; margin-top: 4px; }
+@media (max-width: 760px) { .clients { grid-template-columns: 1fr 1fr; } }
+
+/* setup-fee line under price */
+.setup { font-size: 0.82rem; color: var(--muted-2); margin: 2px 0 0; }
+.setup em { font-style: normal; color: var(--green); }
+
 /* ---------- cards / grids ---------- */
 .grid { display: grid; gap: 20px; }
 .grid-2 { grid-template-columns: repeat(2, 1fr); }

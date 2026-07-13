@@ -3,117 +3,225 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Website Design — Global Base Media</title>
-<meta name="description" content="Stunning, high-performance websites for service businesses — mobile-first, SEO-ready, and wired to convert visitors into booked jobs." />
+<title>Website Design for Service Businesses | Global Base Media</title>
+<meta name="description" content="Clean, modern, mobile-optimized websites that build trust and turn visitors into customers — with AI chat, booking, reviews, and SEO built in. Packages from $199/mo. Book a call: (561) 556-9190." />
+<meta name="theme-color" content="#08060f" />
+<link rel="canonical" href="https://globalbasemedia.com/website-design" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://globalbasemedia.com/website-design" />
+<meta property="og:title" content="Website Design for Service Businesses | Global Base Media" />
+<meta property="og:description" content="Professional websites that build trust and get you more clicks — mobile-optimized, AI-powered, and built to convert." />
+<meta property="og:image" content="https://globalbasemedia.com/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
 <link rel="stylesheet" href="styles.css" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Ctext x='32' y='43' font-family='Arial' font-size='30' font-weight='bold' fill='white' text-anchor='middle'%3EGB%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236d28d9'/%3E%3Ctext x='32' y='43' font-family='Arial' font-size='30' font-weight='bold' fill='white' text-anchor='middle'%3EGB%3C/text%3E%3C/svg%3E" />
+<script>document.documentElement.className += " js";</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Website Design",
+  "provider": { "@type": "ProfessionalService", "name": "Global Base Media", "telephone": "+1-561-556-9190" },
+  "areaServed": "United States",
+  "description": "Custom, mobile-optimized website design for service businesses, with AI chat, online booking, reviews, and SEO built in.",
+  "offers": [
+    { "@type": "Offer", "name": "Launch Package", "price": "199", "priceCurrency": "USD" },
+    { "@type": "Offer", "name": "Growth Package", "price": "399", "priceCurrency": "USD" },
+    { "@type": "Offer", "name": "Custom Package", "price": "699", "priceCurrency": "USD" }
+  ]
+}
+</script>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 
 <header class="site-header">
   <div class="wrap nav">
-    <a class="logo" href="index.html">
-      <span class="logo-mark">GB</span>
+    <a class="logo" href="index.html" aria-label="Global Base Media home">
+      <span class="logo-mark" aria-hidden="true">GB</span>
       <span>Global Base Media<small>AI Marketing Systems</small></span>
     </a>
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span></button>
-    <ul class="nav-links">
+    <button class="nav-toggle" aria-label="Toggle menu" aria-controls="menu" aria-expanded="false"><span></span></button>
+    <ul class="nav-links" id="menu">
       <li class="dropdown">
-        <a href="index.html#services">Services ▾</a>
+        <a href="index.html#services" aria-haspopup="true">Services ▾</a>
         <div class="dropdown-menu">
           <a href="ai-receptionist.html">AI Receptionist &amp; Chatbot<small>24/7 virtual office assistant</small></a>
-          <a href="website-design.html">Website Design<small>Sites built to convert</small></a>
+          <a href="website-design.html" aria-current="page">Website Design<small>Sites built to convert</small></a>
           <a href="seo.html">SEO Services<small>Own your local search</small></a>
-          <a href="google-reviews.html">Google Reviews &amp; Automation<small>Hands-free reputation growth</small></a>
+          <a href="google-reviews.html">Google Reviews &amp; Automation<small>Reputation on autopilot</small></a>
           <a href="ads.html">Social Media &amp; Google Ads<small>Insight-driven advertising</small></a>
         </div>
       </li>
       <li><a href="index.html#results">Results</a></li>
       <li><a href="pricing.html">Pricing</a></li>
       <li><a href="contact.html">Contact</a></li>
+      <li><a href="tel:+15615569190">Call (561) 556-9190</a></li>
     </ul>
     <div class="nav-cta">
-      <a class="nav-phone" href="tel:+15615569190"><span>📞</span> (561) 556-9190</a>
+      <a class="nav-phone" href="tel:+15615569190"><span aria-hidden="true">📞</span> (561) 556-9190</a>
       <a class="btn btn-primary" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Book a Strategy Call</a>
     </div>
   </div>
 </header>
 
-<main>
+<main id="main">
 
-  <div class="hero on-dark page-hero">
+  <!-- HERO -->
+  <div class="hero">
     <div class="wrap">
-      <div class="hero-inner">
-        <span class="kicker">Website design services</span>
-        <h1>Websites built to turn <span class="grad-text">visitors into customers</span></h1>
-        <p class="lede">Stunning, high-performance websites built for one job: converting. Mobile-first, lightning fast, SEO-ready, and wired straight into your booking and follow-up systems.</p>
-        <div class="hero-ctas">
-          <a class="btn btn-primary" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Book a Strategy Call</a>
-          <a class="btn btn-ghost" href="contact.html">Get My Free Digital Audit</a>
+      <div class="hero-grid">
+        <div class="reveal">
+          <span class="kicker">Website design service</span>
+          <h1>Professional websites that build trust and get you <span class="g">more clicks</span></h1>
+          <p class="lede">Whether you're a doctor, attorney, consultant, or small-business owner, your website is your digital storefront. We design clean, modern, mobile-optimized sites that turn visitors into real customers.</p>
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Book a Call With Our Team</a>
+            <a class="btn btn-ghost" href="#pricing">See packages</a>
+          </div>
+          <p class="hero-note"><b>✓</b> Custom website designs · mobile-friendly &amp; SEO-optimized</p>
+        </div>
+        <div class="hero-media reveal">
+          <div class="browser" aria-hidden="true">
+            <div class="chrome"><i></i><i></i><i></i><span class="url">threevalleylakes.com</span></div>
+            <div class="screen">
+              <div class="mock-hero"><b>Welcome to Three Valley Lakes</b><span>Book tickets · plan your visit · today's hours</span></div>
+              <div class="mock-row">
+                <div class="mock-tile"><div class="n">98</div><div class="l">PageSpeed score</div></div>
+                <div class="mock-tile"><div class="n">+61%</div><div class="l">more leads</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="float-badge b1"><span class="dot" style="background:rgba(139,92,246,0.2);color:var(--violet-bright)" aria-hidden="true">📱</span><div>Looks perfect on any device<small>desktop · tablet · phone</small></div></div>
+          <div class="float-badge b2"><span class="dot" style="background:rgba(52,224,161,0.16);color:var(--green)" aria-hidden="true">⚡</span><div>Lightning fast<small>built to rank &amp; convert</small></div></div>
         </div>
       </div>
     </div>
   </div>
 
-  <section>
+  <!-- STRATEGY SESSION SPLIT -->
+  <section class="section-alt">
     <div class="wrap">
       <div class="split">
         <div class="split-media reveal">
-        <div class="vignette">
-          <div class="bar"><i></i><i></i><i></i></div>
-          <div class="meter"><label><span>Mobile page speed</span><span>98/100</span></label><div class="track"><div class="fill" style="width:98%"></div></div></div>
-          <div class="meter"><label><span>Visitor → lead conversion</span><span>+61%</span></label><div class="track"><div class="fill" style="width:61%"></div></div></div>
-          <div class="bubble me" style="max-width:100%"><b>Built in</b>Click-to-call · Booking widget · AI chat · Review wall · Local SEO schema</div>
-        </div></div>
+          <div class="vignette">
+            <div class="bar"><i></i><i></i><i></i></div>
+            <div class="mock-hero" style="margin-bottom:14px;"><b>Your site, working 24/7</b><span>every visitor greeted, every lead captured</span></div>
+            <div class="meter"><label><span>First impression → trust</span><b>instant</b></label><div class="track"><div class="fill" style="width:88%"></div></div></div>
+            <div class="meter"><label><span>Visitor → booked customer</span><b>+61%</b></label><div class="track"><div class="fill g" style="width:61%"></div></div></div>
+          </div>
+        </div>
         <div class="reveal">
-          <span class="kicker">Conversion first</span>
-          <h2>Beautiful is the baseline — booked is the goal</h2>
-          <p>Over 5,000 websites built taught us what actually moves the needle for service businesses: speed, clarity, trust signals, and a frictionless path to “book now.”</p>
-          <ul class="checks">
-            <li>Custom design that matches your brand — no cookie-cutter templates</li>
-            <li>Click-to-call, booking widgets, and AI chat built in from day one</li>
-            <li>Blazing-fast, mobile-first pages that Google loves to rank</li>
-            <li>Review walls and trust badges that sell for you</li>
-            <li>Hosting, security, edits, and priority support all handled</li>
-          </ul>
+          <span class="kicker">Book your website strategy session</span>
+          <h2>Your website is your best <span class="g">closer</span></h2>
+          <p>It's more than a digital storefront — it's your first impression, your sales rep, and your best closer. We build and redesign sites that are lightning-fast, mobile-optimized, and engineered to turn visitors into customers.</p>
+          <p style="color:var(--green); font-weight:600;">Drive more customers and leads with an AI-powered smart website.</p>
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Book a Call With Our Team</a>
+            <a class="btn btn-green" href="tel:+15615568485"><span aria-hidden="true">📞</span> Call (561) 556-8485</a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section-dark on-dark">
+  <!-- PRICING -->
+  <section id="pricing">
     <div class="wrap">
       <div class="section-head center">
-        <span class="kicker">How it works</span>
-        <h2>From kickoff to launch</h2>
+        <span class="kicker">Pricing plans</span>
+        <h2>Choose a <span class="v">package</span> that suits your <span class="g">needs</span></h2>
+        <p class="lede">Every build starts with a strategy call so the scope fits your business. Monthly plans, cancel anytime.</p>
       </div>
-      <div class="grid grid-3">
-        <div class="card reveal" style="background: rgba(255,255,255,0.045); border-color: rgba(255,255,255,0.1); box-shadow:none;">
-          <div class="step-num">1</div>
-          <h3 style="color:#fff;">Strategy & design</h3>
-          <p style="color:var(--muted-on-dark);">We map your customer journey, write conversion-focused copy, and design a site that looks like the market leader you are.</p>
+      <div class="grid grid-3 plans">
+        <div class="card plan reveal">
+          <h3>Launch Package</h3>
+          <p class="tagline">A fast, clean site to start getting leads</p>
+          <div class="price">$199<small>/mo</small></div>
+          <p class="setup">+ $1,500 one-time setup</p>
+          <ul class="checks">
+            <li>Up to 5 pages</li>
+            <li>Contact forms with basic automation</li>
+            <li>Basic on-page SEO</li>
+            <li>Reviews section with Google widget</li>
+            <li>Domain + hosting &amp; support</li>
+          </ul>
+          <a class="btn btn-ghost" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Schedule a Call</a>
         </div>
-        <div class="card reveal" style="background: rgba(255,255,255,0.045); border-color: rgba(255,255,255,0.1); box-shadow:none;">
-          <div class="step-num">2</div>
-          <h3 style="color:#fff;">Build & connect</h3>
-          <p style="color:var(--muted-on-dark);">We build it fast and wire in booking, chat, reviews, tracking, and local SEO schema — everything talks to everything.</p>
+        <div class="card plan featured reveal">
+          <span class="plan-badge">Most popular</span>
+          <h3>Growth Package</h3>
+          <p class="tagline">Launch package + AI features</p>
+          <div class="price">$399<small>/mo</small></div>
+          <p class="setup">+ $1,000 one-time setup</p>
+          <ul class="checks">
+            <li>Up to 7 pages</li>
+            <li>Advanced SEO optimization</li>
+            <li>24/7 AI chat on site + automated reviews</li>
+            <li>Conversion tracking for calls, forms &amp; bookings</li>
+            <li>Unified customer inbox CRM</li>
+          </ul>
+          <a class="btn btn-primary" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Schedule a Call</a>
         </div>
-        <div class="card reveal" style="background: rgba(255,255,255,0.045); border-color: rgba(255,255,255,0.1); box-shadow:none;">
-          <div class="step-num">3</div>
-          <h3 style="color:#fff;">Launch & grow</h3>
-          <p style="color:var(--muted-on-dark);">We launch, monitor, and keep improving. Unlimited peace of mind: edits, updates, and support are on us.</p>
+        <div class="card plan reveal">
+          <h3>Custom Package</h3>
+          <p class="tagline">Growth package + custom features</p>
+          <div class="price">$699<small>/mo</small></div>
+          <p class="setup"><em>Custom setup pricing</em></p>
+          <ul class="checks">
+            <li>Up to 20 pages</li>
+            <li>Landing-page variants for ads</li>
+            <li>AI voice receptionist with call routing</li>
+            <li>Full CRM automations &amp; workflows</li>
+            <li>Social media planner + tools</li>
+          </ul>
+          <a class="btn btn-ghost" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Schedule a Call</a>
         </div>
+      </div>
+      <p class="center" style="margin-top:26px; color:var(--muted-2); font-size:0.88rem;">Prices are starting points — your exact scope and setup are confirmed on your strategy call.</p>
+    </div>
+  </section>
+
+  <!-- FEATURED CLIENTS -->
+  <section class="section-alt">
+    <div class="wrap">
+      <div class="section-head center">
+        <span class="kicker">Our featured clients</span>
+        <h2>Real businesses we've <span class="g">built for</span></h2>
+      </div>
+      <div class="clients">
+        <div class="client-card reveal"><div class="name">Haynie &amp; Company</div><div class="meta">Salt Lake City, UT · Tax Services</div></div>
+        <div class="client-card reveal"><div class="name">Spark Car Wash</div><div class="meta">Woodbridge, NJ · Car Wash Franchise</div></div>
+        <div class="client-card reveal"><div class="name">Revi Bikes</div><div class="meta">San Francisco, CA · Electric Bikes</div></div>
+        <div class="client-card reveal"><div class="name">Chunky Chews</div><div class="meta">Boca Raton, FL · Supplements</div></div>
+        <div class="client-card reveal"><div class="name">BrightLifePlans</div><div class="meta">Brooklyn, NY · Health Insurance</div></div>
+        <div class="client-card reveal"><div class="name">Carolina Brewery</div><div class="meta">Pittsboro, NC · Brewery</div></div>
       </div>
     </div>
   </section>
 
+  <!-- BRANDS WORKED WITH -->
+  <section>
+    <div class="wrap">
+      <div class="section-head center">
+        <span class="kicker">Brands we've worked with</span>
+        <h2>Enterprise experience, small-business focus</h2>
+      </div>
+      <div class="brand-logos reveal">
+        <span>BMW Group</span><span>Shopify</span><span>Goldman Sachs</span>
+        <span>Paramount+</span><span>Diageo</span><span>Condé Nast</span><span>News Corp</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
   <div class="cta-wrap">
-    <div class="cta-band on-dark reveal">
-      <span class="kicker">Ready when you are</span>
-      <h2>See what this looks like for your business</h2>
-      <p>Book a free 30-minute strategy call. We'll audit your digital presence and show you exactly where the growth is — even if you don't hire us.</p>
+    <div class="cta-band reveal">
+      <span class="kicker">Ready to upgrade your digital home?</span>
+      <h2>Let's build a website that <span class="g">works as hard as you do</span></h2>
+      <p>Book a call to discuss your needs and get a custom site built by our design team — mobile-optimized, AI-powered, and made to convert.</p>
       <div class="hero-ctas">
-        <a class="btn btn-primary" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Book My Free Strategy Call</a>
+        <a class="btn btn-primary" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Book a Call With Our Team</a>
         <a class="btn btn-ghost" href="tel:+15615569190">Call (561) 556-9190</a>
       </div>
     </div>
@@ -125,12 +233,13 @@
   <div class="wrap">
     <div class="footer-grid">
       <div class="footer-about">
-        <a class="logo" href="index.html">
-          <span class="logo-mark">GB</span>
+        <a class="logo" href="index.html" aria-label="Global Base Media home">
+          <span class="logo-mark" aria-hidden="true">GB</span>
           <span>Global Base Media<small>AI Marketing Systems</small></span>
         </a>
-        <p>All-in-one marketing systems for service businesses. AI-powered websites &amp; systems that turn clicks into customers.</p>
-        <a class="footer-phone" href="tel:+15615569190">📞 (561) 556-9190</a>
+        <p>All-in-one marketing systems for service businesses. Over 5K websites built · 10K AI bots live.</p>
+        <a class="footer-phone" href="tel:+15615569190"><span aria-hidden="true">📞</span> (561) 556-9190</a><br />
+        <a href="mailto:hello@globalbasemedia.com">hello@globalbasemedia.com</a>
       </div>
       <div>
         <h4>Services</h4>
@@ -146,7 +255,7 @@
         <h4>Company</h4>
         <ul>
           <li><a href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Book a Strategy Call</a></li>
-          <li><a href="index.html#results">Case Studies</a></li>
+          <li><a href="index.html#results">Results</a></li>
           <li><a href="pricing.html">Pricing</a></li>
           <li><a href="contact.html">Contact Us</a></li>
         </ul>
