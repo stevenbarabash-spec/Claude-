@@ -4,6 +4,8 @@
 import { useEffect, useRef, useState } from "react";
 import { api, clientDateKey, debounce } from "@/lib/client";
 import { config } from "@/lib/config";
+import { quoteOfTheDay } from "@/lib/quotes";
+import { Ticker } from "../Ticker";
 import { Panel } from "../Panel";
 
 function greeting(h: number): string {
@@ -59,6 +61,7 @@ export function Session() {
   const dateLine = now
     ? now.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })
     : "";
+  const quote = quoteOfTheDay(clientDateKey());
 
   return (
     <Panel idx="02" title="Session" right={<span suppressHydrationWarning>{Intl.DateTimeFormat().resolvedOptions().timeZone}</span>}>
@@ -83,12 +86,26 @@ export function Session() {
         </div>
       </div>
 
-      {briefing && (
-        <div className="panel" style={{ padding: 12, marginTop: 12, background: "var(--accent-dim)", borderColor: "rgba(111,224,174,0.2)" }}>
-          <div className="label accent" style={{ marginBottom: 6 }}>Jarvis briefing</div>
-          <div style={{ fontSize: 13, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{briefing}</div>
+      {/* Live market + news ticker, right under the date */}
+      <Ticker />
+
+      <div className="panel" style={{ padding: 12, marginTop: 12, background: "var(--accent-dim)", borderColor: "rgba(111,224,174,0.2)" }}>
+        <div className="label accent" style={{ marginBottom: 6 }}>Jarvis briefing</div>
+        {briefing && <div style={{ fontSize: 13, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{briefing}</div>}
+        <div
+          style={{
+            marginTop: briefing ? 10 : 0,
+            paddingTop: briefing ? 10 : 0,
+            borderTop: briefing ? "1px solid var(--border-soft)" : "none",
+            fontSize: 13,
+            lineHeight: 1.6,
+            fontStyle: "italic",
+          }}
+        >
+          “{quote.text}”
+          <span className="faint" style={{ fontStyle: "normal", fontSize: 11.5 }}> — {quote.who}</span>
         </div>
-      )}
+      </div>
 
       <div className="row" style={{ marginTop: 14 }}>
         <span className="label" style={{ whiteSpace: "nowrap" }}>Today I will</span>

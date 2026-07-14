@@ -11,6 +11,17 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.4",
+    date: "2026-07-14",
+    title: "Quote of the day + live ticker",
+    notes: [
+      "Jarvis Brief now shows a motivational quote of the day (changes each morning).",
+      "New live ticker under the date: S&P 500, Dow, and XRP with real-time price and % change.",
+      "Rotating top-news headlines run in the ticker — tap one to open the story.",
+      "Add your own tickers (any stock/crypto symbol) and remove ones you don't want via the ✎ edit control.",
+    ],
+  },
+  {
     version: "v2.1.3",
     date: "2026-07-14",
     title: "Client due dates + release notes",

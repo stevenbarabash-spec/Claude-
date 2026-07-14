@@ -166,6 +166,13 @@ export interface DailyNotes {
   feature_requests?: FeatureRequest[]; // only on sentinel date — the idea parking lot
   routines?: Routine[]; // only on sentinel date — recurring day-of-week tasks
   builds?: BuildRequest[]; // only on sentinel date — Build Console request log
+  tickers?: TickerSymbol[]; // only on sentinel date — the header ticker watchlist
+}
+
+// A market symbol shown in the header ticker (Yahoo Finance symbol + label).
+export interface TickerSymbol {
+  symbol: string; // Yahoo symbol, e.g. "^GSPC", "XRP-USD", "AAPL"
+  label: string; // display name, e.g. "S&P 500", "XRP"
 }
 
 // A capture Jarvis has understood and read back, but not yet filed.
