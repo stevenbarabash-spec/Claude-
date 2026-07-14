@@ -61,9 +61,30 @@ function matchClient(text: string, projects: ClientProject[]): ClientProject | u
   return best?.p;
 }
 
-// Resolve the due date: explicit reminder due wins, else parse today/tomorrow/weekday.
+// A stable dedup id: use Apple's id when the Shortcut sends one, else synthesize
+// from the text + due so re-running the same reminder doesn't double-file.
+function reminderId(r: IncomingReminder): string {
+  if (r.id && r.id.trim()) return r.id.trim();
+  return `syn:${normalize(r.text)}|${(r.due ?? "").slice(0, 10)}`;
+}
+
+// Resolve the due date: explicit reminder due wins (any format Apple sends),
+// else parse today/tomorrow/weekday from the text.
 function resolveDue(r: IncomingReminder, today: string): string | null {
   if (r.due && /^\d{4}-\d{2}-\d{2}/.test(r.due)) return r.due.slice(0, 10);
+  if (r.due && r.due.trim()) {
+    const s = r.due.trim();
+    const parsed = Date.parse(s);
+    if (!Number.isNaN(parsed)) {
+      const d = new Date(parsed);
+      // date-only string (no clock time) → use UTC parts so the calendar day
+      // isn't shifted by the timezone conversion.
+      if (!/\d:\d/.test(s)) {
+        return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+      }
+      return localDateKey(d);
+    }
+  }
   const t = normalize(r.text);
   if (/\btoday\b/.test(t)) return today;
   if (/\btomorrow\b/.test(t)) return addDays(today, 1);
@@ -147,9 +168,10 @@ export async function importReminders(reminders: IncomingReminder[]): Promise<Im
   const newlyImported: string[] = [];
 
   for (const r of reminders) {
-    if (!r.id || !r.text?.trim()) continue;
-    if (seen.has(r.id)) {
-      outcomes.push({ id: r.id, title: r.text.trim(), routedTo: "already imported", alsoToday: false, duplicate: true });
+    if (!r.text?.trim()) continue;
+    const id = reminderId(r);
+    if (seen.has(id)) {
+      outcomes.push({ id, title: r.text.trim(), routedTo: "already imported", alsoToday: false, duplicate: true });
       continue;
     }
     const title = cleanTitle(r.text);
@@ -181,8 +203,8 @@ export async function importReminders(reminders: IncomingReminder[]): Promise<Im
     const alsoToday = Boolean(board) && isToday;
     if (alsoToday) await addDayTask(today, title, null);
 
-    outcomes.push({ id: r.id, title, routedTo, alsoToday });
-    newlyImported.push(r.id);
+    outcomes.push({ id, title, routedTo, alsoToday });
+    newlyImported.push(id);
   }
 
   if (newlyImported.length) await markImported(newlyImported);

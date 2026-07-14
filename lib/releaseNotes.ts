@@ -11,6 +11,15 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.6",
+    date: "2026-07-14",
+    title: "Reminders import — simpler & date-safe",
+    notes: [
+      "The iPhone Shortcut now only needs to send each reminder's text and due date — WARROOM generates the dedup id itself.",
+      "Accepts any due-date format Apple sends and pins it to the correct calendar day (no more off-by-one).",
+    ],
+  },
+  {
     version: "v2.1.5",
     date: "2026-07-14",
     title: "Siri / Apple Reminders import",
