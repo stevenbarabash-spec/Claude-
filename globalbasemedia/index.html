@@ -66,7 +66,55 @@
   .cardphoto{display:block;width:100%;height:190px;object-fit:cover;border-radius:12px;margin-top:16px;background:#0a0812}
   .cardphoto.ph{display:grid;place-items:center;background:linear-gradient(135deg,rgba(47,107,255,.18),rgba(255,61,139,.14));border:1px dashed rgba(255,255,255,.22);color:var(--muted);font-size:.82rem;font-weight:600}
   @media(prefers-reduced-motion:reduce){.flip-inner{transition:none}}
+
+  /* super-charged electric border on the featured (Custom) card */
+  .elec{filter:drop-shadow(0 0 6px rgba(150,210,255,.95)) drop-shadow(0 0 16px rgba(47,107,255,.65)) drop-shadow(0 0 34px rgba(34,211,238,.4))}
+  .elec .base{stroke:url(#eg);stroke-width:1.6;opacity:.6}
+  .elec .bolt{stroke:#cdebff;stroke-width:2.1;filter:url(#electric2);animation:flick 2.4s steps(2,end) infinite}
+  .elec .bolt2{stroke:url(#eg);stroke-width:3.6;opacity:.7;filter:url(#electric2b);animation:flick2 1.5s steps(3,end) infinite}
+  @keyframes flick{0%,100%{opacity:.95}44%{opacity:.55}46%{opacity:1}68%{opacity:.8}}
+  @keyframes flick2{0%,100%{opacity:.5}28%{opacity:.9}31%{opacity:.3}62%{opacity:.7}}
+  .feat .glowpulse{box-shadow:0 0 52px 6px rgba(47,107,255,.5),0 0 120px 22px rgba(34,211,238,.3);animation:pulse 2.2s ease-in-out infinite}
+  @media(prefers-reduced-motion:reduce){.elec .bolt,.elec .bolt2{animation:none;filter:url(#electric2)}}
+
+  /* auto-scrolling website previews (swap each .page for a full-page screenshot img when available) */
+  .examples{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:900px){.examples{grid-template-columns:1fr}}
+  .scrollwin{height:300px;overflow:hidden;position:relative;background:#0a0812}
+  .scrollwin .page{display:flex;flex-direction:column;gap:12px;padding:12px;will-change:transform;animation:autoscroll 17s ease-in-out infinite alternate}
+  .examples .viz:hover .scrollwin .page{animation-play-state:paused}
+  .examples .viz:nth-child(2) .scrollwin .page{animation-delay:-5s}
+  .examples .viz:nth-child(3) .scrollwin .page{animation-delay:-10s}
+  @keyframes autoscroll{from{transform:translateY(0)}to{transform:translateY(calc(-100% + 300px))}}
+  @media(prefers-reduced-motion:reduce){.scrollwin .page{animation:none}}
+  .scrollwin img.shot-full{width:100%;display:block}
+  .pg-hero{border-radius:10px;padding:20px;background:linear-gradient(135deg,rgba(47,107,255,.4),rgba(168,85,247,.24))}
+  .pg-hero b{font-family:var(--display);font-size:1.05rem;color:#fff;display:block}
+  .pg-hero span{font-size:.7rem;color:var(--muted)}
+  .pg-hero .wsite-cta{margin-top:8px}
+  .pg-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .pg-tile{height:56px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07)}
+  .pg-band{height:120px;border-radius:10px;background:linear-gradient(135deg,rgba(255,61,139,.22),rgba(47,107,255,.14))}
+  .pg-band.alt{background:linear-gradient(135deg,rgba(168,85,247,.22),rgba(34,211,238,.12))}
+  .pg-row.two{grid-template-columns:1fr 1fr}
+  .pg-card{height:88px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07)}
+  .pg-cta{height:76px;border-radius:10px;background:linear-gradient(135deg,rgba(47,107,255,.35),rgba(255,61,139,.24));display:grid;place-items:center}
+  .pg-cta b{font-family:var(--display);color:#fff;font-size:.95rem}
+  .pageB .pg-hero{background:linear-gradient(135deg,rgba(255,61,139,.4),rgba(168,85,247,.22))}
+  .pageC .pg-hero{background:linear-gradient(135deg,rgba(34,211,238,.34),rgba(47,107,255,.3))}
+  .ex-label{margin-top:12px;font-weight:700;font-size:.9rem}
+  .ex-label span{color:var(--muted2);font-weight:500}
   </style>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <filter id="electric2" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.08" numOctaves="3" seed="4" result="n"><animate attributeName="baseFrequency" dur="2.1s" values="0.02 0.06;0.06 0.14;0.03 0.09;0.02 0.06" repeatCount="indefinite"/></feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="electric2b" x="-45%" y="-45%" width="190%" height="190%">
+      <feTurbulence type="turbulence" baseFrequency="0.015 0.05" numOctaves="2" seed="9" result="n2"><animate attributeName="baseFrequency" dur="1.4s" values="0.03 0.09;0.09 0.19;0.02 0.07;0.03 0.09" repeatCount="indefinite"/></feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="n2" scale="22" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs></svg>
 
   <!-- HERO -->
   <section class="hero" id="top">
@@ -196,18 +244,63 @@
     </div>
   </div>
 
-  <!-- PROCESS -->
+  <!-- EXAMPLES — custom builds, auto-scrolling previews -->
   <section class="stack-top" style="background:var(--bg);margin-top:-90px;padding-top:130px">
     <div class="dots"></div>
     <div class="wrap center" style="position:relative;z-index:2">
-      <span class="eyebrow">How it works</span>
-      <h2 style="margin-top:14px">So simple, <span class="serif grad">in 4 steps</span></h2>
-      <div class="steps" style="text-align:left">
-        <div class="step reveal r-rise"><div class="n">1</div><h3>Free consult</h3><p>30 minutes to understand your goals, market, and where the growth is.</p></div>
-        <div class="step reveal r-rise"><div class="n">2</div><h3>Free design</h3><p>Within 7 days you get a real design draft. We refine it together.</p></div>
-        <div class="step reveal r-rise"><div class="n">3</div><h3>We build it</h3><p>Site, SEO, reviews, and automation — built and connected for you.</p></div>
-        <div class="step reveal r-rise"><div class="n">4</div><h3>Launch &amp; grow</h3><p>You go live, we handle hosting and keep optimizing as you scale.</p></div>
+      <span class="eyebrow">Our custom builds</span>
+      <h2 style="margin-top:14px">Custom sites we've <span class="serif blu">built</span></h2>
+      <p class="lede" style="margin-top:12px">100% custom — no templates. Watch them scroll, or hover to pause.</p>
+      <div class="examples">
+        <div class="viz reveal" style="padding:0;overflow:hidden">
+          <div class="browser" style="border:0;box-shadow:none;border-radius:16px">
+            <div class="bar"><i></i><i></i><i></i><span class="u">brightsmiledental.com</span></div>
+            <div class="scrollwin"><div class="page pageA">
+              <div class="pg-hero"><b>Bright Smile Dental</b><span>Same-day appointments · new patients welcome</span><br/><span class="wsite-cta">Book Appointment →</span></div>
+              <div class="pg-row"><div class="pg-tile"></div><div class="pg-tile"></div><div class="pg-tile"></div></div>
+              <div class="pg-band"></div>
+              <div class="pg-row two"><div class="pg-card"></div><div class="pg-card"></div></div>
+              <div class="pg-band alt"></div>
+              <div class="pg-cta"><b>Book your visit today</b></div>
+            </div></div>
+          </div>
+          <div class="ba-badge">Custom build</div>
+          <div class="ex-label">Bright Smile Dental <span>· Dentistry</span></div>
+        </div>
+
+        <div class="viz reveal" style="padding:0;overflow:hidden">
+          <div class="browser" style="border:0;box-shadow:none;border-radius:16px">
+            <div class="bar"><i></i><i></i><i></i><span class="u">yourmedspa.com</span></div>
+            <div class="scrollwin"><div class="page pageB">
+              <div class="pg-hero"><b>Radiance Med Spa</b><span>Book your glow-up · memberships available</span><br/><span class="wsite-cta">Reserve Now →</span></div>
+              <div class="pg-row"><div class="pg-tile"></div><div class="pg-tile"></div><div class="pg-tile"></div></div>
+              <div class="pg-band alt"></div>
+              <div class="pg-row two"><div class="pg-card"></div><div class="pg-card"></div></div>
+              <div class="pg-band"></div>
+              <div class="pg-cta"><b>Claim your first visit</b></div>
+            </div></div>
+          </div>
+          <div class="ba-badge">Custom build</div>
+          <div class="ex-label">Radiance Med Spa <span>· Med Spa</span></div>
+        </div>
+
+        <div class="viz reveal" style="padding:0;overflow:hidden">
+          <div class="browser" style="border:0;box-shadow:none;border-radius:16px">
+            <div class="bar"><i></i><i></i><i></i><span class="u">apexhomeservices.com</span></div>
+            <div class="scrollwin"><div class="page pageC">
+              <div class="pg-hero"><b>Apex Home Services</b><span>24/7 booking · fast, friendly, guaranteed</span><br/><span class="wsite-cta">Get a Quote →</span></div>
+              <div class="pg-row"><div class="pg-tile"></div><div class="pg-tile"></div><div class="pg-tile"></div></div>
+              <div class="pg-band"></div>
+              <div class="pg-row two"><div class="pg-card"></div><div class="pg-card"></div></div>
+              <div class="pg-band alt"></div>
+              <div class="pg-cta"><b>Book a service call</b></div>
+            </div></div>
+          </div>
+          <div class="ba-badge">Custom build</div>
+          <div class="ex-label">Apex Home Services <span>· Home Services</span></div>
+        </div>
       </div>
+      <div style="margin-top:36px"><a class="btn" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1"><span class="g"></span><span class="sh"></span><span class="ring"></span><span class="t">Build My Custom Site</span> <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a></div>
     </div>
   </section>
 
@@ -219,15 +312,15 @@
       <h2 style="margin-top:14px">Where's the <span class="serif warm">catch?</span></h2>
       <p class="lede" style="margin-top:12px">There isn't one. Pick the package that fits — pricing is scoped on a quick call.</p>
       <div class="pkgs" style="text-align:left">
-        <div class="pkg reveal"><div class="pic">🗂️</div><h3>Website <span class="serif blu">Start</span></h3><p class="sub">Your professional presence online.</p><div class="price blu">Book a consult</div><ul><li><b>✓</b>1–3 custom pages</li><li><b>✓</b>Optimized for search &amp; AI</li><li><b>✓</b>Great for campaigns &amp; landing pages</li><li><b>✓</b>Free design draft first</li></ul><a class="go" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Get My Free Draft →</a></div>
+        <div class="pkg reveal"><div class="pic">⚡</div><h3>Templatized <span class="serif blu">Website</span></h3><p class="sub">Fast, clean &amp; live in under a week.</p><div class="price blu">Book a consult</div><ul><li><b>✓</b>Built on a proven, high-converting template</li><li><b>✓</b>Up to 5 pages, mobile-fast</li><li><b>✓</b>SEO basics + booking built in</li><li><b>✓</b>Turnaround in less than 7 days</li></ul><a class="go" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Get My Free Draft →</a></div>
 
-        <div class="pkg feat reveal"><span class="glowpulse"></span><span class="badge">Popular</span>
-          <svg class="elec" preserveAspectRatio="none" viewBox="0 0 300 560" aria-hidden="true"><rect class="base" x="3" y="3" width="294" height="554" rx="22"/><rect class="bolt" x="3" y="3" width="294" height="554" rx="22"/></svg>
-          <div class="pic" style="border-color:#60a5fa55">🌐</div><h3>Website <span class="serif blu">Pro</span></h3><p class="sub">Everything your business needs online.</p><div class="price">Book a consult</div><ul><li><b>✓</b>Everything in Start</li><li><b>✓</b>5–10 custom pages</li><li><b>✓</b>Advanced SEO &amp; review automation</li><li><b>✓</b>Free design draft first</li></ul><a class="go" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1" style="background:var(--btn);border-color:transparent;color:#08130d">Get My Free Draft →</a></div>
+        <div class="pkg reveal"><div class="pic">🌐</div><h3>Growth <span class="serif" style="background:linear-gradient(90deg,#ff6aa6,#ff3d8b);-webkit-background-clip:text;background-clip:text;color:transparent">Website</span></h3><p class="sub">Custom design, more room to grow.</p><div class="price" style="background:linear-gradient(90deg,#ff6aa6,#ff3d8b);-webkit-background-clip:text;background-clip:text;color:transparent">Book a consult</div><ul><li><b>✓</b>Custom design, up to 10 pages</li><li><b>✓</b>Advanced SEO &amp; review automation</li><li><b>✓</b>AI chat + lead capture to your CRM</li><li><b>✓</b>Free design draft first</li></ul><a class="go" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Get My Free Draft →</a></div>
 
-        <div class="pkg reveal"><div class="pic">🛍️</div><h3>Online <span class="serif" style="background:linear-gradient(90deg,#ff6aa6,#ff3d8b);-webkit-background-clip:text;background-clip:text;color:transparent">Shop</span></h3><p class="sub">Sells around the clock, all year.</p><div class="price" style="background:linear-gradient(90deg,#ff6aa6,#ff3d8b);-webkit-background-clip:text;background-clip:text;color:transparent">Book a consult</div><ul><li><b>✓</b>Products, cart &amp; orders</li><li><b>✓</b>Secure payment &amp; shipping</li><li><b>✓</b>Intuitive admin</li><li><b>✓</b>Free design draft first</li></ul><a class="go" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Get My Free Draft →</a></div>
+        <div class="pkg reveal"><div class="pic">🛍️</div><h3>Online <span class="serif emer">Shop</span></h3><p class="sub">Sells around the clock, all year.</p><div class="price emer">Book a consult</div><ul><li><b>✓</b>Products, cart &amp; orders</li><li><b>✓</b>Secure payment &amp; shipping</li><li><b>✓</b>Intuitive admin</li><li><b>✓</b>Free design draft first</li></ul><a class="go" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Get My Free Draft →</a></div>
 
-        <div class="pkg reveal"><div class="pic">⚙️</div><h3>AI &amp; <span class="serif emer">Automation</span></h3><p class="sub">CRM, AI assistants &amp; workflows.</p><div class="price emer">Ask us</div><ul><li><b>✓</b>AI receptionist &amp; chatbot</li><li><b>✓</b>Unified CRM inbox</li><li><b>✓</b>Custom automations &amp; APIs</li><li><b>✓</b>Scalable &amp; secure</li></ul><a class="go" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Schedule a Consult →</a></div>
+        <div class="pkg feat reveal"><span class="glowpulse"></span><span class="badge">100% Custom</span>
+          <svg class="elec" preserveAspectRatio="none" viewBox="0 0 300 560" aria-hidden="true"><rect class="base" x="3" y="3" width="294" height="554" rx="22"/><rect class="bolt" x="3" y="3" width="294" height="554" rx="22"/><rect class="bolt bolt2" x="3" y="3" width="294" height="554" rx="22"/></svg>
+          <div class="pic" style="border-color:#60a5fa55">✨</div><h3>Custom <span class="serif blu">Website</span></h3><p class="sub">100% custom-built — never a template.</p><div class="price">Book a consult</div><ul><li><b>✓</b>Bespoke design, built from scratch for your brand</li><li><b>✓</b>Unlimited pages &amp; custom features</li><li><b>✓</b>AI chatbot, automations &amp; integrations</li><li><b>✓</b>Made to do exactly what your business needs</li></ul><a class="go" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1" style="background:var(--btn);border-color:transparent;color:#08130d">Build My Custom Site →</a></div>
       </div>
     </div>
   </section>
@@ -239,9 +332,9 @@
       <span class="eyebrow">Friends of the house</span>
       <h2 style="margin-top:14px">What business owners <span class="serif grad">say</span></h2>
       <div class="tgrid" style="text-align:left">
-        <div class="tcard reveal"><div class="stars">★★★★★</div><blockquote>"Within a week we started getting reviews daily. It's hands-free and works better than any software we've used."</blockquote><div class="who"><div class="a">MR</div><div><b>Michael R.</b><span>Owner, Landscaping</span></div></div></div>
-        <div class="tcard reveal"><div class="stars">★★★★★</div><blockquote>"Our Google page went from 18 to 74 reviews in two months. Calls have nearly doubled."</blockquote><div class="who"><div class="a">AS</div><div><b>Ashwin S.</b><span>Owner, Hair Salon</span></div></div></div>
-        <div class="tcard reveal"><div class="stars">★★★★★</div><blockquote>"We started with 22 reviews and grew past 467 in under a year. Customers mention them before we quote."</blockquote><div class="who"><div class="a">DC</div><div><b>Drew C.</b><span>Owner, Roofing</span></div></div></div>
+        <div class="tcard reveal"><div class="stars">★★★★★</div><blockquote>"Our old site did nothing for us. The new one they built looks incredible and actually brings in bookings — we finally look as professional as we are."</blockquote><div class="who"><div class="a">MR</div><div><b>Michael R.</b><span>Owner, Landscaping</span></div></div></div>
+        <div class="tcard reveal"><div class="stars">★★★★★</div><blockquote>"Our Google page went from 18 to 74 reviews in two months. It's completely hands-free, and our calls have nearly doubled."</blockquote><div class="who"><div class="a">AS</div><div><b>Ashwin S.</b><span>Owner, Hair Salon</span></div></div></div>
+        <div class="tcard reveal"><div class="stars">★★★★★</div><blockquote>"They built us a fully custom site with an AI chatbot that books appointments 24/7 and follows up on its own. It's like hiring a front desk that never sleeps."</blockquote><div class="who"><div class="a">DC</div><div><b>Drew C.</b><span>Owner, Roofing</span></div></div></div>
       </div>
       <div style="margin-top:34px"><a class="btn ghost" href="testimonials.html"><span class="t">See our work →</span></a></div>
     </div>
