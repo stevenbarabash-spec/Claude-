@@ -11,6 +11,15 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.9",
+    date: "2026-07-14",
+    title: "Reminders import — smarter client matching",
+    notes: [
+      "A reminder now matches a client by a distinctive brand word (e.g. “Hydrogel” finds “Get Hydrogel — Funnel”, “BYTOX”, “Greenwich”), not just the exact full project name.",
+      "Generic words (website, group, support…) no longer trigger a false client match.",
+    ],
+  },
+  {
     version: "v2.1.8",
     date: "2026-07-14",
     title: "Reminders import — handles stringified lists",

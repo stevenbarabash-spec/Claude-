@@ -45,17 +45,30 @@ function findNamedProject(projects: ClientProject[], re: RegExp): ClientProject 
   return projects.find((p) => re.test(p.name));
 }
 
+// Generic words that shouldn't alone trigger a client match.
+const CLIENT_STOP = new Set([
+  "the", "and", "for", "get", "back", "website", "redesign", "support", "funnel",
+  "newsletter", "group", "company", "restaurant", "entertainment", "media", "studio",
+  "project", "client", "services", "prospecting", "inc", "llc", "e-bike", "ebike",
+]);
+
 // Which client project (if any) this reminder names. Skips the Home/Misc buckets.
+// Matches on the full client name OR a distinctive brand word (e.g. "Hydrogel"
+// from "Get Hydrogel — Funnel", "BYTOX", "Greenwich"). Longest match wins.
 function matchClient(text: string, projects: ClientProject[]): ClientProject | undefined {
   const t = normalize(text);
   let best: { p: ClientProject; len: number } | undefined;
   for (const p of projects) {
     if (/home\s?chores|miscellaneous/i.test(p.name)) continue;
-    const candidates = [clientOf(p.name), projectOf(p.name)].map(normalize).filter((c) => c.length >= 3);
-    for (const c of candidates) {
-      // whole-token containment: reminder text mentions the client/project name
-      const re = new RegExp(`\\b${c.replace(/\s+/g, "\\s+")}\\b`, "i");
-      if (re.test(t) && (!best || c.length > best.len)) best = { p, len: c.length };
+    const client = normalize(clientOf(p.name));
+    const keywords = new Set<string>();
+    if (client.length >= 3) keywords.add(client); // full client phrase
+    for (const w of client.split(" ")) {
+      if (w.length >= 4 && !CLIENT_STOP.has(w)) keywords.add(w); // distinctive brand word
+    }
+    for (const kw of keywords) {
+      const re = new RegExp(`\\b${kw.replace(/\s+/g, "\\s+")}\\b`, "i");
+      if (re.test(t) && (!best || kw.length > best.len)) best = { p, len: kw.length };
     }
   }
   return best?.p;
