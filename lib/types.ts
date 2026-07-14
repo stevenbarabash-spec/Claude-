@@ -167,6 +167,7 @@ export interface DailyNotes {
   routines?: Routine[]; // only on sentinel date — recurring day-of-week tasks
   builds?: BuildRequest[]; // only on sentinel date — Build Console request log
   tickers?: TickerSymbol[]; // only on sentinel date — the header ticker watchlist
+  imported_reminders?: string[]; // only on sentinel date — Apple Reminder ids already imported (dedup)
 }
 
 // A market symbol shown in the header ticker (Yahoo Finance symbol + label).

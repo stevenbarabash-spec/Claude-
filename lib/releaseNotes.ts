@@ -11,6 +11,17 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.5",
+    date: "2026-07-14",
+    title: "Siri / Apple Reminders import",
+    notes: [
+      "New import endpoint: an iPhone Shortcut sends your reminders straight into WARROOM.",
+      "Smart routing — names a client → that client's board; chores/kids/doctor → Home Chores; “due today” → Tasks · Today; anything unsure → Project Miscellaneous.",
+      "Spoken due dates (“Friday”, “tomorrow”, “today”) are parsed onto the task automatically.",
+      "Won't double-file: each reminder is deduped by its Apple id, and every import is logged in History (revertable).",
+    ],
+  },
+  {
     version: "v2.1.4",
     date: "2026-07-14",
     title: "Quote of the day + live ticker",
