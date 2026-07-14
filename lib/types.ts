@@ -137,6 +137,7 @@ export interface DayTask {
   finishedAt?: string; // ISO — set when finished via Currently Working On
   fromWork?: boolean; // logged here by completing a Currently Working On item
   routineId?: string; // materialized from a recurring Routine
+  carriedFrom?: string; // rolled forward from this earlier date, undone → "overdue"
 }
 
 // A recurring task that auto-appears on its weekdays (e.g. trash Mon/Thu 9am).

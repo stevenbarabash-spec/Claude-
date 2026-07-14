@@ -28,6 +28,8 @@ export function DayTasks() {
   const [busy, setBusy] = useState(false);
   const [hits, setHits] = useState<SearchHit[]>([]);
   const [timeEditId, setTimeEditId] = useState<string | null>(null);
+  const [editDate, setEditDate] = useState("");
+  const [editTime, setEditTime] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const today = clientDateKey();
@@ -61,17 +63,18 @@ export function DayTasks() {
   const [rDays, setRDays] = useState<number[]>([]);
   const [rTime, setRTime] = useState("");
 
-  const load = () => {
-    api<{ tasks: DayTask[] }>(`/api/daytasks?date=${today}`)
+  const load = (carry = false) => {
+    api<{ tasks: DayTask[] }>(`/api/daytasks?date=${today}${carry ? "&carry=1" : ""}`)
       .then((r) => setTasks(r.tasks))
       .catch(() => setTasks([]));
     api<{ routines: Routine[] }>("/api/routines").then((r) => setRoutines(r.routines)).catch(() => {});
   };
 
   useEffect(() => {
-    load();
-    window.addEventListener("jarvis:capture", load);
-    return () => window.removeEventListener("jarvis:capture", load);
+    load(true); // on open, roll yesterday's unfinished tasks forward
+    const reload = () => load(false);
+    window.addEventListener("jarvis:capture", reload);
+    return () => window.removeEventListener("jarvis:capture", reload);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -143,16 +146,39 @@ export function DayTasks() {
     }
   }
 
-  async function setTaskTime(task: DayTask, hhmm: string) {
+  function openEditor(t: DayTask) {
+    setTimeEditId(t.id);
+    setEditDate(today);
+    setEditTime(t.time ?? "");
+  }
+
+  // Reschedule to a new day and/or time. Same day → just change the time;
+  // a different day → move the task onto that day's list.
+  async function reschedule(t: DayTask) {
     setTimeEditId(null);
-    const r = await api<{ tasks: DayTask[] }>("/api/daytasks", {
-      method: "PATCH",
-      body: JSON.stringify({ date: today, id: task.id, patch: { time: hhmm || null } }),
-    }).catch(() => null);
-    if (r) {
-      setTasks(r.tasks);
-      changed();
+    const newTime = editTime || null;
+    if (!editDate || editDate === today) {
+      const r = await api<{ tasks: DayTask[] }>("/api/daytasks", {
+        method: "PATCH",
+        body: JSON.stringify({ date: today, id: t.id, patch: { time: newTime } }),
+      }).catch(() => null);
+      if (r) {
+        setTasks(r.tasks);
+        changed();
+      }
+      return;
     }
+    // Move to another day: add to the new date, remove from today.
+    await api("/api/daytasks", {
+      method: "POST",
+      body: JSON.stringify({ date: editDate, title: t.title, time: newTime }),
+    }).catch(() => {});
+    const del = await api<{ tasks: DayTask[] }>("/api/daytasks", {
+      method: "DELETE",
+      body: JSON.stringify({ date: today, id: t.id }),
+    }).catch(() => null);
+    if (del) setTasks(del.tasks);
+    changed();
   }
 
   async function remove(task: DayTask) {
@@ -269,27 +295,49 @@ export function DayTasks() {
                 </div>
                 <div className="row" style={{ flexShrink: 0 }}>
                   {t.fromWork && t.done && <span className="chip ok">done</span>}
+                  {t.carriedFrom && !t.done && (
+                    <span
+                      className="chip hot"
+                      title={`Rolled over from ${new Date(t.carriedFrom + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}`}
+                    >
+                      overdue
+                    </span>
+                  )}
                   {timeEditId === t.id ? (
-                    <input
-                      className="input"
-                      type="time"
-                      defaultValue={t.time ?? ""}
-                      autoFocus
-                      onBlur={(e) => setTaskTime(t, e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") setTaskTime(t, (e.target as HTMLInputElement).value);
-                        if (e.key === "Escape") setTimeEditId(null);
-                      }}
-                      style={{ width: 110, padding: "3px 6px", fontSize: 12 }}
-                    />
+                    <span className="row" style={{ gap: 5, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                      <input
+                        className="input"
+                        type="date"
+                        value={editDate}
+                        min={today}
+                        onChange={(e) => setEditDate(e.target.value)}
+                        style={{ width: 132, padding: "3px 6px", fontSize: 12 }}
+                        title="Day"
+                      />
+                      <input
+                        className="input"
+                        type="time"
+                        value={editTime}
+                        autoFocus
+                        onChange={(e) => setEditTime(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") reschedule(t);
+                          if (e.key === "Escape") setTimeEditId(null);
+                        }}
+                        style={{ width: 100, padding: "3px 6px", fontSize: 12 }}
+                        title="Time"
+                      />
+                      <button className="btn small primary" onClick={() => reschedule(t)}>save</button>
+                      <button className="btn small" onClick={() => setTimeEditId(null)}>×</button>
+                    </span>
                   ) : late ? (
                     <>
                       <span className="chip hot">{fmt12(t.time!)} · overdue</span>
                       <button
                         className="btn small"
                         style={{ color: "var(--hot)", borderColor: "var(--hot)" }}
-                        onClick={() => setTimeEditId(t.id)}
-                        title="Pick a new time"
+                        onClick={() => openEditor(t)}
+                        title="Move to a new day / time"
                       >
                         ⟳ reschedule
                       </button>
@@ -297,15 +345,15 @@ export function DayTasks() {
                   ) : t.time ? (
                     <span
                       className={`chip ${t.done ? "" : "warm"}`}
-                      onClick={() => !t.done && setTimeEditId(t.id)}
+                      onClick={() => !t.done && openEditor(t)}
                       style={{ cursor: t.done ? "default" : "pointer" }}
-                      title={t.done ? undefined : "Change time"}
+                      title={t.done ? undefined : "Change day / time"}
                     >
                       {fmt12(t.time)}
                     </span>
                   ) : (
                     !t.done && (
-                      <button className="btn small" onClick={() => setTimeEditId(t.id)} title="Set a time">
+                      <button className="btn small" onClick={() => openEditor(t)} title="Set a day / time">
                         🕐 set time
                       </button>
                     )

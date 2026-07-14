@@ -1,6 +1,7 @@
 // Recurring tasks — day-of-week routines (e.g. trash Mon/Thu 9am) that
 // auto-materialize into a day's Tasks when that day is opened, and show
 // forward on the Schedule. Stored on the sentinel log.
+import { addDays } from "./dates";
 import { getStore } from "./store";
 import { GOALS_SENTINEL_DATE, type DayTask, type Routine } from "./types";
 
@@ -56,4 +57,30 @@ export async function materializeForDay(date: string): Promise<DayTask[]> {
     await store.mergeLogNotes(date, { day_tasks: tasks });
   }
   return tasks;
+}
+
+// Roll incomplete tasks from the last 7 days forward onto `today`, tagged with
+// the date they were carried from (→ shown as "overdue"). The original day
+// keeps only its completed / done-log entries. Idempotent: once moved, a past
+// day has nothing left to carry.
+export async function carryForwardInto(today: string): Promise<void> {
+  const store = getStore();
+  const carried: DayTask[] = [];
+  for (let i = 1; i <= 7; i++) {
+    const d = addDays(today, -i);
+    const log = await store.getLog(d);
+    const dt: DayTask[] = log?.notes.day_tasks ?? [];
+    const incomplete = dt.filter((t) => !t.done && !t.fromWork);
+    if (incomplete.length === 0) continue;
+    for (const t of incomplete) {
+      carried.push({ ...t, id: crypto.randomUUID(), routineId: undefined, carriedFrom: t.carriedFrom ?? d });
+    }
+    await store.mergeLogNotes(d, { day_tasks: dt.filter((t) => t.done || t.fromWork) });
+  }
+  if (carried.length) {
+    const todayLog = await store.getLog(today);
+    const merged = [...carried, ...(todayLog?.notes.day_tasks ?? [])];
+    merged.sort((a, b) => (a.time ?? "99:99").localeCompare(b.time ?? "99:99"));
+    await store.mergeLogNotes(today, { day_tasks: merged });
+  }
 }
