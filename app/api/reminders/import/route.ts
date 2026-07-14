@@ -28,8 +28,19 @@ export async function POST(req: Request) {
   if (Array.isArray(body)) {
     list = body as IncomingReminder[];
   } else if (body && typeof body === "object") {
-    const b = body as { reminders?: IncomingReminder[]; reminder?: IncomingReminder; text?: string };
-    if (Array.isArray(b.reminders)) list = b.reminders;
+    const b = body as { reminders?: unknown; reminder?: IncomingReminder; text?: string };
+    // reminders may arrive as an array, or as a JSON string if Shortcuts
+    // serialized the list into a text field — accept both.
+    let rem = b.reminders;
+    if (typeof rem === "string") {
+      try {
+        rem = JSON.parse(rem);
+      } catch {
+        rem = undefined;
+      }
+    }
+    if (Array.isArray(rem)) list = rem as IncomingReminder[];
+    else if (rem && typeof rem === "object") list = [rem as IncomingReminder];
     else if (b.reminder) list = [b.reminder];
     else if (typeof b.text === "string") list = [b as IncomingReminder];
     else list = [];

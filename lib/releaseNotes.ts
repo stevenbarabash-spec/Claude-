@@ -11,6 +11,14 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.8",
+    date: "2026-07-14",
+    title: "Reminders import — handles stringified lists",
+    notes: [
+      "If the iPhone Shortcut serializes the reminders list into a text field, the endpoint now parses it back into JSON automatically.",
+    ],
+  },
+  {
     version: "v2.1.7",
     date: "2026-07-14",
     title: "Reminders import — accepts any payload shape",
