@@ -5,6 +5,8 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/client";
 import type { BuildRequest } from "@/lib/types";
+import { RELEASE_NOTES } from "@/lib/releaseNotes";
+import { config } from "@/lib/config";
 import { Panel } from "@/components/Panel";
 
 const STATUS_STYLE: Record<BuildRequest["status"], string> = {
@@ -48,6 +50,8 @@ export default function BuildPage() {
     }
     setBusy(false);
   }
+
+  const [openVer, setOpenVer] = useState<string | null>(RELEASE_NOTES[0]?.version ?? null);
 
   async function revert() {
     if (pin !== "1782") {
@@ -104,7 +108,43 @@ export default function BuildPage() {
         {msg && <div className="faint" style={{ fontSize: 12, marginTop: 10, lineHeight: 1.5 }}>{msg}</div>}
       </Panel>
 
-      <Panel idx="16" title="Build Log">
+      <Panel idx="16" title="Release Notes" right={<span className="chip">{config.version} live</span>}>
+        <div className="stack" style={{ gap: 0 }}>
+          {RELEASE_NOTES.map((r) => {
+            const open = openVer === r.version;
+            const isLive = r.version === config.version;
+            return (
+              <div key={r.version} style={{ borderBottom: "1px solid var(--border-soft)" }}>
+                <button
+                  className="spread"
+                  style={{ width: "100%", background: "transparent", border: "none", cursor: "pointer", padding: "11px 0", textAlign: "left", color: "var(--text)", gap: 12 }}
+                  onClick={() => setOpenVer(open ? null : r.version)}
+                >
+                  <span className="row" style={{ gap: 10, minWidth: 0 }}>
+                    <span className="faint" style={{ fontSize: 11, width: 12, flexShrink: 0 }}>{open ? "▼" : "▶"}</span>
+                    <span className="num" style={{ fontSize: 13, color: isLive ? "var(--accent)" : "var(--text)" }}>{r.version}</span>
+                    {r.title && <span className="faint" style={{ fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.title}</span>}
+                    {isLive && <span className="chip ok" style={{ flexShrink: 0 }}>live</span>}
+                  </span>
+                  <span className="num faint" style={{ fontSize: 10.5, flexShrink: 0 }}>{r.date}</span>
+                </button>
+                {open && (
+                  <ul className="stack" style={{ gap: 6, listStyle: "none", padding: "0 0 12px 22px", margin: 0 }}>
+                    {r.notes.map((n, i) => (
+                      <li key={i} className="row" style={{ gap: 8, alignItems: "flex-start", fontSize: 12.5, lineHeight: 1.5 }}>
+                        <span className="accent" style={{ flexShrink: 0 }}>·</span>
+                        <span>{n}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </Panel>
+
+      <Panel idx="17" title="Build Log">
         {builds === null ? (
           <div className="faint" style={{ fontSize: 13 }}>Loading…</div>
         ) : builds.length === 0 ? (

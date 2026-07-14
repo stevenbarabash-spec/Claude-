@@ -302,8 +302,14 @@ function ProjectCard({
   const [showUpdates, setShowUpdates] = useState(false);
   const [editing, setEditing] = useState(false);
   const [movingId, setMovingId] = useState<string | null>(null);
+  const [dueEditId, setDueEditId] = useState<string | null>(null);
   const [newTask, setNewTask] = useState({ title: "", due: "" });
   const [newNote, setNewNote] = useState("");
+
+  function setTaskDue(taskId: string, due: string) {
+    onPatch({ tasks: p.tasks.map((t) => (t.id === taskId ? { ...t, due: due || null } : t)) });
+    setDueEditId(null);
+  }
 
   async function moveTask(taskId: string, toProjectId: string) {
     setMovingId(null);
@@ -410,11 +416,26 @@ function ProjectCard({
                 >
                   {t.title}
                 </span>
-                {t.due && !t.done && (
-                  <span className="num" style={{ fontSize: 10, color: t.due < today ? "var(--hot)" : t.due === today ? "var(--warm)" : "var(--text-faint)" }}>
-                    {shortDate(t.due)}
-                  </span>
-                )}
+                <button
+                  className="num"
+                  title="Change due date"
+                  style={{
+                    fontSize: 10,
+                    flexShrink: 0,
+                    background: "transparent",
+                    border: "1px solid var(--border-soft)",
+                    borderRadius: 5,
+                    padding: "1px 6px",
+                    cursor: "pointer",
+                    color: t.due ? (t.due < today ? "var(--hot)" : t.due === today ? "var(--warm)" : "var(--text-faint)") : "var(--text-faint)",
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDueEditId(dueEditId === t.id ? null : t.id);
+                  }}
+                >
+                  {t.due ? shortDate(t.due) : "＋ due date"}
+                </button>
                 <button
                   className="btn small"
                   title="Move to another project"
@@ -427,6 +448,27 @@ function ProjectCard({
                   ⇄
                 </button>
               </div>
+              {dueEditId === t.id && (
+                <div
+                  className="panel row"
+                  style={{ position: "absolute", right: 0, top: "100%", zIndex: 70, padding: 8, gap: 6, boxShadow: "0 8px 24px rgba(0,0,0,0.5)" }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <input
+                    className="input"
+                    type="date"
+                    autoFocus
+                    defaultValue={t.due ?? ""}
+                    style={{ padding: "5px 9px", fontSize: 12 }}
+                    onChange={(e) => setTaskDue(t.id, e.target.value)}
+                  />
+                  {t.due && (
+                    <button className="btn small" style={{ color: "var(--hot)" }} onClick={() => setTaskDue(t.id, "")}>
+                      clear
+                    </button>
+                  )}
+                </div>
+              )}
               {movingId === t.id && (
                 <div
                   className="panel"
