@@ -11,6 +11,14 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.7",
+    date: "2026-07-14",
+    title: "Reminders import — accepts any payload shape",
+    notes: [
+      "The import endpoint now accepts whatever an iPhone Shortcut sends — a batch, a bare array, or a single reminder — so setup can't fail on a formatting technicality.",
+    ],
+  },
+  {
     version: "v2.1.6",
     date: "2026-07-14",
     title: "Reminders import — simpler & date-safe",

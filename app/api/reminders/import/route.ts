@@ -14,16 +14,31 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  let body: { reminders?: IncomingReminder[]; reminder?: IncomingReminder };
+  let body: unknown;
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "invalid JSON" }, { status: 400 });
   }
 
-  // Accept either a batch { reminders: [...] } or a single { reminder: {...} }.
-  const list = body.reminders ?? (body.reminder ? [body.reminder] : []);
-  if (!Array.isArray(list) || list.length === 0) {
+  // Accept whatever shape the Shortcut sends:
+  //   { reminders: [...] } · { reminder: {...} } · a bare array [...] ·
+  //   or a single reminder object { text, due }.
+  let list: IncomingReminder[];
+  if (Array.isArray(body)) {
+    list = body as IncomingReminder[];
+  } else if (body && typeof body === "object") {
+    const b = body as { reminders?: IncomingReminder[]; reminder?: IncomingReminder; text?: string };
+    if (Array.isArray(b.reminders)) list = b.reminders;
+    else if (b.reminder) list = [b.reminder];
+    else if (typeof b.text === "string") list = [b as IncomingReminder];
+    else list = [];
+  } else {
+    list = [];
+  }
+  // Drop empties (a reminder with no text is noise).
+  list = list.filter((r) => r && typeof r.text === "string" && r.text.trim());
+  if (list.length === 0) {
     return NextResponse.json({ error: "reminders[] required" }, { status: 400 });
   }
 
