@@ -197,7 +197,7 @@ export default function ClientsPage() {
         <div className="stack" style={{ gap: 14 }}>
           <div className="label">Projects</div>
           {projects.map((p, idx) => (
-            <ProjectCard key={p.id} p={p} idx={idx} today={today} onPatch={(b) => patch(p.id, b)} onToggleTask={(t) => toggleTask(p, t)} onReload={load} />
+            <ProjectCard key={p.id} p={p} idx={idx} today={today} allProjects={projects} onPatch={(b) => patch(p.id, b)} onToggleTask={(t) => toggleTask(p, t)} onReload={load} />
           ))}
           {projects.length === 0 && <div className="panel faint" style={{ textAlign: "center", padding: 30 }}>No projects yet.</div>}
         </div>
@@ -286,6 +286,7 @@ function ProjectCard({
   p,
   idx,
   today,
+  allProjects,
   onPatch,
   onToggleTask,
   onReload,
@@ -293,14 +294,26 @@ function ProjectCard({
   p: ClientProject;
   idx: number;
   today: string;
+  allProjects: ClientProject[];
   onPatch: (body: Partial<ClientProject>) => void;
   onToggleTask: (t: ClientTask) => void;
   onReload: () => void;
 }) {
   const [showUpdates, setShowUpdates] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [movingId, setMovingId] = useState<string | null>(null);
   const [newTask, setNewTask] = useState({ title: "", due: "" });
   const [newNote, setNewNote] = useState("");
+
+  async function moveTask(taskId: string, toProjectId: string) {
+    setMovingId(null);
+    await api("/api/clients/move", {
+      method: "POST",
+      body: JSON.stringify({ taskId, fromProjectId: p.id, toProjectId }),
+    }).catch(() => {});
+    window.dispatchEvent(new CustomEvent("jarvis:capture"));
+    onReload();
+  }
   const [form, setForm] = useState({
     name: p.name,
     phase: p.phase ?? "",
@@ -375,31 +388,69 @@ function ProjectCard({
         </div>
         <div className="stack" style={{ gap: 3 }}>
           {p.tasks.map((t) => (
-            <div key={t.id} className="row" style={{ gap: 8, cursor: "pointer", padding: "2px 0" }} onClick={() => onToggleTask(t)}>
-              <span
-                style={{
-                  width: 7,
-                  height: 7,
-                  borderRadius: 4,
-                  flexShrink: 0,
-                  border: `1px solid ${t.done ? "var(--accent)" : "var(--text-faint)"}`,
-                  background: t.done ? "var(--accent)" : "transparent",
-                }}
-              />
-              <span
-                style={{
-                  fontSize: 12.5,
-                  flex: 1,
-                  textDecoration: t.done ? "line-through" : "none",
-                  color: t.done ? "var(--text-faint)" : "var(--text)",
-                }}
-              >
-                {t.title}
-              </span>
-              {t.due && !t.done && (
-                <span className="num" style={{ fontSize: 10, color: t.due < today ? "var(--hot)" : t.due === today ? "var(--warm)" : "var(--text-faint)" }}>
-                  {shortDate(t.due)}
+            <div key={t.id} style={{ position: "relative" }}>
+              <div className="row" style={{ gap: 8, cursor: "pointer", padding: "2px 0" }} onClick={() => onToggleTask(t)}>
+                <span
+                  style={{
+                    width: 7,
+                    height: 7,
+                    borderRadius: 4,
+                    flexShrink: 0,
+                    border: `1px solid ${t.done ? "var(--accent)" : "var(--text-faint)"}`,
+                    background: t.done ? "var(--accent)" : "transparent",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: 12.5,
+                    flex: 1,
+                    textDecoration: t.done ? "line-through" : "none",
+                    color: t.done ? "var(--text-faint)" : "var(--text)",
+                  }}
+                >
+                  {t.title}
                 </span>
+                {t.due && !t.done && (
+                  <span className="num" style={{ fontSize: 10, color: t.due < today ? "var(--hot)" : t.due === today ? "var(--warm)" : "var(--text-faint)" }}>
+                    {shortDate(t.due)}
+                  </span>
+                )}
+                <button
+                  className="btn small"
+                  title="Move to another project"
+                  style={{ padding: "1px 6px", fontSize: 11, lineHeight: 1.4, flexShrink: 0 }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMovingId(movingId === t.id ? null : t.id);
+                  }}
+                >
+                  ⇄
+                </button>
+              </div>
+              {movingId === t.id && (
+                <div
+                  className="panel"
+                  style={{ position: "absolute", right: 0, top: "100%", zIndex: 70, padding: 6, minWidth: 200, maxHeight: 240, overflowY: "auto", boxShadow: "0 8px 24px rgba(0,0,0,0.5)" }}
+                >
+                  <div className="label" style={{ fontSize: 9.5, padding: "2px 6px 6px" }}>Move to…</div>
+                  {allProjects.filter((x) => x.id !== p.id).length === 0 ? (
+                    <div className="faint" style={{ fontSize: 11, padding: "4px 6px" }}>No other projects.</div>
+                  ) : (
+                    allProjects
+                      .filter((x) => x.id !== p.id)
+                      .map((x) => (
+                        <button
+                          key={x.id}
+                          className="row"
+                          style={{ width: "100%", textAlign: "left", gap: 8, padding: "6px 6px", fontSize: 12, background: "transparent", border: "none", cursor: "pointer", color: "var(--text)", borderRadius: 5 }}
+                          onClick={() => moveTask(t.id, x.id)}
+                        >
+                          <span style={{ width: 6, height: 6, borderRadius: 3, flexShrink: 0, background: STATUS_EDGE[x.status] }} />
+                          {x.name}
+                        </button>
+                      ))
+                  )}
+                </div>
               )}
             </div>
           ))}
