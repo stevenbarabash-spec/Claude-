@@ -11,6 +11,16 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.14",
+    date: "2026-07-15",
+    title: "Client task times + voice client-matching",
+    notes: [
+      "Client tasks now keep a clock time, not just a date — set it inline on the client board (tap the date chip). The time is preserved when the task is pulled into Section 10.",
+      "A client reminder due today with a time auto-flows into Tasks · Today at that time (e.g. “BYTOX invoice due today at 3pm” lands on the BYTOX board and in Section 10 at 3:00 PM).",
+      "Spoken client names now match even when Siri mishears them (“by tox”, “bydox”, “hydro gel” all resolve to the right client).",
+    ],
+  },
+  {
     version: "v2.1.13",
     date: "2026-07-14",
     title: "“Work on” button on Section 10",

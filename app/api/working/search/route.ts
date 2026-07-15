@@ -24,6 +24,7 @@ export async function GET(req: Request) {
       taskId: it.taskId,
       projectId: it.projectId,
       date: it.date,
+      when: it.when, // HH:MM if the task carries a time — preserved when pulled into today
     }));
   return NextResponse.json({ results }, { headers: { "cache-control": "no-store" } });
 }

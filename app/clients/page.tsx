@@ -20,6 +20,13 @@ function shortDate(d: string): string {
   return new Date(d + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
+function fmtClock(hhmm: string): string {
+  const [h, m] = hhmm.split(":").map(Number);
+  const ap = h >= 12 ? "PM" : "AM";
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return m ? `${h12}:${String(m).padStart(2, "0")} ${ap}` : `${h12} ${ap}`;
+}
+
 const STATUS_EDGE: Record<ClientProject["status"], string> = {
   done: "var(--accent)",
   active: "var(--warm)",
@@ -308,7 +315,10 @@ function ProjectCard({
 
   function setTaskDue(taskId: string, due: string) {
     onPatch({ tasks: p.tasks.map((t) => (t.id === taskId ? { ...t, due: due || null } : t)) });
-    setDueEditId(null);
+  }
+
+  function setTaskTime(taskId: string, time: string) {
+    onPatch({ tasks: p.tasks.map((t) => (t.id === taskId ? { ...t, time: time || null } : t)) });
   }
 
   async function moveTask(taskId: string, toProjectId: string) {
@@ -435,6 +445,7 @@ function ProjectCard({
                   }}
                 >
                   {t.due ? shortDate(t.due) : "＋ due date"}
+                  {t.time ? ` · ${fmtClock(t.time)}` : ""}
                 </button>
                 <button
                   className="btn small"
@@ -461,9 +472,19 @@ function ProjectCard({
                     defaultValue={t.due ?? ""}
                     style={{ padding: "5px 9px", fontSize: 12 }}
                     onChange={(e) => setTaskDue(t.id, e.target.value)}
+                    title="Due date"
                   />
-                  {t.due && (
-                    <button className="btn small" style={{ color: "var(--hot)" }} onClick={() => setTaskDue(t.id, "")}>
+                  <input
+                    className="input"
+                    type="time"
+                    defaultValue={t.time ?? ""}
+                    style={{ padding: "5px 9px", fontSize: 12, width: 110 }}
+                    onChange={(e) => setTaskTime(t.id, e.target.value)}
+                    title="Time (optional)"
+                  />
+                  <button className="btn small primary" onClick={() => setDueEditId(null)}>done</button>
+                  {(t.due || t.time) && (
+                    <button className="btn small" style={{ color: "var(--hot)" }} onClick={() => { setTaskDue(t.id, ""); setTaskTime(t.id, ""); }}>
                       clear
                     </button>
                   )}

@@ -103,6 +103,7 @@ export interface ClientTask {
   title: string;
   done: boolean;
   due: string | null; // YYYY-MM-DD
+  time?: string | null; // HH:MM (24h) — optional clock time, carried into Section 10
 }
 
 export interface ClientIteration {

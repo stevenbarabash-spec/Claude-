@@ -12,6 +12,7 @@ interface SearchHit {
   source: "client" | "crm" | "day";
   title: string;
   who: string | null;
+  when?: string | null; // HH:MM carried from the source task
 }
 
 function nowHHMM(): string {
@@ -106,14 +107,14 @@ export function DayTasks() {
 
   const changed = () => window.dispatchEvent(new CustomEvent("jarvis:capture"));
 
-  async function addTask(taskTitle: string) {
+  async function addTask(taskTitle: string, timeOverride?: string | null) {
     const t = taskTitle.trim();
     if (!t || busy) return;
     setBusy(true);
     try {
       const r = await api<{ tasks: DayTask[] }>("/api/daytasks", {
         method: "POST",
-        body: JSON.stringify({ date: today, title: t, time: time || null }),
+        body: JSON.stringify({ date: today, title: t, time: timeOverride ?? time ?? null }),
       });
       setTasks(r.tasks);
       setTitle("");
@@ -131,9 +132,10 @@ export function DayTasks() {
     void addTask(title);
   }
 
-  // Pull an existing task into today's plan (keeps the client for context).
+  // Pull an existing task into today's plan (keeps the client for context and
+  // its clock time, if the source task had one).
   function pull(hit: SearchHit) {
-    void addTask(hit.who ? `${hit.title} · ${hit.who}` : hit.title);
+    void addTask(hit.who ? `${hit.title} · ${hit.who}` : hit.title, hit.when ?? null);
   }
 
   async function toggle(task: DayTask) {

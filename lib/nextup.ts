@@ -77,7 +77,7 @@ export async function collectCandidates(): Promise<{ today: string; nowHHMM: str
         title: t.title,
         who: clientOf(p.name),
         due: t.due,
-        when: null,
+        when: t.time ?? null,
         score: dd.score + noDue + (p.status === "active" ? 6 : 0),
         reason: dd.reason || "client work",
         href: "/clients",

@@ -61,6 +61,56 @@ const CLIENT_STOP = new Set([
   "project", "client", "services", "prospecting", "inc", "llc", "e-bike", "ebike",
 ]);
 
+// Edit distance for fuzzy matching spoken client names (Siri mishears brands).
+function levenshtein(a: string, b: string): number {
+  const m = a.length, n = b.length;
+  if (m === 0) return n;
+  if (n === 0) return m;
+  let prev = Array.from({ length: n + 1 }, (_, i) => i);
+  for (let i = 1; i <= m; i++) {
+    const curr = [i];
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      curr[j] = Math.min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost);
+    }
+    prev = curr;
+  }
+  return prev[n];
+}
+
+// Distinctive brand keywords for a project (compacted, no spaces/punct).
+function clientKeywords(name: string): string[] {
+  const client = normalize(clientOf(name));
+  const kws = new Set<string>();
+  const compact = client.replace(/\s/g, "");
+  if (compact.length >= 3) kws.add(compact);
+  for (const w of client.split(" ")) if (w.length >= 4 && !CLIENT_STOP.has(w)) kws.add(w);
+  return [...kws];
+}
+
+// Lenient match for an EXPLICIT client answer (the guided-capture "client"
+// field). Tolerates Siri mis-hearings: strips spaces/punctuation and allows a
+// small edit distance ("bytox" ~ "bydox" / "by tox"). Not used for free text.
+function matchClientHint(hint: string, projects: ClientProject[]): ClientProject | undefined {
+  const h = hint.toLowerCase().replace(/[^a-z0-9]/g, "");
+  if (h.length < 3) return undefined;
+  let best: { p: ClientProject; len: number } | undefined;
+  for (const p of projects) {
+    if (/home\s?chores|miscellaneous/i.test(p.name)) continue;
+    for (const kw of clientKeywords(p.name)) {
+      const dist = levenshtein(h, kw);
+      const near =
+        h === kw ||
+        h.includes(kw) ||
+        kw.includes(h) ||
+        (kw.length >= 5 && dist <= 2) ||
+        (kw.length >= 4 && dist <= 1);
+      if (near && (!best || kw.length > best.len)) best = { p, len: kw.length };
+    }
+  }
+  return best?.p;
+}
+
 // Which client project (if any) this reminder names. Skips the Home/Misc buckets.
 // Matches on the full client name OR a distinctive brand word (e.g. "Hydrogel"
 // from "Get Hydrogel — Funnel", "BYTOX", "Greenwich"). Longest match wins.
@@ -233,8 +283,11 @@ export async function importReminders(reminders: IncomingReminder[]): Promise<Im
     // A clock time with no other date implies "today" (e.g. "call mom at 11pm").
     const isToday = due === today || TODAY_PHRASE.test(fullText) || (Boolean(time) && !due);
 
-    // Prefer an explicit client answer; fall back to scanning the full text.
-    const client = (clientHint && matchClient(clientHint, projects)) || matchClient(fullText, projects);
+    // Prefer an explicit client answer (strict, then fuzzy for Siri mishearings);
+    // fall back to scanning the full text.
+    const client =
+      (clientHint && (matchClient(clientHint, projects) || matchClientHint(clientHint, projects))) ||
+      matchClient(fullText, projects);
     let routedTo: string;
     let board: ClientProject | undefined;
 
@@ -247,7 +300,7 @@ export async function importReminders(reminders: IncomingReminder[]): Promise<Im
     }
 
     if (board) {
-      await addClientTask(board, { id: crypto.randomUUID(), title, done: false, due }, projects);
+      await addClientTask(board, { id: crypto.randomUUID(), title, done: false, due, time }, projects);
       routedTo = clientOf(board.name);
     } else {
       // rule 3 — "due today" with no client/home match, or no Misc project exists
