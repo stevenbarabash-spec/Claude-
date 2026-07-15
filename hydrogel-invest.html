@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>InteliGel® — Investor Overview | Green Evolution Technologies</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18326004345"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18326004345');
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap');
 
@@ -2418,6 +2426,17 @@ nav.scrolled {
 </footer>
 
 <script>
+// ── GOOGLE ADS CONVERSION ──
+function fireConversion() {
+  if (typeof gtag === 'function') {
+    gtag('event', 'conversion', {
+      'send_to': 'AW-18326004345',
+      'value': 1.0,
+      'currency': 'USD'
+    });
+  }
+}
+
 // ── QUALIFIER ──
 var qualAnswers = {};
 
@@ -2494,9 +2513,12 @@ function qualSubmit() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
   })
-  .then(function(){ qualShowStep('stepSuccess', 4); })
+  .then(function(){
+    fireConversion();
+    qualShowStep('stepSuccess', 4);
+  })
   .catch(function(){
-    // Still show success to user — log error silently
+    fireConversion();
     qualShowStep('stepSuccess', 4);
     console.error('Webhook failed — check GHL endpoint');
   });
