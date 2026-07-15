@@ -30,6 +30,7 @@ export function DayTasks() {
   const [timeEditId, setTimeEditId] = useState<string | null>(null);
   const [editDate, setEditDate] = useState("");
   const [editTime, setEditTime] = useState("");
+  const [note, setNote] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const today = clientDateKey();
@@ -168,17 +169,27 @@ export function DayTasks() {
       }
       return;
     }
-    // Move to another day: add to the new date, remove from today.
-    await api("/api/daytasks", {
+    // Move to another day: add to the new date FIRST. Only remove it from today
+    // once the new task is confirmed created — never delete before the add
+    // succeeds, or a failed POST would lose the task entirely.
+    const add = await api<{ task: DayTask }>("/api/daytasks", {
       method: "POST",
       body: JSON.stringify({ date: editDate, title: t.title, time: newTime }),
-    }).catch(() => {});
+    }).catch(() => null);
+    if (!add) {
+      setNote("Couldn't move the task — it's still here. Try again.");
+      setTimeout(() => setNote(null), 4000);
+      return; // keep the task on today; nothing was deleted
+    }
     const del = await api<{ tasks: DayTask[] }>("/api/daytasks", {
       method: "DELETE",
       body: JSON.stringify({ date: today, id: t.id }),
     }).catch(() => null);
     if (del) setTasks(del.tasks);
     changed();
+    const label = new Date(editDate + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+    setNote(`Moved to ${label}${newTime ? ` at ${fmt12(newTime)}` : ""}.`);
+    setTimeout(() => setNote(null), 4000);
   }
 
   async function remove(task: DayTask) {
@@ -201,6 +212,14 @@ export function DayTasks() {
       title="Tasks · Today"
       right={<span>{tasks === null ? "…" : `${open} open`}</span>}
     >
+      {note && (
+        <div
+          className="chip"
+          style={{ display: "block", marginBottom: 10, padding: "7px 10px", background: "var(--accent-dim)", borderColor: "rgba(111,224,174,0.3)", fontSize: 12 }}
+        >
+          {note}
+        </div>
+      )}
       <div ref={searchRef} style={{ position: "relative", marginBottom: 12 }}>
         <div className="row">
           <input

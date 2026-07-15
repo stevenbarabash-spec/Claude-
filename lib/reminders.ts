@@ -12,10 +12,19 @@ import { getStore } from "./store";
 import { GOALS_SENTINEL_DATE, type ClientProject, type ClientTask, type DayTask } from "./types";
 
 export interface IncomingReminder {
-  id: string; // Apple's stable reminder id — used for dedup
+  id?: string; // Apple's stable reminder id — used for dedup
   text: string;
+  client?: string | null; // explicit client/company (guided capture)
+  when?: string | null; // spoken day/time phrase (guided capture)
   due?: string | null; // ISO or YYYY-MM-DD from the Reminders due date
   notes?: string | null;
+}
+
+// Blank out "no client / skip / none" style answers from the guided prompts.
+function meaningful(s?: string | null): string {
+  const t = (s ?? "").trim();
+  if (!t || /^(none|no|skip|n\/?a|na|nothing|no client|not a client|no thanks)\.?$/i.test(t)) return "";
+  return t;
 }
 
 export interface ImportOutcome {
@@ -211,19 +220,27 @@ export async function importReminders(reminders: IncomingReminder[]): Promise<Im
       outcomes.push({ id, title: r.text.trim(), routedTo: "already imported", alsoToday: false, duplicate: true });
       continue;
     }
-    const title = cleanTitle(r.text);
-    const due = resolveDue(r, today);
-    const time = parseTime(r.text);
-    // A clock time with no other date implies "today" (e.g. "call mom at 11pm").
-    const isToday = due === today || TODAY_PHRASE.test(r.text) || (Boolean(time) && !due);
+    // Guided capture sends task/client/when separately; combine for parsing but
+    // keep the title from the task text alone.
+    const clientHint = meaningful(r.client);
+    const whenHint = meaningful(r.when);
+    const fullText = [r.text, clientHint, whenHint].filter(Boolean).join(" ");
+    const whenText = whenHint || r.text;
 
-    const client = matchClient(r.text, projects);
+    const title = cleanTitle(r.text);
+    const due = resolveDue({ text: whenText, due: r.due }, today);
+    const time = parseTime(whenText);
+    // A clock time with no other date implies "today" (e.g. "call mom at 11pm").
+    const isToday = due === today || TODAY_PHRASE.test(fullText) || (Boolean(time) && !due);
+
+    // Prefer an explicit client answer; fall back to scanning the full text.
+    const client = (clientHint && matchClient(clientHint, projects)) || matchClient(fullText, projects);
     let routedTo: string;
     let board: ClientProject | undefined;
 
     if (client) {
       board = client;
-    } else if (isHome(r.text)) {
+    } else if (isHome(fullText)) {
       board = home ?? misc; // Home Chores if it exists, else Miscellaneous
     } else if (!isToday) {
       board = misc; // rule 4 — unsure

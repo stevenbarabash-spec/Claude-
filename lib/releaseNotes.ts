@@ -11,6 +11,16 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.11",
+    date: "2026-07-14",
+    title: "Guided capture + reschedule fix",
+    notes: [
+      "Reminders import accepts task, client, and day/time as separate fields — for a guided Siri capture that asks one thing at a time.",
+      "Returns a spoken confirmation line (e.g. “Added Test my website to Get Hydrogel”).",
+      "Fixed: rescheduling a Section 10 task to another day no longer risks losing it — the task is only removed from today after the new day's copy is confirmed created, with an on-screen “Moved to …” confirmation.",
+    ],
+  },
+  {
     version: "v2.1.10",
     date: "2026-07-14",
     title: "Reminders import — clock times",

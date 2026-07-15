@@ -28,7 +28,14 @@ export async function POST(req: Request) {
   if (Array.isArray(body)) {
     list = body as IncomingReminder[];
   } else if (body && typeof body === "object") {
-    const b = body as { reminders?: unknown; reminder?: IncomingReminder; text?: string };
+    const b = body as {
+      reminders?: unknown;
+      reminder?: IncomingReminder;
+      text?: string;
+      client?: string | null;
+      when?: string | null;
+      due?: string | null;
+    };
     // reminders may arrive as an array, or as a JSON string if Shortcuts
     // serialized the list into a text field — accept both.
     let rem = b.reminders;
@@ -42,7 +49,8 @@ export async function POST(req: Request) {
     if (Array.isArray(rem)) list = rem as IncomingReminder[];
     else if (rem && typeof rem === "object") list = [rem as IncomingReminder];
     else if (b.reminder) list = [b.reminder];
-    else if (typeof b.text === "string") list = [b as IncomingReminder];
+    // Guided single capture: task + optional client + optional when.
+    else if (typeof b.text === "string") list = [{ text: b.text, client: b.client, when: b.when, due: b.due }];
     else list = [];
   } else {
     list = [];
@@ -56,5 +64,15 @@ export async function POST(req: Request) {
   const outcomes = await importReminders(list);
   const imported = outcomes.filter((o) => !o.duplicate).length;
   const duplicates = outcomes.filter((o) => o.duplicate).length;
-  return NextResponse.json({ ok: true, imported, duplicates, outcomes });
+  // A friendly line Siri can read back.
+  const fresh = outcomes.filter((o) => !o.duplicate);
+  const spoken =
+    fresh.length === 0
+      ? duplicates > 0
+        ? "That was already on your dashboard."
+        : "Nothing to add."
+      : fresh.length === 1
+        ? `Added ${fresh[0].title} to ${fresh[0].routedTo}.`
+        : `Added ${fresh.length} items to your dashboard.`;
+  return NextResponse.json({ ok: true, imported, duplicates, spoken, outcomes });
 }
