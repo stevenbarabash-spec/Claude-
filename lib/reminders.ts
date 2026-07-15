@@ -112,13 +112,37 @@ function resolveDue(r: IncomingReminder, today: string): string | null {
   return null;
 }
 
-// Strip trigger phrases and filler so the stored title is clean.
+// Parse a clock time from the text → "HH:MM" (24h), or null. Handles
+// "11 pm", "11:00pm", "at 9am", "by 5:30 p.m.", and 24h "23:00".
+function parseTime(text: string): string | null {
+  const m12 = text.match(/\b(\d{1,2})(?::(\d{2}))?\s*(a\.?m\.?|p\.?m\.?)\b/i);
+  if (m12) {
+    let h = parseInt(m12[1], 10);
+    const min = m12[2] ? parseInt(m12[2], 10) : 0;
+    const pm = /p/i.test(m12[3]);
+    if (h === 12) h = pm ? 12 : 0;
+    else if (pm) h += 12;
+    if (h >= 0 && h <= 23 && min >= 0 && min <= 59) {
+      return `${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}`;
+    }
+  }
+  const m24 = text.match(/\b([01]?\d|2[0-3]):([0-5]\d)\b/); // needs a colon → won't catch "101"
+  if (m24) return `${m24[1].padStart(2, "0")}:${m24[2]}`;
+  return null;
+}
+
+// Strip trigger phrases, time/date words, and filler so the stored title is clean.
 function cleanTitle(text: string): string {
   return text
     .replace(/^\s*(remind me to|reminder to|remember to|to)\s+/i, "")
     .replace(/\b(and )?(please )?(add (it )?to my tasks|add to tasks|due today|for today)\b/gi, "")
+    // time expressions incl. a leading connector: "for 11:00 pm", "at 9am", "by 5 p.m."
+    .replace(/\b(for|at|by|@|around|before|after)?\s*\d{1,2}(:\d{2})?\s*(a\.?m\.?|p\.?m\.?)\b/gi, "")
+    .replace(/\b([01]?\d|2[0-3]):[0-5]\d\b/g, "") // 24h times
+    .replace(/\b(today|tonight|tomorrow)\b/gi, "") // date words captured as due
     .replace(/\s+/g, " ")
-    .replace(/[\s,;:.\-]+$/, "") // trailing punctuation left by removed trigger phrases
+    .replace(/\s*\b(for|at|by|on|@|around|before|after)\s*$/i, "") // dangling connector
+    .replace(/[\s,;:.\-]+$/, "") // trailing punctuation
     .trim()
     .replace(/^\w/, (c) => c.toUpperCase());
 }
@@ -189,7 +213,9 @@ export async function importReminders(reminders: IncomingReminder[]): Promise<Im
     }
     const title = cleanTitle(r.text);
     const due = resolveDue(r, today);
-    const isToday = due === today || TODAY_PHRASE.test(r.text);
+    const time = parseTime(r.text);
+    // A clock time with no other date implies "today" (e.g. "call mom at 11pm").
+    const isToday = due === today || TODAY_PHRASE.test(r.text) || (Boolean(time) && !due);
 
     const client = matchClient(r.text, projects);
     let routedTo: string;
@@ -208,13 +234,13 @@ export async function importReminders(reminders: IncomingReminder[]): Promise<Im
       routedTo = clientOf(board.name);
     } else {
       // rule 3 — "due today" with no client/home match, or no Misc project exists
-      await addDayTask(today, title, null);
+      await addDayTask(today, title, time);
       routedTo = "Tasks · Today";
     }
 
-    // A "due today" board item also shows in Section 10.
+    // A "due today" board item also shows in Section 10 (with its clock time).
     const alsoToday = Boolean(board) && isToday;
-    if (alsoToday) await addDayTask(today, title, null);
+    if (alsoToday) await addDayTask(today, title, time);
 
     outcomes.push({ id, title, routedTo, alsoToday });
     newlyImported.push(id);

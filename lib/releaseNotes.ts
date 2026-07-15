@@ -11,6 +11,16 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.10",
+    date: "2026-07-14",
+    title: "Reminders import — clock times",
+    notes: [
+      "Spoken clock times now set the task's time in Section 10 (e.g. “…at 11 pm” → the task is timed 11:00 PM), instead of ending up in the title.",
+      "Handles 11pm / 9am / 3:30 p.m. / 23:00, and a bare time with no date is treated as today.",
+      "The time and date words are cleaned out of the task title.",
+    ],
+  },
+  {
     version: "v2.1.9",
     date: "2026-07-14",
     title: "Reminders import — smarter client matching",
