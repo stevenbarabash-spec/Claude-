@@ -59,28 +59,51 @@ export async function materializeForDay(date: string): Promise<DayTask[]> {
   return tasks;
 }
 
-// Roll incomplete tasks from the last 7 days forward onto `today`, tagged with
-// the date they were carried from (→ shown as "overdue"). The original day
-// keeps only its completed / done-log entries. Idempotent: once moved, a past
-// day has nothing left to carry.
+// How many days back to sweep for un-done tasks. Covers a two-week gap of not
+// opening the dashboard; tasks older than this stay put (never deleted), they
+// just won't surface until swept.
+const CARRY_LOOKBACK_DAYS = 14;
+
+// Roll incomplete tasks from prior days forward onto `today`, tagged with the
+// date they were originally due (→ shown as "overdue · was due …"). The origin
+// day keeps only its completed / done-log entries.
+//
+// LOSS-PROOF ORDERING: tasks are written onto `today` FIRST, then removed from
+// their origin days. If anything fails in between, the worst case is a task
+// appearing on two days (a visible, recoverable duplicate) — never a task that
+// vanishes. Dedup by the task's own id keeps re-runs idempotent, so a partial
+// failure self-heals on the next sweep without duplicating.
 export async function carryForwardInto(today: string): Promise<void> {
   const store = getStore();
   const carried: DayTask[] = [];
-  for (let i = 1; i <= 7; i++) {
+  const originDays: string[] = [];
+  for (let i = 1; i <= CARRY_LOOKBACK_DAYS; i++) {
     const d = addDays(today, -i);
     const log = await store.getLog(d);
     const dt: DayTask[] = log?.notes.day_tasks ?? [];
     const incomplete = dt.filter((t) => !t.done && !t.fromWork);
     if (incomplete.length === 0) continue;
     for (const t of incomplete) {
-      carried.push({ ...t, id: crypto.randomUUID(), routineId: undefined, carriedFrom: t.carriedFrom ?? d });
+      // Keep the task's id so re-carrying the same task can't duplicate it.
+      carried.push({ ...t, routineId: undefined, carriedFrom: t.carriedFrom ?? d });
     }
-    await store.mergeLogNotes(d, { day_tasks: dt.filter((t) => t.done || t.fromWork) });
+    originDays.push(d);
   }
-  if (carried.length) {
-    const todayLog = await store.getLog(today);
-    const merged = [...carried, ...(todayLog?.notes.day_tasks ?? [])];
-    merged.sort((a, b) => (a.time ?? "99:99").localeCompare(b.time ?? "99:99"));
-    await store.mergeLogNotes(today, { day_tasks: merged });
+  if (carried.length === 0) return;
+
+  // 1) Write onto today first, de-duping by id against what's already there.
+  const todayLog = await store.getLog(today);
+  const existing: DayTask[] = todayLog?.notes.day_tasks ?? [];
+  const existingIds = new Set(existing.map((t) => t.id));
+  const toAdd = carried.filter((t) => !existingIds.has(t.id));
+  const merged = [...toAdd, ...existing];
+  merged.sort((a, b) => (a.time ?? "99:99").localeCompare(b.time ?? "99:99"));
+  await store.mergeLogNotes(today, { day_tasks: merged });
+
+  // 2) Only now clear the carried tasks from their origin days.
+  for (const d of originDays) {
+    const log = await store.getLog(d);
+    const dt: DayTask[] = log?.notes.day_tasks ?? [];
+    await store.mergeLogNotes(d, { day_tasks: dt.filter((t) => t.done || t.fromWork) });
   }
 }

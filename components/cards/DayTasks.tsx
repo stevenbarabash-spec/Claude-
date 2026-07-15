@@ -273,7 +273,9 @@ export function DayTasks() {
         <div className="stack" style={{ gap: 0 }}>
           {/* Open tasks first, then a "done today" log at the bottom. */}
           {[...tasks].sort((a, b) => Number(a.done) - Number(b.done)).map((t) => {
-            const late = !t.done && t.time !== null && t.time < now;
+            // A task is "late" (blinks red) if it's a timed task past its hour
+            // OR it rolled over from an earlier day (overdue carry-forward).
+            const late = !t.done && ((t.time !== null && t.time < now) || Boolean(t.carriedFrom));
             const span =
               t.finishedAt
                 ? `started ${t.startedAt ? fmtTime12(new Date(t.startedAt)) : "—"} · finished ${fmtTime12(new Date(t.finishedAt))}`
@@ -319,7 +321,7 @@ export function DayTasks() {
                       className="chip hot"
                       title={`Rolled over from ${new Date(t.carriedFrom + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}`}
                     >
-                      overdue
+                      overdue · was due {new Date(t.carriedFrom + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                     </span>
                   )}
                   {timeEditId === t.id ? (

@@ -11,6 +11,17 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.12",
+    date: "2026-07-14",
+    title: "Overdue failsafe — tasks are never lost",
+    notes: [
+      "Overdue tasks that roll into the next day now blink red and show the date they were originally due (“overdue · was due Jul 12”).",
+      "Carry-forward is loss-proof: a task is written onto the new day before it's removed from the old one, so an interrupted sweep can never drop it (worst case is a harmless duplicate that self-heals).",
+      "Look-back window extended to 14 days; tasks older than that are still never deleted — only surfaced once swept.",
+      "Verified with edge-case tests: done tasks stay put, multi-day rollovers keep their original due date, repeated sweeps don't duplicate, and out-of-window tasks are preserved.",
+    ],
+  },
+  {
     version: "v2.1.11",
     date: "2026-07-14",
     title: "Guided capture + reschedule fix",
