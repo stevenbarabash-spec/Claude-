@@ -667,7 +667,8 @@ nav.scrolled {
   /* ---- GLOBAL ---- */
   /* Uniform section padding on mobile */
   section { padding-top: 56px !important; padding-bottom: 56px !important; }
-  section[style*="padding:120px"] { padding-top: 72px !important; padding-bottom: 72px !important; }
+  section[style*="padding:100px"], section[style*="padding: 100px"],
+  section[style*="padding:120px"], section[style*="padding: 120px"] { padding-top: 56px !important; padding-bottom: 56px !important; }
   /* No horizontal overflow on any element */
   *, *::before, *::after { max-width: 100%; box-sizing: border-box; }
   body { overflow-x: hidden; }
@@ -1134,16 +1135,16 @@ nav.scrolled {
   <div class="container">
     <div class="hero-grid">
       <div>
-        <div class="hero-eyebrow reveal">
+        <div class="hero-eyebrow">
           <span>Pre-Series A · Round Open</span>
         </div>
-        <h1 class="display hero-heading reveal">
+        <h1 class="display hero-heading">
           Watch InteliGel®<br>
           Transform the <em>Field.</em>
         </h1>
-        <p class="hero-sub reveal">Real trials. Real farmers. Real results — documented across 12 states and 3 land-grant universities.</p>
+        <p class="hero-sub">Real trials. Real farmers. Real results — documented across 12 states and 3 land-grant universities.</p>
 
-        <div class="water-stats reveal">
+        <div class="water-stats">
           <div class="w-col">
             <div class="w-col-track">
               <div class="w-col-fill" style="height:32px"></div>
@@ -1167,7 +1168,7 @@ nav.scrolled {
           </div>
         </div>
 
-        <div class="hero-cta-row reveal">
+        <div class="hero-cta-row">
           <a href="#book" class="btn-gold">Schedule Investor Call</a>
           <a href="#solution" class="btn-ghost">See the Technology</a>
         </div>
@@ -1822,7 +1823,7 @@ nav.scrolled {
 </section>
 
 <!-- SIX REASONS -->
-<section class="reasons-section" data-cbg="dark" style="background-image:url('https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68f77f406d769a8ea2d428d9.png');background-size:cover;background-position:center;position:relative;">
+<section class="reasons-section" data-cbg="dark" style="background-image:url('https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68f77f406d769a8ea2d428d9.png');background-size:cover;background-position:center;position:relative;padding:100px 0;">
   <div style="position:absolute;inset:0;background:rgba(244,240,231,0.91);"></div>
   <div style="position:relative;z-index:1;">
     <div class="container">
@@ -2433,7 +2434,7 @@ function qASubmit() {
 var qualAnswers = {};
 
 function qualShowStep(stepId, activeDot) {
-  document.querySelectorAll('.qual-pane').forEach(function(p){ p.classList.add('hidden'); });
+  document.querySelectorAll('#qualCard .qual-pane').forEach(function(p){ p.classList.add('hidden'); });
   var el = document.getElementById(stepId);
   if (el) { el.classList.remove('hidden'); }
 
