@@ -976,6 +976,55 @@ nav.scrolled {
 
 /* table horizontal scroll wrapper */
 .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 6px; }
+
+/* ── QUALIFIER CARD ── */
+.qual-card {
+  background: var(--forest);
+  border: 1px solid rgba(237,232,219,0.09);
+  border-radius: 12px;
+  padding: 48px 52px;
+  position: relative;
+}
+@media (max-width: 768px) { .qual-card { padding: 32px 20px; } }
+
+.qual-steps { display: flex; gap: 8px; margin-bottom: 36px; }
+.qual-step { width: 28px; height: 3px; border-radius: 2px; background: rgba(237,232,219,0.12); transition: background 0.4s ease, width 0.4s ease; }
+.qual-step.active { background: var(--gold); width: 44px; }
+.qual-step.done   { background: var(--sage); }
+
+.qual-pane { animation: qualFadeIn 0.35s ease; }
+.qual-pane.hidden { display: none; }
+@keyframes qualFadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+.qual-eyebrow { font-family: var(--f-mono); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+.qual-q { font-family: var(--f-display); font-weight: 600; font-size: 1.55rem; color: var(--bone); line-height: 1.25; margin-bottom: 12px; }
+.qual-hint { font-size: 0.8rem; color: var(--bone-dim); line-height: 1.65; margin-bottom: 28px; }
+
+.qual-opts { display: flex; flex-direction: column; gap: 10px; }
+.qual-opt { background: rgba(237,232,219,0.05); border: 1px solid rgba(237,232,219,0.14); border-radius: 7px; color: var(--bone); font-family: var(--f-body); font-weight: 500; font-size: 0.88rem; padding: 15px 20px; text-align: left; cursor: pointer; transition: background 0.2s, border-color 0.2s, transform 0.15s; }
+.qual-opt:hover { background: rgba(184,147,12,0.12); border-color: rgba(184,147,12,0.45); transform: translateX(4px); }
+.qual-opt-no { background: transparent; border-color: rgba(237,232,219,0.07); color: var(--bone-dim); font-size: 0.82rem; }
+.qual-opt-no:hover { background: rgba(237,232,219,0.04); border-color: rgba(237,232,219,0.15); transform: none; }
+
+.qual-form { display: flex; flex-direction: column; gap: 14px; }
+.qual-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 600px) { .qual-field-row { grid-template-columns: 1fr; } }
+.qual-field { display: flex; flex-direction: column; gap: 6px; }
+.qual-field label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bone-dim); }
+.qual-field input { background: rgba(237,232,219,0.06); border: 1px solid rgba(237,232,219,0.14); border-radius: 6px; color: var(--bone); font-family: var(--f-body); font-size: 0.88rem; padding: 12px 14px; outline: none; transition: border-color 0.2s; }
+.qual-field input::placeholder { color: rgba(237,232,219,0.25); }
+.qual-field input:focus { border-color: var(--gold); }
+
+.qual-submit { background: var(--gold); color: var(--canvas); font-family: var(--f-body); font-weight: 700; font-size: 0.88rem; letter-spacing: 0.06em; padding: 16px 24px; border: none; border-radius: 7px; cursor: pointer; margin-top: 6px; transition: background 0.2s, transform 0.15s; }
+.qual-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
+.qual-privacy { font-size: 0.68rem; color: rgba(237,232,219,0.3); text-align: center; line-height: 1.5; }
+
+.qual-success-icon { width: 52px; height: 52px; border-radius: 50%; background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.qual-success-icon svg { width: 22px; height: 22px; stroke: #22c55e; }
+.qual-success-details { background: rgba(237,232,219,0.04); border: 1px solid rgba(237,232,219,0.08); border-radius: 8px; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; max-width: 380px; margin: 0 auto; text-align: left; }
+.qual-detail-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; }
+.qual-detail-row span { color: var(--bone-dim); }
+.qual-detail-row strong { color: var(--bone); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -2306,151 +2355,6 @@ nav.scrolled {
   </div>
 </section>
 
-<style>
-/* ── QUALIFIER CARD ── */
-.qual-card {
-  background: var(--forest);
-  border: 1px solid rgba(237,232,219,0.09);
-  border-radius: 12px;
-  padding: 48px 52px;
-  position: relative;
-}
-@media (max-width: 768px) {
-  .qual-card { padding: 32px 20px; }
-}
-
-/* Step dots */
-.qual-steps {
-  display: flex; gap: 8px; margin-bottom: 36px;
-}
-.qual-step {
-  width: 28px; height: 3px; border-radius: 2px;
-  background: rgba(237,232,219,0.12);
-  transition: background 0.4s ease, width 0.4s ease;
-}
-.qual-step.active { background: var(--gold); width: 44px; }
-.qual-step.done   { background: var(--sage); }
-
-/* Panes */
-.qual-pane { animation: qualFadeIn 0.35s ease; }
-.qual-pane.hidden { display: none; }
-@keyframes qualFadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.qual-eyebrow {
-  font-family: var(--f-mono); font-size: 0.62rem;
-  letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--gold); margin-bottom: 14px;
-}
-.qual-q {
-  font-family: var(--f-display); font-weight: 600;
-  font-size: 1.55rem; color: var(--bone);
-  line-height: 1.25; margin-bottom: 12px;
-}
-.qual-hint {
-  font-size: 0.8rem; color: var(--bone-dim);
-  line-height: 1.65; margin-bottom: 28px;
-}
-
-/* Option buttons */
-.qual-opts { display: flex; flex-direction: column; gap: 10px; }
-.qual-opt {
-  background: rgba(237,232,219,0.05);
-  border: 1px solid rgba(237,232,219,0.14);
-  border-radius: 7px;
-  color: var(--bone);
-  font-family: var(--f-body); font-weight: 500;
-  font-size: 0.88rem;
-  padding: 15px 20px;
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s, transform 0.15s;
-}
-.qual-opt:hover {
-  background: rgba(184,147,12,0.12);
-  border-color: rgba(184,147,12,0.45);
-  transform: translateX(4px);
-}
-.qual-opt-no {
-  background: transparent;
-  border-color: rgba(237,232,219,0.07);
-  color: var(--bone-dim);
-  font-size: 0.82rem;
-}
-.qual-opt-no:hover {
-  background: rgba(237,232,219,0.04);
-  border-color: rgba(237,232,219,0.15);
-  transform: none;
-}
-
-/* Contact form */
-.qual-form { display: flex; flex-direction: column; gap: 14px; }
-.qual-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-@media (max-width: 600px) { .qual-field-row { grid-template-columns: 1fr; } }
-.qual-field { display: flex; flex-direction: column; gap: 6px; }
-.qual-field label {
-  font-size: 0.7rem; font-weight: 600;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--bone-dim);
-}
-.qual-field input {
-  background: rgba(237,232,219,0.06);
-  border: 1px solid rgba(237,232,219,0.14);
-  border-radius: 6px;
-  color: var(--bone);
-  font-family: var(--f-body); font-size: 0.88rem;
-  padding: 12px 14px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.qual-field input::placeholder { color: rgba(237,232,219,0.25); }
-.qual-field input:focus { border-color: var(--gold); }
-
-.qual-submit {
-  background: var(--gold);
-  color: var(--canvas);
-  font-family: var(--f-body); font-weight: 700;
-  font-size: 0.88rem; letter-spacing: 0.06em;
-  padding: 16px 24px;
-  border: none; border-radius: 7px;
-  cursor: pointer; margin-top: 6px;
-  transition: background 0.2s, transform 0.15s;
-}
-.qual-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
-
-.qual-privacy {
-  font-size: 0.68rem; color: rgba(237,232,219,0.3);
-  text-align: center; line-height: 1.5;
-}
-
-/* Success state */
-.qual-success-icon {
-  width: 52px; height: 52px; border-radius: 50%;
-  background: rgba(34,197,94,0.12);
-  border: 1px solid rgba(34,197,94,0.3);
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 20px;
-}
-.qual-success-icon svg { width: 22px; height: 22px; stroke: #22c55e; }
-
-.qual-success-details {
-  background: rgba(237,232,219,0.04);
-  border: 1px solid rgba(237,232,219,0.08);
-  border-radius: 8px;
-  padding: 20px 24px;
-  display: flex; flex-direction: column; gap: 12px;
-  max-width: 380px; margin: 0 auto;
-  text-align: left;
-}
-.qual-detail-row {
-  display: flex; justify-content: space-between; align-items: center;
-  font-size: 0.82rem;
-}
-.qual-detail-row span { color: var(--bone-dim); }
-.qual-detail-row strong { color: var(--bone); font-weight: 600; }
-</style>
 
 <!-- FOOTER -->
 <footer style="background:var(--ink);padding:48px 0;">
