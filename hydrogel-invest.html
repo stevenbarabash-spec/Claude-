@@ -1009,6 +1009,7 @@ nav.scrolled {
 .qual-form { display: flex; flex-direction: column; gap: 14px; }
 .qual-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 @media (max-width: 600px) { .qual-field-row { grid-template-columns: 1fr; } }
+#qualCardA .qual-field-row { grid-template-columns: 1fr; }
 .qual-field { display: flex; flex-direction: column; gap: 6px; }
 .qual-field label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bone-dim); }
 .qual-field input { background: rgba(237,232,219,0.06); border: 1px solid rgba(237,232,219,0.14); border-radius: 6px; color: var(--bone); font-family: var(--f-body); font-size: 0.88rem; padding: 12px 14px; outline: none; transition: border-color 0.2s; }
@@ -1172,7 +1173,7 @@ nav.scrolled {
         </div>
       </div>
 
-      <div class="reveal">
+      <div>
         <!-- HERO QUALIFIER (instance A) -->
         <div class="qual-card" id="qualCardA">
           <div class="qual-steps" id="qualStepsA">
