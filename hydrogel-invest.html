@@ -292,12 +292,20 @@ nav.scrolled {
 .offering-badge-text strong { color: var(--text-body); }
 
 /* PRESS BAR */
-.press-bar { background: var(--paper-2); padding: 22px 0; border-top: 1px solid var(--border-l); border-bottom: 1px solid var(--border-l); }
-.press-bar-inner { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
+.press-bar { background: var(--paper-2); padding: 18px 0; border-top: 1px solid var(--border-l); border-bottom: 1px solid var(--border-l); }
+.press-bar-inner { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
 .press-label { font-family: var(--f-body); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; }
-.press-items { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+.press-items { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
 .press-item { font-family: var(--f-body); font-size: 0.75rem; font-weight: 500; color: var(--text-muted); letter-spacing: 0.04em; white-space: nowrap; }
 .press-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-l); flex-shrink: 0; }
+@media (max-width: 768px) {
+  .press-bar { padding: 14px 0; }
+  .press-bar-inner { flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+  .press-bar-inner > .press-dot { display: none; }
+  .press-label { font-size: 0.6rem; letter-spacing: 0.14em; }
+  .press-items { justify-content: center; gap: 10px; }
+  .press-item { font-size: 0.68rem; }
+}
 
 /* PROBLEM */
 .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 48px; }
