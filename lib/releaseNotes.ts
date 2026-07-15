@@ -11,6 +11,15 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.13",
+    date: "2026-07-14",
+    title: "“Work on” button on Section 10",
+    notes: [
+      "Each open task in Tasks · Today now has a ▶ work on button that slides it into Currently Working On so you can see what you're actively on.",
+      "The task stays in Section 10 while you work; marking it Done in the strip checks it off there and stamps the start/finish times.",
+    ],
+  },
+  {
     version: "v2.1.12",
     date: "2026-07-14",
     title: "Overdue failsafe — tasks are never lost",

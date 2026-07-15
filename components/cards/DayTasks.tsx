@@ -192,6 +192,17 @@ export function DayTasks() {
     setTimeout(() => setNote(null), 4000);
   }
 
+  // Slide a task into the "Currently Working On" strip (stays here too, until done).
+  async function workOn(t: DayTask) {
+    await api("/api/working", {
+      method: "POST",
+      body: JSON.stringify({ key: `day:${t.id}`, source: "day", title: t.title, who: null, href: "/", taskId: t.id, date: today }),
+    }).catch(() => null);
+    window.dispatchEvent(new CustomEvent("jarvis:capture"));
+    setNote(`"${t.title}" → Currently Working On`);
+    setTimeout(() => setNote(null), 4000);
+  }
+
   async function remove(task: DayTask) {
     const r = await api<{ tasks: DayTask[] }>("/api/daytasks", {
       method: "DELETE",
@@ -378,6 +389,16 @@ export function DayTasks() {
                         🕐 set time
                       </button>
                     )
+                  )}
+                  {!t.done && timeEditId !== t.id && (
+                    <button
+                      className="btn small"
+                      onClick={() => workOn(t)}
+                      title="Work on this now — slides it into Currently Working On"
+                      style={{ color: "var(--accent)", borderColor: "var(--accent)", padding: "1px 7px" }}
+                    >
+                      ▶ work on
+                    </button>
                   )}
                   <button
                     className="faint"
