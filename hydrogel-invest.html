@@ -596,76 +596,8 @@ nav.scrolled {
 #chartContainer { position: relative; width: 100%; height: 420px; margin-top: 48px; }
 
 /* =====================================================
-   CUSTOM CURSOR SYSTEM (desktop only)
+   CUSTOM CURSOR SYSTEM — removed
    ===================================================== */
-/* Hide cursor elements on touch/mobile — only shown inside pointer:fine */
-#cursor-drop, #cursor-glow { display: none; }
-
-@media (pointer: fine) {
-  #cursor-drop, #cursor-glow { display: block; }
-  * { cursor: none !important; }
-
-  /* Ambient shadow pool — soft ellipse under cursor, simulates elevation */
-  #cursor-glow {
-    position: fixed;
-    top: 0; left: 0;
-    width: 56px; height: 20px;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9990;
-    transform: translate(-30%, 14px);
-    background: radial-gradient(ellipse,
-      rgba(0,0,0,0.38) 0%,
-      rgba(0,0,0,0.14) 50%,
-      transparent 80%);
-    filter: blur(4px);
-    will-change: transform;
-    transition: background 0.35s ease, filter 0.35s ease;
-  }
-  /* On dark/green sections — glow pool turns gold */
-  #cursor-glow.on-dark {
-    width: 80px; height: 28px;
-    background: radial-gradient(ellipse,
-      rgba(212,175,62,0.55) 0%,
-      rgba(184,147,12,0.22) 50%,
-      transparent 80%);
-    filter: blur(6px);
-  }
-  #cursor-drop {
-    position: fixed;
-    top: 0; left: 0;
-    width: 22px; height: 26px;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(0, 0);
-    will-change: transform;
-    filter:
-      drop-shadow(2px 5px 5px rgba(0,0,0,0.55))
-      drop-shadow(1px 2px 2px rgba(0,0,0,0.35))
-      drop-shadow(0 0 14px rgba(255,255,255,0.08));
-    transition: filter 0.35s ease, opacity 0.2s;
-  }
-  /* On dark sections — arrow gets a warm gold shadow-glow */
-  #cursor-drop.on-dark {
-    filter:
-      drop-shadow(2px 5px 6px rgba(0,0,0,0.7))
-      drop-shadow(1px 2px 2px rgba(0,0,0,0.5))
-      drop-shadow(0 0 12px rgba(212,175,62,0.65))
-      drop-shadow(0 0 5px rgba(212,175,62,0.4));
-  }
-  #cursor-drop.hovering {
-    filter:
-      drop-shadow(2px 6px 7px rgba(0,0,0,0.6))
-      drop-shadow(1px 3px 3px rgba(0,0,0,0.4))
-      drop-shadow(0 0 18px rgba(255,255,255,0.13));
-  }
-  #cursor-drop.on-dark.hovering {
-    filter:
-      drop-shadow(2px 6px 7px rgba(0,0,0,0.7))
-      drop-shadow(0 0 16px rgba(212,175,62,0.85))
-      drop-shadow(0 0 6px rgba(212,175,62,0.55));
-  }
-}
 
 /* =====================================================
    MOBILE — comprehensive overrides (max 640px)
@@ -1067,9 +999,7 @@ nav.scrolled {
   Schedule a Call
 </a>
 
-<!-- CUSTOM CURSOR (desktop only) -->
-<div id="cursor-glow"></div>
-<svg id="cursor-drop" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg id="cursor-drop" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none">
   <defs>
     <linearGradient id="arrowFill" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#FFFFFF"/>
@@ -2785,42 +2715,6 @@ function toggleFaq(btn) {
 // =====================================================
 // CUSTOM CURSOR — teal arrow + bioluminescent glow
 // Desktop (pointer: fine) only
-// =====================================================
-(function() {
-  if (!window.matchMedia('(pointer: fine)').matches) return;
-  var arrow = document.getElementById('cursor-drop');
-  var glow  = document.getElementById('cursor-glow');
-  if (!arrow || !glow) return;
-  var mx = -400, my = -400, gx = -400, gy = -400;
-  var onDark = false;
-  function lerp(a, b, t) { return a + (b - a) * t; }
-  function checkBg(x, y) {
-    var el = document.elementFromPoint(x, y);
-    var sec = el && el.closest('[data-cbg]');
-    var dark = !!(sec && sec.getAttribute('data-cbg') === 'dark');
-    if (dark !== onDark) {
-      onDark = dark;
-      arrow.classList.toggle('on-dark', dark);
-      glow.classList.toggle('on-dark', dark);
-    }
-  }
-  document.addEventListener('mousemove', function(e) {
-    mx = e.clientX; my = e.clientY;
-    arrow.style.left = mx + 'px'; arrow.style.top = my + 'px';
-    checkBg(mx, my);
-  }, { passive: true });
-  (function loop() {
-    gx = lerp(gx, mx, 0.07); gy = lerp(gy, my, 0.07);
-    glow.style.left = gx + 'px'; glow.style.top = gy + 'px';
-    requestAnimationFrame(loop);
-  })();
-  document.querySelectorAll('a,button,input,select,label').forEach(function(el) {
-    el.addEventListener('mouseenter', function() { arrow.classList.add('hovering'); });
-    el.addEventListener('mouseleave', function() { arrow.classList.remove('hovering'); });
-  });
-  document.addEventListener('mouseleave', function() { arrow.style.opacity = '0'; });
-  document.addEventListener('mouseenter', function() { arrow.style.opacity = '1'; });
-})();
 
 // SCROLL TO TOP — mobile only
 (function() {
