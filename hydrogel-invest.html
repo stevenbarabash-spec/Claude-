@@ -2133,22 +2133,274 @@ nav.scrolled {
   </div>
 </section>
 
-<!-- CLOSING CTA -->
-<section id="invest" data-cbg="dark" style="background:var(--canvas);padding:120px 0;text-align:center;">
-  <div class="container">
-    <div class="closing-headline reveal">
+<!-- CLOSING CTA / QUALIFIER -->
+<section id="invest" data-cbg="dark" style="background:var(--canvas);padding:100px 0;">
+  <div class="container" style="max-width:680px;">
+
+    <div class="closing-headline reveal" style="text-align:center;margin-bottom:48px;">
       The question isn't whether the world needs it.<br>
       It's whether you invest <em>before it scales.</em>
     </div>
-    <div class="closing-input-row reveal">
-      <input type="email" class="closing-input" placeholder="Enter your email address">
-      <button class="closing-btn">Schedule a Call →</button>
-    </div>
-    <p class="legal-disclaimer reveal">
+
+    <!-- QUALIFIER CARD -->
+    <div class="qual-card reveal" id="qualCard">
+
+      <!-- STEP INDICATOR -->
+      <div class="qual-steps" id="qualSteps">
+        <div class="qual-step active" id="dot1"></div>
+        <div class="qual-step" id="dot2"></div>
+        <div class="qual-step" id="dot3"></div>
+        <div class="qual-step" id="dot4"></div>
+      </div>
+
+      <!-- STEP 1: Accredited status -->
+      <div class="qual-pane" id="step1">
+        <div class="qual-eyebrow">Step 1 of 4</div>
+        <h3 class="qual-q">Are you an accredited investor?</h3>
+        <p class="qual-hint">Per SEC Rule 501, an accredited investor has a net worth exceeding $1M (excluding primary residence) or annual income above $200K ($300K joint) for the past two years.</p>
+        <div class="qual-opts">
+          <button class="qual-opt" onclick="qualNext(1,'Yes — I meet the SEC accredited investor criteria')">Yes — I meet the criteria</button>
+          <button class="qual-opt qual-opt-no" onclick="qualDisqualify()">No — I do not qualify</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Investment range -->
+      <div class="qual-pane hidden" id="step2">
+        <div class="qual-eyebrow">Step 2 of 4</div>
+        <h3 class="qual-q">What is your investment range for this opportunity?</h3>
+        <p class="qual-hint">Minimum investment is $25,000. This is a Reg D 506(c) private placement.</p>
+        <div class="qual-opts">
+          <button class="qual-opt" onclick="qualNext(2,'$25K – $50K')">$25,000 – $50,000</button>
+          <button class="qual-opt" onclick="qualNext(2,'$50K – $100K')">$50,000 – $100,000</button>
+          <button class="qual-opt" onclick="qualNext(2,'$100K – $250K')">$100,000 – $250,000</button>
+          <button class="qual-opt" onclick="qualNext(2,'$250K+')">$250,000+</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Timeline -->
+      <div class="qual-pane hidden" id="step3">
+        <div class="qual-eyebrow">Step 3 of 4</div>
+        <h3 class="qual-q">How soon are you looking to make an investment decision?</h3>
+        <p class="qual-hint">This round is actively closing. Priority access is given to investors ready to move within 60 days.</p>
+        <div class="qual-opts">
+          <button class="qual-opt" onclick="qualNext(3,'Within 30 days')">Within 30 days</button>
+          <button class="qual-opt" onclick="qualNext(3,'30–60 days')">30–60 days</button>
+          <button class="qual-opt" onclick="qualNext(3,'60–90 days')">60–90 days</button>
+          <button class="qual-opt" onclick="qualNext(3,'Just exploring')">Just exploring for now</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Contact info -->
+      <div class="qual-pane hidden" id="step4">
+        <div class="qual-eyebrow">Step 4 of 4</div>
+        <h3 class="qual-q">Where should we send your investor materials?</h3>
+        <p class="qual-hint">You'll receive the Private Placement Memorandum and a link to schedule your investor call directly with our team.</p>
+        <div class="qual-form">
+          <div class="qual-field-row">
+            <div class="qual-field">
+              <label>First Name</label>
+              <input type="text" id="qFirstName" placeholder="John" autocomplete="given-name">
+            </div>
+            <div class="qual-field">
+              <label>Last Name</label>
+              <input type="text" id="qLastName" placeholder="Smith" autocomplete="family-name">
+            </div>
+          </div>
+          <div class="qual-field">
+            <label>Email Address</label>
+            <input type="email" id="qEmail" placeholder="john@example.com" autocomplete="email">
+          </div>
+          <div class="qual-field">
+            <label>Mobile Number</label>
+            <input type="tel" id="qPhone" placeholder="+1 (555) 000-0000" autocomplete="tel">
+          </div>
+          <button class="qual-submit" onclick="qualSubmit()">
+            <span id="qualSubmitText">Send My Materials &amp; Book a Call →</span>
+            <span id="qualSubmitLoading" style="display:none;">Submitting…</span>
+          </button>
+          <p class="qual-privacy">Your information is kept strictly confidential and is never sold or shared. You may unsubscribe at any time.</p>
+        </div>
+      </div>
+
+      <!-- DISQUALIFIED -->
+      <div class="qual-pane hidden" id="stepDisq">
+        <div style="text-align:center;padding:20px 0;">
+          <div style="font-size:2.2rem;margin-bottom:16px;">🌱</div>
+          <h3 class="qual-q" style="margin-bottom:12px;">Thank you for your interest</h3>
+          <p class="qual-hint" style="max-width:400px;margin:0 auto;">This offering is only available to accredited investors per SEC regulations. We'd love to stay in touch — follow InteliGel's journey as we grow.</p>
+          <a href="https://greenevolutiontechnologies.com" class="qual-opt" style="display:inline-block;margin-top:28px;text-decoration:none;">Learn More About InteliGel →</a>
+        </div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="qual-pane hidden" id="stepSuccess">
+        <div style="text-align:center;padding:20px 0;">
+          <div class="qual-success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3 class="qual-q" style="margin-bottom:12px;">You're qualified. Materials are on the way.</h3>
+          <p class="qual-hint" style="max-width:420px;margin:0 auto 28px;">Check your inbox — your Private Placement Memorandum will arrive within minutes. A member of our team will also reach out to schedule your investor call.</p>
+          <div class="qual-success-details">
+            <div class="qual-detail-row"><span>Status</span><strong>Accredited Investor ✓</strong></div>
+            <div class="qual-detail-row"><span>Next Step</span><strong>Check your email</strong></div>
+            <div class="qual-detail-row"><span>Response Time</span><strong>Within 24 hours</strong></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /qual-card -->
+
+    <p class="legal-disclaimer reveal" style="text-align:center;margin-top:40px;">
       This communication is for informational purposes only and does not constitute an offer to sell or a solicitation of an offer to buy securities. Any such offer or solicitation will be made only through the Private Placement Memorandum to accredited investors in compliance with applicable securities laws. Investing involves risk, including loss of principal. Past performance does not guarantee future results.
     </p>
   </div>
 </section>
+
+<style>
+/* ── QUALIFIER CARD ── */
+.qual-card {
+  background: var(--forest);
+  border: 1px solid rgba(237,232,219,0.09);
+  border-radius: 12px;
+  padding: 48px 52px;
+  position: relative;
+}
+@media (max-width: 768px) {
+  .qual-card { padding: 32px 20px; }
+}
+
+/* Step dots */
+.qual-steps {
+  display: flex; gap: 8px; margin-bottom: 36px;
+}
+.qual-step {
+  width: 28px; height: 3px; border-radius: 2px;
+  background: rgba(237,232,219,0.12);
+  transition: background 0.4s ease, width 0.4s ease;
+}
+.qual-step.active { background: var(--gold); width: 44px; }
+.qual-step.done   { background: var(--sage); }
+
+/* Panes */
+.qual-pane { animation: qualFadeIn 0.35s ease; }
+.qual-pane.hidden { display: none; }
+@keyframes qualFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.qual-eyebrow {
+  font-family: var(--f-mono); font-size: 0.62rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 14px;
+}
+.qual-q {
+  font-family: var(--f-display); font-weight: 600;
+  font-size: 1.55rem; color: var(--bone);
+  line-height: 1.25; margin-bottom: 12px;
+}
+.qual-hint {
+  font-size: 0.8rem; color: var(--bone-dim);
+  line-height: 1.65; margin-bottom: 28px;
+}
+
+/* Option buttons */
+.qual-opts { display: flex; flex-direction: column; gap: 10px; }
+.qual-opt {
+  background: rgba(237,232,219,0.05);
+  border: 1px solid rgba(237,232,219,0.14);
+  border-radius: 7px;
+  color: var(--bone);
+  font-family: var(--f-body); font-weight: 500;
+  font-size: 0.88rem;
+  padding: 15px 20px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+.qual-opt:hover {
+  background: rgba(184,147,12,0.12);
+  border-color: rgba(184,147,12,0.45);
+  transform: translateX(4px);
+}
+.qual-opt-no {
+  background: transparent;
+  border-color: rgba(237,232,219,0.07);
+  color: var(--bone-dim);
+  font-size: 0.82rem;
+}
+.qual-opt-no:hover {
+  background: rgba(237,232,219,0.04);
+  border-color: rgba(237,232,219,0.15);
+  transform: none;
+}
+
+/* Contact form */
+.qual-form { display: flex; flex-direction: column; gap: 14px; }
+.qual-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 600px) { .qual-field-row { grid-template-columns: 1fr; } }
+.qual-field { display: flex; flex-direction: column; gap: 6px; }
+.qual-field label {
+  font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--bone-dim);
+}
+.qual-field input {
+  background: rgba(237,232,219,0.06);
+  border: 1px solid rgba(237,232,219,0.14);
+  border-radius: 6px;
+  color: var(--bone);
+  font-family: var(--f-body); font-size: 0.88rem;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.qual-field input::placeholder { color: rgba(237,232,219,0.25); }
+.qual-field input:focus { border-color: var(--gold); }
+
+.qual-submit {
+  background: var(--gold);
+  color: var(--canvas);
+  font-family: var(--f-body); font-weight: 700;
+  font-size: 0.88rem; letter-spacing: 0.06em;
+  padding: 16px 24px;
+  border: none; border-radius: 7px;
+  cursor: pointer; margin-top: 6px;
+  transition: background 0.2s, transform 0.15s;
+}
+.qual-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+.qual-privacy {
+  font-size: 0.68rem; color: rgba(237,232,219,0.3);
+  text-align: center; line-height: 1.5;
+}
+
+/* Success state */
+.qual-success-icon {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: rgba(34,197,94,0.12);
+  border: 1px solid rgba(34,197,94,0.3);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+}
+.qual-success-icon svg { width: 22px; height: 22px; stroke: #22c55e; }
+
+.qual-success-details {
+  background: rgba(237,232,219,0.04);
+  border: 1px solid rgba(237,232,219,0.08);
+  border-radius: 8px;
+  padding: 20px 24px;
+  display: flex; flex-direction: column; gap: 12px;
+  max-width: 380px; margin: 0 auto;
+  text-align: left;
+}
+.qual-detail-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.82rem;
+}
+.qual-detail-row span { color: var(--bone-dim); }
+.qual-detail-row strong { color: var(--bone); font-weight: 600; }
+</style>
 
 <!-- FOOTER -->
 <footer style="background:var(--ink);padding:48px 0;">
@@ -2166,6 +2418,90 @@ nav.scrolled {
 </footer>
 
 <script>
+// ── QUALIFIER ──
+var qualAnswers = {};
+
+function qualShowStep(stepId, activeDot) {
+  document.querySelectorAll('.qual-pane').forEach(function(p){ p.classList.add('hidden'); });
+  var el = document.getElementById(stepId);
+  if (el) { el.classList.remove('hidden'); }
+
+  // Update dots
+  var dots = document.querySelectorAll('.qual-step');
+  dots.forEach(function(d, i){
+    d.classList.remove('active','done');
+    if (i < activeDot - 1) d.classList.add('done');
+    else if (i === activeDot - 1) d.classList.add('active');
+  });
+
+  // Hide dots on non-numbered steps
+  var steps = document.getElementById('qualSteps');
+  if (steps) steps.style.display = (stepId === 'stepDisq' || stepId === 'stepSuccess') ? 'none' : 'flex';
+}
+
+function qualNext(step, answer) {
+  qualAnswers['step' + step] = answer;
+  qualShowStep('step' + (step + 1), step + 1);
+  // Scroll card into view smoothly
+  var card = document.getElementById('qualCard');
+  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function qualDisqualify() {
+  qualShowStep('stepDisq', 1);
+}
+
+function qualSubmit() {
+  var first = document.getElementById('qFirstName').value.trim();
+  var last  = document.getElementById('qLastName').value.trim();
+  var email = document.getElementById('qEmail').value.trim();
+  var phone = document.getElementById('qPhone').value.trim();
+
+  if (!first || !email || !phone) {
+    alert('Please fill in your name, email, and phone number.');
+    return;
+  }
+  var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if (!emailOk) { alert('Please enter a valid email address.'); return; }
+
+  // Show loading state
+  document.getElementById('qualSubmitText').style.display = 'none';
+  document.getElementById('qualSubmitLoading').style.display = 'inline';
+
+  // Build GHL webhook payload — replace WEBHOOK_URL with your GHL webhook
+  var payload = {
+    firstName: first,
+    lastName: last,
+    email: email,
+    phone: phone,
+    accredited: qualAnswers['step1'] || '',
+    investmentRange: qualAnswers['step2'] || '',
+    timeline: qualAnswers['step3'] || '',
+    source: 'investininteligel.com',
+    tags: ['investor-lead','pre-series-a']
+  };
+
+  var WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL_HERE';
+
+  if (WEBHOOK_URL === 'YOUR_GHL_WEBHOOK_URL_HERE') {
+    // Dev mode: skip webhook, show success
+    setTimeout(function(){ qualShowStep('stepSuccess', 4); }, 600);
+    return;
+  }
+
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(function(){ qualShowStep('stepSuccess', 4); })
+  .catch(function(){
+    // Still show success to user — log error silently
+    qualShowStep('stepSuccess', 4);
+    console.error('Webhook failed — check GHL endpoint');
+  });
+}
+
 // FAQ ACCORDION
 function toggleFaq(btn) {
   var item = btn.closest('.faq-item');
