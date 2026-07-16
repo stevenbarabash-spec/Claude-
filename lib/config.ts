@@ -1,7 +1,7 @@
 // Personal configuration — edit these to make the OS yours.
 export const config = {
   brand: "WARROOM",
-  version: "v2.1.14",
+  version: "v2.1.15",
   owner: {
     name: "Steven",
     fullName: "Steven Barabash",
@@ -24,7 +24,7 @@ export const config = {
     { id: "plan-tomorrow", label: "Plan tomorrow", category: "System" },
   ],
   nutrition: {
-    kcalTarget: 2000,
+    kcalTarget: 1750,
     proteinTarget: 150, // 600 kcal
     carbsTarget: 200, // 800 kcal
     fatTarget: 65, // ~585 kcal

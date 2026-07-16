@@ -11,6 +11,12 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.15",
+    date: "2026-07-15",
+    title: "Calorie target → 1,750",
+    notes: ["Daily calorie target changed from 2,000 to 1,750 kcal (Nutrition card, Health averages, and Jarvis)."],
+  },
+  {
     version: "v2.1.14",
     date: "2026-07-15",
     title: "Client task times + voice client-matching",
