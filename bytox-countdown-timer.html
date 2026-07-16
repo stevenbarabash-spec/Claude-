@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bytox Countdown Timer</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #080a14;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  /* ── WIDGET ROOT ── paste this section into Shopify */
+  .bytox-countdown {
+    background: #0d1020;
+    border: 1px solid rgba(200, 16, 46, 0.3);
+    border-radius: 12px;
+    padding: 28px 32px 24px;
+    text-align: center;
+    max-width: 560px;
+    width: 100%;
+  }
+
+  .bytox-countdown__label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .bytox-countdown__headline {
+    font-size: 14px;
+    font-weight: 900;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+
+  .bytox-countdown__headline span {
+    color: #c8102e;
+  }
+
+  .bytox-countdown__units {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+
+  .bytox-countdown__unit {
+    flex: 1;
+    max-width: 110px;
+  }
+
+  .bytox-countdown__number {
+    background: #080a14;
+    border: 1px solid rgba(200,16,46,0.25);
+    border-radius: 8px;
+    padding: 16px 8px 12px;
+    font-size: 48px;
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -1px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bytox-countdown__number::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: rgba(200,16,46,0.2);
+  }
+
+  .bytox-countdown__unit-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  .bytox-countdown__sep {
+    font-size: 36px;
+    font-weight: 900;
+    color: rgba(200,16,46,0.4);
+    padding-top: 8px;
+    flex: 0;
+    align-self: flex-start;
+  }
+
+  .bytox-countdown__bar {
+    height: 3px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .bytox-countdown__bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #9b0020, #c8102e);
+    border-radius: 2px;
+    transition: width 1s linear;
+  }
+
+  .bytox-countdown__cta {
+    display: inline-block;
+    background: linear-gradient(135deg, #9b0020, #c8102e);
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 900;
+    padding: 14px 36px;
+    border-radius: 50px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+  }
+
+  .bytox-countdown__fine {
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Expired state */
+  .bytox-countdown--expired .bytox-countdown__number {
+    color: rgba(255,255,255,0.2);
+  }
+  .bytox-countdown--expired .bytox-countdown__headline {
+    color: rgba(255,255,255,0.4);
+  }
+
+  @media (max-width: 480px) {
+    .bytox-countdown__number { font-size: 36px; padding: 12px 4px 10px; }
+    .bytox-countdown__sep { font-size: 28px; }
+    .bytox-countdown { padding: 24px 16px 20px; }
+    .bytox-countdown__units { gap: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     BYTOX COUNTDOWN TIMER WIDGET
+     Copy everything inside this comment block into Shopify:
+     Customize > Add Section > Custom HTML
+     ============================================================ -->
+
+<div class="bytox-countdown" id="bytoxCountdown">
+  <p class="bytox-countdown__label">250 Years of America Sale</p>
+  <p class="bytox-countdown__headline">Sale ends in <span id="bytoxExpiredText">...</span></p>
+
+  <div class="bytox-countdown__units">
+    <div class="bytox-countdown__unit">
+      <div class="bytox-countdown__number" id="cdDays">00</div>
+      <div class="bytox-countdown__unit-label">Days</div>
+    </div>
+    <div class="bytox-countdown__sep">:</div>
+    <div class="bytox-countdown__unit">
+      <div class="bytox-countdown__number" id="cdHours">00</div>
+      <div class="bytox-countdown__unit-label">Hours</div>
+    </div>
+    <div class="bytox-countdown__sep">:</div>
+    <div class="bytox-countdown__unit">
+      <div class="bytox-countdown__number" id="cdMins">00</div>
+      <div class="bytox-countdown__unit-label">Minutes</div>
+    </div>
+    <div class="bytox-countdown__sep">:</div>
+    <div class="bytox-countdown__unit">
+      <div class="bytox-countdown__number" id="cdSecs">00</div>
+      <div class="bytox-countdown__unit-label">Seconds</div>
+    </div>
+  </div>
+
+  <div class="bytox-countdown__bar">
+    <div class="bytox-countdown__bar-fill" id="cdBar" style="width:0%"></div>
+  </div>
+
+  <a href="https://bytox.com" class="bytox-countdown__cta">SHOP THE SALE →</a>
+  <p class="bytox-countdown__fine">Buy 1 Get 2 Free · Auto-applied · No code needed</p>
+</div>
+
+<script>
+(function () {
+  // ── CONFIGURATION ────────────────────────────────────────────
+  // Sale end: Saturday July 19, 2026 at midnight Eastern Time (UTC-4)
+  // = Sunday July 20, 2026 04:00:00 UTC
+  var SALE_END_UTC = new Date('2026-07-20T04:00:00Z').getTime();
+
+  // Total sale duration for the progress bar (25 days from June 25 launch)
+  var SALE_START_UTC = new Date('2026-06-25T04:00:00Z').getTime();
+  // ─────────────────────────────────────────────────────────────
+
+  var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+
+  var elDays  = document.getElementById('cdDays');
+  var elHours = document.getElementById('cdHours');
+  var elMins  = document.getElementById('cdMins');
+  var elSecs  = document.getElementById('cdSecs');
+  var elBar   = document.getElementById('cdBar');
+  var elText  = document.getElementById('bytoxExpiredText');
+  var elRoot  = document.getElementById('bytoxCountdown');
+
+  function tick() {
+    var now  = Date.now();
+    var diff = SALE_END_UTC - now;
+
+    if (diff <= 0) {
+      // Sale has ended
+      elDays.textContent  = '00';
+      elHours.textContent = '00';
+      elMins.textContent  = '00';
+      elSecs.textContent  = '00';
+      elBar.style.width   = '100%';
+      elText.textContent  = 'Sale Ended';
+      elRoot.classList.add('bytox-countdown--expired');
+      return; // stop ticking
+    }
+
+    var totalSecs = Math.floor(diff / 1000);
+    var d = Math.floor(totalSecs / 86400);
+    var h = Math.floor((totalSecs % 86400) / 3600);
+    var m = Math.floor((totalSecs % 3600) / 60);
+    var s = totalSecs % 60;
+
+    elDays.textContent  = pad(d);
+    elHours.textContent = pad(h);
+    elMins.textContent  = pad(m);
+    elSecs.textContent  = pad(s);
+
+    // Progress bar: 0% = sale just started, 100% = sale ended
+    var totalDuration = SALE_END_UTC - SALE_START_UTC;
+    var elapsed       = now - SALE_START_UTC;
+    var pct           = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
+    elBar.style.width = pct.toFixed(2) + '%';
+
+    // Headline text
+    if (d > 0) {
+      elText.textContent = d + (d === 1 ? ' Day' : ' Days');
+    } else if (h > 0) {
+      elText.textContent = h + (h === 1 ? ' Hour' : ' Hours');
+    } else if (m > 0) {
+      elText.textContent = m + ' Minutes';
+    } else {
+      elText.textContent = s + ' Seconds';
+    }
+
+    setTimeout(tick, 1000);
+  }
+
+  tick();
+})();
+</script>
+
+<!-- ============================================================
+     END WIDGET
+     ============================================================ -->
+
+</body>
+</html>
