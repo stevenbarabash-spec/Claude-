@@ -139,6 +139,7 @@ export interface DayTask {
   fromWork?: boolean; // logged here by completing a Currently Working On item
   routineId?: string; // materialized from a recurring Routine
   carriedFrom?: string; // rolled forward from this earlier date, undone → "overdue"
+  ref?: string; // source key (e.g. "client:<id>") — dedups repeated pulls into today
 }
 
 // A recurring task that auto-appears on its weekdays (e.g. trash Mon/Thu 9am).

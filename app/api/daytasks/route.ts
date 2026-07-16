@@ -26,16 +26,22 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const body = (await req.json()) as { date?: string; title?: string; time?: string | null };
+  const body = (await req.json()) as { date?: string; title?: string; time?: string | null; ref?: string };
   const date = body.date ?? "";
   const title = (body.title ?? "").trim();
   if (!DATE_RE.test(date) || !title) {
     return NextResponse.json({ error: "date + title required" }, { status: 400 });
   }
   const time = body.time && TIME_RE.test(body.time) ? body.time : null;
+  const ref = typeof body.ref === "string" && body.ref.trim() ? body.ref.trim() : undefined;
   const before = await readTasks(date);
+  // Dedup: pulling the same source task (client/CRM) into a day twice is a no-op.
+  if (ref) {
+    const existing = before.find((t) => t.ref === ref);
+    if (existing) return NextResponse.json({ task: existing, tasks: before, deduped: true });
+  }
   const tasks = [...before];
-  const task: DayTask = { id: crypto.randomUUID(), title, time, done: false };
+  const task: DayTask = { id: crypto.randomUUID(), title, time, done: false, ...(ref ? { ref } : {}) };
   tasks.push(task);
   tasks.sort((a, b) => (a.time ?? "99:99").localeCompare(b.time ?? "99:99"));
   await getStore().mergeLogNotes(date, { day_tasks: tasks });

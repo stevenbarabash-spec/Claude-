@@ -107,14 +107,14 @@ export function DayTasks() {
 
   const changed = () => window.dispatchEvent(new CustomEvent("jarvis:capture"));
 
-  async function addTask(taskTitle: string, timeOverride?: string | null) {
+  async function addTask(taskTitle: string, timeOverride?: string | null, ref?: string) {
     const t = taskTitle.trim();
     if (!t || busy) return;
     setBusy(true);
     try {
       const r = await api<{ tasks: DayTask[] }>("/api/daytasks", {
         method: "POST",
-        body: JSON.stringify({ date: today, title: t, time: timeOverride ?? time ?? null }),
+        body: JSON.stringify({ date: today, title: t, time: timeOverride ?? time ?? null, ...(ref ? { ref } : {}) }),
       });
       setTasks(r.tasks);
       setTitle("");
@@ -135,7 +135,7 @@ export function DayTasks() {
   // Pull an existing task into today's plan (keeps the client for context and
   // its clock time, if the source task had one).
   function pull(hit: SearchHit) {
-    void addTask(hit.who ? `${hit.title} · ${hit.who}` : hit.title, hit.when ?? null);
+    void addTask(hit.who ? `${hit.title} · ${hit.who}` : hit.title, hit.when ?? null, hit.key);
   }
 
   async function toggle(task: DayTask) {

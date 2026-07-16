@@ -11,6 +11,22 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.17",
+    date: "2026-07-16",
+    title: "No duplicate day tasks + add-to-today from client board",
+    notes: [
+      "Pulling the same client/CRM task into Tasks · Today no longer creates duplicates — it's deduped by source, so repeated adds (or a refresh) are a no-op.",
+      "New ＋ today button on every client-board task adds it straight to Section 10, carrying its time.",
+      "Manual tasks you type yourself are unaffected — you can still add two with the same name on purpose.",
+    ],
+  },
+  {
+    version: "v2.1.16",
+    date: "2026-07-16",
+    title: "Hotfix: overdue-task crash",
+    notes: ["Fixed a client-side crash that could blank the home page when an overdue task with no set time rolled into today."],
+  },
+  {
     version: "v2.1.15",
     date: "2026-07-15",
     title: "Calorie target → 1,750",

@@ -83,7 +83,7 @@ export function NextUp() {
     setStarting(it.id);
     await api("/api/daytasks", {
       method: "POST",
-      body: JSON.stringify({ date: clientDateKey(), title: it.who ? `${it.title} · ${it.who}` : it.title, time: null }),
+      body: JSON.stringify({ date: clientDateKey(), title: it.who ? `${it.title} · ${it.who}` : it.title, time: it.when ?? null, ref: it.id }),
     }).catch(() => {});
     setStarting(null);
     setResult((r) => (r ? { ...r, items: r.items.filter((x) => x.id !== it.id) } : r));

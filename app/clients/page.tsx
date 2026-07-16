@@ -321,6 +321,22 @@ function ProjectCard({
     onPatch({ tasks: p.tasks.map((t) => (t.id === taskId ? { ...t, time: time || null } : t)) });
   }
 
+  const [addedId, setAddedId] = useState<string | null>(null);
+  async function addToToday(t: ClientTask) {
+    setAddedId(t.id);
+    await api("/api/daytasks", {
+      method: "POST",
+      body: JSON.stringify({
+        date: clientDateKey(),
+        title: `${t.title} · ${clientOf(p.name)}`,
+        time: t.time ?? null,
+        ref: `client:${t.id}`, // dedups against Next Up / repeated adds
+      }),
+    }).catch(() => {});
+    window.dispatchEvent(new CustomEvent("jarvis:capture"));
+    setTimeout(() => setAddedId((v) => (v === t.id ? null : v)), 2000);
+  }
+
   async function moveTask(taskId: string, toProjectId: string) {
     setMovingId(null);
     await api("/api/clients/move", {
@@ -446,6 +462,17 @@ function ProjectCard({
                 >
                   {t.due ? shortDate(t.due) : "＋ due date"}
                   {t.time ? ` · ${fmtClock(t.time)}` : ""}
+                </button>
+                <button
+                  className="btn small"
+                  title="Add to today's tasks (Section 10)"
+                  style={{ padding: "1px 7px", fontSize: 11, lineHeight: 1.4, flexShrink: 0, color: addedId === t.id ? "var(--accent)" : undefined, borderColor: addedId === t.id ? "var(--accent)" : undefined }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    void addToToday(t);
+                  }}
+                >
+                  {addedId === t.id ? "✓ added" : "＋ today"}
                 </button>
                 <button
                   className="btn small"
