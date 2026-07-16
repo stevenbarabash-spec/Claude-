@@ -41,10 +41,29 @@ export default function ClientsPage() {
   const [undo, setUndo] = useState<{ projectId: string; task: ClientTask } | null>(null);
   const today = clientDateKey();
 
+  // Map of ref ("client:<taskId>") → the day-task id it created, for tasks
+  // already on today's Section 10 — so the board can show them as added.
+  const [todayRefs, setTodayRefs] = useState<Record<string, string>>({});
+  function loadToday() {
+    api<{ tasks: { id: string; ref?: string }[] }>(`/api/daytasks?date=${clientDateKey()}`)
+      .then((r) => {
+        const m: Record<string, string> = {};
+        for (const t of r.tasks) if (t.ref && t.ref.startsWith("client:")) m[t.ref] = t.id;
+        setTodayRefs(m);
+      })
+      .catch(() => {});
+  }
+
   function load() {
     api<{ projects: ClientProject[] }>("/api/clients").then((r) => setProjects(r.projects)).catch(() => {});
   }
-  useEffect(load, []);
+  useEffect(() => {
+    load();
+    loadToday();
+    const onCap = () => loadToday();
+    window.addEventListener("jarvis:capture", onCap);
+    return () => window.removeEventListener("jarvis:capture", onCap);
+  }, []);
 
   async function patch(id: string, body: Partial<ClientProject>) {
     setProjects((ps) => (ps ?? []).map((p) => (p.id === id ? { ...p, ...body } : p)));
@@ -204,7 +223,7 @@ export default function ClientsPage() {
         <div className="stack" style={{ gap: 14 }}>
           <div className="label">Projects</div>
           {projects.map((p, idx) => (
-            <ProjectCard key={p.id} p={p} idx={idx} today={today} allProjects={projects} onPatch={(b) => patch(p.id, b)} onToggleTask={(t) => toggleTask(p, t)} onReload={load} />
+            <ProjectCard key={p.id} p={p} idx={idx} today={today} allProjects={projects} todayRefs={todayRefs} onReloadToday={loadToday} onPatch={(b) => patch(p.id, b)} onToggleTask={(t) => toggleTask(p, t)} onReload={load} />
           ))}
           {projects.length === 0 && <div className="panel faint" style={{ textAlign: "center", padding: 30 }}>No projects yet.</div>}
         </div>
@@ -294,6 +313,8 @@ function ProjectCard({
   idx,
   today,
   allProjects,
+  todayRefs,
+  onReloadToday,
   onPatch,
   onToggleTask,
   onReload,
@@ -302,6 +323,8 @@ function ProjectCard({
   idx: number;
   today: string;
   allProjects: ClientProject[];
+  todayRefs: Record<string, string>;
+  onReloadToday: () => void;
   onPatch: (body: Partial<ClientProject>) => void;
   onToggleTask: (t: ClientTask) => void;
   onReload: () => void;
@@ -321,20 +344,23 @@ function ProjectCard({
     onPatch({ tasks: p.tasks.map((t) => (t.id === taskId ? { ...t, time: time || null } : t)) });
   }
 
-  const [addedId, setAddedId] = useState<string | null>(null);
-  async function addToToday(t: ClientTask) {
-    setAddedId(t.id);
-    await api("/api/daytasks", {
-      method: "POST",
-      body: JSON.stringify({
-        date: clientDateKey(),
-        title: `${t.title} · ${clientOf(p.name)}`,
-        time: t.time ?? null,
-        ref: `client:${t.id}`, // dedups against Next Up / repeated adds
-      }),
-    }).catch(() => {});
+  // Toggle a task on/off today's Section 10. Green ✓ when already added.
+  async function toggleToday(t: ClientTask) {
+    const ref = `client:${t.id}`;
+    const existingId = todayRefs[ref];
+    if (existingId) {
+      await api("/api/daytasks", {
+        method: "DELETE",
+        body: JSON.stringify({ date: clientDateKey(), id: existingId }),
+      }).catch(() => {});
+    } else {
+      await api("/api/daytasks", {
+        method: "POST",
+        body: JSON.stringify({ date: clientDateKey(), title: `${t.title} · ${clientOf(p.name)}`, time: t.time ?? null, ref }),
+      }).catch(() => {});
+    }
+    onReloadToday();
     window.dispatchEvent(new CustomEvent("jarvis:capture"));
-    setTimeout(() => setAddedId((v) => (v === t.id ? null : v)), 2000);
   }
 
   async function moveTask(taskId: string, toProjectId: string) {
@@ -463,17 +489,30 @@ function ProjectCard({
                   {t.due ? shortDate(t.due) : "＋ due date"}
                   {t.time ? ` · ${fmtClock(t.time)}` : ""}
                 </button>
-                <button
-                  className="btn small"
-                  title="Add to today's tasks (Section 10)"
-                  style={{ padding: "1px 7px", fontSize: 11, lineHeight: 1.4, flexShrink: 0, color: addedId === t.id ? "var(--accent)" : undefined, borderColor: addedId === t.id ? "var(--accent)" : undefined }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    void addToToday(t);
-                  }}
-                >
-                  {addedId === t.id ? "✓ added" : "＋ today"}
-                </button>
+                {(() => {
+                  const onToday = Boolean(todayRefs[`client:${t.id}`]);
+                  return (
+                    <button
+                      className="btn small"
+                      title={onToday ? "On today's tasks — click to remove" : "Add to today's tasks (Section 10)"}
+                      style={{
+                        padding: "1px 7px",
+                        fontSize: 11,
+                        lineHeight: 1.4,
+                        flexShrink: 0,
+                        color: onToday ? "var(--accent)" : undefined,
+                        borderColor: onToday ? "var(--accent)" : undefined,
+                        background: onToday ? "var(--accent-dim)" : undefined,
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        void toggleToday(t);
+                      }}
+                    >
+                      {onToday ? "✓ today" : "＋ today"}
+                    </button>
+                  );
+                })()}
                 <button
                   className="btn small"
                   title="Move to another project"

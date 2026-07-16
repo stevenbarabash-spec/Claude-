@@ -11,6 +11,15 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.19",
+    date: "2026-07-16",
+    title: "Client board shows what's already on today",
+    notes: [
+      "On the client board, a task already added to Tasks · Today shows a green ✓ today instead of ＋ today.",
+      "It's a toggle — click the green ✓ to remove it from today; click ＋ to add it. State reflects Section 10 in real time.",
+    ],
+  },
+  {
     version: "v2.1.18",
     date: "2026-07-16",
     title: "Layout fits the screen (left-aligned)",
