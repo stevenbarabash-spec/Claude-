@@ -588,6 +588,121 @@ nav.scrolled {
 .closing-btn:hover { background: var(--gold-light); }
 .legal-disclaimer { font-size: 0.7rem; color: var(--bone-dim); max-width: 560px; margin: 0 auto; line-height: 1.6; opacity: 0.6; }
 
+/* =====================================================
+   LIFECYCLE SECTION
+   ===================================================== */
+.lc-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid rgba(237,232,219,0.12);
+  margin-bottom: 48px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.lc-tabs::-webkit-scrollbar { display: none; }
+.lc-tab {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: rgba(237,232,219,0.45);
+  font-family: var(--f-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 28px 16px;
+  cursor: pointer;
+  transition: color 0.25s, border-color 0.25s;
+  margin-bottom: -1px;
+}
+.lc-tab:hover { color: var(--bone); }
+.lc-tab.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+
+.lc-panels { position: relative; }
+.lc-panel {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  animation: lcFadeIn 0.4s ease;
+}
+.lc-panel.active { display: grid; }
+@keyframes lcFadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+.lc-media {
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  background: var(--forest);
+}
+.lc-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.lc-media-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--stem), var(--forest));
+  border: 1px solid rgba(184,147,12,0.2);
+}
+.lc-year-visual { text-align: center; padding: 40px; }
+.lc-year-icon { font-size: 4rem; margin-bottom: 20px; }
+.lc-year-headline { font-family: var(--f-display); font-size: 2rem; font-weight: 300; color: var(--bone); line-height: 1.25; }
+
+.lc-badge {
+  display: inline-block;
+  background: rgba(184,147,12,0.15);
+  border: 1px solid rgba(184,147,12,0.35);
+  color: var(--gold-light);
+  font-family: var(--f-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 50px;
+  margin-bottom: 20px;
+}
+.lc-title {
+  font-family: var(--f-display);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 300;
+  color: var(--bone);
+  margin: 0 0 16px;
+  line-height: 1.15;
+}
+.lc-body {
+  color: var(--bone-dim);
+  font-size: 0.95rem;
+  line-height: 1.75;
+  margin: 0 0 32px;
+}
+.lc-stat-row {
+  display: flex;
+  gap: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(237,232,219,0.1);
+}
+.lc-stat { display: flex; flex-direction: column; gap: 4px; }
+.lc-stat-num {
+  font-family: var(--f-mono);
+  font-size: 1.5rem;
+  color: var(--gold-light);
+  line-height: 1;
+}
+.lc-stat-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(237,232,219,0.4);
+}
+
+@media (max-width: 640px) {
+  .lc-panel { grid-template-columns: 1fr; gap: 28px; }
+  .lc-tab { padding: 12px 16px 14px; font-size: 0.68rem; }
+  .lc-media { aspect-ratio: 16/9; }
+  .lc-title { font-size: 1.6rem; }
+  .lc-stat-num { font-size: 1.2rem; }
+}
+
 /* FOOTER */
 .footer-inner { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
 .footer-brand { font-family: var(--f-display); font-weight: 600; font-size: 1.2rem; color: var(--bone-dim); }
@@ -1314,6 +1429,131 @@ nav.scrolled {
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- LIFECYCLE SECTION -->
+<section id="lifecycle" data-cbg="dark" style="background:var(--canvas);padding:100px 0;overflow:hidden;">
+  <div class="container">
+    <div class="section-head" style="text-align:center;margin-bottom:56px;">
+      <p class="eyebrow">Product Performance</p>
+      <h2 class="display-sm">InteliGel® <em style="font-style:italic;color:var(--gold-light);">Lifecycle &amp; Performance</em></h2>
+      <p style="color:var(--bone-dim);max-width:560px;margin:16px auto 0;font-size:0.95rem;line-height:1.7;">From dry granule to living soil reservoir — watch InteliGel transform the field over a full growing season.</p>
+    </div>
+
+    <!-- TAB NAV -->
+    <div class="lc-tabs" role="tablist">
+      <button class="lc-tab active" data-tab="lc-h6"   role="tab" aria-selected="true">Hour 6</button>
+      <button class="lc-tab"        data-tab="lc-d2"   role="tab">Day 2</button>
+      <button class="lc-tab"        data-tab="lc-m1"   role="tab">Month 1</button>
+      <button class="lc-tab"        data-tab="lc-m2"   role="tab">Month 2</button>
+      <button class="lc-tab"        data-tab="lc-m4"   role="tab">Month 4</button>
+      <button class="lc-tab"        data-tab="lc-y1"   role="tab">Year 1</button>
+    </div>
+
+    <!-- PANELS -->
+    <div class="lc-panels">
+
+      <!-- Hour 6 -->
+      <div class="lc-panel active" id="lc-h6">
+        <div class="lc-media">
+          <img src="https://assets.cdn.filesafe.space/IUFCbHtG5zmLcNxfm2Ke/media/6a5849b1524a3ec4c6fc3ecb.gif" alt="InteliGel full activation at hour 6" loading="lazy">
+        </div>
+        <div class="lc-copy">
+          <div class="lc-badge">Hour 6</div>
+          <h3 class="lc-title">Full Activation</h3>
+          <p class="lc-body">In just six hours, dry InteliGel® granules absorb up to 400× their weight in water — transforming into a high-capacity gel reservoir ready to nourish crops on demand.</p>
+          <div class="lc-stat-row">
+            <div class="lc-stat"><span class="lc-stat-num">400×</span><span class="lc-stat-label">Water absorption</span></div>
+            <div class="lc-stat"><span class="lc-stat-num">6 hrs</span><span class="lc-stat-label">Full activation</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 2 -->
+      <div class="lc-panel" id="lc-d2">
+        <div class="lc-media">
+          <img src="https://assets.cdn.filesafe.space/IUFCbHtG5zmLcNxfm2Ke/media/6a5849b11a0f04805080373f.gif" alt="InteliGel structural stability at day 2" loading="lazy">
+        </div>
+        <div class="lc-copy">
+          <div class="lc-badge">Day 2</div>
+          <h3 class="lc-title">Structural Stability</h3>
+          <p class="lc-body">By day two, InteliGel® reaches peak structural integrity. Even under soil pressure, the gel matrix holds firm — delivering a steady, consistent release of hydration directly to the root zone.</p>
+          <div class="lc-stat-row">
+            <div class="lc-stat"><span class="lc-stat-num">48 hrs</span><span class="lc-stat-label">Peak stability</span></div>
+            <div class="lc-stat"><span class="lc-stat-num">Zero</span><span class="lc-stat-label">Leaching</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Month 1 -->
+      <div class="lc-panel" id="lc-m1">
+        <div class="lc-media">
+          <img src="https://assets.cdn.filesafe.space/IUFCbHtG5zmLcNxfm2Ke/media/6a5849b1baf5f6da407dbc1d.jpg" alt="InteliGel soil integration at month 1" loading="lazy">
+        </div>
+        <div class="lc-copy">
+          <div class="lc-badge">Month 1</div>
+          <h3 class="lc-title">Soil Integration</h3>
+          <p class="lc-body">InteliGel® is now fully integrated with the surrounding soil structure. The gel creates a breathable matrix that improves aeration while locking moisture exactly where plant roots need it most.</p>
+          <div class="lc-stat-row">
+            <div class="lc-stat"><span class="lc-stat-num">50%</span><span class="lc-stat-label">Less irrigation</span></div>
+            <div class="lc-stat"><span class="lc-stat-num">+28%</span><span class="lc-stat-label">Root density</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Month 2 -->
+      <div class="lc-panel" id="lc-m2">
+        <div class="lc-media">
+          <img src="https://assets.cdn.filesafe.space/IUFCbHtG5zmLcNxfm2Ke/media/6a5849b29c9b37b5fdfa1dbe.jpg" alt="InteliGel sustained equilibrium at month 2" loading="lazy">
+        </div>
+        <div class="lc-copy">
+          <div class="lc-badge">Month 2</div>
+          <h3 class="lc-title">Sustained Equilibrium</h3>
+          <p class="lc-body">Fields treated with InteliGel® maintain consistent moisture levels even under mid-season heat stress. Crops show visibly stronger canopy and uniform row coverage compared to untreated plots.</p>
+          <div class="lc-stat-row">
+            <div class="lc-stat"><span class="lc-stat-num">3×</span><span class="lc-stat-label">Drought resilience</span></div>
+            <div class="lc-stat"><span class="lc-stat-num">+41%</span><span class="lc-stat-label">Canopy coverage</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Month 4 -->
+      <div class="lc-panel" id="lc-m4">
+        <div class="lc-media">
+          <img src="https://assets.cdn.filesafe.space/IUFCbHtG5zmLcNxfm2Ke/media/6a5849b11a0f04805080373a.jpg" alt="InteliGel optimal root health at month 4" loading="lazy">
+        </div>
+        <div class="lc-copy">
+          <div class="lc-badge">Month 4</div>
+          <h3 class="lc-title">Optimal Root Health</h3>
+          <p class="lc-body">Root systems in InteliGel®-treated soil are visibly more robust and extensive. The gel continues releasing stored moisture through dry cycles, producing superior crop resilience and yield potential heading into harvest.</p>
+          <div class="lc-stat-row">
+            <div class="lc-stat"><span class="lc-stat-num">+79%</span><span class="lc-stat-label">Root biomass</span></div>
+            <div class="lc-stat"><span class="lc-stat-num">280%</span><span class="lc-stat-label">Yield improvement</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Year 1 -->
+      <div class="lc-panel" id="lc-y1">
+        <div class="lc-media lc-media-text">
+          <div class="lc-year-visual">
+            <div class="lc-year-icon">🌾</div>
+            <div class="lc-year-headline">One Full Season.<br>Proven Results.</div>
+          </div>
+        </div>
+        <div class="lc-copy">
+          <div class="lc-badge">Year 1</div>
+          <h3 class="lc-title">Season-Long ROI</h3>
+          <p class="lc-body">After a full growing season, InteliGel®-treated fields show measurable, bankable results: higher yields, dramatically lower water bills, and soil that is healthier at the end of the season than the beginning.</p>
+          <div class="lc-stat-row">
+            <div class="lc-stat"><span class="lc-stat-num">$847</span><span class="lc-stat-label">Saved per acre</span></div>
+            <div class="lc-stat"><span class="lc-stat-num">280%</span><span class="lc-stat-label">Average ROI</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /lc-panels -->
   </div>
 </section>
 
@@ -2712,6 +2952,22 @@ function toggleFaq(btn) {
   }, { passive: true });
   btn.addEventListener('click', function() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+
+// Lifecycle tabs
+(function(){
+  var tabs = document.querySelectorAll('.lc-tab');
+  var panels = document.querySelectorAll('.lc-panel');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){ t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+      panels.forEach(function(p){ p.classList.remove('active'); });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected','true');
+      var target = document.getElementById(tab.getAttribute('data-tab'));
+      if(target) target.classList.add('active');
+    });
   });
 })();
 </script>
