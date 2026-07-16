@@ -366,7 +366,8 @@ export function DayTasks() {
                     </span>
                   ) : late ? (
                     <>
-                      <span className="chip hot">{fmt12(t.time!)} · overdue</span>
+                      {/* Carried tasks may have no time → guard fmt12 against null. */}
+                      <span className="chip hot">{t.time ? `${fmt12(t.time)} · ` : ""}overdue</span>
                       <button
                         className="btn small"
                         style={{ color: "var(--hot)", borderColor: "var(--hot)" }}
