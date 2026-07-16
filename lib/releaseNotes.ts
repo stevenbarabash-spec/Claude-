@@ -11,6 +11,15 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.18",
+    date: "2026-07-16",
+    title: "Layout fits the screen (left-aligned)",
+    notes: [
+      "The dashboard is now left-aligned and the right-hand column fits on normal screens — no more widening the window to see Next Up / Nutrition / Goals.",
+      "Gentler desktop zoom and a wrap-safe top nav, so there's no horizontal scroll from ~1180px up.",
+    ],
+  },
+  {
     version: "v2.1.17",
     date: "2026-07-16",
     title: "No duplicate day tasks + add-to-today from client board",
