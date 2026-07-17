@@ -17,52 +17,114 @@
   .cardphoto.ph{display:grid;place-items:center;background:linear-gradient(135deg,rgba(47,107,255,.18),rgba(255,61,139,.14));border:1px dashed rgba(255,255,255,.22);color:var(--muted);font-size:.82rem;font-weight:600}
   @media(prefers-reduced-motion:reduce){.flip-inner{transition:none}}
 
-  /* super-charged electric border on the featured (Custom) card */
-  .elec{filter:drop-shadow(0 0 6px rgba(150,210,255,.95)) drop-shadow(0 0 16px rgba(47,107,255,.65)) drop-shadow(0 0 34px rgba(34,211,238,.4))}
-  .elec .base{stroke:url(#eg);stroke-width:1.6;opacity:.6}
-  .elec .bolt{stroke:#cdebff;stroke-width:2.1;filter:url(#electric2);animation:flick 2.4s steps(2,end) infinite}
-  .elec .bolt2{stroke:url(#eg);stroke-width:3.6;opacity:.7;filter:url(#electric2b);animation:flick2 1.5s steps(3,end) infinite}
-  @keyframes flick{0%,100%{opacity:.95}44%{opacity:.55}46%{opacity:1}68%{opacity:.8}}
-  @keyframes flick2{0%,100%{opacity:.5}28%{opacity:.9}31%{opacity:.3}62%{opacity:.7}}
-  .feat .glowpulse{box-shadow:0 0 52px 6px rgba(47,107,255,.5),0 0 120px 22px rgba(34,211,238,.3);animation:pulse 2.2s ease-in-out infinite}
+  /* electric border on the featured (Custom) card — sparking, but not aggressive */
+  .elec{filter:drop-shadow(0 0 5px rgba(150,210,255,.55)) drop-shadow(0 0 14px rgba(47,107,255,.38))}
+  .elec .base{stroke:url(#eg);stroke-width:1.5;opacity:.55}
+  .elec .bolt{stroke:#cdebff;stroke-width:1.6;filter:url(#electric2);animation:flick 3.4s steps(2,end) infinite}
+  .elec .bolt2{stroke:url(#eg);stroke-width:2.4;opacity:.4;filter:url(#electric2b);animation:flick2 2.3s steps(3,end) infinite}
+  @keyframes flick{0%,100%{opacity:.85}44%{opacity:.6}46%{opacity:.95}68%{opacity:.75}}
+  @keyframes flick2{0%,100%{opacity:.35}28%{opacity:.6}31%{opacity:.25}62%{opacity:.5}}
+  .feat .glowpulse{box-shadow:0 0 36px 4px rgba(47,107,255,.35),0 0 90px 16px rgba(34,211,238,.18);animation:pulse 2.6s ease-in-out infinite}
   @media(prefers-reduced-motion:reduce){.elec .bolt,.elec .bolt2{animation:none;filter:url(#electric2)}}
 
   /* auto-scrolling website previews (swap each .page for a full-page screenshot img when available) */
   .examples{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
   @media(max-width:900px){.examples{grid-template-columns:1fr}}
   .scrollwin{height:300px;overflow:hidden;position:relative;background:#0a0812}
-  .scrollwin .page{display:flex;flex-direction:column;gap:12px;padding:12px;will-change:transform;animation:autoscroll 17s ease-in-out infinite alternate}
+  .scrollwin .page{display:block;will-change:transform;animation:autoscroll 20s ease-in-out infinite alternate}
   .examples .viz:hover .scrollwin .page{animation-play-state:paused}
   .examples .viz:nth-child(2) .scrollwin .page{animation-delay:-5s}
   .examples .viz:nth-child(3) .scrollwin .page{animation-delay:-10s}
   @keyframes autoscroll{from{transform:translateY(0)}to{transform:translateY(calc(-100% + 300px))}}
   @media(prefers-reduced-motion:reduce){.scrollwin .page{animation:none}}
   .scrollwin img.shot-full{width:100%;display:block}
-  .pg-hero{border-radius:10px;padding:20px;background:linear-gradient(135deg,rgba(47,107,255,.4),rgba(168,85,247,.24))}
-  .pg-hero b{font-family:var(--display);font-size:1.05rem;color:#fff;display:block}
-  .pg-hero span{font-size:.7rem;color:var(--muted)}
-  .pg-hero .wsite-cta{margin-top:8px}
-  .pg-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-  .pg-tile{height:56px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07)}
-  .pg-band{height:120px;border-radius:10px;background:linear-gradient(135deg,rgba(255,61,139,.22),rgba(47,107,255,.14))}
-  .pg-band.alt{background:linear-gradient(135deg,rgba(168,85,247,.22),rgba(34,211,238,.12))}
-  .pg-row.two{grid-template-columns:1fr 1fr}
-  .pg-card{height:88px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07)}
-  .pg-cta{height:76px;border-radius:10px;background:linear-gradient(135deg,rgba(47,107,255,.35),rgba(255,61,139,.24));display:grid;place-items:center}
-  .pg-cta b{font-family:var(--display);color:#fff;font-size:.95rem}
-  .pageB .pg-hero{background:linear-gradient(135deg,rgba(255,61,139,.4),rgba(168,85,247,.22))}
-  .pageC .pg-hero{background:linear-gradient(135deg,rgba(34,211,238,.34),rgba(47,107,255,.3))}
   .ex-label{margin-top:12px;font-weight:700;font-size:.9rem}
   .ex-label span{color:var(--muted2);font-weight:500}
+
+  /* --- faked mini website templates inside the scroll windows --- */
+  .msite{background:#fff;color:#22303f;font-size:10px;line-height:1.5;text-align:left}
+  .msite .nav9{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:9px 12px;background:#fff}
+  .msite .nav9 b{font-size:9.5px;font-weight:800;white-space:nowrap}
+  .msite .nav9 .lk{font-size:7px;color:#98a2b3;letter-spacing:.08em;white-space:nowrap}
+  .msbtn{display:inline-block;padding:5px 11px;border-radius:999px;font-weight:800;font-size:8px;color:#fff;white-space:nowrap}
+  .mshero{padding:24px 14px 20px;text-align:center}
+  .mshero .kick{font-size:7px;letter-spacing:.2em;text-transform:uppercase;font-weight:700}
+  .mshero h5{font-family:"Fraunces",serif;font-style:italic;font-weight:600;font-size:17px;line-height:1.15;margin:6px 0 4px}
+  .mshero .of{font-size:7.5px;letter-spacing:.28em;text-transform:uppercase;font-weight:700;color:#8a93a3;display:block;margin-bottom:7px}
+  .mshero p{font-size:8.5px;color:#66717f;max-width:230px;margin:0 auto 10px}
+  .msphoto{height:76px;border-radius:8px;margin:0 12px 12px;display:grid;place-items:center;font-size:20px}
+  .msband{padding:15px 14px;text-align:center;color:#fff}
+  .msband b{display:block;font-size:10.5px;margin-bottom:3px}
+  .msband span{font-size:8px;opacity:.85;display:block;margin-bottom:7px}
+  .msgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}
+  .msgrid .c{border:1px solid #e8ebf0;border-radius:8px;padding:10px 8px;text-align:center;background:#fff}
+  .msgrid .c i{font-style:normal;font-size:13px;display:block;margin-bottom:4px}
+  .msgrid .c b{font-size:8.5px;display:block}
+  .msgrid .c span{font-size:7.5px;color:#8a93a3}
+  .msrev{margin:0 12px 12px;border:1px solid #eef0f4;border-radius:8px;padding:9px 11px;display:flex;align-items:center;gap:9px;background:#fff;box-shadow:0 4px 14px rgba(15,30,60,.06)}
+  .msrev .g{font-weight:900;font-size:13px;background:linear-gradient(135deg,#4285F4,#EA4335 45%,#FBBC05 70%,#34A853);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .msrev div b{display:block;font-size:8.5px;letter-spacing:.12em}
+  .msrev div span{font-size:7.5px;color:#8a93a3}
+  .msrev .st{margin-left:auto;color:#fbbc05;font-size:9.5px;letter-spacing:.05em}
+  .msquote{margin:0 12px 12px;background:#f6f8fb;border-radius:8px;padding:11px 12px;font-size:8.5px;color:#4a5568;font-style:italic}
+  .msquote b{display:block;font-style:normal;font-size:8px;margin-top:5px;color:#22303f}
+  .msfaq{padding:0 12px 12px}
+  .msfaq .q{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #edf0f4;padding:7px 2px;font-size:8.5px;font-weight:600;color:#374151}
+  .msfaq .q i{font-style:normal;color:#9aa4b2}
+  .msfoot{padding:13px 14px;color:#fff;font-size:7.5px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+  .msfoot div b{display:block;font-size:9px;margin-bottom:2px}
+  .msmap{height:44px;border-radius:6px;flex:0 0 80px;display:grid;place-items:center;font-size:13px}
+
+  /* theme: dental — white + navy + gold (modeled on a real practice site) */
+  .ms-dental .nav9 b,.ms-dental .mshero h5{color:#12314f}
+  .ms-dental .msbtn{background:#12314f}
+  .ms-dental .mshero{background:linear-gradient(180deg,#eaf4fb,#fff)}
+  .ms-dental .kick{color:#b98a2f}
+  .ms-dental .msphoto{background:linear-gradient(135deg,#cde6f5,#8fbdda 55%,#e8f4fb)}
+  .ms-dental .msband{background:#12314f}
+  .ms-dental .msband .msbtn{background:#d9a441;color:#241a06}
+  .ms-dental .msfoot{background:#0d2740}
+  .ms-dental .msmap{background:linear-gradient(135deg,#d8ecdf,#a5cdb3)}
+  /* theme: med spa — cream + blush + rose */
+  .ms-spa{background:#fffaf7}
+  .ms-spa .nav9{background:#fffaf7}
+  .ms-spa .nav9 b,.ms-spa .mshero h5{color:#7c3a55}
+  .ms-spa .msbtn{background:#c2688c}
+  .ms-spa .mshero{background:linear-gradient(180deg,#fbeee9,#fffaf7)}
+  .ms-spa .kick{color:#c2688c}
+  .ms-spa .msphoto{background:linear-gradient(135deg,#f6dcd2,#e4b3a2 55%,#fbeee9)}
+  .ms-spa .msband{background:#7c3a55}
+  .ms-spa .msband .msbtn{background:#f0c9b8;color:#4a2333}
+  .ms-spa .msgrid .c{border-color:#f2e4dd;background:#fffdfb}
+  .ms-spa .msfoot{background:#5f2c41}
+  .ms-spa .msmap{background:linear-gradient(135deg,#f6dcd2,#dfae9d)}
+  /* theme: home services — white + deep blue + orange */
+  .ms-home .nav9 b{color:#0f2a52}
+  .ms-home .msbtn{background:#f2600c}
+  .ms-home .mshero{background:linear-gradient(160deg,#0f2a52,#1c4585);color:#fff}
+  .ms-home .mshero h5{font-family:var(--display);font-style:normal;font-weight:700;color:#fff;font-size:15px}
+  .ms-home .kick{color:#ffb073}
+  .ms-home .mshero p{color:#c3d2ea}
+  .ms-home .msphoto{background:linear-gradient(135deg,#d7e2f2,#9db4d6 55%,#e9eff8)}
+  .ms-home .msband{background:#f2600c}
+  .ms-home .msband .msbtn{background:#fff;color:#9a3d03}
+  .ms-home .msfoot{background:#0f2a52}
+  .ms-home .msmap{background:linear-gradient(135deg,#d7e2f2,#a9bedd)}
+
+  /* tightened footer (canonical change also in styles-v2.css) */
+  .footwrap,.footsticky{height:400px}
+  .footlinks{padding:36px 40px 0;gap:34px}
+  .footlinks a{font-size:1.45rem}
+  .footcopy{padding:0 40px 6px}
   </style>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
     <filter id="electric2" x="-30%" y="-30%" width="160%" height="160%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.08" numOctaves="3" seed="4" result="n"><animate attributeName="baseFrequency" dur="2.1s" values="0.02 0.06;0.06 0.14;0.03 0.09;0.02 0.06" repeatCount="indefinite"/></feTurbulence>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.06" numOctaves="3" seed="4" result="n"><animate attributeName="baseFrequency" dur="2.8s" values="0.02 0.05;0.045 0.1;0.025 0.07;0.02 0.05" repeatCount="indefinite"/></feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="8" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
     <filter id="electric2b" x="-45%" y="-45%" width="190%" height="190%">
-      <feTurbulence type="turbulence" baseFrequency="0.015 0.05" numOctaves="2" seed="9" result="n2"><animate attributeName="baseFrequency" dur="1.4s" values="0.03 0.09;0.09 0.19;0.02 0.07;0.03 0.09" repeatCount="indefinite"/></feTurbulence>
-      <feDisplacementMap in="SourceGraphic" in2="n2" scale="22" xChannelSelector="R" yChannelSelector="G"/>
+      <feTurbulence type="turbulence" baseFrequency="0.015 0.05" numOctaves="2" seed="9" result="n2"><animate attributeName="baseFrequency" dur="2s" values="0.02 0.07;0.06 0.13;0.02 0.06;0.02 0.07" repeatCount="indefinite"/></feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="n2" scale="13" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
   </defs></svg>
 
@@ -204,47 +266,73 @@
       <div class="examples">
         <div class="viz reveal" style="padding:0;overflow:hidden">
           <div class="browser" style="border:0;box-shadow:none;border-radius:16px">
-            <div class="bar"><i></i><i></i><i></i><span class="u">brightsmiledental.com</span></div>
-            <div class="scrollwin"><div class="page pageA">
-              <div class="pg-hero"><b>Bright Smile Dental</b><span>Same-day appointments · new patients welcome</span><br/><span class="wsite-cta">Book Appointment →</span></div>
-              <div class="pg-row"><div class="pg-tile"></div><div class="pg-tile"></div><div class="pg-tile"></div></div>
-              <div class="pg-band"></div>
-              <div class="pg-row two"><div class="pg-card"></div><div class="pg-card"></div></div>
-              <div class="pg-band alt"></div>
-              <div class="pg-cta"><b>Book your visit today</b></div>
-            </div></div>
+            <div class="bar"><i></i><i></i><i></i><span class="u">brightsmiledentalspa.com</span></div>
+            <div class="scrollwin"><div class="page pageA"><div class="msite ms-dental">
+              <div class="nav9"><b>🦷 Bright Smile</b><span class="lk">SERVICES · ABOUT · CONTACT</span><span class="msbtn">Book Now</span></div>
+              <div class="mshero"><span class="kick">Cosmetic · General · Emergency</span><h5>Bright Smile Dental Spa</h5><span class="of">of Boca Raton</span><p>Gentle, modern dentistry in a spa-calm setting. Same-day appointments &amp; new patients always welcome.</p><span class="msbtn">Request an Appointment</span></div>
+              <div class="msphoto">😁</div>
+              <div class="msrev"><span class="g">G</span><div><b>EXCELLENT</b><span>Based on 476 reviews</span></div><span class="st">★★★★★</span></div>
+              <div class="msband"><b>Yes, we accept your dental insurance!</b><span>No insurance? No problem — ask about our in-house membership plan.</span><span class="msbtn">Check My Coverage</span></div>
+              <div class="msgrid">
+                <div class="c"><i>🦷</i><b>General Dentistry</b><span>Cleanings &amp; exams</span></div>
+                <div class="c"><i>✨</i><b>Cosmetic</b><span>Whitening &amp; veneers</span></div>
+                <div class="c"><i>😁</i><b>Restorative</b><span>Implants &amp; crowns</span></div>
+                <div class="c"><i>🚑</i><b>Emergency</b><span>Same-day relief</span></div>
+              </div>
+              <div class="msquote">"The most relaxing dental visit I've ever had — it really does feel like a spa."<b>— Maria G. ★★★★★</b></div>
+              <div class="msfaq">
+                <div class="q">Do you take my insurance? <i>+</i></div>
+                <div class="q">What if I haven't been in years? <i>+</i></div>
+                <div class="q">Do you offer sedation? <i>+</i></div>
+              </div>
+              <div class="msfoot"><div><b>Bright Smile Dental Spa</b>Boca Raton, FL · Mon–Sat 8–6<br/>Call (561) 555-0148</div><div class="msmap">📍</div></div>
+            </div></div></div>
           </div>
           <div class="ba-badge">Custom build</div>
-          <div class="ex-label">Bright Smile Dental <span>· Dentistry</span></div>
+          <div class="ex-label">Bright Smile Dental Spa <span>· Dentistry</span></div>
         </div>
 
         <div class="viz reveal" style="padding:0;overflow:hidden">
           <div class="browser" style="border:0;box-shadow:none;border-radius:16px">
-            <div class="bar"><i></i><i></i><i></i><span class="u">yourmedspa.com</span></div>
-            <div class="scrollwin"><div class="page pageB">
-              <div class="pg-hero"><b>Radiance Med Spa</b><span>Book your glow-up · memberships available</span><br/><span class="wsite-cta">Reserve Now →</span></div>
-              <div class="pg-row"><div class="pg-tile"></div><div class="pg-tile"></div><div class="pg-tile"></div></div>
-              <div class="pg-band alt"></div>
-              <div class="pg-row two"><div class="pg-card"></div><div class="pg-card"></div></div>
-              <div class="pg-band"></div>
-              <div class="pg-cta"><b>Claim your first visit</b></div>
-            </div></div>
+            <div class="bar"><i></i><i></i><i></i><span class="u">radiantmedspa.com</span></div>
+            <div class="scrollwin"><div class="page pageB"><div class="msite ms-spa">
+              <div class="nav9"><b>✦ Radiant Med Spa</b><span class="lk">TREATMENTS · GALLERY · BOOK</span><span class="msbtn">Reserve</span></div>
+              <div class="mshero"><span class="kick">Medical Aesthetics · Boca Raton</span><h5>Glow, naturally.</h5><p>Physician-supervised treatments tailored to your skin — so you leave lit from within.</p><span class="msbtn">Book a Treatment</span></div>
+              <div class="msphoto">🌸</div>
+              <div class="msgrid">
+                <div class="c"><i>💉</i><b>Injectables</b><span>Botox &amp; fillers</span></div>
+                <div class="c"><i>🧖</i><b>Facials</b><span>HydraFacial &amp; peels</span></div>
+                <div class="c"><i>✨</i><b>Laser</b><span>Skin &amp; hair removal</span></div>
+                <div class="c"><i>🌿</i><b>Wellness</b><span>IV therapy &amp; more</span></div>
+              </div>
+              <div class="msband"><b>The Radiant Club</b><span>Members save on every visit — plus a free birthday facial.</span><span class="msbtn">Join the Club</span></div>
+              <div class="msrev"><span class="g">G</span><div><b>EXCELLENT</b><span>Based on 212 reviews</span></div><span class="st">★★★★★</span></div>
+              <div class="msquote">"Booked online in seconds, and my skin has never looked better. Obsessed."<b>— Jenna P. ★★★★★</b></div>
+              <div class="msfoot"><div><b>Radiant Med Spa</b>Boca Raton, FL · Tue–Sat 9–7<br/>Call (561) 555-0192</div><div class="msmap">📍</div></div>
+            </div></div></div>
           </div>
           <div class="ba-badge">Custom build</div>
-          <div class="ex-label">Radiance Med Spa <span>· Med Spa</span></div>
+          <div class="ex-label">Radiant Med Spa <span>· Med Spa</span></div>
         </div>
 
         <div class="viz reveal" style="padding:0;overflow:hidden">
           <div class="browser" style="border:0;box-shadow:none;border-radius:16px">
             <div class="bar"><i></i><i></i><i></i><span class="u">apexhomeservices.com</span></div>
-            <div class="scrollwin"><div class="page pageC">
-              <div class="pg-hero"><b>Apex Home Services</b><span>24/7 booking · fast, friendly, guaranteed</span><br/><span class="wsite-cta">Get a Quote →</span></div>
-              <div class="pg-row"><div class="pg-tile"></div><div class="pg-tile"></div><div class="pg-tile"></div></div>
-              <div class="pg-band"></div>
-              <div class="pg-row two"><div class="pg-card"></div><div class="pg-card"></div></div>
-              <div class="pg-band alt"></div>
-              <div class="pg-cta"><b>Book a service call</b></div>
-            </div></div>
+            <div class="scrollwin"><div class="page pageC"><div class="msite ms-home">
+              <div class="nav9"><b>🔧 Apex Home Services</b><span class="lk">SERVICES · AREAS · REVIEWS</span><span class="msbtn">Get a Quote</span></div>
+              <div class="mshero"><span class="kick">24/7 Emergency Service</span><h5>Repairs done right — the first time.</h5><p>Licensed &amp; insured pros for your plumbing, electrical, AC and roof. Upfront pricing, no surprises.</p><span class="msbtn">Book a Service Call</span></div>
+              <div class="msphoto">🏠</div>
+              <div class="msrev"><span class="g">G</span><div><b>EXCELLENT</b><span>Based on 389 reviews</span></div><span class="st">★★★★★</span></div>
+              <div class="msgrid">
+                <div class="c"><i>🚿</i><b>Plumbing</b><span>Leaks to repipes</span></div>
+                <div class="c"><i>⚡</i><b>Electrical</b><span>Panels &amp; wiring</span></div>
+                <div class="c"><i>❄️</i><b>HVAC</b><span>AC repair &amp; install</span></div>
+                <div class="c"><i>🏠</i><b>Roofing</b><span>Repair &amp; replace</span></div>
+              </div>
+              <div class="msband"><b>Emergency? We're on the way.</b><span>Real humans answer 24/7 — average dispatch under 60 minutes.</span><span class="msbtn">Call Now</span></div>
+              <div class="msquote">"They showed up in 40 minutes on a Sunday and the price matched the quote. Unheard of."<b>— Robert T. ★★★★★</b></div>
+              <div class="msfoot"><div><b>Apex Home Services</b>Serving all of Palm Beach County<br/>Call (561) 555-0177 · 24/7</div><div class="msmap">📍</div></div>
+            </div></div></div>
           </div>
           <div class="ba-badge">Custom build</div>
           <div class="ex-label">Apex Home Services <span>· Home Services</span></div>
