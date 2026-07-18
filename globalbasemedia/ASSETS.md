@@ -7,6 +7,9 @@ gets lost between work sessions.
 
 - **Logo (app icon)** — `logo.png` in this folder, hosted at
   `https://assets.cdn.filesafe.space/zPMFoWE7Sa0FnTxcLYBp/media/68f39cec4a04cb08c317e482.png`
+- **Logo (wide wordmark, "Powered By GlobalUP CRM")** — `logo-wide.png`, used in the
+  nav brand + footer, hosted at
+  `https://assets.cdn.filesafe.space/zPMFoWE7Sa0FnTxcLYBp/media/68de9ea3065f28b65eb3d1d4.png`
 - **CRM / SMS messaging demo video** — good clip for the **AI & Automation (CRM)**
   page's "SMS messaging" section, and also fits the **AI-powered "smart website"**
   angle on the Website Design page (two-way texting / booking built into the site):

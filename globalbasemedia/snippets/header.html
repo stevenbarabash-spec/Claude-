@@ -151,8 +151,8 @@ h3{font-size:1.22rem;letter-spacing:-.01em}
 @media(min-width:821px){.nav.stuck{justify-content:flex-end}}
 .nav .brand{transition:left .4s ease,translate .4s ease}
 .nav.stuck .brand{left:20px;translate:0 -50%}
-.nav .brand img{transition:width .35s ease,height .35s ease}
-.nav.stuck .brand img{width:26px;height:26px}
+.nav .brand img{transition:height .35s ease}
+.nav.stuck .brand img{height:30px}
 @media(min-width:821px){.nav.stuck .links{position:absolute;left:50%;top:50%;translate:-50% -50%}}
 .nav .links{display:flex;gap:18px;align-items:center}
 .nav .links a{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#111;position:relative;white-space:nowrap}
@@ -163,7 +163,7 @@ h3{font-size:1.22rem;letter-spacing:-.01em}
 .nav .links a:nth-child(4)::after{background:var(--blue)}
 .nav .links a:hover::after{width:100%}
 .nav .brand{position:absolute;left:50%;top:50%;translate:-50% -50%;display:flex;align-items:center;gap:9px;font-weight:800;color:#111;font-size:.98rem}
-.nav .brand img{width:32px;height:32px;border-radius:8px}
+.nav .brand img{width:auto;height:38px;border-radius:0}
 .pillcta{position:relative;overflow:hidden;border:0;border-radius:12px;color:#08130d;font-weight:800;font-size:.72rem;letter-spacing:.03em;
   padding:11px 18px;background:#0a0a0a;box-shadow:0 10px 30px -8px rgba(34,224,160,.55),0 6px 22px -6px rgba(18,201,138,.4)}
 .pillcta .g{position:absolute;inset:0;background:var(--btn);opacity:.98}
@@ -196,6 +196,7 @@ h3{font-size:1.22rem;letter-spacing:-.01em}
   .nav .links a .caret{display:none}
   .nav-toggle{display:block}
   .nav .brand{left:52px;translate:0 -50%}
+  .nav .brand img{height:28px}
   .pillcta{display:none}
 }
 
@@ -341,6 +342,7 @@ section{position:relative;padding:110px 0}
 .footwrap{position:relative;height:400px}
 .footsticky{position:sticky;bottom:0;height:400px;background:#fff;color:#111;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
 .footsticky .dots2{position:absolute;inset:0;background-image:radial-gradient(#a1a1aa 1px,transparent 1px);background-size:24px 24px;opacity:.4}
+.footlogo{position:relative;z-index:2;display:block;align-self:flex-start;width:auto;height:36px;margin:0 40px 4px}
 .footlinks{position:relative;z-index:2;display:flex;gap:34px;flex-wrap:wrap;padding:36px 40px 0}
 .footlinks a{font-size:1.45rem;font-weight:800;color:#27272a;position:relative}
 .footlinks a::after{content:"";position:absolute;left:0;bottom:-2px;height:3px;width:0;background:var(--pink);transition:width .3s}
@@ -364,6 +366,7 @@ section{position:relative;padding:110px 0}
   .footlinks a{font-size:1rem}
   .footcopy{text-align:left;padding:6px 20px 6px;font-size:.74rem}
   .footword{font-size:9.4vw;white-space:nowrap}
+  .footlogo{height:26px;margin:0 20px 2px}
 }
 
 a.skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--blue);color:#fff;padding:12px 18px;border-radius:0 0 10px 0;font-weight:700}
@@ -477,7 +480,7 @@ a.skip:focus{left:0}
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
-  <a class="brand" href="index.html"><img src="https://assets.cdn.filesafe.space/zPMFoWE7Sa0FnTxcLYBp/media/68f39cec4a04cb08c317e482.png" alt="Global Base Media" /> Global Base Media</a>
+  <a class="brand" href="index.html"><img src="https://assets.cdn.filesafe.space/zPMFoWE7Sa0FnTxcLYBp/media/68de9ea3065f28b65eb3d1d4.png" alt="Global Base Media — Powered by GlobalUP CRM" /></a>
   <a class="pillcta" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1"><span class="g"></span><span class="sh"></span><span class="t" style="display:inline-flex;align-items:center;gap:7px">Book a Strategy Call <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span></a>
 </nav>
 
