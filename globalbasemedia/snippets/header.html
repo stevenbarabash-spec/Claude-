@@ -142,8 +142,12 @@ h3{font-size:1.22rem;letter-spacing:-.01em}
   padding:10px 16px 10px 14px;width:min(1080px,92%);animation:drop .5s ease-out both;
   transition:top .35s ease,width .35s ease,border-radius .35s ease,padding .35s ease,box-shadow .35s ease}
 @keyframes drop{from{opacity:0;translate:-50% -16px}to{opacity:1;translate:-50% 0}}
-/* scrolled state: snaps to the top as a thinner full-width bar */
-.nav.stuck{top:0;width:100%;border-radius:0;border:0;border-bottom:1px solid #ececf2;padding:6px 20px;box-shadow:0 12px 34px -14px rgba(0,0,0,.4)}
+/* scrolled state: snaps up into a thin, rounded, frosted-glass bar */
+.nav.stuck{top:8px;width:min(1280px,97.5%);border-radius:16px;padding:6px 18px;
+  background:linear-gradient(120deg,rgba(255,255,255,.82),rgba(255,255,255,.6) 45%,rgba(255,255,255,.76));
+  -webkit-backdrop-filter:blur(18px) saturate(1.7);backdrop-filter:blur(18px) saturate(1.7);
+  border:1px solid rgba(255,255,255,.55);
+  box-shadow:0 12px 40px -12px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.8),inset 0 -1px 0 rgba(255,255,255,.25)}
 @media(min-width:821px){.nav.stuck{justify-content:flex-end}}
 .nav .brand{transition:left .4s ease,translate .4s ease}
 .nav.stuck .brand{left:20px;translate:0 -50%}

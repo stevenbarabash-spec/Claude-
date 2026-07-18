@@ -119,10 +119,11 @@
   .glowline{background:linear-gradient(110deg,transparent 38%,rgba(255,255,255,.95) 50%,transparent 62%) no-repeat,linear-gradient(90deg,#a855f7,#ff3d8b);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:250% 100%,100% 100%;background-position:-160% 0,0 0}
   .hero-h1.go .glowline{animation:flashsweep 1.05s ease-in-out .1s both}
   @keyframes flashsweep{from{background-position:-160% 0,0 0}to{background-position:260% 0,0 0}}
-  .hero-h1.js .l2 span{display:inline-block;white-space:pre;opacity:0;transform:translateY(.45em)}
-  .hero-h1.js.go .l2 span{animation:popletter .62s cubic-bezier(.2,.7,.3,1.25) both;animation-delay:calc(.5s + var(--i)*.036s)}
+  .hero-h1 .l2 .w{display:inline-block;white-space:nowrap} /* words wrap as units — never mid-word */
+  .hero-h1.js .l2 .w span{display:inline-block;opacity:0;transform:translateY(.45em)}
+  .hero-h1.js.go .l2 .w span{animation:popletter .62s cubic-bezier(.2,.7,.3,1.25) both;animation-delay:calc(.5s + var(--i)*.036s)}
   @keyframes popletter{from{opacity:0;transform:translateY(.45em)}62%{opacity:1;transform:translateY(-.07em)}to{opacity:1;transform:translateY(0)}}
-  @media(prefers-reduced-motion:reduce){.hero-h1.go .glowline{animation:none}.hero-h1.js .l2 span{opacity:1;transform:none;animation:none}}
+  @media(prefers-reduced-motion:reduce){.hero-h1.go .glowline{animation:none}.hero-h1.js .l2 .w span{opacity:1;transform:none;animation:none}}
 
   /* Google "EXCELLENT" trust strip */
   .gstrip{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin:24px auto 38px;background:#fff;color:#16181d;border-radius:16px;padding:13px 26px;width:fit-content;box-shadow:0 24px 60px -18px rgba(0,0,0,.55)}
@@ -558,11 +559,17 @@
     var l2=h1.querySelector(".l2");
     if(l2){
       var txt=l2.textContent;l2.textContent="";
-      txt.split("").forEach(function(ch,i){
-        var s=document.createElement("span");
-        s.textContent=ch;
-        s.style.setProperty("--i",i);
-        l2.appendChild(s);
+      var idx=0;
+      txt.split(" ").forEach(function(word,wi,arr){
+        var w=document.createElement("span");w.className="w";
+        word.split("").forEach(function(ch){
+          var s=document.createElement("span");
+          s.textContent=ch;
+          s.style.setProperty("--i",idx++);
+          w.appendChild(s);
+        });
+        l2.appendChild(w);
+        if(wi<arr.length-1)l2.appendChild(document.createTextNode(" "));
       });
       h1.classList.add("js");
     }
