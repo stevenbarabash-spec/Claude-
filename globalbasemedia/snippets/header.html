@@ -348,6 +348,8 @@ section{position:relative;padding:110px 0}
 .footlinks a::after{content:"";position:absolute;left:0;bottom:-2px;height:3px;width:0;background:var(--pink);transition:width .3s}
 .footlinks a:hover::after{width:100%}
 .footcopy{position:relative;z-index:2;text-align:right;padding:0 40px 6px;color:#111;font-size:.9rem}
+.footcopy a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.footcopy a:hover{color:var(--pink)}
 .footword{position:relative;z-index:1;text-align:center;font-weight:900;font-size:clamp(2.4rem,13vw,9rem);letter-spacing:-.03em;line-height:.9;
   background:var(--spectrum);-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 20px}
 /* fin-wave: letters split by JS, each bumped up in sequence when the footer comes into view */

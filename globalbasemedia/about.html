@@ -86,6 +86,12 @@
   .teamph{display:block;width:100%;border-radius:20px;margin-top:44px;box-shadow:0 30px 70px rgba(0,0,0,.5)}
   .mission{max-width:720px;margin:44px auto 0;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:30px;text-align:center}
   .mission .serifline{font-family:var(--serif);font-style:italic;font-size:1.5rem;color:#fff;line-height:1.4}
+  /* mission card rises less than its 38px gap to the stats so it never overlaps them mid-animation */
+  .mission.r-rise{transform:translateY(18px)}
+  .mission.r-rise.in{transform:none}
+  /* fade the story section's glow into the next section's bg so the hand-off has no hard edge */
+  .storysec{overflow:hidden}
+  .storysec::after{content:"";position:absolute;left:0;right:0;bottom:0;height:300px;background:linear-gradient(to bottom,transparent,var(--bg));pointer-events:none;z-index:1}
   /* dark brand-partner marquee: real partner logo cards (white text in the images needs a dark band) */
   .bmq{background:linear-gradient(180deg,#0d0716,#070310)}
   .bmq .cap{color:#8b87a0}
@@ -116,7 +122,7 @@
   </section>
 
   <!-- STORY -->
-  <section style="background:var(--bg2)">
+  <section class="storysec" style="background:var(--bg2)">
     <div class="bloom emerald"></div>
     <div class="wrap center" style="position:relative;z-index:2">
       <span class="eyebrow">Our story</span>
@@ -229,7 +235,7 @@
     <div class="dots2"></div>
     <img class="footlogo" src="logo-wide.png" alt="" />
     <div class="footlinks"><a href="index.html#services">Services</a><a href="testimonials.html">Work</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="tel:+15615569190">Call</a></div>
-    <div class="footcopy">© <span class="year">2026</span> Global Base Media &middot; Boca Raton, FL &middot; (561) 556-9190</div>
+    <div class="footcopy">© <span class="year">2026</span> Global Base Media &middot; Boca Raton, FL &middot; (561) 556-9190 &middot; <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></div>
     <div class="footword">Global Base Media</div>
     <div class="footglow"></div>
   </div>
