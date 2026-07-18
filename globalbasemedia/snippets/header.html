@@ -343,6 +343,12 @@ section{position:relative;padding:110px 0}
 .footcopy{position:relative;z-index:2;text-align:right;padding:0 40px 6px;color:#111;font-size:.9rem}
 .footword{position:relative;z-index:1;text-align:center;font-weight:900;font-size:clamp(2.4rem,13vw,9rem);letter-spacing:-.03em;line-height:.9;
   background:var(--spectrum);-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 20px}
+/* fin-wave: letters split by JS, each bumped up in sequence when the footer comes into view */
+.footword.split{background:none;-webkit-background-clip:border-box;background-clip:border-box}
+.footword span{display:inline-block;white-space:pre;background:var(--spectrum);-webkit-background-clip:text;background-clip:text;color:transparent;will-change:transform}
+.footword.wave span{animation:finbump .95s cubic-bezier(.3,.05,.2,1) both;animation-delay:calc(var(--i)*55ms)}
+@keyframes finbump{0%,100%{transform:translateY(0)}32%{transform:translateY(-.16em)}62%{transform:translateY(.035em)}}
+@media(prefers-reduced-motion:reduce){.footword.wave span{animation:none}}
 .footglow{position:absolute;left:-40px;right:-40px;bottom:-40px;height:280px;filter:blur(70px);opacity:.7;z-index:0;
   background:linear-gradient(90deg,#93c5fd,var(--blue),var(--pink),var(--green));
   -webkit-mask-image:linear-gradient(to top,#000 25%,transparent);mask-image:linear-gradient(to top,#000 25%,transparent)}

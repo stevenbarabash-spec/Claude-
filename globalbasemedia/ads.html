@@ -353,6 +353,35 @@
     addEventListener("scroll",setStuck,{passive:true}); setStuck();
   }
 
+  /* Footer fin-wave: split the wordmark into letters (keeping the gradient continuous),
+     then bump each letter up in sequence when the footer scrolls into view */
+  var fw=document.querySelector(".footword");
+  if(fw&&!reduce){
+    var txt=fw.textContent;fw.textContent="";fw.classList.add("split");
+    var spans=[];
+    txt.split("").forEach(function(ch,i){
+      var s=document.createElement("span");
+      s.textContent=ch;
+      s.style.setProperty("--i",i);
+      fw.appendChild(s);spans.push(s);
+    });
+    function paintWord(){
+      var w=fw.getBoundingClientRect().width;
+      spans.forEach(function(s){
+        s.style.backgroundSize=w+"px 100%";
+        s.style.backgroundPosition=(-s.offsetLeft)+"px 0";
+      });
+    }
+    paintWord();addEventListener("resize",paintWord);
+    if("IntersectionObserver" in window){
+      var iow=new IntersectionObserver(function(es){es.forEach(function(e){
+        if(e.isIntersecting)fw.classList.add("wave");
+        else if(e.intersectionRatio===0)fw.classList.remove("wave");
+      })},{threshold:[0,.5]});
+      iow.observe(fw);
+    } else {fw.classList.add("wave");}
+  }
+
   document.querySelectorAll(".year").forEach(function(el){el.textContent=new Date().getFullYear()});
 })();
 </script>
