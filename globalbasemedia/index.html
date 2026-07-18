@@ -60,23 +60,6 @@
 
 <main id="main">
   <style>
-  /* ——— glass-crack entrance: pane over the page, cracks, shatters through ——— */
-  .shov{position:fixed;inset:0;z-index:9998;pointer-events:none}
-  .shov .sbg{position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.10),rgba(205,215,255,.05) 50%,rgba(255,255,255,.12));-webkit-backdrop-filter:blur(4px) brightness(1.06);backdrop-filter:blur(4px) brightness(1.06);transition:opacity .4s ease}
-  .shov svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-  .shov path{fill:none;stroke:rgba(255,255,255,.78);stroke-width:.16;stroke-dasharray:1;stroke-dashoffset:1;filter:drop-shadow(0 0 1px rgba(190,205,255,.9))}
-  .shov.s1 path.pc{transition:stroke-dashoffset .16s ease-out;stroke-dashoffset:.62}
-  .shov.s2 path{transition:stroke-dashoffset .15s cubic-bezier(.3,.7,.2,1);stroke-dashoffset:0}
-  .shov.s1{animation:shk1 .2s ease}
-  .shov.s2{animation:shk2 .24s ease}
-  @keyframes shk1{25%{transform:translate(2px,-1px)}55%{transform:translate(-2px,1px)}80%{transform:translate(1px,0)}}
-  @keyframes shk2{20%{transform:translate(-4px,2px)}45%{transform:translate(4px,-2px)}70%{transform:translate(-2px,1px)}90%{transform:translate(1px,-1px)}}
-  .shov .shard{position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),rgba(208,218,255,.06) 55%,rgba(255,255,255,.13));will-change:transform,opacity}
-  .shov.s3 .shard{transition:transform .72s cubic-bezier(.32,.08,.57,1),opacity .6s ease .08s;opacity:0}
-  .shov.s3 .sbg{opacity:0}
-  .shov.s3 path{transition:opacity .2s;opacity:0}
-  @media(prefers-reduced-motion:reduce){.shov{display:none}}
-
   /* Home component styles — kept inside the body so the global Header stays frozen */
   .flip{perspective:1500px}
   .flip-inner{position:relative;transform-style:preserve-3d;transition:transform .95s cubic-bezier(.4,.05,.2,1)}
@@ -669,64 +652,6 @@
   })();
   </script>
 
-
-  <script>
-  (function(){
-    /* glass-crack entrance */
-    if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-    var N=12,CX=46,CY=42,OUT=170;
-    var J=[3,-4,2,-2,4,-3,1,-4,3,-1,2,-3],R1=[14,17,13,18,15,16,14,17,15,13,18,16];
-    var pts=[],op=[];
-    for(var i=0;i<N;i++){
-      var a=(i*(360/N)+J[i])*Math.PI/180;
-      var dx=Math.cos(a),dy=Math.sin(a);
-      pts.push([CX+dx*R1[i],CY+dy*R1[i]]);
-      op.push([CX+dx*OUT,CY+dy*OUT]);
-    }
-    var ov=document.createElement("div");ov.className="shov";
-    var bg=document.createElement("div");bg.className="sbg";ov.appendChild(bg);
-    var NS="http://www.w3.org/2000/svg";
-    var svg=document.createElementNS(NS,"svg");
-    svg.setAttribute("viewBox","0 0 100 100");svg.setAttribute("preserveAspectRatio","none");svg.setAttribute("aria-hidden","true");
-    for(var i=0;i<N;i++){
-      var p=document.createElementNS(NS,"path");
-      p.setAttribute("d","M"+CX+" "+CY+" L"+pts[i][0]+" "+pts[i][1]+" L"+op[i][0]+" "+op[i][1]);
-      p.setAttribute("pathLength","1");
-      if(i%2===0)p.setAttribute("class","pc");
-      svg.appendChild(p);
-      var r=document.createElementNS(NS,"path");
-      var n=(i+1)%N;
-      r.setAttribute("d","M"+pts[i][0]+" "+pts[i][1]+" L"+pts[n][0]+" "+pts[n][1]);
-      r.setAttribute("pathLength","1");
-      svg.appendChild(r);
-    }
-    ov.appendChild(svg);
-    var shards=[];
-    for(var i=0;i<N;i++){
-      var n=(i+1)%N;
-      var tri=document.createElement("div");tri.className="shard";
-      tri.style.clipPath="polygon("+CX+"% "+CY+"%,"+pts[i][0]+"% "+pts[i][1]+"%,"+pts[n][0]+"% "+pts[n][1]+"%)";
-      tri.style.opacity=.85+((i%3)*.05);
-      var quad=document.createElement("div");quad.className="shard";
-      quad.style.clipPath="polygon("+pts[i][0]+"% "+pts[i][1]+"%,"+pts[n][0]+"% "+pts[n][1]+"%,"+op[n][0]+"% "+op[n][1]+"%,"+op[i][0]+"% "+op[i][1]+"%)";
-      quad.style.opacity=.8+((i%4)*.05);
-      var am=((i+0.5)*(360/N)+J[i])*Math.PI/180;
-      tri.dataset.tx=Math.cos(am)*16;tri.dataset.ty=Math.sin(am)*16+22;tri.dataset.rz=(i%2?1:-1)*(14+i*3);
-      quad.dataset.tx=Math.cos(am)*55;quad.dataset.ty=Math.sin(am)*40+55;quad.dataset.rz=(i%2?-1:1)*(20+i*4);
-      ov.appendChild(tri);ov.appendChild(quad);shards.push(tri,quad);
-    }
-    document.body.appendChild(ov);
-    setTimeout(function(){ov.classList.add("s1")},380);
-    setTimeout(function(){ov.classList.add("s2")},950);
-    setTimeout(function(){
-      ov.classList.add("s3");
-      shards.forEach(function(sh){
-        sh.style.transform="translate("+sh.dataset.tx+"vw,"+sh.dataset.ty+"vh) rotate("+sh.dataset.rz+"deg) scale(1.06)";
-      });
-    },1220);
-    setTimeout(function(){if(ov.parentNode)ov.parentNode.removeChild(ov)},2200);
-  })();
-  </script>
 </main>
 
 <!-- STICKY FOOTER REVEAL -->
