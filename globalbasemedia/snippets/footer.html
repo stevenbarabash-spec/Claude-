@@ -18,6 +18,27 @@
   if(t){t.addEventListener("click",function(){var o=document.body.classList.toggle("nav-open");t.setAttribute("aria-expanded",o?"true":"false")});
     document.querySelectorAll(".nav .links a").forEach(function(a){a.addEventListener("click",function(){document.body.classList.remove("nav-open");t.setAttribute("aria-expanded","false")})});}
 
+  /* Liquid nav highlight — springy white blob that glides between items */
+  var lk=document.querySelector(".nav .links");
+  if(lk){
+    var lq=lk.querySelector(".lq");
+    var deskq=window.matchMedia("(min-width:821px)");
+    if(lq){
+      var cur=lk.querySelector(":scope>li>a[aria-current]");
+      var placeLq=function(a,on){var li=a.parentElement;lq.style.left=li.offsetLeft+"px";lq.style.width=li.offsetWidth+"px";lk.classList.toggle("lq-on",!!on);};
+      var restLq=function(){if(cur&&deskq.matches)placeLq(cur,true);else lk.classList.remove("lq-on");};
+      Array.prototype.forEach.call(lk.children,function(li){
+        var a=li.querySelector(":scope>a");
+        if(a)a.addEventListener("mouseenter",function(){if(deskq.matches)placeLq(a,true);});
+      });
+      lk.addEventListener("mouseleave",restLq);
+      window.addEventListener("resize",restLq);
+      window.addEventListener("load",restLq);
+      if(document.fonts&&document.fonts.ready)document.fonts.ready.then(restLq);
+      restLq();
+    }
+  }
+
   /* Reveal on scroll — replays every time an element enters the viewport (up or down) */
   var els=document.querySelectorAll(".reveal");
   if("IntersectionObserver" in window){
