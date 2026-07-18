@@ -1,6 +1,7 @@
 // Quick daily tasks with optional times — stored on the day's log so each day
 // starts clean. Feeds the Tasks card and the day timeline.
 import { NextResponse } from "next/server";
+import { setClientTaskDoneById } from "@/lib/clientProjects";
 import { recordHistory } from "@/lib/history";
 import { carryForwardInto, materializeForDay } from "@/lib/routines";
 import { getStore } from "@/lib/store";
@@ -88,6 +89,22 @@ export async function PATCH(req: Request) {
     before,
     after: tasks,
   });
+  // Sync: a task pulled from the client board carries ref "client:<taskId>";
+  // checking it off here checks off the source client task too (and vice-versa).
+  if (typeof patch.done === "boolean" && patch.done !== wasDone && task.ref?.startsWith("client:")) {
+    const clientTaskId = task.ref.slice("client:".length);
+    const synced = await setClientTaskDoneById(clientTaskId, patch.done);
+    if (synced) {
+      await recordHistory({
+        action: "update",
+        resource: "client_project",
+        resource_id: synced.project.id,
+        label: `Client task ${patch.done ? "checked off" : "reopened"} (synced): ${task.title}`,
+        before: synced.before,
+        after: synced.project,
+      });
+    }
+  }
   return NextResponse.json({ task, tasks });
 }
 

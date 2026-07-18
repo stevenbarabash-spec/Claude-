@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
-import { listClientProjects, saveClientProjects } from "@/lib/clientProjects";
+import { listClientProjects, materializeClientRecurring, saveClientProjects } from "@/lib/clientProjects";
+import { localDateKey } from "@/lib/dates";
 import { recordHistory } from "@/lib/history";
 import type { ClientProject } from "@/lib/types";
 
 export async function GET() {
+  await materializeClientRecurring(localDateKey()); // add any recurring tasks due today
   const projects = await listClientProjects();
   return NextResponse.json({ projects }, { headers: { "cache-control": "no-store" } });
 }

@@ -11,6 +11,15 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.20",
+    date: "2026-07-18",
+    title: "Recurring client tasks + cross-tab done sync",
+    notes: [
+      "Client board: add recurring tasks per project — weekly (pick weekdays) or monthly (a day like the 15th or 30th; 31 = last day). They auto-appear on their due dates with an optional time.",
+      "Checking a task off now syncs everywhere: mark a pulled client task done in Tasks · Today and it checks off on the client board (and the Due-Today card) — and vice-versa.",
+    ],
+  },
+  {
     version: "v2.1.19",
     date: "2026-07-16",
     title: "Client board shows what's already on today",

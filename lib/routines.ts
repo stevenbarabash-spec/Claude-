@@ -32,6 +32,24 @@ export async function removeRoutine(id: string): Promise<Routine[]> {
   return routines;
 }
 
+// Mirror a done-state onto a day task by its source ref (e.g. "client:<id>") on
+// a given day — the reverse of the day→client sync, used when a client task is
+// checked off on the board and its Section 10 copy should follow.
+export async function setDayTaskDoneByRef(date: string, ref: string, done: boolean): Promise<boolean> {
+  const store = getStore();
+  const log = await store.getLog(date);
+  const dt: DayTask[] = log?.notes.day_tasks ?? [];
+  let changed = false;
+  for (const t of dt) {
+    if (t.ref === ref && t.done !== done) {
+      t.done = done;
+      changed = true;
+    }
+  }
+  if (changed) await store.mergeLogNotes(date, { day_tasks: dt });
+  return changed;
+}
+
 // Ensure every routine due on `date` exists in that day's tasks (idempotent).
 // Returns the day's tasks after materializing.
 export async function materializeForDay(date: string): Promise<DayTask[]> {

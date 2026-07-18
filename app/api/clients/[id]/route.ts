@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { listClientProjects, saveClientProjects } from "@/lib/clientProjects";
+import { localDateKey } from "@/lib/dates";
 import { recordHistory } from "@/lib/history";
+import { setDayTaskDoneByRef } from "@/lib/routines";
 import type { ClientProject } from "@/lib/types";
 
 const PATCHABLE: (keyof ClientProject)[] = [
@@ -14,6 +16,7 @@ const PATCHABLE: (keyof ClientProject)[] = [
   "budget",
   "iterations",
   "tasks",
+  "recurring",
 ];
 
 // The most specific one-line description of what a patch actually did.
@@ -59,6 +62,14 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
     before,
     after: project,
   });
+  // Reverse sync: if a task's done-state changed here, mirror it onto its
+  // Section 10 copy (today) so checking off on the board updates Tasks · Today.
+  for (const t of project.tasks) {
+    const prev = before.tasks.find((x) => x.id === t.id);
+    if (prev && prev.done !== t.done) {
+      await setDayTaskDoneByRef(localDateKey(), `client:${t.id}`, t.done);
+    }
+  }
   return NextResponse.json({ project });
 }
 

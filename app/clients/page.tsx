@@ -335,6 +335,30 @@ function ProjectCard({
   const [dueEditId, setDueEditId] = useState<string | null>(null);
   const [newTask, setNewTask] = useState({ title: "", due: "" });
   const [newNote, setNewNote] = useState("");
+  const [showRepeat, setShowRepeat] = useState(false);
+  const [rec, setRec] = useState<{ title: string; cadence: "weekly" | "monthly"; weekdays: number[]; dayOfMonth: string; time: string }>({
+    title: "",
+    cadence: "weekly",
+    weekdays: [],
+    dayOfMonth: "1",
+    time: "",
+  });
+
+  function addRecurring() {
+    const title = rec.title.trim();
+    if (!title) return;
+    if (rec.cadence === "weekly" && rec.weekdays.length === 0) return;
+    const def =
+      rec.cadence === "weekly"
+        ? { id: crypto.randomUUID(), title, cadence: "weekly" as const, weekdays: [...rec.weekdays].sort(), time: rec.time || null }
+        : { id: crypto.randomUUID(), title, cadence: "monthly" as const, dayOfMonth: Math.max(1, Math.min(31, Number(rec.dayOfMonth) || 1)), time: rec.time || null };
+    onPatch({ recurring: [...(p.recurring ?? []), def] });
+    setRec({ title: "", cadence: rec.cadence, weekdays: [], dayOfMonth: "1", time: "" });
+  }
+
+  function removeRecurring(id: string) {
+    onPatch({ recurring: (p.recurring ?? []).filter((r) => r.id !== id) });
+  }
 
   function setTaskDue(taskId: string, due: string) {
     onPatch({ tasks: p.tasks.map((t) => (t.id === taskId ? { ...t, due: due || null } : t)) });
@@ -589,6 +613,53 @@ function ProjectCard({
           <input className="input" type="date" style={{ width: 145, padding: "5px 9px", fontSize: 12 }} value={newTask.due} onChange={(e) => setNewTask({ ...newTask, due: e.target.value })} />
           <button className="btn small">+</button>
         </form>
+
+        {/* Recurring tasks */}
+        <button className="label" style={{ marginTop: 10, fontSize: 9, cursor: "pointer" }} onClick={() => setShowRepeat(!showRepeat)}>
+          {showRepeat ? "▼" : "▶"} 🔁 {(p.recurring ?? []).length} repeating
+        </button>
+        {showRepeat && (
+          <div className="stack" style={{ gap: 6, marginTop: 6 }}>
+            {(p.recurring ?? []).map((r) => (
+              <div key={r.id} className="spread" style={{ fontSize: 11.5 }}>
+                <span>
+                  {r.cadence === "weekly"
+                    ? `Weekly · ${(r.weekdays ?? []).map((d) => ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][d]).join(", ")}`
+                    : `Monthly · day ${r.dayOfMonth}`}
+                  {r.time ? ` · ${fmtClock(r.time)}` : ""} — {r.title}
+                </span>
+                <button className="btn small" style={{ color: "var(--hot)", padding: "0 6px" }} onClick={() => removeRecurring(r.id)}>×</button>
+              </div>
+            ))}
+            <input className="input" style={{ padding: "5px 9px", fontSize: 12 }} placeholder="Recurring task title…" value={rec.title} onChange={(e) => setRec({ ...rec, title: e.target.value })} />
+            <div className="row" style={{ gap: 6, flexWrap: "wrap" }}>
+              <button className="btn small" style={rec.cadence === "weekly" ? { background: "var(--accent-dim)", borderColor: "var(--accent)" } : undefined} onClick={() => setRec({ ...rec, cadence: "weekly" })}>Weekly</button>
+              <button className="btn small" style={rec.cadence === "monthly" ? { background: "var(--accent-dim)", borderColor: "var(--accent)" } : undefined} onClick={() => setRec({ ...rec, cadence: "monthly" })}>Monthly</button>
+              {rec.cadence === "weekly" ? (
+                <span className="row" style={{ gap: 3 }}>
+                  {["S", "M", "T", "W", "T", "F", "S"].map((lbl, d) => (
+                    <button
+                      key={d}
+                      className="btn small"
+                      style={{ padding: "2px 7px", ...(rec.weekdays.includes(d) ? { background: "var(--accent-dim)", borderColor: "var(--accent)", color: "var(--accent)" } : {}) }}
+                      onClick={() => setRec({ ...rec, weekdays: rec.weekdays.includes(d) ? rec.weekdays.filter((x) => x !== d) : [...rec.weekdays, d] })}
+                    >
+                      {lbl}
+                    </button>
+                  ))}
+                </span>
+              ) : (
+                <span className="row" style={{ gap: 4, fontSize: 11 }}>
+                  day
+                  <input className="input num" type="number" min={1} max={31} style={{ width: 56, padding: "3px 6px", fontSize: 12 }} value={rec.dayOfMonth} onChange={(e) => setRec({ ...rec, dayOfMonth: e.target.value })} />
+                  <span className="faint">(31 = last day)</span>
+                </span>
+              )}
+              <input className="input" type="time" style={{ width: 105, padding: "3px 6px", fontSize: 12 }} value={rec.time} onChange={(e) => setRec({ ...rec, time: e.target.value })} title="Optional time" />
+              <button className="btn small primary" onClick={addRecurring}>add</button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Updates */}

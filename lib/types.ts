@@ -104,6 +104,18 @@ export interface ClientTask {
   done: boolean;
   due: string | null; // YYYY-MM-DD
   time?: string | null; // HH:MM (24h) — optional clock time, carried into Section 10
+  recurringId?: string; // materialized from a ClientRecurring definition
+}
+
+// A recurring task on a client project — weekly (by weekday) or monthly (by day
+// of month). Materializes into the project's tasks on its due dates.
+export interface ClientRecurring {
+  id: string;
+  title: string;
+  cadence: "weekly" | "monthly";
+  weekdays?: number[]; // weekly: 0=Sun … 6=Sat
+  dayOfMonth?: number; // monthly: 1-31 (clamped to the last day of short months)
+  time?: string | null; // HH:MM
 }
 
 export interface ClientIteration {
@@ -123,6 +135,7 @@ export interface ClientProject {
   budget: string | null;
   iterations: ClientIteration[];
   tasks: ClientTask[];
+  recurring?: ClientRecurring[]; // per-project recurring task definitions
   created_at: string;
   updated_at: string;
 }
