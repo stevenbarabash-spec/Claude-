@@ -39,6 +39,8 @@ export default function ClientsPage() {
   const [newName, setNewName] = useState("");
   // Last checked-off task, so a stray click is one tap away from coming back.
   const [undo, setUndo] = useState<{ projectId: string; task: ClientTask } | null>(null);
+  // Inline edit state for a "due today by client" strip item.
+  const [stripEdit, setStripEdit] = useState<{ id: string; title: string; due: string } | null>(null);
   const today = clientDateKey();
 
   // Map of ref ("client:<taskId>") → the day-task id it created, for tasks
@@ -84,6 +86,24 @@ export default function ClientsPage() {
     setUndo(nowDone ? { projectId: p.id, task } : null);
   }
 
+  // ── Inline edit/delete for the "Due today by client" strip ──
+  function stripDelete(projectId: string, taskId: string) {
+    const p = projects?.find((x) => x.id === projectId);
+    if (!p) return;
+    void patch(projectId, { tasks: p.tasks.filter((t) => t.id !== taskId) });
+    setStripEdit(null);
+  }
+  function stripSaveEdit(projectId: string, taskId: string) {
+    const p = projects?.find((x) => x.id === projectId);
+    if (!p || !stripEdit) return;
+    void patch(projectId, {
+      tasks: p.tasks.map((t) =>
+        t.id === taskId ? { ...t, title: stripEdit.title.trim() || t.title, due: stripEdit.due || null } : t,
+      ),
+    });
+    setStripEdit(null);
+  }
+
   async function addProject(e: React.FormEvent) {
     e.preventDefault();
     if (!newName.trim()) return;
@@ -101,18 +121,21 @@ export default function ClientsPage() {
   const doneTasks = projects.flatMap((p) => p.tasks.filter((t) => t.done).map((t) => ({ p, t })));
   const overdueCount = openTasks.filter(({ t }) => t.due && t.due < today).length;
 
-  // Due today, grouped by client (project deadlines included).
-  const dueTodayByClient = new Map<string, { title: string; overdue: boolean }[]>();
+  // Due today, grouped by client (project deadlines included). Each item carries
+  // its project + task id so the strip can check off / edit / delete inline.
+  type DueItem = { title: string; overdue: boolean; projectId: string; task: ClientTask | null };
+  const dueTodayByClient = new Map<string, DueItem[]>();
   for (const p of projects) {
     if (p.status === "done") continue;
     const c = clientOf(p.name);
     for (const t of p.tasks) {
       if (t.done || !t.due) continue;
-      if (t.due === today) dueTodayByClient.set(c, [...(dueTodayByClient.get(c) ?? []), { title: t.title, overdue: false }]);
-      else if (t.due < today) dueTodayByClient.set(c, [...(dueTodayByClient.get(c) ?? []), { title: t.title, overdue: true }]);
+      if (t.due <= today) {
+        dueTodayByClient.set(c, [...(dueTodayByClient.get(c) ?? []), { title: t.title, overdue: t.due < today, projectId: p.id, task: t }]);
+      }
     }
     if (p.deadline === today) {
-      dueTodayByClient.set(c, [...(dueTodayByClient.get(c) ?? []), { title: "PROJECT DEADLINE", overdue: false }]);
+      dueTodayByClient.set(c, [...(dueTodayByClient.get(c) ?? []), { title: "PROJECT DEADLINE", overdue: false, projectId: p.id, task: null }]);
     }
   }
 
@@ -203,14 +226,47 @@ export default function ClientsPage() {
                   <span style={{ fontSize: 12.5, fontWeight: 600 }}>{client}</span>
                   <span className="num faint" style={{ fontSize: 11 }}>{items.length}</span>
                 </div>
-                {items.map((i, idx) => (
-                  <div key={idx} style={{ marginTop: 7, fontSize: 12, background: "rgba(255,255,255,0.03)", borderRadius: 6, padding: "6px 8px" }}>
-                    {i.title}
-                    <div className="label" style={{ fontSize: 9.5, marginTop: 3, color: i.overdue ? "var(--hot)" : "var(--warm)" }}>
-                      {i.overdue ? "overdue" : "due today"}
+                {items.map((i, idx) => {
+                  const editing = i.task && stripEdit?.id === i.task.id;
+                  return (
+                    <div key={idx} style={{ marginTop: 7, fontSize: 12, background: "rgba(255,255,255,0.03)", borderRadius: 6, padding: "6px 8px" }}>
+                      {editing && i.task ? (
+                        <div className="stack" style={{ gap: 5 }}>
+                          <input className="input" style={{ padding: "4px 7px", fontSize: 12 }} value={stripEdit!.title} autoFocus onChange={(e) => setStripEdit({ ...stripEdit!, title: e.target.value })} />
+                          <div className="row" style={{ gap: 5 }}>
+                            <input className="input" type="date" style={{ padding: "3px 6px", fontSize: 11 }} value={stripEdit!.due} onChange={(e) => setStripEdit({ ...stripEdit!, due: e.target.value })} />
+                            <button className="btn small primary" onClick={() => stripSaveEdit(i.projectId, i.task!.id)}>save</button>
+                            <button className="btn small" onClick={() => setStripEdit(null)}>×</button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="row" style={{ gap: 7, alignItems: "flex-start" }}>
+                          {i.task && (
+                            <input
+                              type="checkbox"
+                              checked={false}
+                              title="Mark done (syncs everywhere)"
+                              onChange={() => setTaskDone(i.projectId, i.task!, true)}
+                              style={{ marginTop: 2, accentColor: "var(--accent)", cursor: "pointer", flexShrink: 0 }}
+                            />
+                          )}
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div>{i.title}</div>
+                            <div className="label" style={{ fontSize: 9.5, marginTop: 3, color: i.overdue ? "var(--hot)" : "var(--warm)" }}>
+                              {i.title === "PROJECT DEADLINE" ? "deadline" : i.overdue ? "overdue" : "due today"}
+                            </div>
+                          </div>
+                          {i.task && (
+                            <span className="row" style={{ gap: 3, flexShrink: 0 }}>
+                              <button className="btn small" style={{ padding: "0 6px" }} title="Edit" onClick={() => setStripEdit({ id: i.task!.id, title: i.task!.title, due: i.task!.due ?? "" })}>✎</button>
+                              <button className="btn small" style={{ padding: "0 6px", color: "var(--hot)" }} title="Delete" onClick={() => stripDelete(i.projectId, i.task!.id)}>×</button>
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ))}
           </div>

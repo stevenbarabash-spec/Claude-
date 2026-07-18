@@ -11,6 +11,14 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.21",
+    date: "2026-07-18",
+    title: "Editable “due today by client” strip",
+    notes: [
+      "The Due-today-by-client strip at the top of the Clients board is now interactive: check a task off (syncs everywhere), edit its title/date inline, or delete it — right from the strip.",
+    ],
+  },
+  {
     version: "v2.1.20",
     date: "2026-07-18",
     title: "Recurring client tasks + cross-tab done sync",
