@@ -16,6 +16,31 @@
   .nf .low{position:absolute;left:0;right:0;bottom:0;z-index:3;display:flex;flex-direction:column;align-items:center;gap:16px;padding-bottom:26px}
   .nf .hint{font-size:.86rem;color:var(--muted);letter-spacing:.02em;text-shadow:0 2px 14px rgba(0,0,0,.8)}
   .nf .hint b{color:#fff;font-weight:700}
+  /* huge center unmute button */
+  .unmute{position:absolute;top:50%;left:50%;translate:-50% -50%;z-index:4;
+    display:grid;place-items:center;width:140px;height:140px;border-radius:50%;cursor:pointer;
+    background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.3);color:#fff;
+    backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);
+    box-shadow:0 24px 70px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.35);
+    transition:transform .25s cubic-bezier(.22,.7,.24,1),opacity .35s,background .2s}
+  .unmute svg{width:54px;height:54px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
+  .unmute:hover{transform:scale(1.08);background:rgba(255,255,255,.16)}
+  .unmute::before{content:"";position:absolute;inset:-14px;border-radius:50%;border:1.5px solid rgba(255,255,255,.22);animation:unpulse 2.2s ease-out infinite}
+  @keyframes unpulse{0%{transform:scale(.92);opacity:0}30%{opacity:1}100%{transform:scale(1.22);opacity:0}}
+  .unmute .lbl{position:absolute;top:calc(100% + 16px);left:50%;translate:-50% 0;font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.8);white-space:nowrap}
+  .unmute.gone{opacity:0;transform:scale(.6);pointer-events:none}
+  /* small corner sound toggle after unmuting */
+  .sndpill{position:absolute;right:22px;bottom:26px;z-index:4;display:none;align-items:center;gap:8px;
+    padding:10px 16px;border-radius:999px;cursor:pointer;font-size:.8rem;font-weight:700;color:#fff;
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+  .sndpill svg{width:16px;height:16px}
+  .sndpill.show{display:inline-flex}
+  @media(max-width:820px){
+    .unmute{width:104px;height:104px}
+    .unmute svg{width:40px;height:40px}
+    .sndpill{right:12px;bottom:auto;top:96px}
+  }
   /* ——— the dock ——— */
   .dock{display:flex;align-items:flex-end;gap:9px;padding:9px 13px;border-radius:24px;
     background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);
@@ -54,6 +79,14 @@
   <section class="nf">
     <video src="https://assets.cdn.filesafe.space/zPMFoWE7Sa0FnTxcLYBp/media/6a5bb428be58d79bcb851d7a.mp4" autoplay muted loop playsinline aria-label="Page not found"></video>
     <div class="veil" aria-hidden="true"></div>
+    <button class="unmute" type="button" aria-label="Play video with sound">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+      <span class="lbl">Tap for sound</span>
+    </button>
+    <button class="sndpill" type="button" aria-label="Mute video">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9.5 9.5 0 0 1 0 14"/></svg>
+      <span class="st">Sound on</span>
+    </button>
     <div class="low">
       <p class="hint"><b>Lost?</b> Pick a destination below.</p>
       <nav class="dock" aria-label="Site navigation dock">
@@ -74,6 +107,25 @@
 
   <script>
   (function(){
+    /* unmute: big center button starts the video over with sound, then a small pill toggles it */
+    var vid=document.querySelector(".nf video");
+    var big=document.querySelector(".unmute");
+    var pill=document.querySelector(".sndpill");
+    if(vid&&big&&pill){
+      big.addEventListener("click",function(){
+        vid.muted=false;vid.volume=1;vid.currentTime=0;
+        var pr=vid.play();if(pr&&pr.catch)pr.catch(function(){});
+        big.classList.add("gone");
+        pill.classList.add("show");
+        pill.querySelector(".st").textContent="Sound on";
+      });
+      pill.addEventListener("click",function(){
+        vid.muted=!vid.muted;
+        pill.querySelector(".st").textContent=vid.muted?"Sound off":"Sound on";
+        pill.setAttribute("aria-label",vid.muted?"Unmute video":"Mute video");
+      });
+    }
+
     var dock=document.querySelector(".dock");
     if(!dock)return;
     var items=Array.prototype.slice.call(dock.querySelectorAll("a"));
