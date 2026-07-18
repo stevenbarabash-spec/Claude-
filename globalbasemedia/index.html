@@ -669,6 +669,15 @@
 <script>
 (function(){
   var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* builders sometimes wrap pasted header code in transformed containers,
+     which breaks position:fixed — lift the nav (and aura) to the body root */
+  try{
+    var nv=document.querySelector("nav.nav");
+    if(nv&&nv.parentElement!==document.body)document.body.appendChild(nv);
+    var au=document.querySelector(".cursor-aura");
+    if(au&&au.parentElement!==document.body)document.body.appendChild(au);
+  }catch(e){}
+
   var t=document.querySelector(".nav-toggle");
   if(t){t.addEventListener("click",function(){var o=document.body.classList.toggle("nav-open");t.setAttribute("aria-expanded",o?"true":"false")});
     document.querySelectorAll(".nav .links a").forEach(function(a){a.addEventListener("click",function(){document.body.classList.remove("nav-open");t.setAttribute("aria-expanded","false")})});}
