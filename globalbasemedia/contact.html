@@ -56,24 +56,28 @@
   <style>
   /* contact page */
   .cthero{padding:170px 0 10px;text-align:center;position:relative}
+  /* light page background in the builder — dark, readable text */
+  .cthero .eyebrow{color:#6b6685}
+  .cthero h1{color:#1b1533}
+  .cthero .lede{color:#524d6b}
   .ctgrid{display:grid;grid-template-columns:1fr 1.15fr;gap:26px;align-items:start;margin-top:44px;text-align:left}
   @media(max-width:900px){.ctgrid{grid-template-columns:1fr}}
-  .ctcard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:28px}
-  .ctcard h3{margin-bottom:16px}
+  .ctcard{background:#fff;border:1px solid #e9e6f2;border-radius:20px;padding:28px;box-shadow:0 24px 60px -24px rgba(30,15,70,.2)}
+  .ctcard h3{margin-bottom:16px;color:#1b1533}
   .ctstep{display:flex;gap:14px;margin-top:18px}
   .ctstep .n{flex:0 0 auto;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;font-weight:800;font-size:.85rem;color:#08130d;background:var(--btn)}
-  .ctstep b{display:block;color:#fff;font-size:.95rem}
-  .ctstep p{font-size:.86rem;color:var(--muted2);margin-top:2px}
-  .ctphone{display:flex;align-items:center;gap:12px;margin-top:26px;padding:16px 18px;border-radius:14px;background:rgba(34,224,160,.1);border:1px solid rgba(34,224,160,.35)}
-  .ctphone svg{width:20px;height:20px;color:#57f0c0;flex:0 0 auto}
-  .ctphone a{font-family:var(--display);font-weight:700;font-size:1.25rem;color:#fff;white-space:nowrap}
-  .ctphone span{font-size:.78rem;color:var(--muted2)}
-  .ctmeta{margin-top:18px;font-size:.85rem;color:var(--muted2)}
-  .ctmeta b{color:#fff}
-  .formwrap{background:#000;border-radius:20px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.14)}
+  .ctstep b{display:block;color:#1b1533;font-size:.95rem}
+  .ctstep p{font-size:.86rem;color:#5a5570;margin-top:2px}
+  .ctphone{display:flex;align-items:center;gap:12px;margin-top:26px;padding:16px 18px;border-radius:14px;background:rgba(18,201,138,.12);border:1px solid rgba(18,160,110,.4)}
+  .ctphone svg{width:20px;height:20px;color:#0e8f63;flex:0 0 auto}
+  .ctphone a{font-family:var(--display);font-weight:700;font-size:1.25rem;color:#0a2e21;white-space:nowrap}
+  .ctphone span{font-size:.78rem;color:#3e6b57}
+  .ctmeta{margin-top:18px;font-size:.85rem;color:#6b6685}
+  .ctmeta b{color:#1b1533}
+  .formwrap{background:transparent;border-radius:20px;overflow:hidden;box-shadow:0 30px 70px -22px rgba(30,15,70,.3)}
   .formwrap iframe{display:block;width:100%;height:820px;border:0}
-  .formnote{text-align:center;font-size:.8rem;color:var(--muted2);margin-top:12px}
-  .formnote a{color:#7fb0ff;text-decoration:underline;text-underline-offset:2px}
+  .formnote{text-align:center;font-size:.8rem;color:#6b6685;margin-top:12px}
+  .formnote a{color:#2f6bff;text-decoration:underline;text-underline-offset:2px}
   @media(max-width:900px){.formwrap iframe{height:860px}}
   </style>
 
