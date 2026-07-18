@@ -61,6 +61,13 @@
     addEventListener("resize",park); park();
   }
 
+  /* Nav: floating pill at the top of the page, snaps into a thin full-width bar on scroll */
+  var nav=document.querySelector(".nav");
+  if(nav){
+    var setStuck=function(){nav.classList.toggle("stuck",scrollY>60)};
+    addEventListener("scroll",setStuck,{passive:true}); setStuck();
+  }
+
   document.querySelectorAll(".year").forEach(function(el){el.textContent=new Date().getFullYear()});
 })();
 </script>

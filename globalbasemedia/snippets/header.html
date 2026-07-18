@@ -139,8 +139,17 @@ h3{font-size:1.22rem;letter-spacing:-.01em}
 /* ---------- floating pill nav ---------- */
 .nav{position:fixed;top:22px;left:50%;translate:-50% 0;z-index:100;display:flex;align-items:center;justify-content:space-between;
   background:#fff;color:#111;border-radius:18px;box-shadow:0 20px 50px -12px rgba(0,0,0,.55);border:1px solid #eee;
-  padding:10px 16px 10px 14px;width:min(1080px,92%);animation:drop .5s ease-out both}
+  padding:10px 16px 10px 14px;width:min(1080px,92%);animation:drop .5s ease-out both;
+  transition:top .35s ease,width .35s ease,border-radius .35s ease,padding .35s ease,box-shadow .35s ease}
 @keyframes drop{from{opacity:0;translate:-50% -16px}to{opacity:1;translate:-50% 0}}
+/* scrolled state: snaps to the top as a thinner full-width bar */
+.nav.stuck{top:0;width:100%;border-radius:0;border:0;border-bottom:1px solid #ececf2;padding:6px 20px;box-shadow:0 12px 34px -14px rgba(0,0,0,.4)}
+@media(min-width:821px){.nav.stuck{justify-content:flex-end}}
+.nav .brand{transition:left .4s ease,translate .4s ease}
+.nav.stuck .brand{left:20px;translate:0 -50%}
+.nav .brand img{transition:width .35s ease,height .35s ease}
+.nav.stuck .brand img{width:26px;height:26px}
+@media(min-width:821px){.nav.stuck .links{position:absolute;left:50%;top:50%;translate:-50% -50%}}
 .nav .links{display:flex;gap:18px;align-items:center}
 .nav .links a{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#111;position:relative;white-space:nowrap}
 .nav .links a::after{content:"";position:absolute;left:0;bottom:-4px;height:2px;width:0;transition:width .3s ease}
@@ -157,6 +166,19 @@ h3{font-size:1.22rem;letter-spacing:-.01em}
 .pillcta .sh{position:absolute;top:0;left:-60%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:transform .7s ease}
 .pillcta:hover .sh{transform:skewX(-20deg) translateX(360%)}
 .pillcta .t{position:relative;z-index:1}
+/* Services dropdown */
+.nav .links li{position:relative;list-style:none}
+.nav .links a .caret{vertical-align:1px;margin-left:2px;transition:transform .25s ease}
+.nav .links li.has-sub:hover>a .caret,.nav .links li.has-sub:focus-within>a .caret{transform:rotate(180deg)}
+.nav .links .sub{display:none;position:absolute;top:100%;left:-12px;padding-top:14px;min-width:224px;z-index:102}
+.nav .links .sub::before{content:"";position:absolute;top:0;left:0;right:0;height:14px}
+.nav .links li.has-sub:hover .sub,.nav .links li.has-sub:focus-within .sub{display:block}
+.nav .links .sub li{list-style:none}
+.nav .links .sub li:first-child a{border-radius:10px 10px 4px 4px}
+.nav .links .sub li:last-child a{border-radius:4px 4px 10px 10px}
+.nav .links .sub a{display:block;background:#fff;padding:11px 16px;font-size:.7rem;border-radius:4px;box-shadow:0 22px 54px -16px rgba(0,0,0,.45)}
+.nav .links .sub a:hover{background:#f4f4fa;color:#2f6bff}
+.nav .links .sub a::after{display:none}
 .nav-toggle{display:none;background:none;border:0;width:40px;height:40px;position:relative;z-index:101}
 .nav-toggle span,.nav-toggle span::before,.nav-toggle span::after{content:"";position:absolute;left:8px;width:24px;height:2.5px;background:#111;border-radius:3px;transition:.2s}
 .nav-toggle span{top:19px}.nav-toggle span::before{top:-7px;left:0}.nav-toggle span::after{top:7px;left:0}
@@ -164,6 +186,10 @@ h3{font-size:1.22rem;letter-spacing:-.01em}
   .nav .links{position:absolute;top:calc(100% + 10px);left:0;right:0;flex-direction:column;align-items:flex-start;gap:4px;background:#fff;border-radius:16px;padding:14px 18px;box-shadow:0 20px 50px -12px rgba(0,0,0,.4);display:none}
   body.nav-open .nav .links{display:flex}
   .nav .links a{font-size:.9rem;padding:8px 0}
+  .nav .links .sub{display:block;position:static;padding:0 0 4px 14px;min-width:0}
+  .nav .links .sub::before{display:none}
+  .nav .links .sub a{box-shadow:none;padding:7px 0;font-size:.8rem;border-radius:0;background:transparent}
+  .nav .links a .caret{display:none}
   .nav-toggle{display:block}
   .nav .brand{left:52px;translate:0 -50%}
   .pillcta{display:none}
@@ -187,6 +213,10 @@ h3{font-size:1.22rem;letter-spacing:-.01em}
 .btn.ghost,.btn.ghost .t{color:#fff}
 
 /* ---------- sections & stacking ---------- */
+/* soft color hand-off between sections — blooms dissolve into the next background instead of cutting off */
+.hero::after,section.stack-top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:260px;
+  background:linear-gradient(to bottom,transparent,var(--bg2));pointer-events:none;z-index:1}
+
 section{position:relative;padding:110px 0}
 .stack{position:relative;z-index:2;background:var(--bg);border-radius:0 0 60px 60px;box-shadow:0 30px 60px -10px rgba(0,0,0,.6);border-bottom:1px solid rgba(255,255,255,.05)}
 .stack-top{position:relative;z-index:3;margin-top:-56px;border-radius:60px 60px 0 0;border-top:1px solid rgba(255,255,255,.06);overflow:hidden}
@@ -317,6 +347,14 @@ section{position:relative;padding:110px 0}
   background:linear-gradient(90deg,#93c5fd,var(--blue),var(--pink),var(--green));
   -webkit-mask-image:linear-gradient(to top,#000 25%,transparent);mask-image:linear-gradient(to top,#000 25%,transparent)}
 
+@media(max-width:640px){
+  .footwrap,.footsticky{height:300px}
+  .footlinks{gap:6px 22px;padding:22px 20px 0}
+  .footlinks a{font-size:1rem}
+  .footcopy{text-align:left;padding:6px 20px 6px;font-size:.74rem}
+  .footword{font-size:9.4vw;white-space:nowrap}
+}
+
 a.skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--blue);color:#fff;padding:12px 18px;border-radius:0 0 10px 0;font-weight:700}
 a.skip:focus{left:0}
 
@@ -415,13 +453,21 @@ a.skip:focus{left:0}
 <nav class="nav">
   <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span></button>
   <ul class="links">
-    <li><a href="index.html#services">Services</a></li>
+    <li class="has-sub"><a href="index.html#services">Services <svg class="caret" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></a>
+      <ul class="sub">
+        <li><a href="website-design.html">Website Design</a></li>
+        <li><a href="seo.html">SEO</a></li>
+        <li><a href="ads.html">Google Ads</a></li>
+        <li><a href="google-reviews.html">Google Reviews &amp; Automations</a></li>
+        <li><a href="ai-receptionist.html">24/7 Virtual Assistant</a></li>
+      </ul>
+    </li>
     <li><a href="testimonials.html">Our Work</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
   <a class="brand" href="index.html"><img src="https://assets.cdn.filesafe.space/zPMFoWE7Sa0FnTxcLYBp/media/68f39cec4a04cb08c317e482.png" alt="Global Base Media" /> Global Base Media</a>
-  <a class="pillcta" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1"><span class="g"></span><span class="sh"></span><span class="t">Book a Strategy Call →</span></a>
+  <a class="pillcta" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1"><span class="g"></span><span class="sh"></span><span class="t" style="display:inline-flex;align-items:center;gap:7px">Book a Strategy Call <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span></a>
 </nav>
 
 <div class="cursor-aura" aria-hidden="true"><b class="b1"></b><b class="b2"></b></div>
