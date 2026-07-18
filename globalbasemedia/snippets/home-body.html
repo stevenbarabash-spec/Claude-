@@ -13,7 +13,8 @@
   .flip.flipped .flip-hint{opacity:0}
   .hero-visual .chip{opacity:0;transition:opacity .6s ease .15s}
   .hero-visual.flipped .chip{opacity:1}
-  .cardphoto{display:block;width:100%;height:190px;object-fit:cover;border-radius:12px;margin-top:16px;background:#0a0812}
+  .cardphoto{display:block;width:100%;height:252px;object-fit:cover;object-position:center top;border-radius:12px;margin-top:16px;background:#0a0812}
+  @media(max-width:560px){.cardphoto{height:190px}}
   .cardphoto.ph{display:grid;place-items:center;background:linear-gradient(135deg,rgba(47,107,255,.18),rgba(255,61,139,.14));border:1px dashed rgba(255,255,255,.22);color:var(--muted);font-size:.82rem;font-weight:600}
   @media(prefers-reduced-motion:reduce){.flip-inner{transition:none}}
 
@@ -224,6 +225,43 @@
     .footcopy{text-align:left;padding:6px 20px 6px;font-size:.74rem}
     .footword{font-size:9.4vw;white-space:nowrap}
   }
+
+  /* ——— LIGHT THEME (homepage): white/pastel like the Contact page ——— */
+  body{background:#fbfaff!important}
+  #main{color:#3c3854}
+  #main section{background:#fff!important}
+  #main section[style*="--bg2"]{background:#f5f2fb!important}
+  #main section.hero{background:linear-gradient(160deg,#f3ecfb,#eaf2fb 45%,#fdeef5)!important}
+  #main .hero::after,#main section.stack-top::after{display:none}
+  #main .dots{background-image:radial-gradient(rgba(45,30,100,.5) 1px,transparent 1px);opacity:.1}
+  #main .bloom{opacity:.28}
+  #main h1,#main h2{color:#191434}
+  #main .lede{color:#524d6b}
+  #main .eyebrow{color:#6b6685}
+  #main .hero-note{color:#5a5570}
+  #main b[style*="color:#fff"]{color:#191434!important}
+  #main .hero .avatars .a{border-color:#fff}
+  #main .btn.ghost,#main .btn.ghost .t{color:#22204a}
+  #main .btn.ghost{background:#fff;border-color:#c9c3e6}
+  #main .btn.ghost:hover{background:#f4f1fc}
+  #main .qcard{background:#fff;border:1px solid #e9e6f2;box-shadow:0 18px 44px -20px rgba(30,15,70,.15)}
+  #main .qcard p{color:#5a5570}
+  #main .step{background:#fff;border-color:#e9e6f2;box-shadow:0 18px 44px -22px rgba(30,15,70,.13)}
+  #main .step p{color:#5a5570}
+  #main .tcard{background:#fff;border-color:#e9e6f2;box-shadow:0 18px 44px -22px rgba(30,15,70,.13)}
+  #main .tcard blockquote{color:#2a2542}
+  #main .faq details{background:#fff;border-color:#e9e6f2}
+  #main .faq .b{color:#5a5570}
+  #main .pkg{background:#fff;border-color:#e9e6f2;box-shadow:0 18px 44px -24px rgba(30,15,70,.16)}
+  #main .pkg .sub{color:#6b6685}
+  #main .pkg li{color:#4a4660}
+  #main .pkg.feat{background:linear-gradient(#fff,#fff) padding-box,conic-gradient(from var(--ringang),#4285F4,#EA4335 28%,#FBBC05 52%,#34A853 76%,#4285F4) border-box}
+  #main .feat .price{color:#2f6bff}
+  #main .pkg .go{color:#22204a;background:#f2f0fa;border-color:#dcd7ee}
+  #main .pkg .go:hover{background:#e9e5f7}
+  /* the website mockups stay dark — framed screens on a light page */
+  #main .viz{background:#141126;border-color:rgba(255,255,255,.09);color:#f6f4fb}
+  #main .viz .sub{color:#a49dc0}
   </style>
   <!-- HERO -->
   <section class="hero" id="top">
