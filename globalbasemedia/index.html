@@ -75,15 +75,15 @@
   .cardphoto.ph{display:grid;place-items:center;background:linear-gradient(135deg,rgba(47,107,255,.18),rgba(255,61,139,.14));border:1px dashed rgba(255,255,255,.22);color:var(--muted);font-size:.82rem;font-weight:600}
   @media(prefers-reduced-motion:reduce){.flip-inner{transition:none}}
 
-  /* electric border on the featured (Custom) card — two smooth strands undulating like a DNA wave */
-  .elec{filter:drop-shadow(0 0 5px rgba(150,210,255,.5)) drop-shadow(0 0 14px rgba(47,107,255,.32))}
-  .elec .base{stroke:url(#eg);stroke-width:1.5;opacity:.55}
-  .elec .bolt{stroke:#cdebff;stroke-width:1.5;filter:url(#electric2);animation:wavea 6s ease-in-out infinite}
-  .elec .bolt2{stroke:url(#eg);stroke-width:1.9;opacity:.5;filter:url(#electric2b);animation:waveb 8s ease-in-out infinite}
-  @keyframes wavea{0%,100%{opacity:.85}50%{opacity:.55}}
-  @keyframes waveb{0%,100%{opacity:.38}50%{opacity:.62}}
-  .feat .glowpulse{box-shadow:0 0 36px 4px rgba(47,107,255,.35),0 0 90px 16px rgba(34,211,238,.18);animation:pulse 2.6s ease-in-out infinite}
-  @media(prefers-reduced-motion:reduce){.elec .bolt,.elec .bolt2{animation:none;filter:url(#electric2)}}
+  /* rainbow ring on the featured (Custom) card — smooth Google-colored border, slowly rotating */
+  @property --ringang{syntax:"<angle>";inherits:false;initial-value:0deg}
+  .pkg.feat{border:2.5px solid transparent;
+    background:linear-gradient(#0f0b1c,#0f0b1c) padding-box,
+    conic-gradient(from var(--ringang),#4285F4,#EA4335 28%,#FBBC05 52%,#34A853 76%,#4285F4) border-box;
+    animation:ringspin 8s linear infinite}
+  @keyframes ringspin{to{--ringang:360deg}}
+  .feat .glowpulse{box-shadow:0 0 34px 2px rgba(66,133,244,.3),0 0 80px 12px rgba(52,168,83,.16);animation:pulse 3s ease-in-out infinite}
+  @media(prefers-reduced-motion:reduce){.pkg.feat{animation:none}}
 
   /* auto-scrolling website previews (swap each .page for a full-page screenshot img when available) */
   .examples{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
@@ -193,6 +193,49 @@
   .gdg-gal .ba s i{position:absolute;left:50%;bottom:3px;transform:translateX(-50%);font-style:normal;font-size:4.6px;font-weight:800;letter-spacing:.1em;background:rgba(0,0,0,.6);color:#fff;padding:2px 5px;border-radius:3px;white-space:nowrap}
   .gdg-gal .ba s.af i{background:rgba(24,128,56,.85)}
   .gdg-gal .cap9{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;font-family:"Fraunces",serif;font-style:italic;font-size:6px;color:#4b5563;margin:-4px 0 10px}
+
+  /* --- AI chatbot widgets pinned inside the mockup browser frames --- */
+  .chatw{position:absolute;right:8px;bottom:8px;width:122px;z-index:6;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 10px 30px rgba(10,20,40,.45);font-size:7px;text-align:left}
+  .chatw .ch{display:flex;align-items:center;gap:5px;background:#12314f;color:#fff;padding:6px 8px}
+  .chatw .ch .dot9{width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,#4aa8ff,#7fe0c3);position:relative}
+  .chatw .ch .dot9::after{content:"";position:absolute;right:-1px;bottom:-1px;width:4px;height:4px;border-radius:50%;background:#22e0a0;border:1px solid #12314f}
+  .chatw .ch b{font-size:6.8px;display:block;line-height:1.1}
+  .chatw .ch span{font-size:5.4px;opacity:.75;display:block}
+  .chatw .cm{padding:6px 7px;display:flex;flex-direction:column;gap:4px;min-height:64px}
+  .chatw .bub{max-width:86%;padding:4px 6px;border-radius:7px;line-height:1.35}
+  .chatw .bub.bot{background:#eef2f7;color:#1c2b3a;border-bottom-left-radius:2px;align-self:flex-start}
+  .chatw .bub.usr{background:#12314f;color:#fff;border-bottom-right-radius:2px;align-self:flex-end}
+  .chatw .chips{display:flex;gap:3px;align-self:flex-start}
+  .chatw .chips i{font-style:normal;font-size:5.6px;font-weight:700;color:#12314f;border:1px solid #b9cbe0;border-radius:999px;padding:2px 5px;background:#fff}
+  .chatw .typing{display:inline-flex;gap:2px;align-self:flex-start;background:#eef2f7;border-radius:7px;border-bottom-left-radius:2px;padding:5px 6px}
+  .chatw .typing i{width:3px;height:3px;border-radius:50%;background:#8296ad;animation:tybounce 1s ease-in-out infinite}
+  .chatw .typing i:nth-child(2){animation-delay:.15s}
+  .chatw .typing i:nth-child(3){animation-delay:.3s}
+  @keyframes tybounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-2.5px)}}
+  .chatw .cin{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #edf0f4;padding:5px 7px;color:#9aa4b2;font-size:6px}
+  .chatw .cin .snd{width:12px;height:12px;border-radius:50%;background:#12314f;display:grid;place-items:center;color:#fff;font-size:6px}
+  /* conversation loop — each piece gets its own visibility window over a 10s cycle */
+  .chatw .cm>*{opacity:0}
+  .chatw .m1{animation:cwin1 10s ease infinite}
+  .chatw .m2{animation:cwin2 10s ease infinite}
+  .chatw .ty{animation:cwin3 10s ease infinite}
+  .chatw .m3{animation:cwin4 10s ease infinite}
+  .chatw .m4{animation:cwin5 10s ease infinite}
+  @keyframes cwin1{0%,3%{opacity:0;transform:translateY(5px)}7%,93%{opacity:1;transform:none}98%,100%{opacity:0}}
+  @keyframes cwin2{0%,16%{opacity:0;transform:translateY(5px)}20%,93%{opacity:1;transform:none}98%,100%{opacity:0}}
+  @keyframes cwin3{0%,26%{opacity:0}29%,41%{opacity:1}44%,100%{opacity:0}}
+  @keyframes cwin4{0%,44%{opacity:0;transform:translateY(5px)}48%,93%{opacity:1;transform:none}98%,100%{opacity:0}}
+  @keyframes cwin5{0%,56%{opacity:0;transform:translateY(5px)}60%,93%{opacity:1;transform:none}98%,100%{opacity:0}}
+  @media(prefers-reduced-motion:reduce){.chatw .cm>*{opacity:1;animation:none}.chatw .ty{display:none}.chatw .typing i{animation:none}}
+  /* closed launcher (Apex) */
+  .chatb{position:absolute;right:8px;bottom:8px;z-index:6;display:flex;align-items:flex-end;gap:5px}
+  .chatb .tease{background:#fff;color:#1c2b3a;font-size:6.4px;font-weight:600;padding:5px 7px;border-radius:8px;border-bottom-right-radius:2px;box-shadow:0 8px 22px rgba(10,20,40,.4);max-width:92px;animation:teasein 6s ease infinite}
+  @keyframes teasein{0%,8%{opacity:0;transform:translateY(5px)}16%,88%{opacity:1;transform:none}96%,100%{opacity:0}}
+  .chatb .orb{position:relative;width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#f2600c,#ff8b3d);display:grid;place-items:center;box-shadow:0 8px 20px rgba(242,96,12,.5);animation:orbfloat 3.2s ease-in-out infinite}
+  @keyframes orbfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  .chatb .orb svg{width:12px;height:12px}
+  .chatb .orb .bdg{position:absolute;top:-3px;right:-3px;background:#e11d48;color:#fff;font-size:5.5px;font-weight:800;width:9px;height:9px;border-radius:50%;display:grid;place-items:center;border:1px solid #fff}
+  @media(prefers-reduced-motion:reduce){.chatb .tease,.chatb .orb{animation:none;opacity:1}}
   .gdg-strip{background:#fff;text-align:center;font-size:5.8px;letter-spacing:.12em;font-weight:700;padding:8px 10px;color:#565a61;border-top:1px solid #eee}
   .gdg-strip .st{color:#c9a24a;letter-spacing:.04em}
   .gdg-test{background:#f7f5f0;text-align:center;padding:18px 12px}
@@ -240,17 +283,6 @@
     .footword{font-size:9.4vw;white-space:nowrap}
   }
   </style>
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-    <filter id="electric2" x="-30%" y="-30%" width="160%" height="160%">
-      <feTurbulence type="turbulence" baseFrequency="0.006 0.02" numOctaves="1" seed="4" result="n"><animate attributeName="baseFrequency" dur="7s" values="0.006 0.02;0.009 0.028;0.006 0.02" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/></feTurbulence>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="10" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-    <filter id="electric2b" x="-30%" y="-30%" width="160%" height="160%">
-      <feTurbulence type="turbulence" baseFrequency="0.007 0.022" numOctaves="1" seed="11" result="n2"><animate attributeName="baseFrequency" dur="9s" values="0.008 0.024;0.005 0.017;0.008 0.024" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/></feTurbulence>
-      <feDisplacementMap in="SourceGraphic" in2="n2" scale="12" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </defs></svg>
-
   <!-- HERO -->
   <section class="hero" id="top">
     <div class="dots"></div><div class="noise"></div><div class="bloom spectrum"></div>
@@ -414,7 +446,18 @@
                 <div class="tc"><span class="st">★★★★★</span> "From the moment you walk in, it feels nothing like a dental office."<b>— Kim A. · Google review</b></div>
               </div>
               <div class="gdg-foot"><div><b>WEST PALM BEACH DENTISTRY</b>Modern, personalized dentistry serving Palm Beach since 1984.</div><div><b>EXPLORE</b>Doctors · Gallery<br/>Testimonials</div><div><b>OFFICES</b>Downtown West Palm<br/>Palm Beach Gardens</div></div>
-            </div></div></div>
+            </div></div>
+            <div class="chatw" aria-hidden="true">
+              <div class="ch"><span class="dot9"></span><div><b>Smile Assistant</b><span>AI · online now</span></div></div>
+              <div class="cm">
+                <div class="bub bot m1">Hi! I can book your visit — what do you need?</div>
+                <div class="bub usr m2">Teeth whitening</div>
+                <div class="typing ty"><i></i><i></i><i></i></div>
+                <div class="bub bot m3">Great choice. Dr. Lane has Tuesday at 2:15pm — want it?</div>
+                <div class="chips m4"><i>Book Tuesday</i><i>More times</i></div>
+              </div>
+              <div class="cin">Type a message…<span class="snd">➤</span></div>
+            </div>
           </div>
           <div class="ba-badge">Custom build</div>
           <div class="ex-label">West Palm Beach Dentistry <span>· Dentistry</span></div>
@@ -461,7 +504,11 @@
               <div class="msband"><b>Emergency? We're on the way.</b><span>Real humans answer 24/7 — average dispatch under 60 minutes.</span><span class="msbtn">Call Now</span></div>
               <div class="msquote">"They showed up in 40 minutes on a Sunday and the price matched the quote. Unheard of."<b>— Robert T. ★★★★★</b></div>
               <div class="msfoot"><div><b>APEX HOME SERVICES</b>Serving all of Palm Beach County<br/>Licensed &amp; insured · CFC-058821</div><div class="rt"><b>24/7 DISPATCH</b>Call (561) 555-0177<br/>Same-day service</div></div>
-            </div></div></div>
+            </div></div>
+            <div class="chatb" aria-hidden="true">
+              <span class="tease">Roof leak? Chat with our AI — we're on it 24/7.</span>
+              <span class="orb"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-9 8.35 8.5 8.5 0 0 1-3.4-.7L3 21l1.85-5.55A8.38 8.38 0 0 1 12.5 3a8.5 8.5 0 0 1 8.5 8.5z"/></svg><span class="bdg">1</span></span>
+            </div>
           </div>
           <div class="ba-badge">Custom build</div>
           <div class="ex-label">Apex Home Services <span>· Home Services</span></div>
@@ -486,7 +533,6 @@
         <div class="pkg reveal"><div class="pic">🛍️</div><h3>Online <span class="serif emer">Shop</span></h3><p class="sub">Sells around the clock, all year.</p><div class="price emer">Book a consult</div><ul><li><b>✓</b>Products, cart &amp; orders</li><li><b>✓</b>Secure payment &amp; shipping</li><li><b>✓</b>Intuitive admin</li><li><b>✓</b>Free design draft first</li></ul><a class="go" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1">Get My Free Draft →</a></div>
 
         <div class="pkg feat reveal"><span class="glowpulse"></span><span class="badge">100% Custom</span>
-          <svg class="elec" preserveAspectRatio="none" viewBox="0 0 300 560" aria-hidden="true"><rect class="base" x="3" y="3" width="294" height="554" rx="22"/><rect class="bolt" x="3" y="3" width="294" height="554" rx="22"/><rect class="bolt bolt2" x="3" y="3" width="294" height="554" rx="22"/></svg>
           <div class="pic" style="border-color:#60a5fa55">✨</div><h3>Custom <span class="serif blu">Website</span></h3><p class="sub">100% custom-built — never a template.</p><div class="price">Book a consult</div><ul><li><b>✓</b>Bespoke design, built from scratch for your brand</li><li><b>✓</b>Unlimited pages &amp; custom features</li><li><b>✓</b>AI chatbot, automations &amp; integrations</li><li><b>✓</b>Made to do exactly what your business needs</li></ul><a class="go" href="https://api.leadconnectorhq.com/widget/form/TvVxKhAbj09pNmLwQHD1" style="background:var(--btn);border-color:transparent;color:#08130d">Build My Custom Site →</a></div>
       </div>
     </div>

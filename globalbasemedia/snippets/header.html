@@ -305,16 +305,17 @@ section{position:relative;padding:110px 0}
 .pkg .go:hover{background:rgba(255,255,255,.15)}
 .pkg.feat{border-color:transparent}
 .badge{position:absolute;top:-13px;left:50%;translate:-50% 0;background:var(--blue);color:#fff;font-size:.66rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;border-radius:999px;z-index:4;box-shadow:0 0 18px rgba(47,107,255,.7)}
-/* electric border — a continuous base ring + a jittering bolt on top, fully wrapping the card */
-.elec{position:absolute;inset:-2px;width:calc(100% + 4px);height:calc(100% + 4px);border-radius:24px;pointer-events:none;z-index:3;
-  filter:drop-shadow(0 0 5px rgba(96,165,250,.75)) drop-shadow(0 0 12px rgba(47,107,255,.4))}
-.elec rect{fill:none;vector-effect:non-scaling-stroke}
-.elec .base{stroke:url(#eg);stroke-width:1.4;opacity:.55}
-.elec .bolt{stroke:url(#eg);stroke-width:2.4;filter:url(#electric)}
+/* rainbow ring — a smooth Google-colored gradient border slowly rotating around the featured card */
+@property --ringang{syntax:"<angle>";inherits:false;initial-value:0deg}
+.pkg.feat{border:2.5px solid transparent;
+  background:linear-gradient(#0f0b1c,#0f0b1c) padding-box,
+  conic-gradient(from var(--ringang),#4285F4,#EA4335 28%,#FBBC05 52%,#34A853 76%,#4285F4) border-box;
+  animation:ringspin 8s linear infinite}
+@keyframes ringspin{to{--ringang:360deg}}
 .feat .glowpulse{position:absolute;inset:-10px;border-radius:30px;pointer-events:none;z-index:0;
-  box-shadow:0 0 44px 4px rgba(47,107,255,.4),0 0 100px 14px rgba(96,165,250,.22);animation:pulse 2.6s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
-@media(prefers-reduced-motion:reduce){.feat .glowpulse{animation:none}.elec .bolt{filter:none}}
+  box-shadow:0 0 34px 2px rgba(66,133,244,.3),0 0 80px 12px rgba(52,168,83,.16);animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.feat .glowpulse{animation:none}.pkg.feat{animation:none}}
 .feat .price{color:#93c5fd}
 
 /* ---------- testimonials ---------- */
