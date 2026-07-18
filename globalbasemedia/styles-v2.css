@@ -155,8 +155,10 @@ nav.nav{position:fixed!important;left:50%!important;right:auto!important;transla
   .nav .links .sub .tile{width:26px;height:26px;border-radius:8px}
   .nav .links a .caret{display:none}
   .nav-toggle{display:block}
-  .nav .brand{left:52px;translate:0 -50%}
+  /* mobile: hamburger stays left, logo rides in the middle — in both nav states */
+  .nav .brand,.nav.stuck .brand{left:50%;translate:-50% -50%}
   .nav .brand img{height:42px}
+  .nav.stuck .brand img{height:38px}
   .pillcta{display:none}
 }
 
