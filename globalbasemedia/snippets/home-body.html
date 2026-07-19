@@ -233,10 +233,17 @@
     .footword{font-size:9.4vw;white-space:nowrap}
   }
 
-  .gpchip{display:flex;width:fit-content;align-items:center;gap:9px;background:#fff;border:1px solid #e5e2f0;border-radius:999px;padding:8px 16px;font-size:.8rem;color:#3c3854;box-shadow:0 10px 28px -14px rgba(30,15,70,.25);margin-bottom:30px}
+  .gpchip{display:flex;width:fit-content;align-items:center;gap:9px;background:#fff;border:1px solid #e5e2f0;border-radius:999px;padding:8px 16px;font-size:.8rem;color:#3c3854;box-shadow:0 10px 28px -14px rgba(30,15,70,.25);margin-bottom:48px}
   .gpchip b{color:#191434}
-  #main .hero .wrap{max-width:1340px}
-  @media(min-width:941px){#main .hero-grid2{grid-template-columns:.9fr 1.1fr;gap:60px}}
+  #main .hero .wrap{max-width:1360px}
+  @media(min-width:941px){
+    #main .hero-grid2{grid-template-columns:.94fr 1.06fr;gap:56px}
+    /* hero showcase matches the full height of the text column */
+    #main .hero .flip-inner{height:620px}
+    #main .hero .flip-back{height:620px}
+    #main .hero .flip-back .browser{height:100%;display:flex;flex-direction:column}
+    #main .hero .flip-back .browser>*:last-child{flex:1}
+  }
   /* hero decorations fade out at the bottom so the hero melts into the next section */
   #main .dots,#main .noise{-webkit-mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 86%,transparent)}
   #main .hero .dots,#main .hero .noise{-webkit-mask-image:linear-gradient(to bottom,#000 55%,transparent 96%);mask-image:linear-gradient(to bottom,#000 55%,transparent 96%)}
