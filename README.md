@@ -87,7 +87,9 @@ invites** (with a Meet link when there's no physical location).
 ### One-time Google setup
 
 1. [console.cloud.google.com](https://console.cloud.google.com) → create a
-   project → enable the **Google Calendar API**.
+   project → enable the **Google Calendar API** and the **People API**
+   (the second one lets Jarvis look up attendees by name in your Gmail/Google
+   Contacts instead of requiring a manual list).
 2. OAuth consent screen → External → add yourself as a test user.
 3. Credentials → OAuth client ID → **Web application** → redirect URI
    `http://localhost:8765/callback`.
@@ -98,9 +100,11 @@ invites** (with a Meet link when there's no physical location).
 5. Set `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`,
    `GOOGLE_OAUTH_REFRESH_TOKEN` (and optionally `GOOGLE_BOOKING_CALENDAR_ID`,
    default `primary`) in `.env.local` / Vercel.
-6. Optional but recommended: `MEETING_CONTACTS="John Smith <john@acme.com>; Jane <jane@x.io>"`
-   so spoken first names resolve to invite emails. Emails can also be dictated
-   inline ("john at acme dot com").
+6. Attendee name resolution, in order: an email said out loud → the
+   `MEETING_CONTACTS` list (`"John Smith <john@acme.com>; Jane <jane@x.io>"`)
+   → a live search of your Google/Gmail contacts (saved contacts and people
+   you've emailed before). `MEETING_CONTACTS` is optional but useful for
+   nicknames or people not in your Google account.
 
 ### Two ways to book
 

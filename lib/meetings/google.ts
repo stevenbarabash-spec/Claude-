@@ -19,7 +19,7 @@ export function bookingConfigured(): boolean {
 
 let cachedToken: { token: string; expiresAt: number } | null = null;
 
-async function accessToken(): Promise<string> {
+export async function accessToken(): Promise<string> {
   if (cachedToken && Date.now() < cachedToken.expiresAt) return cachedToken.token;
   const res = await fetch(TOKEN_URL, {
     method: "POST",

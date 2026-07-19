@@ -8,6 +8,7 @@ import { localDateKey } from "../dates";
 import { getStore } from "../store";
 import type { MeetingDraft } from "../types";
 import { bookingConfigured, insertEvent, type BookedMeeting } from "./google";
+import { findContact } from "./googleContacts";
 
 export { bookingConfigured };
 
@@ -103,9 +104,15 @@ Request: ${text}`,
     const email = (a.email ?? "").trim();
     if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       attendees.push({ name: a.name?.trim() || null, email });
-    } else if (a.name?.trim()) {
-      unmatched.push(a.name.trim());
+      continue;
     }
+    const name = a.name?.trim();
+    if (!name) continue;
+    // Not in MEETING_CONTACTS (the LLM already checked that list) — fall
+    // back to searching the user's actual Google/Gmail contacts.
+    const found = bookingConfigured() ? await findContact(name) : null;
+    if (found) attendees.push({ name: found.name ?? name, email: found.email });
+    else unmatched.push(name);
   }
 
   return {
@@ -147,7 +154,7 @@ export function describeMeeting(d: MeetingDraft): string {
   else lines.push(`Where: not set — no video call, no location`);
   if (d.unmatched.length) {
     lines.push(
-      `⚠ No email on file for: ${d.unmatched.join(", ")} — they will NOT get an invite. Say their email or add them to MEETING_CONTACTS.`,
+      `⚠ No email on file for: ${d.unmatched.join(", ")} — they will NOT get an invite. Say their email, or add them to your Google Contacts / MEETING_CONTACTS.`,
     );
   }
   return lines.join("\n");
