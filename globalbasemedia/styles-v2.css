@@ -306,7 +306,8 @@ section{position:relative;padding:110px 0;overflow-x:clip}
 /* ---------- sticky footer reveal ---------- */
 .footwrap{position:relative;height:400px}
 .footsticky{position:sticky;bottom:0;height:400px;background:#fff;color:#111;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
-.footsticky .dots2{position:absolute;inset:0;background-image:radial-gradient(#a1a1aa 1px,transparent 1px);background-size:24px 24px;opacity:.4}
+.footsticky .dots2{position:absolute;inset:0;background-image:radial-gradient(#a1a1aa 1px,transparent 1px);background-size:24px 24px;opacity:.4;
+  -webkit-mask-image:linear-gradient(to bottom,transparent,#000 40%);mask-image:linear-gradient(to bottom,transparent,#000 40%)}
 .footlogo{position:relative;z-index:2;display:block;align-self:flex-start;width:auto;height:66px;margin:0 40px 8px}
 .footlinks{position:relative;z-index:2;display:flex;gap:34px;flex-wrap:wrap;padding:36px 40px 0}
 .footlinks a{font-size:1.45rem;font-weight:800;color:#27272a;position:relative}
@@ -323,9 +324,9 @@ section{position:relative;padding:110px 0;overflow-x:clip}
 .footword.wave span{animation:finbump .95s cubic-bezier(.3,.05,.2,1) both;animation-delay:calc(var(--i)*55ms)}
 @keyframes finbump{0%,100%{transform:translateY(0)}32%{transform:translateY(-.16em)}62%{transform:translateY(.035em)}}
 @media(prefers-reduced-motion:reduce){.footword.wave span{animation:none}}
-.footglow{position:absolute;left:-40px;right:-40px;bottom:-40px;height:280px;filter:blur(70px);opacity:.7;z-index:0;
+.footglow{position:absolute;left:-40px;right:-40px;bottom:-40px;height:200px;filter:blur(70px);opacity:.65;z-index:0;
   background:linear-gradient(90deg,#93c5fd,var(--blue),var(--pink),var(--green));
-  -webkit-mask-image:linear-gradient(to top,#000 25%,transparent);mask-image:linear-gradient(to top,#000 25%,transparent)}
+  -webkit-mask-image:linear-gradient(to top,#000 30%,transparent 88%);mask-image:linear-gradient(to top,#000 30%,transparent 88%)}
 
 @media(max-width:640px){
   .footwrap,.footsticky{height:300px}
