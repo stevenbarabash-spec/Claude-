@@ -106,18 +106,59 @@ export async function insertEvent(draft: MeetingDraft): Promise<BookedMeeting> {
     const text = await res.text();
     throw new Error(`google event insert failed (${res.status}): ${text.slice(0, 300)}`);
   }
-  const ev = (await res.json()) as {
-    id: string;
-    htmlLink?: string;
-    hangoutLink?: string;
-    start?: { dateTime?: string };
-    end?: { dateTime?: string };
-  };
+  let ev = (await res.json()) as GoogleEvent;
+
+  // Meet link provisioning is async — Google often returns the event before
+  // conferenceData finishes (status "pending"). Poll a few times so the
+  // returned meetLink is real instead of null on the happy path.
+  if (draft.with_meet) {
+    ev = await waitForConferenceLink(token, calendarId, ev);
+  }
+
   return {
     id: ev.id,
     htmlLink: ev.htmlLink ?? null,
-    meetLink: ev.hangoutLink ?? null,
+    meetLink: extractMeetLink(ev),
     start: ev.start?.dateTime ?? `${draft.date}T${draft.start_time}:00`,
     end: ev.end?.dateTime ?? `${end.date}T${end.time}:00`,
   };
+}
+
+interface GoogleEvent {
+  id: string;
+  htmlLink?: string;
+  hangoutLink?: string;
+  start?: { dateTime?: string };
+  end?: { dateTime?: string };
+  conferenceData?: {
+    createRequest?: { status?: { statusCode?: string } };
+    entryPoints?: { entryPointType?: string; uri?: string }[];
+  };
+}
+
+function extractMeetLink(ev: GoogleEvent): string | null {
+  if (ev.hangoutLink) return ev.hangoutLink;
+  const video = ev.conferenceData?.entryPoints?.find((p) => p.entryPointType === "video");
+  return video?.uri ?? null;
+}
+
+// Re-fetches the event a few times (short backoff) until conferenceData
+// reports success or we give up — the event itself is already booked and
+// invites already sent either way, this only affects whether we can hand
+// back a working Meet link right away.
+async function waitForConferenceLink(token: string, calendarId: string, ev: GoogleEvent): Promise<GoogleEvent> {
+  let current = ev;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    if (extractMeetLink(current)) return current;
+    const status = current.conferenceData?.createRequest?.status?.statusCode;
+    if (status === "failure") return current;
+    await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
+    const res = await fetch(
+      `${CAL_API}/calendars/${encodeURIComponent(calendarId)}/events/${current.id}`,
+      { headers: { authorization: `Bearer ${token}` } },
+    );
+    if (!res.ok) return current;
+    current = (await res.json()) as GoogleEvent;
+  }
+  return current;
 }

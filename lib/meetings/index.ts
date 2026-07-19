@@ -42,6 +42,7 @@ interface ParsedMeeting {
   attendees?: { name?: string | null; email?: string | null }[];
   location?: string | null;
   notes?: string | null;
+  no_video_call?: boolean;
 }
 
 export async function parseMeetingRequest(
@@ -70,12 +71,14 @@ export async function parseMeetingRequest(
  "duration_min": number,
  "attendees": [{"name": "..." | null, "email": "..." | null}],
  "location": "..." | null,
- "notes": "..." | null}
+ "notes": "..." | null,
+ "no_video_call": true | false}
 Rules:
 - Resolve relative dates ("tomorrow", "next Tuesday") against today's date in the user's timezone.
 - Spoken emails: normalize "john at acme dot com" → "john@acme.com".
 - If an attendee is named without an email, match the name (case-insensitive, first names ok) against the contact list; use that email. If no match, keep the name with email null.
 - Default duration 30 minutes if unstated. If no start time was given at all, return {"ok": false, "reason": "no time given"}.
+- Every meeting gets a Google Meet video link by default — including ones with a physical location (hybrid). Set "no_video_call": true ONLY if the user explicitly says something like "in person only", "no video call", "no Zoom/Meet link", or "phone call only".
 - Do NOT invent emails, dates, or times.
 - If this is not actually a meeting/call request, return {"ok": false, "reason": "..."}.`,
     `Today is ${weekday} ${today} (${config.timezone}). The user is ${config.owner.fullName}.
@@ -115,8 +118,9 @@ Request: ${text}`,
       unmatched,
       location: p.location?.trim() || null,
       notes: p.notes?.trim() || null,
-      // Meet link unless it's clearly an in-person meeting somewhere.
-      with_meet: !p.location,
+      // Meet link by default, even alongside a physical location (hybrid),
+      // unless the user explicitly opted out.
+      with_meet: !p.no_video_call,
     },
     reason: null,
   };
@@ -137,8 +141,10 @@ export function describeMeeting(d: MeetingDraft): string {
       ? `Invites to: ${d.attendees.map((a) => (a.name ? `${a.name} (${a.email})` : a.email)).join(", ")}`
       : `Invites to: nobody — just your calendar`,
   ];
-  if (d.location) lines.push(`Where: ${d.location}`);
+  if (d.location && d.with_meet) lines.push(`Where: ${d.location} + Google Meet (link auto-attached)`);
+  else if (d.location) lines.push(`Where: ${d.location}`);
   else if (d.with_meet) lines.push(`Where: Google Meet (link auto-attached)`);
+  else lines.push(`Where: not set — no video call, no location`);
   if (d.unmatched.length) {
     lines.push(
       `⚠ No email on file for: ${d.unmatched.join(", ")} — they will NOT get an invite. Say their email or add them to MEETING_CONTACTS.`,
