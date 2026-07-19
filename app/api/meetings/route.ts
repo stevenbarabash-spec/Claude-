@@ -6,6 +6,7 @@
 //   { "draft": { ...MeetingDraft } }   → book a previously previewed/edited draft
 // The reply field is written to be spoken aloud by the Shortcut.
 import { NextResponse } from "next/server";
+import { clearPendingMeeting, getPendingMeeting, setPendingMeeting } from "@/lib/jarvis/commands";
 import {
   bookMeeting,
   bookingConfigured,
@@ -86,10 +87,43 @@ export async function POST(req: Request) {
   }
 
   const body = (await req.json().catch(() => null)) as
-    | { text?: string; mode?: string; draft?: unknown }
+    | { text?: string; mode?: string; draft?: unknown; confirm?: unknown }
     | null;
 
-  // Book a pre-built draft (second leg of a preview → confirm Shortcut).
+  // Book the pending preview set by an earlier mode:"preview" call. This is
+  // the recommended second leg for Shortcuts clients — a plain {"confirm":
+  // true} is trivial to send, unlike round-tripping a full draft object
+  // through Shortcuts' own "Dictionary" type, which in practice mangles
+  // nested numbers/booleans/arrays badly enough to get rejected as
+  // malformed. The server remembers the draft instead (same 10-minute
+  // confirm-gated pattern Jarvis chat uses).
+  const confirmed =
+    body?.confirm === true || body?.confirm === "true" || body?.confirm === 1 || body?.confirm === "1";
+  if (confirmed) {
+    const pending = await getPendingMeeting();
+    if (!pending) {
+      return NextResponse.json(
+        {
+          error: "nothing_pending",
+          reply: "There's nothing pending to confirm — it may have expired. Tell me the meeting again.",
+        },
+        { status: 409 },
+      );
+    }
+    await clearPendingMeeting();
+    try {
+      const { reply, booked } = await bookMeeting(pending.draft);
+      return NextResponse.json({ reply, booked });
+    } catch (err) {
+      return NextResponse.json(
+        { error: "booking_failed", reply: `Booking failed — nothing was sent. ${err instanceof Error ? err.message : ""}` },
+        { status: 502 },
+      );
+    }
+  }
+
+  // Book a pre-built draft directly — kept for API callers that manage their
+  // own state; Shortcuts should prefer the confirm:true flow above.
   if (body?.draft !== undefined) {
     const draft = coerceDraft(body.draft);
     if (!draft) {
@@ -129,7 +163,9 @@ export async function POST(req: Request) {
   }
 
   if (body?.mode === "preview") {
-    return NextResponse.json({ draft, readback: describeMeeting(draft), reply: describeMeeting(draft) });
+    const readback = describeMeeting(draft);
+    await setPendingMeeting(text, draft, readback);
+    return NextResponse.json({ draft, readback, reply: readback });
   }
 
   try {
