@@ -21,17 +21,56 @@ export async function GET() {
   );
 }
 
-function isDraft(d: unknown): d is MeetingDraft {
-  if (!d || typeof d !== "object") return false;
-  const m = d as Partial<MeetingDraft>;
-  return (
-    typeof m.title === "string" &&
-    typeof m.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(m.date) &&
-    typeof m.start_time === "string" && /^\d{2}:\d{2}$/.test(m.start_time) &&
-    typeof m.duration_min === "number" &&
-    Array.isArray(m.attendees) &&
-    m.attendees.every((a) => typeof a?.email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a.email))
-  );
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Shortcuts apps (Siri Shortcuts, etc.) round-trip a "Dictionary" value
+// through their own type system before re-serializing it as JSON — numbers
+// and booleans routinely come back as strings, a single-item array can
+// collapse into a bare object, and absent fields can arrive as null instead
+// of just missing. Coerce instead of strictly requiring exact JS types, so a
+// draft that's shaped right but typed loosely still books.
+function coerceDraft(d: unknown): MeetingDraft | null {
+  if (!d || typeof d !== "object") return null;
+  const m = d as Record<string, unknown>;
+
+  const title = typeof m.title === "string" ? m.title.trim() : "";
+  const date = typeof m.date === "string" ? m.date.trim() : "";
+  const start_time = typeof m.start_time === "string" ? m.start_time.trim() : "";
+  const duration_min = Number(m.duration_min);
+  if (!title || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(start_time) || !Number.isFinite(duration_min)) {
+    return null;
+  }
+
+  const toArray = (v: unknown): unknown[] => (Array.isArray(v) ? v : v != null ? [v] : []);
+
+  const attendees = toArray(m.attendees)
+    .map((a) => {
+      const rec = a as Record<string, unknown> | null;
+      const email = typeof rec?.email === "string" ? rec.email.trim() : "";
+      const name = typeof rec?.name === "string" ? rec.name.trim() : null;
+      return { name, email };
+    })
+    .filter((a) => EMAIL_RE.test(a.email));
+
+  const unmatched = toArray(m.unmatched)
+    .map((v) => String(v).trim())
+    .filter(Boolean);
+
+  const withMeetRaw = m.with_meet;
+  const with_meet =
+    withMeetRaw === true || withMeetRaw === "true" || withMeetRaw === 1 || withMeetRaw === "1";
+
+  return {
+    title,
+    date,
+    start_time,
+    duration_min: Math.max(5, Math.min(8 * 60, Math.round(duration_min))),
+    attendees,
+    unmatched,
+    location: typeof m.location === "string" && m.location.trim() ? m.location.trim() : null,
+    notes: typeof m.notes === "string" && m.notes.trim() ? m.notes.trim() : null,
+    with_meet,
+  };
 }
 
 export async function POST(req: Request) {
@@ -52,19 +91,13 @@ export async function POST(req: Request) {
 
   // Book a pre-built draft (second leg of a preview → confirm Shortcut).
   if (body?.draft !== undefined) {
-    if (!isDraft(body.draft)) {
+    const draft = coerceDraft(body.draft);
+    if (!draft) {
       return NextResponse.json(
         { error: "bad_draft", reply: "That draft was malformed — nothing was booked." },
         { status: 400 },
       );
     }
-    const draft: MeetingDraft = {
-      ...body.draft,
-      unmatched: Array.isArray(body.draft.unmatched) ? body.draft.unmatched : [],
-      location: body.draft.location ?? null,
-      notes: body.draft.notes ?? null,
-      with_meet: body.draft.with_meet ?? !body.draft.location,
-    };
     try {
       const { reply, booked } = await bookMeeting(draft);
       return NextResponse.json({ reply, booked });
