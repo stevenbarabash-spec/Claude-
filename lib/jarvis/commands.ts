@@ -6,7 +6,7 @@
 import { aiAvailable, llmJson, llmText } from "../ai/llm";
 import { localDateKey } from "../dates";
 import { getStore } from "../store";
-import { GOALS_SENTINEL_DATE, type PendingCapture, type PendingCommand } from "../types";
+import { GOALS_SENTINEL_DATE, type MeetingDraft, type PendingCapture, type PendingCommand, type PendingMeeting } from "../types";
 
 const PENDING_TTL_MS = 10 * 60 * 1000;
 
@@ -64,6 +64,33 @@ export async function reviseCaptureText(original: string, correction: string): P
     256,
   );
   return text.trim() || correction;
+}
+
+/* ── Pending meeting (confirm-gated booking) ────────────── */
+
+export async function getPendingMeeting(): Promise<PendingMeeting | null> {
+  const log = await getStore().getLog(GOALS_SENTINEL_DATE);
+  const m = log?.notes.pending_meeting;
+  if (!m) return null;
+  if (new Date(m.expires_at).getTime() < Date.now()) {
+    await clearPendingMeeting();
+    return null;
+  }
+  return m;
+}
+
+export async function setPendingMeeting(text: string, draft: MeetingDraft, description: string): Promise<void> {
+  const m: PendingMeeting = {
+    text,
+    draft,
+    description,
+    expires_at: new Date(Date.now() + PENDING_TTL_MS).toISOString(),
+  };
+  await getStore().mergeLogNotes(GOALS_SENTINEL_DATE, { pending_meeting: m });
+}
+
+export async function clearPendingMeeting(): Promise<void> {
+  await getStore().mergeLogNotes(GOALS_SENTINEL_DATE, { pending_meeting: null });
 }
 
 export async function getPendingCommand(): Promise<PendingCommand | null> {

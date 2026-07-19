@@ -57,6 +57,7 @@ Copy `.env.example` → `.env.local` and add pieces as you go:
    Optional `API_SECRET` for programmatic access via the `x-api-secret` header.
 4. **Calendar** — Google Calendar → Settings → your calendar → *"Secret address in
    iCal format"* → `GOOGLE_CALENDAR_ICAL_URL`.
+5. **Meeting booking** — see [Voice meeting booking](#voice-meeting-booking) below.
 
 ## Deploy (Vercel)
 
@@ -76,6 +77,48 @@ Push every env var from `.env.example` (`vercel env add NAME production`).
 - Chrome/Edge/Safari: uses the browser's built-in speech recognition — free, instant.
 - Other browsers: records audio and transcribes server-side with Whisper
   (needs `OPENAI_API_KEY`).
+
+## Voice meeting booking
+
+Say *"book a meeting with John tomorrow at 3pm"* — Jarvis parses it, reads it
+back, and on "confirm" creates the Google Calendar event **and emails the
+invites** (with a Meet link when there's no physical location).
+
+### One-time Google setup
+
+1. [console.cloud.google.com](https://console.cloud.google.com) → create a
+   project → enable the **Google Calendar API**.
+2. OAuth consent screen → External → add yourself as a test user.
+3. Credentials → OAuth client ID → **Web application** → redirect URI
+   `http://localhost:8765/callback`.
+4. Mint the refresh token:
+   ```bash
+   GOOGLE_OAUTH_CLIENT_ID=... GOOGLE_OAUTH_CLIENT_SECRET=... node scripts/google-refresh-token.mjs
+   ```
+5. Set `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`,
+   `GOOGLE_OAUTH_REFRESH_TOKEN` (and optionally `GOOGLE_BOOKING_CALENDAR_ID`,
+   default `primary`) in `.env.local` / Vercel.
+6. Optional but recommended: `MEETING_CONTACTS="John Smith <john@acme.com>; Jane <jane@x.io>"`
+   so spoken first names resolve to invite emails. Emails can also be dictated
+   inline ("john at acme dot com").
+
+### Two ways to book
+
+- **In Jarvis** (dashboard assistant): just say/type it. Jarvis reads the
+  meeting back and waits for "confirm" — same safety gate as captures. You can
+  correct it ("no, make it 4pm") before confirming.
+- **Siri Shortcut** (hands-free, one shot): the `POST /api/meetings` endpoint
+  books immediately and returns a speakable `reply`. Build the Shortcut:
+  1. **Dictate Text** (this is what you say after invoking the shortcut)
+  2. **Get Contents of URL** — `https://<your-app>.vercel.app/api/meetings`,
+     Method `POST`, Header `x-api-secret: <API_SECRET>`, JSON body
+     `{"text": <Dictated Text>}`
+  3. **Get Dictionary Value** — key `reply`
+  4. **Speak Text** — the reply
+  Name it e.g. *"Book a meeting"* so "Hey Siri, book a meeting" runs it.
+  Want a confirmation step on the phone too? POST with
+  `{"text": ..., "mode": "preview"}` first, show/speak the `readback`, then
+  POST the returned `draft` back as `{"draft": ...}` to book.
 
 ## Make it yours
 

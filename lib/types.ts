@@ -175,6 +175,7 @@ export interface DailyNotes {
   briefing?: { text: string; generated_at: string };
   pending_command?: PendingCommand | null; // only on sentinel date — awaiting "confirm"
   pending_capture?: PendingCapture | null; // only on sentinel date — awaiting "confirm"
+  pending_meeting?: PendingMeeting | null; // only on sentinel date — awaiting "confirm"
   history?: HistoryEvent[]; // only on the history sentinel date
   muted_events?: string[]; // only on sentinel date — calendar series UIDs to hide
   working_on?: WorkingItem[]; // only on sentinel date — the Currently Working On strip
@@ -189,6 +190,28 @@ export interface DailyNotes {
 export interface TickerSymbol {
   symbol: string; // Yahoo symbol, e.g. "^GSPC", "XRP-USD", "AAPL"
   label: string; // display name, e.g. "S&P 500", "XRP"
+}
+
+// A meeting parsed from a voice/text request, ready to be created on Google
+// Calendar. Dates/times are wall-clock in the user's configured timezone.
+export interface MeetingDraft {
+  title: string;
+  date: string; // YYYY-MM-DD
+  start_time: string; // HH:MM, 24h
+  duration_min: number;
+  attendees: { name: string | null; email: string }[];
+  unmatched: string[]; // spoken names we couldn't resolve to an email
+  location: string | null;
+  notes: string | null;
+  with_meet: boolean; // attach a Google Meet link
+}
+
+// A meeting Jarvis has understood and read back, but not yet booked.
+export interface PendingMeeting {
+  text: string; // the original utterance (kept so corrections can revise it)
+  draft: MeetingDraft;
+  description: string; // human-readable "here's what I'll book"
+  expires_at: string;
 }
 
 // A capture Jarvis has understood and read back, but not yet filed.

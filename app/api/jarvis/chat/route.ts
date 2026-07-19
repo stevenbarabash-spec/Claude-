@@ -11,16 +11,26 @@ import { localDateKey } from "@/lib/dates";
 import {
   clearPendingCapture,
   clearPendingCommand,
+  clearPendingMeeting,
   executePendingCommand,
   getPendingCapture,
   getPendingCommand,
+  getPendingMeeting,
   isCancellation,
   isConfirmation,
   isCorrection,
   proposeCommand,
   reviseCaptureText,
   setPendingCapture,
+  setPendingMeeting,
 } from "@/lib/jarvis/commands";
+import {
+  bookMeeting,
+  bookingConfigured,
+  describeMeeting,
+  looksLikeMeetingRequest,
+  parseMeetingRequest,
+} from "@/lib/meetings";
 import { previewCapture, runCapturePipeline } from "@/lib/pipeline";
 import { getStore } from "@/lib/store";
 
@@ -29,13 +39,14 @@ interface ChatMessage {
   content: string;
 }
 
-type Intent = "capture" | "ask" | "chat" | "command" | "start_work" | "next";
+type Intent = "capture" | "ask" | "chat" | "command" | "start_work" | "next" | "meeting";
 
 const NEXT_RE = /what('?s| should| do| to| shall).*(next|work on|do now|do first|priorit|focus on|tackle)|what'?s next|what do i do|plan my day|where (should|do) i start/i;
 
 async function detectIntent(text: string): Promise<Intent> {
   if (!aiAvailable()) {
     if (NEXT_RE.test(text)) return "next";
+    if (looksLikeMeetingRequest(text)) return "meeting";
     if (/\b(work on|working on|start (on|working|the)|let'?s do|i want to do|i'?ll do|tackle|focus on)\b/i.test(text) && /\b(today|now|next|this|first|top|one)\b/i.test(text)) {
       return "start_work";
     }
@@ -46,6 +57,7 @@ async function detectIntent(text: string): Promise<Intent> {
     `Classify the user's message for a personal-OS assistant. Return {"intent": ...}:
 - "next": the user asks what to work on or do next / what to prioritize / where to start / to plan their day — "what should I work on?", "what's next?", "what should I do now?", "prioritize my day"
 - "start_work": the user wants to START a specific task now/today — "let me work on the BYTOX newsletter", "I want to do the funnel today", "start the essay", "let's do the first one"
+- "meeting": book/schedule a NEW meeting, call, or appointment on the calendar, possibly inviting people — "book a meeting with John tomorrow at 3", "schedule a call with jane@acme.com Friday at noon"
 - "capture": a NEW to-do, reminder, meal eaten, money owed/received, idea, decision, or journal entry to be FILED
 - "command": modify/delete an EXISTING money record, OR act on the CLIENT BOARD — e.g. "delete the Meridian receivable", "change Acme's invoice to $5k", "mark the Relay invoice paid", "add a task to BYTOX to send the invoice", "mark the Greenwich homepage task done"
 - "ask": a question about the user's own data, history, tasks, or past captures
@@ -182,6 +194,45 @@ export async function POST(req: Request) {
     // fall through: treat as a fresh message
   }
 
+  // A pending meeting awaiting read-back confirmation: "confirm" books it and
+  // sends the invites, a correction re-parses, "cancel" (or anything else) drops it.
+  const pendingMeeting = await getPendingMeeting();
+  if (pendingMeeting) {
+    if (isConfirmation(text)) {
+      await clearPendingMeeting();
+      try {
+        const { reply } = await bookMeeting(pendingMeeting.draft);
+        return NextResponse.json({ reply, action: { type: "meeting_booked" } });
+      } catch (err) {
+        return NextResponse.json({
+          reply: `Booking failed — nothing was sent. ${err instanceof Error ? err.message : "Unknown error."}`,
+          action: { type: "meeting_failed" },
+        });
+      }
+    }
+    if (isCorrection(text)) {
+      const revised = await reviseCaptureText(pendingMeeting.text, text);
+      const { draft, reason } = await parseMeetingRequest(revised);
+      if (!draft) {
+        return NextResponse.json({
+          reply: `I lost the thread on that one (${reason ?? "couldn't re-parse"}) — tell me the whole meeting again.`,
+          action: { type: "meeting_failed" },
+        });
+      }
+      const description = describeMeeting(draft);
+      await setPendingMeeting(revised, draft, description);
+      return NextResponse.json({
+        reply: `Updated — here's what I'll book now:\n\n${description}\n\nSay "confirm" to book it and send the invites, or correct me again.`,
+        action: { type: "meeting_proposed" },
+      });
+    }
+    await clearPendingMeeting();
+    if (isCancellation(text)) {
+      return NextResponse.json({ reply: "Cancelled — nothing was booked, no invites sent.", action: { type: "meeting_cancelled" } });
+    }
+    // fall through: treat as a fresh message
+  }
+
   // A pending capture awaiting read-back confirmation: "confirm" files it,
   // a correction revises it, "cancel" (or anything else) drops it.
   const pendingCap = await getPendingCapture();
@@ -230,6 +281,29 @@ export async function POST(req: Request) {
   if (intent === "start_work") {
     const { reply, staged } = await stageFromUtterance(payload);
     return NextResponse.json({ reply, action: { type: staged ? "work_staged" : "chat" } });
+  }
+
+  if (intent === "meeting") {
+    if (!bookingConfigured()) {
+      return NextResponse.json({
+        reply:
+          "Calendar booking isn't wired up yet — set GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, and GOOGLE_OAUTH_REFRESH_TOKEN (run scripts/google-refresh-token.mjs to mint the token).",
+        action: { type: "meeting_failed" },
+      });
+    }
+    const { draft, reason } = await parseMeetingRequest(payload);
+    if (!draft) {
+      return NextResponse.json({
+        reply: `I couldn't book that: ${reason ?? "missing details"}. Give me a person, a day, and a time — e.g. "book a call with John tomorrow at 3pm".`,
+        action: { type: "meeting_failed" },
+      });
+    }
+    const description = describeMeeting(draft);
+    await setPendingMeeting(payload, draft, description);
+    return NextResponse.json({
+      reply: `Here's what I'll book:\n\n${description}\n\nSay "confirm" and I'll create it and send the invites — "cancel" to drop it, or correct me (e.g. "no, make it 4pm").`,
+      action: { type: "meeting_proposed" },
+    });
   }
 
   if (intent === "command") {
