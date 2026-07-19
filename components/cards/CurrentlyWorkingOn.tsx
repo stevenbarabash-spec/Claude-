@@ -26,12 +26,14 @@ const SOURCE_LABEL: Record<WorkingItem["source"], string> = {
   day: "today",
 };
 
+// Live H:MM:SS (or M:SS) running-timer readout.
 function elapsed(startedAt: string, now: number): string {
-  const mins = Math.max(0, Math.floor((now - new Date(startedAt).getTime()) / 60000));
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins}m`;
-  const h = Math.floor(mins / 60);
-  return `${h}h ${mins % 60}m`;
+  const s = Math.max(0, Math.floor((now - new Date(startedAt).getTime()) / 1000));
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return h > 0 ? `${h}:${pad(m)}:${pad(sec)}` : `${m}:${pad(sec)}`;
 }
 
 export function CurrentlyWorkingOn() {
@@ -60,7 +62,7 @@ export function CurrentlyWorkingOn() {
   useEffect(() => {
     load();
     window.addEventListener("jarvis:capture", load);
-    const t = setInterval(() => setNow(Date.now()), 30000);
+    const t = setInterval(() => setNow(Date.now()), 1000); // tick the live timer every second
     return () => {
       window.removeEventListener("jarvis:capture", load);
       clearInterval(t);
@@ -146,7 +148,20 @@ export function CurrentlyWorkingOn() {
     if (r) setItems(r.items);
   }
 
+  // Active item: bank the elapsed time onto the task, then remove.
   async function stop(item: WorkingItem) {
+    const r = await api<{ items: WorkingItem[] }>("/api/working/stop", {
+      method: "POST",
+      body: JSON.stringify({ key: item.key }),
+    }).catch(() => null);
+    if (r) {
+      setItems(r.items);
+      window.dispatchEvent(new CustomEvent("jarvis:capture"));
+    }
+  }
+
+  // Pending item: just discard (no time was tracked).
+  async function discard(item: WorkingItem) {
     const r = await api<{ items: WorkingItem[] }>("/api/working", {
       method: "DELETE",
       body: JSON.stringify({ key: item.key }),
@@ -251,7 +266,7 @@ export function CurrentlyWorkingOn() {
                       <button className="btn small primary" disabled={busy === it.key} onClick={() => confirm(it)}>
                         {busy === it.key ? "…" : "✓ confirm"}
                       </button>
-                      <button className="btn small" onClick={() => stop(it)} title="Discard">discard</button>
+                      <button className="btn small" onClick={() => discard(it)} title="Discard">discard</button>
                     </>
                   ) : (
                     <>

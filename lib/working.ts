@@ -53,6 +53,35 @@ export async function removeWorking(key: string): Promise<WorkingItem[]> {
   return items;
 }
 
+// Stop working WITHOUT completing: bank the elapsed session onto the client task
+// (so time accumulates across sessions for billing), then drop it from the strip.
+// Pending (never-started) items are just discarded.
+export async function stopWorking(key: string): Promise<WorkingItem[]> {
+  const items = await listWorking();
+  const item = items.find((x) => x.key === key);
+  if (item && item.status !== "pending" && item.source === "client" && item.projectId) {
+    const finishedAt = new Date().toISOString();
+    const projects = await listClientProjects();
+    const p = projects.find((x) => x.id === item.projectId);
+    if (p) {
+      const before = JSON.parse(JSON.stringify(p));
+      p.tasks = p.tasks.map((t) =>
+        t.id === item.taskId ? { ...t, sessions: [...(t.sessions ?? []), { start: item.startedAt, end: finishedAt }] } : t,
+      );
+      p.updated_at = new Date().toISOString();
+      await saveClientProjects(projects);
+      await recordHistory({
+        action: "update", resource: "client_project", resource_id: p.id,
+        label: `Time logged on: ${item.title}${item.who ? ` (${item.who})` : ""}`,
+        before, after: p,
+      });
+    }
+  }
+  const remaining = items.filter((x) => x.key !== key);
+  await save(remaining);
+  return remaining;
+}
+
 // Check the task off at its source, drop it from the strip, log it.
 export async function completeWorking(key: string): Promise<{ items: WorkingItem[]; ok: boolean; message: string }> {
   const items = await listWorking();
@@ -80,7 +109,13 @@ export async function completeWorking(key: string): Promise<{ items: WorkingItem
       const p = projects.find((x) => x.id === item.projectId);
       if (p) {
         const before = JSON.parse(JSON.stringify(p));
-        p.tasks = p.tasks.map((t) => (t.id === item.taskId ? { ...t, done: true } : t));
+        // Mark done AND bank this work session onto the task (for time tracking).
+        const session = item.status === "pending" ? null : { start: startedAt as string, end: finishedAt };
+        p.tasks = p.tasks.map((t) =>
+          t.id === item.taskId
+            ? { ...t, done: true, sessions: session ? [...(t.sessions ?? []), session] : t.sessions }
+            : t,
+        );
         p.updated_at = new Date().toISOString();
         await saveClientProjects(projects);
         await recordHistory({

@@ -98,6 +98,12 @@ export interface HabitDef {
 }
 
 // ── Client work (migrated from the schedule-tracker) ──
+// One tracked work session on a task (for time-spent / hourly billing).
+export interface WorkSession {
+  start: string; // ISO
+  end: string; // ISO
+}
+
 export interface ClientTask {
   id: string;
   title: string;
@@ -105,6 +111,7 @@ export interface ClientTask {
   due: string | null; // YYYY-MM-DD
   time?: string | null; // HH:MM (24h) — optional clock time, carried into Section 10
   recurringId?: string; // materialized from a ClientRecurring definition
+  sessions?: WorkSession[]; // logged work sessions — total = billable time spent
 }
 
 // A recurring task on a client project — weekly (by weekday) or monthly (by day

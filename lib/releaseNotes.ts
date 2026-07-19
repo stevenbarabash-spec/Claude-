@@ -11,6 +11,16 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.22",
+    date: "2026-07-18",
+    title: "Time tracking on tasks (for hourly billing)",
+    notes: [
+      "Currently Working On now shows a live running timer (H:MM:SS) while you work.",
+      "Hitting Done or Stop banks that session's time onto the client task — time accumulates across multiple sessions.",
+      "The client board shows a small ⏱ total per task (e.g. “⏱ 1h 20m”) so you can pull up how long anything took, anytime — handy for hourly clients.",
+    ],
+  },
+  {
     version: "v2.1.21",
     date: "2026-07-18",
     title: "Editable “due today by client” strip",

@@ -27,6 +27,16 @@ function fmtClock(hhmm: string): string {
   return m ? `${h12}:${String(m).padStart(2, "0")} ${ap}` : `${h12} ${ap}`;
 }
 
+// Total tracked time on a task, in seconds → "1h 20m" / "45m" / "3m".
+function totalSpentSec(t: ClientTask): number {
+  return (t.sessions ?? []).reduce((s, x) => s + Math.max(0, (new Date(x.end).getTime() - new Date(x.start).getTime()) / 1000), 0);
+}
+function fmtSpent(sec: number): string {
+  const m = Math.round(sec / 60);
+  if (m < 60) return `${m}m`;
+  return `${Math.floor(m / 60)}h ${m % 60}m`;
+}
+
 const STATUS_EDGE: Record<ClientProject["status"], string> = {
   done: "var(--accent)",
   active: "var(--warm)",
@@ -548,6 +558,16 @@ function ProjectCard({
                 >
                   {t.title}
                 </span>
+                {(t.sessions?.length ?? 0) > 0 && (
+                  <span
+                    className="num"
+                    title={`Time tracked across ${t.sessions!.length} session${t.sessions!.length === 1 ? "" : "s"}`}
+                    style={{ fontSize: 10, flexShrink: 0, color: "var(--accent)" }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    ⏱ {fmtSpent(totalSpentSec(t))}
+                  </span>
+                )}
                 <button
                   className="num"
                   title="Change due date"
