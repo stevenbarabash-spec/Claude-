@@ -106,6 +106,25 @@ invites** (with a Meet link when there's no physical location).
    you've emailed before). `MEETING_CONTACTS` is optional but useful for
    nicknames or people not in your Google account.
 
+### Multiple Google accounts (contacts only)
+
+Meetings only ever get booked on **one** account (`GOOGLE_OAUTH_REFRESH_TOKEN`
+above), but you can widen name lookup to search other accounts' contacts too
+— e.g. a personal Gmail plus a work account — without booking on them:
+
+1. Reuse the same Client ID/Secret — no new Google Cloud project needed.
+2. In the OAuth consent screen, add the other account's email as a test user
+   (**Audience → Test users → Add users**).
+3. Re-run the refresh-token script, signing in as that other account when the
+   browser opens:
+   ```bash
+   GOOGLE_OAUTH_CLIENT_ID=... GOOGLE_OAUTH_CLIENT_SECRET=... node scripts/google-refresh-token.mjs
+   ```
+4. Add the printed token to `GOOGLE_CONTACTS_REFRESH_TOKENS` instead of
+   overwriting `GOOGLE_OAUTH_REFRESH_TOKEN` — semicolon-separate multiple:
+   `token1;token2`.
+5. Repeat per additional account.
+
 ### Two ways to book
 
 - **In Jarvis** (dashboard assistant): just say/type it. Jarvis reads the

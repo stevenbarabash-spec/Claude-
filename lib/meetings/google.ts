@@ -17,17 +17,20 @@ export function bookingConfigured(): boolean {
   );
 }
 
-let cachedToken: { token: string; expiresAt: number } | null = null;
+// One access-token cache entry per refresh token, so booking (the primary
+// account) and contacts-only lookups against other accounts don't collide.
+const tokenCache = new Map<string, { token: string; expiresAt: number }>();
 
-export async function accessToken(): Promise<string> {
-  if (cachedToken && Date.now() < cachedToken.expiresAt) return cachedToken.token;
+export async function accessTokenFor(refreshToken: string): Promise<string> {
+  const cached = tokenCache.get(refreshToken);
+  if (cached && Date.now() < cached.expiresAt) return cached.token;
   const res = await fetch(TOKEN_URL, {
     method: "POST",
     headers: { "content-type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       client_id: process.env.GOOGLE_OAUTH_CLIENT_ID!,
       client_secret: process.env.GOOGLE_OAUTH_CLIENT_SECRET!,
-      refresh_token: process.env.GOOGLE_OAUTH_REFRESH_TOKEN!,
+      refresh_token: refreshToken,
       grant_type: "refresh_token",
     }),
   });
@@ -36,11 +39,24 @@ export async function accessToken(): Promise<string> {
     throw new Error(`google token refresh failed (${res.status}): ${body.slice(0, 200)}`);
   }
   const data = (await res.json()) as { access_token: string; expires_in: number };
-  cachedToken = {
-    token: data.access_token,
-    expiresAt: Date.now() + (data.expires_in - 60) * 1000,
-  };
-  return cachedToken.token;
+  const entry = { token: data.access_token, expiresAt: Date.now() + (data.expires_in - 60) * 1000 };
+  tokenCache.set(refreshToken, entry);
+  return entry.token;
+}
+
+// The account meetings are actually booked/invited on.
+export async function accessToken(): Promise<string> {
+  return accessTokenFor(process.env.GOOGLE_OAUTH_REFRESH_TOKEN!);
+}
+
+// Additional Google accounts whose contacts should be searchable when
+// resolving a spoken name, even though meetings only ever get booked on the
+// primary account above. GOOGLE_CONTACTS_REFRESH_TOKENS="token1;token2".
+export function contactsOnlyRefreshTokens(): string[] {
+  return (process.env.GOOGLE_CONTACTS_REFRESH_TOKENS ?? "")
+    .split(/[;\n,]+/)
+    .map((t) => t.trim())
+    .filter(Boolean);
 }
 
 export interface BookedMeeting {
