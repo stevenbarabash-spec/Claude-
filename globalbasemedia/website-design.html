@@ -154,28 +154,25 @@
   .ba-tag{align-self:flex-start;font-size:.78rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;border-radius:999px;padding:6px 16px}
   .ba-tag.tagold{background:#e8e6df;color:#6b675c;border:1px solid #d4d1c5}
   .ba-tag.tagnew{background:linear-gradient(100deg,#12c98a,#22e0a0);color:#08130d}
-  .w95{font-family:Tahoma,"MS Sans Serif",Arial,sans-serif;background:#c0c0c0;border:2px solid;border-color:#fff #404040 #404040 #fff;box-shadow:2px 2px 0 #000;color:#000;text-align:left}
-  .w95bar{display:flex;align-items:center;gap:6px;background:linear-gradient(90deg,#000080,#1084d0);color:#fff;font-weight:700;font-size:.72rem;padding:3px 4px}
-  .w95ic{width:14px;height:14px;background:linear-gradient(135deg,#ffff00 50%,#008080 50%);border:1px solid #808080;flex:0 0 auto}
-  .w95t{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .w95btns{display:flex;gap:2px}
-  .w95btns i{font-style:normal;width:16px;height:14px;display:grid;place-items:center;background:#c0c0c0;color:#000;font-size:.6rem;font-weight:700;border:1px solid;border-color:#fff #404040 #404040 #fff}
-  .w95menu{display:flex;gap:12px;font-size:.72rem;padding:3px 8px;border-bottom:1px solid #808080}
-  .w95addr{display:flex;align-items:center;gap:8px;font-size:.7rem;padding:3px 8px;border-bottom:2px solid;border-color:#808080 #fff #fff #808080}
-  .w95url{flex:1;background:#fff;border:2px solid;border-color:#404040 #fff #fff #404040;padding:2px 6px;font-family:"Courier New",monospace;font-size:.68rem;white-space:nowrap;overflow:hidden}
-  .w95body{background:#fff;margin:6px;border:2px solid;border-color:#404040 #fff #fff #404040;padding:14px;font-family:"Times New Roman",Times,serif}
-  .w95mq{overflow:hidden;background:#000080;margin:-14px -14px 12px;padding:3px 0}
-  .w95mq span{display:inline-block;white-space:nowrap;color:#0f0;font-family:"Courier New",monospace;font-size:.7rem;animation:w95mq 11s linear infinite}
-  @keyframes w95mq{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
-  .w95h{font-size:1.35rem;color:#000080}
-  .w95hr{height:3px;background:repeating-linear-gradient(90deg,#ff00ff 0 8px,#00ffff 8px 16px);margin:8px 0}
-  .w95p{font-size:.8rem;line-height:1.5;margin:8px 0;color:#000}
-  .w95link{color:#0000ee;cursor:pointer}
-  .w95btn{display:inline-block;background:#c0c0c0;border:2px solid;border-color:#fff #404040 #404040 #fff;padding:5px 18px;font-family:Tahoma,Arial,sans-serif;font-size:.72rem;font-weight:700;margin:6px 0}
-  .w95cnt{font-family:"Courier New",monospace;font-size:.72rem;margin-top:10px}
-  .w95cnt b{background:#000;color:#0f0;padding:1px 5px;letter-spacing:2px}
-  .w95foot{font-size:.66rem;color:#808080;margin-top:12px;font-family:Tahoma,Arial,sans-serif}
-  /* video flip card */
+  .flatold{background:#fff;border:1px solid #bbb;font-family:Arial,Helvetica,sans-serif;color:#333;text-align:left;filter:saturate(.4)}
+  .fo-top{display:flex;justify-content:space-between;align-items:baseline;background:#2c4a77;padding:12px 14px}
+  .fo-logo{font-weight:700;font-size:.9rem;letter-spacing:.04em;color:#fff}
+  .fo-tag{font-size:.64rem;color:#b9c6da;font-style:italic}
+  .fo-nav{display:flex;font-size:.7rem;background:#e8e8e8;border-bottom:1px solid #bbb}
+  .fo-nav span{padding:7px 14px;border-right:1px solid #ccc;color:#2c4a77;font-weight:700;cursor:pointer}
+  .fo-nav span.on{background:#fff;color:#333}
+  .fo-hero{background:#ddd;text-align:center;padding:26px 16px}
+  .fo-hero b{display:block;font-size:1.25rem;color:#222;font-weight:700}
+  .fo-hero span{display:block;font-size:.76rem;color:#666;margin-top:6px}
+  .fo-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:14px}
+  .fo-card b{display:block;font-size:.76rem;margin-top:8px;color:#333}
+  .fo-card p{font-size:.68rem;color:#777;margin-top:3px;line-height:1.4}
+  .fo-img{aspect-ratio:1/1;background:#c9c9c9;border:1px solid #aaa;position:relative}
+  .fo-img::before,.fo-img::after{content:"";position:absolute;left:6%;right:6%;top:50%;height:1px;background:#999;transform:rotate(24deg)}
+  .fo-img::after{transform:rotate(-24deg)}
+  .fo-btn{display:inline-block;margin:2px 14px 8px;background:#e4e4e4;border:1px solid #999;padding:6px 20px;font-size:.72rem;color:#333}
+  .fo-foot{border-top:1px solid #ccc;padding:8px 14px;font-size:.64rem;color:#999}
+    /* video flip card */
   .banew{perspective:1500px}
   .banew .flip-inner{position:relative;transform-style:preserve-3d;transition:transform .95s cubic-bezier(.4,.05,.2,1);height:100%}
   .banew.flipped .flip-inner{transform:rotateY(180deg)}
@@ -258,20 +255,20 @@
       <div class="ba2">
         <div class="ba-side reveal r-left">
           <span class="ba-tag tagold">Old Site</span>
-          <div class="w95" aria-label="A dated Windows-95-era website before redesign">
-            <div class="w95bar"><span class="w95ic"></span><span class="w95t">Welcome to Our Web Site!! - Microsoft Internet Explorer</span><span class="w95btns"><i>_</i><i>&#9633;</i><i>&#10005;</i></span></div>
-            <div class="w95menu"><span>File</span><span>Edit</span><span>View</span><span>Favorites</span><span>Help</span></div>
-            <div class="w95addr"><b>Address</b><span class="w95url">http://www.ourwebsite.com/index.htm</span></div>
-            <div class="w95body">
-              <div class="w95mq"><span>*** WELCOME TO OUR HOME PAGE *** THANKS FOR VISITING *** SIGN OUR GUESTBOOK ***</span></div>
-              <b class="w95h">Welcome to Our Web Site!!</b>
-              <div class="w95hr"></div>
-              <p class="w95p">We are proud to announce that our company is now on the World Wide Web. Please browse our site and dont forget to bookmark this page!</p>
-              <p class="w95p"><u class="w95link">Click here</u> to enter our site. <u class="w95link">Click here</u> for our price list (updated 2014).</p>
-              <div class="w95btn">ENTER SITE</div>
-              <div class="w95cnt">You are visitor No. <b>0 0 3 8 4 7</b></div>
-              <div class="w95foot">Best viewed in Internet Explorer 5 at 800x600 &middot; Under Construction</div>
+          <div class="flatold" aria-label="A flat, dated website before redesign">
+            <div class="fo-top"><span class="fo-logo">OUR COMPANY, INC.</span><span class="fo-tag">"Quality Service Since 1987"</span></div>
+            <div class="fo-nav"><span class="on">Home</span><span>About Us</span><span>Services</span><span>Photo Gallery</span><span>Contact</span></div>
+            <div class="fo-hero">
+              <b>Welcome to our website.</b>
+              <span>We are a company that provides services. Please look around.</span>
             </div>
+            <div class="fo-row">
+              <div class="fo-card"><div class="fo-img"></div><b>Our Services</b><p>We offer many services for you to choose from.</p></div>
+              <div class="fo-card"><div class="fo-img"></div><b>About Us</b><p>We have been in business for many years.</p></div>
+              <div class="fo-card"><div class="fo-img"></div><b>Contact Us</b><p>Call us during business hours to learn more.</p></div>
+            </div>
+            <div class="fo-btn">Read More</div>
+            <div class="fo-foot">&copy; 2014 Our Company. All rights reserved. &middot; Last updated 2014</div>
           </div>
         </div>
         <div class="mid" aria-hidden="true">→</div>
@@ -299,10 +296,10 @@
         </div>
       </div>
       <div class="adstats">
-        <div class="adstat reveal"><div class="n"><em data-cnt="7" data-suf=" days">7 days</em></div><div class="l">to your first free design</div></div>
-        <div class="adstat reveal"><div class="n"><em data-cnt="98">98</em></div><div class="l">average PageSpeed score</div></div>
-        <div class="adstat reveal"><div class="n"><em data-cnt="50" data-suf="+">50+</em></div><div class="l">happy clients</div></div>
-        <div class="adstat reveal"><div class="n"><em>100%</em></div><div class="l">yours — you own everything</div></div>
+        <div class="adstat reveal"><div class="n"><em data-cnt="7" data-suf=" days">7 days</em></div><div class="l">To your first free design</div></div>
+        <div class="adstat reveal"><div class="n"><em data-cnt="98">98</em></div><div class="l">Average PageSpeed score</div></div>
+        <div class="adstat reveal"><div class="n"><em data-cnt="50" data-suf="+">50+</em></div><div class="l">Happy clients</div></div>
+        <div class="adstat reveal"><div class="n"><em>100%</em></div><div class="l">Yours — you own everything</div></div>
       </div>
     </div>
   </section>
