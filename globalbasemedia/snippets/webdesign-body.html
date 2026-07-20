@@ -52,6 +52,15 @@
   .inc .c p{font-size:.85rem;color:var(--muted2)}
   .inc .c .tag9{display:inline-block;font-size:.64rem;font-weight:800;letter-spacing:.08em;color:#57f0c0;background:rgba(34,224,160,.12);border:1px solid rgba(34,224,160,.3);border-radius:999px;padding:3px 10px;margin-bottom:12px}
 
+  /* video showcase: one big panel now, auto-fits side-by-side as more are added */
+  .shgrid{display:grid;grid-template-columns:1fr;gap:34px;margin-top:46px}
+  @media(min-width:901px){
+    .shgrid{grid-template-columns:repeat(auto-fit,minmax(620px,1fr));width:min(1560px,94vw);margin-inline:calc((min(1560px,94vw) - 100%)/-2)}
+  }
+  .shitem{margin:0;background:#141126;border-radius:20px;overflow:hidden;box-shadow:0 30px 70px -28px rgba(20,10,50,.5);text-align:left}
+  .shitem video{display:block;width:100%;height:auto;background:#0a0812}
+  .shitem figcaption{padding:14px 20px;font-size:.92rem;font-weight:700;color:#f6f4fb;display:flex;justify-content:space-between;gap:10px;align-items:center}
+  .shitem figcaption span{color:#a49dc0;font-weight:600}
   /* ——— LIGHT THEME (website design page): white/pastel like the homepage ——— */
   body{background:linear-gradient(180deg,#f4eefb 0%,#edf3fd 18%,#f7f5fd 45%,#faf8fd 70%,#ffffff 88%,#ffffff 100%)!important}
   #main{color:#3c3854}
@@ -168,7 +177,25 @@
   </section>
 
   <!-- WHAT EVERY SITE INCLUDES -->
-  <section class="stack-top" style="background:var(--bg);margin-top:-90px;padding-top:130px">
+    <!-- SHOWCASE -->
+  <section>
+    <div class="wrap center" style="position:relative;z-index:2">
+      <span class="eyebrow">Showcase</span>
+      <h2 style="margin-top:14px">Watch our builds <span class="serif warm">in motion.</span></h2>
+      <p class="lede" style="margin-top:12px">Real websites we designed and built — captured live, exactly as customers see them.</p>
+      <div class="shgrid">
+        <figure class="shitem reveal r-rise">
+          <div class="browser" style="border:0;box-shadow:none;border-radius:0">
+            <div class="bar"><i></i><i></i><i></i><span class="u">built by Global Base Media</span></div>
+            <video src="https://assets.cdn.filesafe.space/zPMFoWE7Sa0FnTxcLYBp/media/6a5d858b1097b8119507e7db.mp4" autoplay muted loop playsinline preload="metadata" aria-label="A custom website we built, shown live"></video>
+          </div>
+          <figcaption>Custom build <span>Designed &amp; built by Global Base Media</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+<section class="stack-top" style="background:var(--bg);margin-top:-90px;padding-top:130px">
     <div class="dots"></div>
     <div class="wrap center" style="position:relative;z-index:2">
       <span class="eyebrow">Standard equipment</span>
