@@ -704,6 +704,49 @@ nav.scrolled {
 }
 
 /* =====================================================
+   JON CARD (confirmation + calendar screens)
+   ===================================================== */
+.jon-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 380px;
+  margin: 0 auto 26px;
+  padding: 14px 18px;
+  background: rgba(237,232,219,0.05);
+  border: 1px solid rgba(184,147,12,0.28);
+  border-radius: 14px;
+  text-align: left;
+}
+.jon-card img {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  flex-shrink: 0;
+  border: 2px solid rgba(184,147,12,0.5);
+}
+.jon-card-info { display: flex; flex-direction: column; gap: 3px; }
+.jon-card-name { font-family: var(--f-body); font-weight: 700; font-size: 1rem; color: var(--bone); }
+.jon-card-role { font-size: 0.78rem; color: var(--bone-dim); }
+.jon-card-badge {
+  display: inline-block;
+  margin-top: 4px;
+  align-self: flex-start;
+  background: rgba(184,147,12,0.18);
+  border: 1px solid rgba(184,147,12,0.45);
+  color: var(--gold-light);
+  font-family: var(--f-body);
+  font-weight: 700;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 4px;
+}
+
+/* =====================================================
    POPUP QUALIFIER MODAL
    ===================================================== */
 .qm-overlay {
@@ -1351,9 +1394,17 @@ nav.scrolled {
           <div class="qual-pane hidden" id="A-stepInvite">
             <div style="text-align:center;padding:8px 0;">
               <div class="qual-success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-              <h3 class="qual-q" style="margin-bottom:10px;">You qualify for this round.</h3>
-              <p class="qual-hint" style="max-width:360px;margin:0 auto 24px;">Would you like to book a private investor call to discuss the opportunity in detail?</p>
-              <button class="qual-submit" onclick="qABook()" style="max-width:340px;margin:0 auto;">Yes — Book My Investor Call →</button>
+              <h3 class="qual-q" style="margin-bottom:16px;">You qualify for this round.</h3>
+              <div class="jon-card">
+                <img src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata">
+                <div class="jon-card-info">
+                  <div class="jon-card-name">Jon Licata</div>
+                  <div class="jon-card-role">Chief Revenue Officer</div>
+                  <span class="jon-card-badge">Investor</span>
+                </div>
+              </div>
+              <p class="qual-hint" style="max-width:360px;margin:0 auto 24px;">Would you like to book a private call with Jon to discuss the opportunity in detail?</p>
+              <button class="qual-submit" onclick="qABook()" style="max-width:340px;margin:0 auto;">Yes — Book My Call With Jon →</button>
             </div>
           </div>
           <!-- Disqualified -->
@@ -1368,8 +1419,16 @@ nav.scrolled {
           <div class="qual-pane hidden" id="A-stepSuccess">
             <div style="text-align:center;padding:16px 0;">
               <div class="qual-success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-              <h3 class="qual-q" style="margin-bottom:6px;">Select your investor call time.</h3>
-              <p class="qual-hint" style="max-width:340px;margin:0 auto 20px;">Pick a time below to speak directly with our team.</p>
+              <h3 class="qual-q" style="margin-bottom:16px;">Select your call time with Jon.</h3>
+              <div class="jon-card">
+                <img src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata">
+                <div class="jon-card-info">
+                  <div class="jon-card-name">Jon Licata</div>
+                  <div class="jon-card-role">Chief Revenue Officer</div>
+                  <span class="jon-card-badge">Investor</span>
+                </div>
+              </div>
+              <p class="qual-hint" style="max-width:340px;margin:0 auto 20px;">Pick a time below to speak directly with Jon.</p>
               <iframe src="https://api.leadconnectorhq.com/widget/booking/EoyuzAkgBGkwKNP6Hr36" style="width:100%;height:620px;border:none;border-radius:8px;background:transparent;" scrolling="yes" title="Book Your Investor Call"></iframe>
             </div>
           </div>
@@ -2534,9 +2593,17 @@ nav.scrolled {
           <div class="qual-success-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h3 class="qual-q" style="margin-bottom:12px;">You qualify for this round.</h3>
-          <p class="qual-hint" style="max-width:440px;margin:0 auto 28px;">Would you like to book a private investor call to discuss this opportunity in detail with our team?</p>
-          <button class="qual-submit" onclick="qualBook()" style="max-width:380px;margin:0 auto;">Yes — Book My Investor Call →</button>
+          <h3 class="qual-q" style="margin-bottom:18px;">You qualify for this round.</h3>
+          <div class="jon-card">
+            <img src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata">
+            <div class="jon-card-info">
+              <div class="jon-card-name">Jon Licata</div>
+              <div class="jon-card-role">Chief Revenue Officer</div>
+              <span class="jon-card-badge">Investor</span>
+            </div>
+          </div>
+          <p class="qual-hint" style="max-width:440px;margin:0 auto 28px;">Would you like to book a private call with Jon to discuss this opportunity in detail?</p>
+          <button class="qual-submit" onclick="qualBook()" style="max-width:380px;margin:0 auto;">Yes — Book My Call With Jon →</button>
         </div>
       </div>
 
@@ -2556,8 +2623,16 @@ nav.scrolled {
           <div class="qual-success-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h3 class="qual-q" style="margin-bottom:6px;">Select your investor call time.</h3>
-          <p class="qual-hint" style="max-width:420px;margin:0 auto 20px;">Pick a time below to speak directly with our team.</p>
+          <h3 class="qual-q" style="margin-bottom:16px;">Select your call time with Jon.</h3>
+          <div class="jon-card">
+            <img src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata">
+            <div class="jon-card-info">
+              <div class="jon-card-name">Jon Licata</div>
+              <div class="jon-card-role">Chief Revenue Officer</div>
+              <span class="jon-card-badge">Investor</span>
+            </div>
+          </div>
+          <p class="qual-hint" style="max-width:420px;margin:0 auto 20px;">Pick a time below to speak directly with Jon.</p>
           <iframe src="https://api.leadconnectorhq.com/widget/booking/EoyuzAkgBGkwKNP6Hr36" style="width:100%;height:620px;border:none;border-radius:8px;background:transparent;" scrolling="yes" title="Book Your Investor Call"></iframe>
           <div class="qual-success-details">
             <div class="qual-detail-row"><span>Status</span><strong>Accredited Investor ✓</strong></div>
@@ -2641,9 +2716,17 @@ nav.scrolled {
           <div class="qual-success-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h3 class="qual-q" style="margin-bottom:12px;">You qualify for this round.</h3>
-          <p class="qual-hint" style="max-width:440px;margin:0 auto 28px;">Would you like to book a private investor call to discuss this opportunity in detail with our team?</p>
-          <button class="qual-submit" onclick="qMBook()" style="max-width:380px;margin:0 auto;">Yes — Book My Investor Call →</button>
+          <h3 class="qual-q" style="margin-bottom:18px;">You qualify for this round.</h3>
+          <div class="jon-card">
+            <img src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata">
+            <div class="jon-card-info">
+              <div class="jon-card-name">Jon Licata</div>
+              <div class="jon-card-role">Chief Revenue Officer</div>
+              <span class="jon-card-badge">Investor</span>
+            </div>
+          </div>
+          <p class="qual-hint" style="max-width:440px;margin:0 auto 28px;">Would you like to book a private call with Jon to discuss this opportunity in detail?</p>
+          <button class="qual-submit" onclick="qMBook()" style="max-width:380px;margin:0 auto;">Yes — Book My Call With Jon →</button>
         </div>
       </div>
 
@@ -2663,8 +2746,16 @@ nav.scrolled {
           <div class="qual-success-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h3 class="qual-q" style="margin-bottom:6px;">Select your investor call time.</h3>
-          <p class="qual-hint" style="max-width:420px;margin:0 auto 20px;">Pick a time below to speak directly with our team.</p>
+          <h3 class="qual-q" style="margin-bottom:16px;">Select your call time with Jon.</h3>
+          <div class="jon-card">
+            <img src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata">
+            <div class="jon-card-info">
+              <div class="jon-card-name">Jon Licata</div>
+              <div class="jon-card-role">Chief Revenue Officer</div>
+              <span class="jon-card-badge">Investor</span>
+            </div>
+          </div>
+          <p class="qual-hint" style="max-width:420px;margin:0 auto 20px;">Pick a time below to speak directly with Jon.</p>
           <iframe src="https://api.leadconnectorhq.com/widget/booking/EoyuzAkgBGkwKNP6Hr36" style="width:100%;height:560px;border:none;border-radius:8px;background:transparent;" scrolling="yes" title="Book Your Investor Call"></iframe>
           <div class="qual-success-details">
             <div class="qual-detail-row"><span>Status</span><strong>Accredited Investor ✓</strong></div>
