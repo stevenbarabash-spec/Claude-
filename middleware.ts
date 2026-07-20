@@ -9,6 +9,10 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith("/login") || pathname.startsWith("/api/auth/")) {
     return NextResponse.next();
   }
+  // The brief feed does its own auth (BRIEF_API_KEY); let it reach its handler.
+  if (pathname.startsWith("/api/brief")) {
+    return NextResponse.next();
+  }
 
   // Programmatic access via x-api-secret for API routes (scripts, shortcuts).
   if (pathname.startsWith("/api/") && process.env.API_SECRET) {

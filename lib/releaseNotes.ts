@@ -11,6 +11,15 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.23",
+    date: "2026-07-20",
+    title: "Read-only status-brief API",
+    notes: [
+      "New read-only GET /api/brief returns all clients/projects/tasks as JSON for an external assistant (weekly status brief).",
+      "Protected by a separate BRIEF_API_KEY (Authorization: Bearer or ?key=) — no write access, and the dashboard login isn't required.",
+    ],
+  },
+  {
     version: "v2.1.22",
     date: "2026-07-18",
     title: "Time tracking on tasks (for hourly billing)",
