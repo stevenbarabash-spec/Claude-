@@ -11,6 +11,14 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.24",
+    date: "2026-07-20",
+    title: "PIN lock screen",
+    notes: [
+      "The dashboard is gated by a PIN — a clean lock screen asks for your PIN before anything loads (numeric entry, hidden digits).",
+    ],
+  },
+  {
     version: "v2.1.23",
     date: "2026-07-20",
     title: "Read-only status-brief API",
