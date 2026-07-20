@@ -952,14 +952,23 @@ nav.scrolled {
   }
 
   /* Push content below fixed bar */
-  body { padding-top: 60px; padding-bottom: 20px; }
+  /* Header floats over the hero's sky — no reserved gap above the video */
+  body { padding-top: 0; padding-bottom: 20px; }
 
-  /* Video hero: full-bleed width, shorter, bottom cropped to hide burned-in captions */
-  .video-hero {
-    height: calc(78svh - 60px);
+  /* FULL-BLEED: force every top-level section edge-to-edge, escaping any
+     wrapper padding (e.g. GoHighLevel column). Inner .container keeps text gutters. */
+  section, .ticker-bar, .press-bar, footer {
     width: 100vw;
     max-width: 100vw !important;
-    margin-left: calc(50% - 50vw);
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
+  }
+
+  /* Video hero: full-bleed width, shorter, bottom cropped to hide burned-in captions.
+     No top gap — sits flush under the fixed header. */
+  .video-hero {
+    height: 78svh;
+    margin-top: 0 !important;
   }
   .video-hero video {
     height: 122% !important;
