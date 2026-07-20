@@ -703,6 +703,73 @@ nav.scrolled {
   .lc-stat-num { font-size: 1.2rem; }
 }
 
+/* =====================================================
+   POPUP QUALIFIER MODAL
+   ===================================================== */
+.qm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(6,15,9,0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+.qm-overlay.open { opacity: 1; visibility: visible; }
+.qm-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  max-height: 92vh;
+  overflow-y: auto;
+  transform: translateY(24px) scale(0.98);
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.qm-overlay.open .qm-dialog { transform: translateY(0) scale(1); }
+.qm-dialog .qual-card { margin: 0; }
+.qm-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(237,232,219,0.2);
+  background: rgba(11,31,18,0.6);
+  color: var(--bone);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s;
+}
+.qm-close:hover { background: rgba(11,31,18,0.9); border-color: rgba(237,232,219,0.4); }
+.qm-close svg { width: 16px; height: 16px; }
+/* Exit-intent banner shown above step 1 when triggered by leave-intent */
+.qm-exit-banner {
+  display: none;
+  background: linear-gradient(90deg, rgba(184,147,12,0.22), rgba(184,147,12,0.08));
+  border: 1px solid rgba(184,147,12,0.4);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 22px;
+  text-align: center;
+}
+.qm-overlay.exit-intent .qm-exit-banner { display: block; }
+.qm-exit-banner strong { color: var(--gold-light); font-family: var(--f-body); font-weight: 700; font-size: 0.95rem; display: block; margin-bottom: 4px; }
+.qm-exit-banner span { color: var(--bone-dim); font-size: 0.8rem; line-height: 1.5; }
+@media (max-width: 640px) {
+  .qm-overlay { padding: 14px; align-items: flex-start; padding-top: 70px; }
+  .qm-dialog { max-height: 88vh; }
+}
+
 /* FOOTER */
 .footer-inner { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
 .footer-brand { font-family: var(--f-display); font-weight: 600; font-size: 1.2rem; color: var(--bone-dim); }
@@ -2534,6 +2601,129 @@ nav.scrolled {
 </section>
 
 
+<!-- ACCREDITED-INVESTOR POPUP QUALIFIER -->
+<div class="qm-overlay" id="qualModal" aria-hidden="true">
+  <div class="qm-dialog" role="dialog" aria-modal="true" aria-label="Accredited investor qualifier">
+    <button class="qm-close" id="qmClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div class="qual-card" id="qualCardM">
+
+      <!-- EXIT-INTENT BANNER (only shows on leave-intent trigger) -->
+      <div class="qm-exit-banner">
+        <strong>Wait — before you go.</strong>
+        <span>Opportunities like this don't come along every day. Take 30 seconds to see if you qualify for this round before it closes.</span>
+      </div>
+
+      <!-- STEP INDICATOR -->
+      <div class="qual-steps" id="qualStepsM">
+        <div class="qual-step active"></div>
+        <div class="qual-step"></div>
+        <div class="qual-step"></div>
+        <div class="qual-step"></div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="qual-pane" id="M-step1">
+        <div class="qual-eyebrow">Step 1 of 4</div>
+        <h3 class="qual-q">Are you an accredited investor?</h3>
+        <p class="qual-hint">Per SEC Rule 501, an accredited investor has a net worth exceeding $1M (excluding primary residence) or annual income above $200K ($300K joint) for the past two years.</p>
+        <div class="qual-opts">
+          <button class="qual-opt" onclick="qM(1,'Yes — I meet the SEC accredited investor criteria')">Yes — I meet the criteria</button>
+          <button class="qual-opt qual-opt-no" onclick="qMDisq()">No — I do not qualify</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="qual-pane hidden" id="M-step2">
+        <div class="qual-eyebrow">Step 2 of 4</div>
+        <h3 class="qual-q">What is your investment range for this opportunity?</h3>
+        <p class="qual-hint">Minimum investment is $25,000. This is a Reg D 506(c) private placement.</p>
+        <div class="qual-opts">
+          <button class="qual-opt" onclick="qM(2,'$25K – $50K')">$25,000 – $50,000</button>
+          <button class="qual-opt" onclick="qM(2,'$50K – $100K')">$50,000 – $100,000</button>
+          <button class="qual-opt" onclick="qM(2,'$100K – $250K')">$100,000 – $250,000</button>
+          <button class="qual-opt" onclick="qM(2,'$250K+')">$250,000+</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="qual-pane hidden" id="M-step3">
+        <div class="qual-eyebrow">Step 3 of 4</div>
+        <h3 class="qual-q">How soon are you looking to make an investment decision?</h3>
+        <p class="qual-hint">This round is actively closing. Priority access is given to investors ready to move within 60 days.</p>
+        <div class="qual-opts">
+          <button class="qual-opt" onclick="qM(3,'Within 30 days')">Within 30 days</button>
+          <button class="qual-opt" onclick="qM(3,'30–60 days')">30–60 days</button>
+          <button class="qual-opt" onclick="qM(3,'60–90 days')">60–90 days</button>
+          <button class="qual-opt" onclick="qM(3,'Just exploring')">Just exploring for now</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="qual-pane hidden" id="M-step4">
+        <div class="qual-eyebrow">Step 4 of 4</div>
+        <h3 class="qual-q">Where should we send your investor materials?</h3>
+        <p class="qual-hint">You'll receive the Private Placement Memorandum and a link to schedule your investor call directly with our team.</p>
+        <div class="qual-form">
+          <div class="qual-field-row">
+            <div class="qual-field">
+              <label>First Name</label>
+              <input type="text" id="M-qFirstName" placeholder="John" autocomplete="given-name">
+            </div>
+            <div class="qual-field">
+              <label>Last Name</label>
+              <input type="text" id="M-qLastName" placeholder="Smith" autocomplete="family-name">
+            </div>
+          </div>
+          <div class="qual-field">
+            <label>Email Address</label>
+            <input type="email" id="M-qEmail" placeholder="john@example.com" autocomplete="email">
+          </div>
+          <div class="qual-field">
+            <label>Mobile Number</label>
+            <input type="tel" id="M-qPhone" placeholder="+1 (555) 000-0000" autocomplete="tel">
+          </div>
+          <button class="qual-submit" onclick="qMSubmit()">
+            <span id="qMSubmitText">Send My Materials &amp; Book a Call →</span>
+            <span id="qMSubmitLoading" style="display:none;">Submitting…</span>
+          </button>
+          <p class="qual-privacy">Your information is kept strictly confidential and is never sold or shared. You may unsubscribe at any time.</p>
+        </div>
+      </div>
+
+      <!-- DISQUALIFIED -->
+      <div class="qual-pane hidden" id="M-stepDisq">
+        <div style="text-align:center;padding:20px 0;">
+          <div style="font-size:2.2rem;margin-bottom:16px;">🌱</div>
+          <h3 class="qual-q" style="margin-bottom:12px;">Thank you for your interest</h3>
+          <p class="qual-hint" style="max-width:400px;margin:0 auto;">This offering is only available to accredited investors per SEC regulations. We'd love to stay in touch — follow InteliGel's journey as we grow.</p>
+          <a href="https://greenevolutiontechnologies.com" class="qual-opt" style="display:inline-block;margin-top:28px;text-decoration:none;">Learn More About InteliGel →</a>
+        </div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="qual-pane hidden" id="M-stepSuccess">
+        <div style="text-align:center;padding:20px 0;">
+          <div class="qual-success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3 class="qual-q" style="margin-bottom:6px;">You're qualified. Materials are on the way.</h3>
+          <p class="qual-hint" style="max-width:420px;margin:0 auto 20px;">Select your investor call time below.</p>
+          <iframe src="https://api.leadconnectorhq.com/widget/booking/EoyuzAkgBGkwKNP6Hr36" style="width:100%;height:560px;border:none;border-radius:8px;background:transparent;" scrolling="yes" title="Book Your Investor Call"></iframe>
+          <div class="qual-success-details">
+            <div class="qual-detail-row"><span>Status</span><strong>Accredited Investor ✓</strong></div>
+            <div class="qual-detail-row"><span>Materials</span><strong>Sent to your email</strong></div>
+            <div class="qual-detail-row"><span>Response Time</span><strong>Within 24 hours</strong></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /qual-card -->
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer style="background:var(--ink);padding:48px 0;">
   <div class="container">
@@ -2692,6 +2882,104 @@ function qualSubmit() {
     console.error('Webhook failed — check GHL endpoint');
   });
 }
+
+// ── QUALIFIER INSTANCE M (popup modal) ──
+var qMAnswers = {};
+function qMShowStep(id, dot) {
+  document.querySelectorAll('#qualCardM .qual-pane').forEach(function(p){ p.classList.add('hidden'); });
+  var el = document.getElementById('M-' + id);
+  if (el) el.classList.remove('hidden');
+  var stepsEl = document.getElementById('qualStepsM');
+  var numbered = ['step1','step2','step3','step4'];
+  stepsEl.style.display = numbered.indexOf(id) !== -1 ? 'flex' : 'none';
+  if (dot) {
+    document.querySelectorAll('#qualCardM .qual-step').forEach(function(d,i){
+      d.classList.remove('active','done');
+      if (i < dot-1) d.classList.add('done');
+      else if (i === dot-1) d.classList.add('active');
+    });
+  }
+}
+function qM(step, answer) {
+  qMAnswers['step'+step] = answer;
+  qMShowStep('step'+(step+1), step+1);
+}
+function qMDisq() { qMShowStep('stepDisq', null); }
+function qMSubmit() {
+  var first = document.getElementById('M-qFirstName').value.trim();
+  var last  = document.getElementById('M-qLastName').value.trim();
+  var email = document.getElementById('M-qEmail').value.trim();
+  var phone = document.getElementById('M-qPhone').value.trim();
+  if (!first || !email || !phone) { alert('Please fill in your name, email, and phone number.'); return; }
+  var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if (!emailOk) { alert('Please enter a valid email address.'); return; }
+  document.getElementById('qMSubmitText').style.display = 'none';
+  document.getElementById('qMSubmitLoading').style.display = 'inline';
+  var payload = {
+    firstName: first, lastName: last, email: email, phone: phone,
+    accredited: qMAnswers['step1'] || '',
+    investmentRange: qMAnswers['step2'] || '',
+    timeline: qMAnswers['step3'] || '',
+    source: 'investininteligel.com',
+    tags: ['investor-lead','pre-series-a','popup-qualifier']
+  };
+  var WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL_HERE';
+  if (WEBHOOK_URL === 'YOUR_GHL_WEBHOOK_URL_HERE') {
+    setTimeout(function(){ qMShowStep('stepSuccess', 4); }, 600);
+    return;
+  }
+  fetch(WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) })
+    .then(function(){ fireConversion(); qMShowStep('stepSuccess', 4); })
+    .catch(function(){ fireConversion(); qMShowStep('stepSuccess', 4); console.error('Webhook failed — check GHL endpoint'); });
+}
+
+// ── POPUP TRIGGERS: 15% scroll  ·  50% video watched  ·  exit intent ──
+(function(){
+  var modal = document.getElementById('qualModal');
+  if (!modal) return;
+  var shown = false;
+
+  function openModal(exitIntent) {
+    if (shown) return;
+    if (sessionStorage.getItem('qmDismissed')) return;
+    shown = true;
+    if (exitIntent) modal.classList.add('exit-intent');
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+    sessionStorage.setItem('qmDismissed','1');
+  }
+
+  // Close controls
+  document.getElementById('qmClose').addEventListener('click', closeModal);
+  modal.addEventListener('click', function(e){ if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+
+  // Trigger 1: scroll 15% of the page
+  window.addEventListener('scroll', function(){
+    var st = window.pageYOffset || document.documentElement.scrollTop;
+    var docH = document.documentElement.scrollHeight - window.innerHeight;
+    if (docH > 0 && (st / docH) >= 0.15) openModal(false);
+  }, { passive: true });
+
+  // Trigger 2: 50% of the hero video watched
+  var vid = document.getElementById('heroVideo');
+  if (vid) {
+    vid.addEventListener('timeupdate', function(){
+      if (vid.duration && (vid.currentTime / vid.duration) >= 0.50) openModal(false);
+    });
+  }
+
+  // Trigger 3: exit intent (mouse leaves toward top of viewport / tab)
+  document.addEventListener('mouseout', function(e){
+    if (!e.relatedTarget && e.clientY <= 0) openModal(true);
+  });
+})();
 
 // FAQ ACCORDION
 function toggleFaq(btn) {
