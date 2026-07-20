@@ -90,6 +90,12 @@
 
   /* auto-scrolling website previews (swap each .page for a full-page screenshot img when available) */
   .examples{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  /* breakout: the custom-builds gallery spans nearly the full viewport */
+  @media(min-width:901px){
+    .examples{width:min(1780px,96vw);margin-inline:calc((min(1780px,96vw) - 100%)/-2);gap:28px}
+    .examples .scrollwin{height:580px}
+    .examples .scrollwin .page{zoom:1.22}
+  }
   @media(max-width:900px){.examples{grid-template-columns:1fr}}
   .scrollwin{height:300px;overflow:hidden;position:relative;background:#0a0812}
   .scrollwin .page{display:block;will-change:transform;animation:autoscroll 20s ease-in-out infinite alternate}
