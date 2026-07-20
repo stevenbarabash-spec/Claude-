@@ -943,6 +943,10 @@ nav.scrolled {
   .ticker-bar, .team-track-wrap { overflow: hidden; }
   /* Faster ticker on mobile */
   .ticker-track { animation-duration: 6s; }
+  /* The * max-width:100% rule above clamps the marquee tracks and kills the
+     scroll — exempt them so width:max-content is honored and they keep rotating. */
+  .team-track, .ticker-track { max-width: none !important; }
+  .team-track { animation-duration: 30s; }
 
   /* Tighter container gutter on mobile */
   .container { padding: 0 16px; }
