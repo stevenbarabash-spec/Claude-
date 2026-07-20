@@ -1312,11 +1312,10 @@ nav.scrolled {
             <div class="qual-step active"></div>
             <div class="qual-step"></div>
             <div class="qual-step"></div>
-            <div class="qual-step"></div>
           </div>
           <!-- Step 1 -->
           <div class="qual-pane" id="A-step1">
-            <div class="qual-eyebrow">Step 1 of 4</div>
+            <div class="qual-eyebrow">Step 1 of 3</div>
             <h3 class="qual-q">Are you an accredited investor?</h3>
             <p class="qual-hint">Per SEC Rule 501 — net worth exceeding $1M (excluding primary residence) or annual income above $200K ($300K joint).</p>
             <div class="qual-opts">
@@ -1326,7 +1325,7 @@ nav.scrolled {
           </div>
           <!-- Step 2 -->
           <div class="qual-pane hidden" id="A-step2">
-            <div class="qual-eyebrow">Step 2 of 4</div>
+            <div class="qual-eyebrow">Step 2 of 3</div>
             <h3 class="qual-q">What is your investment range?</h3>
             <p class="qual-hint">Minimum investment is $25,000. Reg D 506(c) private placement.</p>
             <div class="qual-opts">
@@ -1338,7 +1337,7 @@ nav.scrolled {
           </div>
           <!-- Step 3 -->
           <div class="qual-pane hidden" id="A-step3">
-            <div class="qual-eyebrow">Step 3 of 4</div>
+            <div class="qual-eyebrow">Step 3 of 3</div>
             <h3 class="qual-q">How soon are you looking to decide?</h3>
             <p class="qual-hint">This round is actively closing. Priority access given to investors ready within 60 days.</p>
             <div class="qual-opts">
@@ -1349,19 +1348,12 @@ nav.scrolled {
             </div>
           </div>
           <!-- Step 4 -->
-          <div class="qual-pane hidden" id="A-step4">
-            <div class="qual-eyebrow">Step 4 of 4</div>
-            <h3 class="qual-q">Where should we send your materials?</h3>
-            <p class="qual-hint">You'll receive the PPM and a direct link to book your investor call.</p>
-            <div class="qual-form">
-              <div class="qual-field-row">
-                <div class="qual-field"><label>First Name</label><input type="text" id="A-qFirst" placeholder="John" autocomplete="given-name"></div>
-                <div class="qual-field"><label>Last Name</label><input type="text" id="A-qLast" placeholder="Smith" autocomplete="family-name"></div>
-              </div>
-              <div class="qual-field"><label>Email Address</label><input type="email" id="A-qEmail" placeholder="john@example.com" autocomplete="email"></div>
-              <div class="qual-field"><label>Mobile Number</label><input type="tel" id="A-qPhone" placeholder="+1 (555) 000-0000" autocomplete="tel"></div>
-              <button class="qual-submit" onclick="qASubmit()">Send My Materials &amp; Book a Call →</button>
-              <p class="qual-privacy">Strictly confidential. Never sold or shared.</p>
+          <div class="qual-pane hidden" id="A-stepInvite">
+            <div style="text-align:center;padding:8px 0;">
+              <div class="qual-success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <h3 class="qual-q" style="margin-bottom:10px;">You qualify for this round.</h3>
+              <p class="qual-hint" style="max-width:360px;margin:0 auto 24px;">Would you like to book a private investor call to discuss the opportunity in detail?</p>
+              <button class="qual-submit" onclick="qABook()" style="max-width:340px;margin:0 auto;">Yes — Book My Investor Call →</button>
             </div>
           </div>
           <!-- Disqualified -->
@@ -1376,8 +1368,8 @@ nav.scrolled {
           <div class="qual-pane hidden" id="A-stepSuccess">
             <div style="text-align:center;padding:16px 0;">
               <div class="qual-success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-              <h3 class="qual-q" style="margin-bottom:6px;">You're qualified. Materials are on the way.</h3>
-              <p class="qual-hint" style="max-width:340px;margin:0 auto 20px;">Select your investor call time below.</p>
+              <h3 class="qual-q" style="margin-bottom:6px;">Select your investor call time.</h3>
+              <p class="qual-hint" style="max-width:340px;margin:0 auto 20px;">Pick a time below to speak directly with our team.</p>
               <iframe src="https://api.leadconnectorhq.com/widget/booking/EoyuzAkgBGkwKNP6Hr36" style="width:100%;height:620px;border:none;border-radius:8px;background:transparent;" scrolling="yes" title="Book Your Investor Call"></iframe>
             </div>
           </div>
@@ -2497,12 +2489,11 @@ nav.scrolled {
         <div class="qual-step active" id="dot1"></div>
         <div class="qual-step" id="dot2"></div>
         <div class="qual-step" id="dot3"></div>
-        <div class="qual-step" id="dot4"></div>
       </div>
 
       <!-- STEP 1: Accredited status -->
       <div class="qual-pane" id="step1">
-        <div class="qual-eyebrow">Step 1 of 4</div>
+        <div class="qual-eyebrow">Step 1 of 3</div>
         <h3 class="qual-q">Are you an accredited investor?</h3>
         <p class="qual-hint">Per SEC Rule 501, an accredited investor has a net worth exceeding $1M (excluding primary residence) or annual income above $200K ($300K joint) for the past two years.</p>
         <div class="qual-opts">
@@ -2513,7 +2504,7 @@ nav.scrolled {
 
       <!-- STEP 2: Investment range -->
       <div class="qual-pane hidden" id="step2">
-        <div class="qual-eyebrow">Step 2 of 4</div>
+        <div class="qual-eyebrow">Step 2 of 3</div>
         <h3 class="qual-q">What is your investment range for this opportunity?</h3>
         <p class="qual-hint">Minimum investment is $25,000. This is a Reg D 506(c) private placement.</p>
         <div class="qual-opts">
@@ -2526,7 +2517,7 @@ nav.scrolled {
 
       <!-- STEP 3: Timeline -->
       <div class="qual-pane hidden" id="step3">
-        <div class="qual-eyebrow">Step 3 of 4</div>
+        <div class="qual-eyebrow">Step 3 of 3</div>
         <h3 class="qual-q">How soon are you looking to make an investment decision?</h3>
         <p class="qual-hint">This round is actively closing. Priority access is given to investors ready to move within 60 days.</p>
         <div class="qual-opts">
@@ -2538,34 +2529,14 @@ nav.scrolled {
       </div>
 
       <!-- STEP 4: Contact info -->
-      <div class="qual-pane hidden" id="step4">
-        <div class="qual-eyebrow">Step 4 of 4</div>
-        <h3 class="qual-q">Where should we send your investor materials?</h3>
-        <p class="qual-hint">You'll receive the Private Placement Memorandum and a link to schedule your investor call directly with our team.</p>
-        <div class="qual-form">
-          <div class="qual-field-row">
-            <div class="qual-field">
-              <label>First Name</label>
-              <input type="text" id="qFirstName" placeholder="John" autocomplete="given-name">
-            </div>
-            <div class="qual-field">
-              <label>Last Name</label>
-              <input type="text" id="qLastName" placeholder="Smith" autocomplete="family-name">
-            </div>
+      <div class="qual-pane hidden" id="stepInvite">
+        <div style="text-align:center;padding:12px 0;">
+          <div class="qual-success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <div class="qual-field">
-            <label>Email Address</label>
-            <input type="email" id="qEmail" placeholder="john@example.com" autocomplete="email">
-          </div>
-          <div class="qual-field">
-            <label>Mobile Number</label>
-            <input type="tel" id="qPhone" placeholder="+1 (555) 000-0000" autocomplete="tel">
-          </div>
-          <button class="qual-submit" onclick="qualSubmit()">
-            <span id="qualSubmitText">Send My Materials &amp; Book a Call →</span>
-            <span id="qualSubmitLoading" style="display:none;">Submitting…</span>
-          </button>
-          <p class="qual-privacy">Your information is kept strictly confidential and is never sold or shared. You may unsubscribe at any time.</p>
+          <h3 class="qual-q" style="margin-bottom:12px;">You qualify for this round.</h3>
+          <p class="qual-hint" style="max-width:440px;margin:0 auto 28px;">Would you like to book a private investor call to discuss this opportunity in detail with our team?</p>
+          <button class="qual-submit" onclick="qualBook()" style="max-width:380px;margin:0 auto;">Yes — Book My Investor Call →</button>
         </div>
       </div>
 
@@ -2585,8 +2556,8 @@ nav.scrolled {
           <div class="qual-success-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h3 class="qual-q" style="margin-bottom:6px;">You're qualified. Materials are on the way.</h3>
-          <p class="qual-hint" style="max-width:420px;margin:0 auto 20px;">Select your investor call time below.</p>
+          <h3 class="qual-q" style="margin-bottom:6px;">Select your investor call time.</h3>
+          <p class="qual-hint" style="max-width:420px;margin:0 auto 20px;">Pick a time below to speak directly with our team.</p>
           <iframe src="https://api.leadconnectorhq.com/widget/booking/EoyuzAkgBGkwKNP6Hr36" style="width:100%;height:620px;border:none;border-radius:8px;background:transparent;" scrolling="yes" title="Book Your Investor Call"></iframe>
           <div class="qual-success-details">
             <div class="qual-detail-row"><span>Status</span><strong>Accredited Investor ✓</strong></div>
@@ -2625,12 +2596,11 @@ nav.scrolled {
         <div class="qual-step active"></div>
         <div class="qual-step"></div>
         <div class="qual-step"></div>
-        <div class="qual-step"></div>
       </div>
 
       <!-- STEP 1 -->
       <div class="qual-pane" id="M-step1">
-        <div class="qual-eyebrow">Step 1 of 4</div>
+        <div class="qual-eyebrow">Step 1 of 3</div>
         <h3 class="qual-q">Are you an accredited investor?</h3>
         <p class="qual-hint">Per SEC Rule 501, an accredited investor has a net worth exceeding $1M (excluding primary residence) or annual income above $200K ($300K joint) for the past two years.</p>
         <div class="qual-opts">
@@ -2641,7 +2611,7 @@ nav.scrolled {
 
       <!-- STEP 2 -->
       <div class="qual-pane hidden" id="M-step2">
-        <div class="qual-eyebrow">Step 2 of 4</div>
+        <div class="qual-eyebrow">Step 2 of 3</div>
         <h3 class="qual-q">What is your investment range for this opportunity?</h3>
         <p class="qual-hint">Minimum investment is $25,000. This is a Reg D 506(c) private placement.</p>
         <div class="qual-opts">
@@ -2654,7 +2624,7 @@ nav.scrolled {
 
       <!-- STEP 3 -->
       <div class="qual-pane hidden" id="M-step3">
-        <div class="qual-eyebrow">Step 3 of 4</div>
+        <div class="qual-eyebrow">Step 3 of 3</div>
         <h3 class="qual-q">How soon are you looking to make an investment decision?</h3>
         <p class="qual-hint">This round is actively closing. Priority access is given to investors ready to move within 60 days.</p>
         <div class="qual-opts">
@@ -2666,34 +2636,14 @@ nav.scrolled {
       </div>
 
       <!-- STEP 4 -->
-      <div class="qual-pane hidden" id="M-step4">
-        <div class="qual-eyebrow">Step 4 of 4</div>
-        <h3 class="qual-q">Where should we send your investor materials?</h3>
-        <p class="qual-hint">You'll receive the Private Placement Memorandum and a link to schedule your investor call directly with our team.</p>
-        <div class="qual-form">
-          <div class="qual-field-row">
-            <div class="qual-field">
-              <label>First Name</label>
-              <input type="text" id="M-qFirstName" placeholder="John" autocomplete="given-name">
-            </div>
-            <div class="qual-field">
-              <label>Last Name</label>
-              <input type="text" id="M-qLastName" placeholder="Smith" autocomplete="family-name">
-            </div>
+      <div class="qual-pane hidden" id="M-stepInvite">
+        <div style="text-align:center;padding:12px 0;">
+          <div class="qual-success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <div class="qual-field">
-            <label>Email Address</label>
-            <input type="email" id="M-qEmail" placeholder="john@example.com" autocomplete="email">
-          </div>
-          <div class="qual-field">
-            <label>Mobile Number</label>
-            <input type="tel" id="M-qPhone" placeholder="+1 (555) 000-0000" autocomplete="tel">
-          </div>
-          <button class="qual-submit" onclick="qMSubmit()">
-            <span id="qMSubmitText">Send My Materials &amp; Book a Call →</span>
-            <span id="qMSubmitLoading" style="display:none;">Submitting…</span>
-          </button>
-          <p class="qual-privacy">Your information is kept strictly confidential and is never sold or shared. You may unsubscribe at any time.</p>
+          <h3 class="qual-q" style="margin-bottom:12px;">You qualify for this round.</h3>
+          <p class="qual-hint" style="max-width:440px;margin:0 auto 28px;">Would you like to book a private investor call to discuss this opportunity in detail with our team?</p>
+          <button class="qual-submit" onclick="qMBook()" style="max-width:380px;margin:0 auto;">Yes — Book My Investor Call →</button>
         </div>
       </div>
 
@@ -2713,8 +2663,8 @@ nav.scrolled {
           <div class="qual-success-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h3 class="qual-q" style="margin-bottom:6px;">You're qualified. Materials are on the way.</h3>
-          <p class="qual-hint" style="max-width:420px;margin:0 auto 20px;">Select your investor call time below.</p>
+          <h3 class="qual-q" style="margin-bottom:6px;">Select your investor call time.</h3>
+          <p class="qual-hint" style="max-width:420px;margin:0 auto 20px;">Pick a time below to speak directly with our team.</p>
           <iframe src="https://api.leadconnectorhq.com/widget/booking/EoyuzAkgBGkwKNP6Hr36" style="width:100%;height:560px;border:none;border-radius:8px;background:transparent;" scrolling="yes" title="Book Your Investor Call"></iframe>
           <div class="qual-success-details">
             <div class="qual-detail-row"><span>Status</span><strong>Accredited Investor ✓</strong></div>
@@ -2773,9 +2723,11 @@ function qAShowStep(id, dot) {
 }
 function qA(step, answer) {
   qAAnswers['step'+step] = answer;
+  if (step === 3) { qAShowStep('stepInvite', null); document.getElementById('qualCardA').scrollIntoView({behavior:'smooth',block:'center'}); return; }
   qAShowStep('step'+(step+1), step+1);
   document.getElementById('qualCardA').scrollIntoView({behavior:'smooth',block:'center'});
 }
+function qABook() { fireConversion(); qAShowStep('stepSuccess', null); document.getElementById('qualCardA').scrollIntoView({behavior:'smooth',block:'center'}); }
 function qADisq() { qAShowStep('stepDisq', null); }
 function qASubmit() {
   var first = document.getElementById('A-qFirst').value.trim();
@@ -2823,11 +2775,13 @@ function qualShowStep(stepId, activeDot) {
 
 function qualNext(step, answer) {
   qualAnswers['step' + step] = answer;
+  var card = document.getElementById('qualCard');
+  if (step === 3) { qualShowStep('stepInvite', null); if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
   qualShowStep('step' + (step + 1), step + 1);
   // Scroll card into view smoothly
-  var card = document.getElementById('qualCard');
   if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
+function qualBook() { fireConversion(); qualShowStep('stepSuccess', null); var card = document.getElementById('qualCard'); if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
 
 function qualDisqualify() {
   qualShowStep('stepDisq', 1);
@@ -2906,8 +2860,10 @@ function qMShowStep(id, dot) {
 }
 function qM(step, answer) {
   qMAnswers['step'+step] = answer;
+  if (step === 3) { qMShowStep('stepInvite', null); return; }
   qMShowStep('step'+(step+1), step+1);
 }
+function qMBook() { fireConversion(); qMShowStep('stepSuccess', null); }
 function qMDisq() { qMShowStep('stepDisq', null); }
 function qMSubmit() {
   var first = document.getElementById('M-qFirstName').value.trim();
