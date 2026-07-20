@@ -8,7 +8,8 @@
   .flip-front{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
   .flip-back{position:relative;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(180deg)}
   .flip-front .browser{display:flex;flex-direction:column;height:100%}
-  .flipvid{display:block;width:100%;flex:1;min-height:0;object-fit:cover;background:#0a0812}
+  .flipvid{display:block;width:100%;flex:1;min-height:0;object-fit:cover;background:#0a0812;transform:scale(1.08);transform-origin:left center}
+  .flip-front .browser{overflow:hidden}
   .flip-hint{position:absolute;left:14px;bottom:12px;z-index:2;font-size:.66rem;font-weight:700;color:#fff;background:rgba(0,0,0,.5);padding:5px 10px;border-radius:8px;backdrop-filter:blur(4px);transition:opacity .4s}
   .flip.flipped .flip-hint{opacity:0}
   .hero-visual .chip{opacity:0;transition:opacity .6s ease .15s}
@@ -601,6 +602,8 @@
     var done=false;
     function doFlip(){ if(done)return; done=true; flip.classList.add("flipped"); if(wrap)wrap.classList.add("flipped"); }
     if(v){
+      v.playbackRate=1.5;
+      v.addEventListener("loadedmetadata",function(){v.playbackRate=1.5;});
       v.addEventListener("ended",doFlip);
       v.addEventListener("error",doFlip);
       var p=v.play&&v.play(); if(p&&p.catch)p.catch(function(){});
