@@ -149,14 +149,37 @@
   /* website mockups and the before/after frames stay dark — framed screens */
   #main .viz{background:#141126;border-color:rgba(255,255,255,.09);color:#f6f4fb}
   #main .viz .sub{color:#a49dc0}
+  /* ——— cinematic hero: full-bleed video, words rise on end, auto-glide to next section ——— */
+  #main .hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;padding:120px 0 80px}
+  #main .herobg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:filter .9s ease}
+  #main .heroveil{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .9s ease;
+    background:linear-gradient(180deg,rgba(6,3,12,.5),rgba(6,3,12,.25) 45%,rgba(6,3,12,.6))}
+  #main .hero .wrap{position:relative;z-index:2}
+  #main .hero .hero-visual{display:none}
+  #main .hero .hero-grid2{grid-template-columns:1fr;justify-items:center;text-align:center}
+  #main .hero .hcopy{opacity:0;transform:translateY(40px);transition:opacity 1s cubic-bezier(.22,.7,.24,1),transform 1s cubic-bezier(.22,.7,.24,1)}
+  #main .hero.words .hcopy{opacity:1;transform:none}
+  #main .hero.words .herobg{filter:brightness(.45) saturate(1.1)}
+  #main .hero.words .heroveil{opacity:1}
+  #main .hero h1{color:#fff}
+  #main .hero .lede{color:#e9e5f6;margin-inline:auto}
+  #main .hero .eyebrow{color:#cfc9e8}
+  #main .hero .hero-note{color:#cfc9e8}
+  #main .hero .hero-cta-row{justify-content:center}
+  #main .hero .btn.ghost,#main .hero .btn.ghost .t{color:#fff}
+  #main .hero .btn.ghost{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.45)}
+  #main .hero .dots,#main .hero .noise{display:none}
+  #main .hero .hcopy b[style*="color:#fff"]{color:#fff!important}
+  @media(prefers-reduced-motion:reduce){#main .hero .hcopy{opacity:1;transform:none}}
   </style>
 
   <!-- HERO -->
   <section class="hero" id="top">
-    <div class="dots"></div><div class="noise"></div><div class="bloom spectrum"></div>
+    <video class="herobg" src="https://assets.cdn.filesafe.space/zPMFoWE7Sa0FnTxcLYBp/media/6a5d879fbaf5f6da403842b0.mp4" autoplay muted playsinline preload="auto" aria-hidden="true"></video>
+    <div class="heroveil" aria-hidden="true"></div>
     <div class="wrap" style="position:relative;z-index:2">
       <div class="hero-grid2">
-        <div>
+        <div class="hcopy">
           <span class="eyebrow">Website Design</span>
           <h1 style="margin-top:16px">Websites that <span class="serif warm">win customers.</span></h1>
           <p class="lede" style="margin-top:20px">Beautiful is the baseline. We build <b style="color:#fff">mobile-fast</b> sites with <b style="color:#fff">booking</b>, <b style="color:#fff">click-to-call</b> and an <b style="color:#fff">SEO foundation</b> — so your website works as hard as you do.</p>
@@ -327,6 +350,33 @@
   })();
   </script>
 
+  <script>
+  (function(){
+    /* hero video: play through, then raise the words; glide to the next section if the visitor hasn't moved */
+    var hero=document.querySelector("#main .hero");
+    var v=document.querySelector(".herobg");
+    if(!hero||!v)return;
+    if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches){hero.classList.add("words");return;}
+    var shown=false,scrolled=false;
+    addEventListener("scroll",function(){if(window.scrollY>40)scrolled=true;},{passive:true});
+    function words(){
+      if(shown)return;shown=true;
+      hero.classList.add("words");
+      setTimeout(function(){
+        if(!scrolled&&window.scrollY<40){
+          var nx=hero.nextElementSibling;
+          if(nx)nx.scrollIntoView({behavior:"smooth"});
+        }
+      },2800);
+    }
+    hero.addEventListener("click",words);
+    v.addEventListener("ended",words);
+    v.addEventListener("error",words);
+    var p=v.play&&v.play();if(p&&p.catch)p.catch(function(){words()});
+    setTimeout(function(){if(!v.currentTime)words();},3500);
+    setTimeout(words,45000);
+  })();
+  </script>
 </main>
 
 <!-- STICKY FOOTER REVEAL -->
