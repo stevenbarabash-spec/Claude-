@@ -126,6 +126,32 @@ main { flex: 1; padding: 60px 0 72px; }
   margin: 0 auto;
 }
 
+/* ---- THANK-YOU VIDEO ---- */
+.video-block { margin: 44px auto 0; max-width: 540px; }
+.video-frame {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(212,175,62,0.28);
+  background: #060f08;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 6px rgba(184,147,12,0.04);
+}
+.video-frame video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  background: #060f08;
+  object-fit: cover;
+}
+.video-caption {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--bone-dim);
+  margin-top: 14px;
+  letter-spacing: 0.01em;
+}
+
 /* ---- NEXT STEPS ---- */
 .next {
   margin: 56px auto 0;
@@ -276,6 +302,17 @@ footer {
       <p class="subhead">Thanks for confirming — Jon's looking forward to your call.</p>
     </section>
 
+    <!-- THANK-YOU VIDEO -->
+    <section class="video-block">
+      <div class="video-frame">
+        <video controls playsinline preload="metadata" poster="">
+          <source src="https://assets.cdn.filesafe.space/IUFCbHtG5zmLcNxfm2Ke/media/6a5fb91ae4e420b6ec39489a.mp4" type="video/mp4">
+          Your browser doesn't support embedded video. <a href="https://assets.cdn.filesafe.space/IUFCbHtG5zmLcNxfm2Ke/media/6a5fb91ae4e420b6ec39489a.mp4" target="_blank" rel="noopener">Watch it here.</a>
+        </video>
+      </div>
+      <p class="video-caption">A quick note on what happens next — press play.</p>
+    </section>
+
     <!-- NEXT STEPS -->
     <section class="next">
       <div class="next-title">What happens next</div>
@@ -285,23 +322,19 @@ footer {
       </div>
       <div class="next-item">
         <div class="next-num">2</div>
-        <div class="next-text">Review the investor deck ahead of time so we can make the most of our 30 minutes.</div>
+        <div class="next-text">We'll email you the investor deck to review ahead of time — keep an eye on your inbox, and check your spam folder just in case it lands there.</div>
       </div>
       <div class="next-item">
         <div class="next-num">3</div>
-        <div class="next-text">Watch Jon's quick intro to get oriented before we talk.</div>
+        <div class="next-text">Come with your questions so we can make the most of our 30 minutes together.</div>
       </div>
     </section>
 
-    <!-- BUTTONS -->
+    <!-- BUTTON -->
     <div class="btn-row">
       <a class="btn btn-gold" href="https://assets.cdn.filesafe.space/IUFCbHtG5zmLcNxfm2Ke/media/6a5fb9398d48b5a586aa38bc.pdf" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         View the Investor Deck
-      </a>
-      <a class="btn btn-ghost" href="https://assets.cdn.filesafe.space/IUFCbHtG5zmLcNxfm2Ke/media/6a5fb91ae4e420b6ec39489a.mp4" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Watch the Video
       </a>
     </div>
 
