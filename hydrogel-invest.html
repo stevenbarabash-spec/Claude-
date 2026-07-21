@@ -1390,21 +1390,22 @@ nav.scrolled {
               <button class="qual-opt qual-opt-no" onclick="qA(3,'Just exploring')">Just exploring</button>
             </div>
           </div>
-          <!-- Step 4 -->
+          <!-- Step 4: contact capture -->
           <div class="qual-pane hidden" id="A-stepInvite">
-            <div style="text-align:center;padding:8px 0;">
+            <div style="text-align:center;padding:4px 0;">
               <div class="qual-success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-              <h3 class="qual-q" style="margin-bottom:16px;">You qualify for this round.</h3>
-              <div class="jon-card">
-                <img src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata">
-                <div class="jon-card-info">
-                  <div class="jon-card-name">Jon Licata</div>
-                  <div class="jon-card-role">Chief Revenue Officer</div>
-                  <span class="jon-card-badge">Investor</span>
-                </div>
+              <h3 class="qual-q" style="margin-bottom:6px;">You qualify — where should we send your investor materials?</h3>
+              <p class="qual-hint" style="max-width:360px;margin:0 auto 20px;">You'll get the materials by email and then pick a time to speak with Jon.</p>
+            </div>
+            <div class="qual-form">
+              <div class="qual-field-row">
+                <div class="qual-field"><label>First Name</label><input type="text" id="A-capFirst" placeholder="John" autocomplete="given-name"></div>
+                <div class="qual-field"><label>Last Name</label><input type="text" id="A-capLast" placeholder="Smith" autocomplete="family-name"></div>
               </div>
-              <p class="qual-hint" style="max-width:360px;margin:0 auto 24px;">Would you like to book a private call with Jon to discuss the opportunity in detail?</p>
-              <button class="qual-submit" onclick="qABook()" style="max-width:340px;margin:0 auto;">Yes — Book My Call With Jon →</button>
+              <div class="qual-field"><label>Email Address</label><input type="email" id="A-capEmail" placeholder="john@example.com" autocomplete="email"></div>
+              <div class="qual-field"><label>Mobile Number</label><input type="tel" id="A-capPhone" placeholder="+1 (555) 000-0000" autocomplete="tel"></div>
+              <button class="qual-submit" onclick="qACapture()">Send My Materials &amp; Continue →</button>
+              <p class="qual-privacy">Strictly confidential. Never sold or shared.</p>
             </div>
           </div>
           <!-- Disqualified -->
@@ -1429,7 +1430,7 @@ nav.scrolled {
                 </div>
               </div>
               <p class="qual-hint" style="max-width:340px;margin:0 auto 20px;">Pick a time below to speak directly with Jon.</p>
-              <iframe src="https://api.leadconnectorhq.com/widget/booking/EoyuzAkgBGkwKNP6Hr36" style="width:100%;height:620px;border:none;border-radius:8px;background:transparent;" scrolling="yes" title="Book Your Investor Call"></iframe>
+              <iframe id="A-bookingIframe" style="width:100%;height:620px;border:none;border-radius:8px;background:transparent;" scrolling="yes" title="Book Your Investor Call"></iframe>
             </div>
           </div>
         </div>
@@ -2584,23 +2585,24 @@ nav.scrolled {
         </div>
       </div>
 
-      <!-- STEP 4: Contact info -->
+      <!-- STEP 4: Contact capture -->
       <div class="qual-pane hidden" id="stepInvite">
-        <div style="text-align:center;padding:12px 0;">
+        <div style="text-align:center;padding:4px 0;">
           <div class="qual-success-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h3 class="qual-q" style="margin-bottom:18px;">You qualify for this round.</h3>
-          <div class="jon-card">
-            <img src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata">
-            <div class="jon-card-info">
-              <div class="jon-card-name">Jon Licata</div>
-              <div class="jon-card-role">Chief Revenue Officer</div>
-              <span class="jon-card-badge">Investor</span>
-            </div>
+          <h3 class="qual-q" style="margin-bottom:6px;">You qualify — where should we send your investor materials?</h3>
+          <p class="qual-hint" style="max-width:440px;margin:0 auto 22px;">You'll receive the materials by email, then pick a time to speak directly with Jon.</p>
+        </div>
+        <div class="qual-form">
+          <div class="qual-field-row">
+            <div class="qual-field"><label>First Name</label><input type="text" id="capFirst" placeholder="John" autocomplete="given-name"></div>
+            <div class="qual-field"><label>Last Name</label><input type="text" id="capLast" placeholder="Smith" autocomplete="family-name"></div>
           </div>
-          <p class="qual-hint" style="max-width:440px;margin:0 auto 28px;">Would you like to book a private call with Jon to discuss this opportunity in detail?</p>
-          <button class="qual-submit" onclick="qualBook()" style="max-width:380px;margin:0 auto;">Yes — Book My Call With Jon →</button>
+          <div class="qual-field"><label>Email Address</label><input type="email" id="capEmail" placeholder="john@example.com" autocomplete="email"></div>
+          <div class="qual-field"><label>Mobile Number</label><input type="tel" id="capPhone" placeholder="+1 (555) 000-0000" autocomplete="tel"></div>
+          <button class="qual-submit" onclick="qualCapture()">Send My Materials &amp; Continue →</button>
+          <p class="qual-privacy">Your information is kept strictly confidential and is never sold or shared.</p>
         </div>
       </div>
 
@@ -2630,7 +2632,7 @@ nav.scrolled {
             </div>
           </div>
           <p class="qual-hint" style="max-width:420px;margin:0 auto 20px;">Pick a time below to speak directly with Jon.</p>
-          <iframe src="https://api.leadconnectorhq.com/widget/booking/EoyuzAkgBGkwKNP6Hr36" style="width:100%;height:620px;border:none;border-radius:8px;background:transparent;" scrolling="yes" title="Book Your Investor Call"></iframe>
+          <iframe id="bookingIframe" style="width:100%;height:620px;border:none;border-radius:8px;background:transparent;" scrolling="yes" title="Book Your Investor Call"></iframe>
           <div class="qual-success-details">
             <div class="qual-detail-row"><span>Status</span><strong>Accredited Investor ✓</strong></div>
             <div class="qual-detail-row"><span>Materials</span><strong>Sent to your email</strong></div>
@@ -2709,21 +2711,22 @@ nav.scrolled {
 
       <!-- STEP 4 -->
       <div class="qual-pane hidden" id="M-stepInvite">
-        <div style="text-align:center;padding:12px 0;">
+        <div style="text-align:center;padding:4px 0;">
           <div class="qual-success-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h3 class="qual-q" style="margin-bottom:18px;">You qualify for this round.</h3>
-          <div class="jon-card">
-            <img src="https://invest.greenevolutiontechnologies.com/assets/team-jon-B_M84CEj.webp" alt="Jon Licata">
-            <div class="jon-card-info">
-              <div class="jon-card-name">Jon Licata</div>
-              <div class="jon-card-role">Chief Revenue Officer</div>
-              <span class="jon-card-badge">Investor</span>
-            </div>
+          <h3 class="qual-q" style="margin-bottom:6px;">You qualify — where should we send your investor materials?</h3>
+          <p class="qual-hint" style="max-width:440px;margin:0 auto 22px;">You'll receive the materials by email, then pick a time to speak directly with Jon.</p>
+        </div>
+        <div class="qual-form">
+          <div class="qual-field-row">
+            <div class="qual-field"><label>First Name</label><input type="text" id="M-capFirst" placeholder="John" autocomplete="given-name"></div>
+            <div class="qual-field"><label>Last Name</label><input type="text" id="M-capLast" placeholder="Smith" autocomplete="family-name"></div>
           </div>
-          <p class="qual-hint" style="max-width:440px;margin:0 auto 28px;">Would you like to book a private call with Jon to discuss this opportunity in detail?</p>
-          <button class="qual-submit" onclick="qMBook()" style="max-width:380px;margin:0 auto;">Yes — Book My Call With Jon →</button>
+          <div class="qual-field"><label>Email Address</label><input type="email" id="M-capEmail" placeholder="john@example.com" autocomplete="email"></div>
+          <div class="qual-field"><label>Mobile Number</label><input type="tel" id="M-capPhone" placeholder="+1 (555) 000-0000" autocomplete="tel"></div>
+          <button class="qual-submit" onclick="qMCapture()">Send My Materials &amp; Continue →</button>
+          <p class="qual-privacy">Your information is kept strictly confidential and is never sold or shared.</p>
         </div>
       </div>
 
@@ -2753,7 +2756,7 @@ nav.scrolled {
             </div>
           </div>
           <p class="qual-hint" style="max-width:420px;margin:0 auto 20px;">Pick a time below to speak directly with Jon.</p>
-          <iframe src="https://api.leadconnectorhq.com/widget/booking/EoyuzAkgBGkwKNP6Hr36" style="width:100%;height:560px;border:none;border-radius:8px;background:transparent;" scrolling="yes" title="Book Your Investor Call"></iframe>
+          <iframe id="M-bookingIframe" style="width:100%;height:560px;border:none;border-radius:8px;background:transparent;" scrolling="yes" title="Book Your Investor Call"></iframe>
           <div class="qual-success-details">
             <div class="qual-detail-row"><span>Status</span><strong>Accredited Investor ✓</strong></div>
             <div class="qual-detail-row"><span>Materials</span><strong>Sent to your email</strong></div>
@@ -2782,6 +2785,10 @@ nav.scrolled {
 </footer>
 
 <script>
+// ── GHL INBOUND WEBHOOK (captures every qualified lead, booked or not) ──
+const GHL_WEBHOOK = '⟦STEVE: paste GHL inbound webhook URL⟧';
+const BOOKING_BASE = 'https://api.leadconnectorhq.com/widget/booking/EoyuzAkgBGkwKNP6Hr36';
+
 // ── GOOGLE ADS CONVERSION ──
 function fireConversion() {
   if (typeof gtag === 'function') {
@@ -2791,6 +2798,53 @@ function fireConversion() {
       'currency': 'USD'
     });
   }
+}
+
+// ── SHARED CAPTURE + CALENDAR-PREFILL HELPERS ──
+// Prefill John's booking calendar so the lead never re-types anything.
+// NOTE: first_name / last_name / email / phone are the standard GHL params;
+// if a field doesn't populate on the live widget, adjust the names here and re-test.
+function prefillBooking(iframeId, first, last, email, phone) {
+  var el = document.getElementById(iframeId);
+  if (!el) return;
+  el.src = BOOKING_BASE
+    + '?first_name=' + encodeURIComponent(first)
+    + '&last_name='  + encodeURIComponent(last)
+    + '&email='      + encodeURIComponent(email)
+    + '&phone='      + encodeURIComponent(phone);
+}
+// Validate, POST to GHL, then (only on completion) prefill calendar + reveal success.
+function ghlCapture(o) {
+  var first = o.first, last = o.last, email = o.email, phone = o.phone, ans = o.answers || {};
+  if (!first || !last || !email || !phone) { alert('Please fill in your first name, last name, email, and phone number.'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter a valid email address.'); return; }
+
+  var range = ans['step2'] || '';
+  var timeline = ans['step3'] || '';
+  var payload = {
+    firstName: first,
+    lastName: last,
+    email: email,
+    phone: phone,
+    accredited: ans['step1'] || '',
+    investmentRange: range,
+    timeline: timeline,
+    source: 'investininteligel.com',
+    tags: ['investor-lead', 'pre-series-a', range, timeline].concat(o.extraTags || []).filter(Boolean)
+  };
+
+  // Same email is used in the payload AND the calendar prefill, so GHL merges
+  // the capture and the booking into one contact instead of creating a duplicate.
+  function proceed() {
+    fireConversion();
+    prefillBooking(o.iframeId, first, last, email, phone);
+    o.reveal();
+  }
+
+  if (GHL_WEBHOOK === '⟦STEVE: paste GHL inbound webhook URL⟧') { proceed(); return; } // dev mode: no webhook yet
+  fetch(GHL_WEBHOOK, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+    .then(proceed)
+    .catch(function(){ proceed(); console.error('GHL webhook failed — check inbound URL'); });
 }
 
 // ── QUALIFIER INSTANCE A (hero) ──
@@ -2815,29 +2869,17 @@ function qA(step, answer) {
   qAShowStep('step'+(step+1), step+1);
   document.getElementById('qualCardA').scrollIntoView({behavior:'smooth',block:'center'});
 }
-function qABook() { fireConversion(); qAShowStep('stepSuccess', null); document.getElementById('qualCardA').scrollIntoView({behavior:'smooth',block:'center'}); }
 function qADisq() { qAShowStep('stepDisq', null); }
-function qASubmit() {
-  var first = document.getElementById('A-qFirst').value.trim();
-  var email = document.getElementById('A-qEmail').value.trim();
-  var phone = document.getElementById('A-qPhone').value.trim();
-  if (!first || !email || !phone) { alert('Please fill in your name, email, and phone number.'); return; }
-  fireConversion();
-  var WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL_HERE';
-  var payload = {
-    firstName: first,
-    lastName: document.getElementById('A-qLast').value.trim(),
-    email: email, phone: phone,
-    accredited: qAAnswers['step1']||'',
-    investmentRange: qAAnswers['step2']||'',
-    timeline: qAAnswers['step3']||'',
-    source: 'investininteligel.com',
-    tags: ['investor-lead','pre-series-a']
-  };
-  if (WEBHOOK_URL !== 'YOUR_GHL_WEBHOOK_URL_HERE') {
-    fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-  }
-  qAShowStep('stepSuccess', null);
+function qACapture() {
+  ghlCapture({
+    first: document.getElementById('A-capFirst').value.trim(),
+    last:  document.getElementById('A-capLast').value.trim(),
+    email: document.getElementById('A-capEmail').value.trim(),
+    phone: document.getElementById('A-capPhone').value.trim(),
+    answers: qAAnswers,
+    iframeId: 'A-bookingIframe',
+    reveal: function(){ qAShowStep('stepSuccess', null); document.getElementById('qualCardA').scrollIntoView({behavior:'smooth',block:'center'}); }
+  });
 }
 
 // ── QUALIFIER ──
@@ -2869,63 +2911,19 @@ function qualNext(step, answer) {
   // Scroll card into view smoothly
   if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
-function qualBook() { fireConversion(); qualShowStep('stepSuccess', null); var card = document.getElementById('qualCard'); if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
-
 function qualDisqualify() {
   qualShowStep('stepDisq', 1);
 }
 
-function qualSubmit() {
-  var first = document.getElementById('qFirstName').value.trim();
-  var last  = document.getElementById('qLastName').value.trim();
-  var email = document.getElementById('qEmail').value.trim();
-  var phone = document.getElementById('qPhone').value.trim();
-
-  if (!first || !email || !phone) {
-    alert('Please fill in your name, email, and phone number.');
-    return;
-  }
-  var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  if (!emailOk) { alert('Please enter a valid email address.'); return; }
-
-  // Show loading state
-  document.getElementById('qualSubmitText').style.display = 'none';
-  document.getElementById('qualSubmitLoading').style.display = 'inline';
-
-  // Build GHL webhook payload — replace WEBHOOK_URL with your GHL webhook
-  var payload = {
-    firstName: first,
-    lastName: last,
-    email: email,
-    phone: phone,
-    accredited: qualAnswers['step1'] || '',
-    investmentRange: qualAnswers['step2'] || '',
-    timeline: qualAnswers['step3'] || '',
-    source: 'investininteligel.com',
-    tags: ['investor-lead','pre-series-a']
-  };
-
-  var WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL_HERE';
-
-  if (WEBHOOK_URL === 'YOUR_GHL_WEBHOOK_URL_HERE') {
-    // Dev mode: skip webhook, show success
-    setTimeout(function(){ qualShowStep('stepSuccess', 4); }, 600);
-    return;
-  }
-
-  fetch(WEBHOOK_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  })
-  .then(function(){
-    fireConversion();
-    qualShowStep('stepSuccess', 4);
-  })
-  .catch(function(){
-    fireConversion();
-    qualShowStep('stepSuccess', 4);
-    console.error('Webhook failed — check GHL endpoint');
+function qualCapture() {
+  ghlCapture({
+    first: document.getElementById('capFirst').value.trim(),
+    last:  document.getElementById('capLast').value.trim(),
+    email: document.getElementById('capEmail').value.trim(),
+    phone: document.getElementById('capPhone').value.trim(),
+    answers: qualAnswers,
+    iframeId: 'bookingIframe',
+    reveal: function(){ qualShowStep('stepSuccess', null); var card = document.getElementById('qualCard'); if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
   });
 }
 
@@ -2951,34 +2949,18 @@ function qM(step, answer) {
   if (step === 3) { qMShowStep('stepInvite', null); return; }
   qMShowStep('step'+(step+1), step+1);
 }
-function qMBook() { fireConversion(); qMShowStep('stepSuccess', null); }
 function qMDisq() { qMShowStep('stepDisq', null); }
-function qMSubmit() {
-  var first = document.getElementById('M-qFirstName').value.trim();
-  var last  = document.getElementById('M-qLastName').value.trim();
-  var email = document.getElementById('M-qEmail').value.trim();
-  var phone = document.getElementById('M-qPhone').value.trim();
-  if (!first || !email || !phone) { alert('Please fill in your name, email, and phone number.'); return; }
-  var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  if (!emailOk) { alert('Please enter a valid email address.'); return; }
-  document.getElementById('qMSubmitText').style.display = 'none';
-  document.getElementById('qMSubmitLoading').style.display = 'inline';
-  var payload = {
-    firstName: first, lastName: last, email: email, phone: phone,
-    accredited: qMAnswers['step1'] || '',
-    investmentRange: qMAnswers['step2'] || '',
-    timeline: qMAnswers['step3'] || '',
-    source: 'investininteligel.com',
-    tags: ['investor-lead','pre-series-a','popup-qualifier']
-  };
-  var WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL_HERE';
-  if (WEBHOOK_URL === 'YOUR_GHL_WEBHOOK_URL_HERE') {
-    setTimeout(function(){ qMShowStep('stepSuccess', 4); }, 600);
-    return;
-  }
-  fetch(WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) })
-    .then(function(){ fireConversion(); qMShowStep('stepSuccess', 4); })
-    .catch(function(){ fireConversion(); qMShowStep('stepSuccess', 4); console.error('Webhook failed — check GHL endpoint'); });
+function qMCapture() {
+  ghlCapture({
+    first: document.getElementById('M-capFirst').value.trim(),
+    last:  document.getElementById('M-capLast').value.trim(),
+    email: document.getElementById('M-capEmail').value.trim(),
+    phone: document.getElementById('M-capPhone').value.trim(),
+    answers: qMAnswers,
+    iframeId: 'M-bookingIframe',
+    extraTags: ['popup-qualifier'],
+    reveal: function(){ qMShowStep('stepSuccess', null); }
+  });
 }
 
 // ── POPUP TRIGGERS: 15% scroll  ·  50% video watched  ·  exit intent ──
