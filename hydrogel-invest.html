@@ -1297,7 +1297,7 @@ nav.scrolled {
 
 <!-- STOCK TICKER -->
 <div class="ticker-bar" aria-hidden="true">
-  <div class="ticker-label"><span class="ticker-live-dot"></span>LIVE</div>
+  <div class="ticker-label">KEY METRICS</div>
   <div class="ticker-track-wrap">
     <div class="ticker-track" id="tickerTrack">
       <!-- items injected by JS; duplicated for seamless loop -->
@@ -1725,6 +1725,8 @@ nav.scrolled {
       </div>
     </div>
 
+    <!-- HOLD: verify with GET before publishing. Replace with real, documented customer quotes only. -->
+    <!--
     <div class="testimonials">
       <div class="testimonial reveal">
         <div class="testimonial-quote">"I was skeptical — I've been farming this land for 30 years. But after year one with InteliGel, my corn yield jumped 62% and my water bill dropped by half. I've already pre-ordered for next season."</div>
@@ -1735,6 +1737,9 @@ nav.scrolled {
         <div class="testimonial-attr">LISA TORRES — Row Crop Producer, Kansas · 1,200 Acres</div>
       </div>
     </div>
+    -->
+    <!-- END HOLD -->
+
   </div>
 </section>
 
@@ -3045,20 +3050,20 @@ function toggleFaq(btn) {
   var track = document.getElementById('tickerTrack');
   if (!track) return;
 
-  // Seed values — these drift live
+  // Static, factual figures — NO live drift. Verify each against GET's official source.
   var live = {
-    farmers:   3184,
-    pipeline:  19.2,
-    savings:   65,
-    states:    12,
-    yield:     68,
-    water:     50,
-    waitlist:  178,
-    patents:   14,
-    grant:     75,
-    sqft:      1500000,
-    valCap:    100,
-    raise:     1.5
+    farmers:   3184,      // ⟦GET: confirm real completed-trial count (deck references ~10 farms / 6+ universities)⟧
+    pipeline:  19.2,      // ⟦GET: confirm pipeline $M (deck cites ~$15M signed + ~$6M pre-orders)⟧
+    savings:   65,        // ⟦GET: confirm max input cost reduction %⟧
+    states:    12,        // ⟦GET: confirm number of states⟧
+    yield:     68,        // ⟦GET: confirm documented yield increase %⟧
+    water:     50,        // ⟦GET: confirm irrigation water savings %⟧
+    waitlist:  178,       // ⟦GET: confirm active waitlist count⟧
+    patents:   14,        // ⟦GET: confirm patent filing count⟧
+    grant:     75,        // ⟦GET: confirm Fresno State grant $K⟧
+    sqft:      1500000,   // ⟦GET: confirm proposed manufacturing sq ft⟧
+    valCap:    100,       // valuation cap $M — Reg D 506(c)
+    raise:     1.5        // round target $M
   };
 
   function fmt(n, dec) { return n.toFixed(dec !== undefined ? dec : 0); }
@@ -3107,18 +3112,7 @@ function toggleFaq(btn) {
   }
 
   buildTrack();
-
-  // Live micro-updates — drift numbers slightly every 9-15s to feel like a live feed
-  function drift() {
-    live.farmers   += Math.random() < 0.6 ? Math.floor(Math.random() * 3) : 0;
-    live.waitlist  += Math.random() < 0.5 ? Math.floor(Math.random() * 2) : 0;
-    live.pipeline   = Math.max(19, live.pipeline + (Math.random() - 0.3) * 0.1);
-    live.yield      = Math.min(72, Math.max(65, live.yield + (Math.random() - 0.45) * 0.3));
-    live.water      = Math.min(52, Math.max(48, live.water + (Math.random() - 0.5) * 0.2));
-    buildTrack();
-    setTimeout(drift, 9000 + Math.random() * 6000);
-  }
-  setTimeout(drift, 12000);
+  // Numbers are static and factual. The CSS scroll animation continues; no values change over time.
 })();
 
 // SCROLL REVEAL
