@@ -77,12 +77,14 @@ export function DayTimeline() {
   for (const t of dayTasks) {
     if (!t.time) continue;
     const [h, m] = t.time.split(":").map(Number);
+    const isClient = !!t.ref && t.ref.startsWith("client:");
     notches.push({
       id: `dt-${t.id}`,
       minutes: h * 60 + m,
       title: (t.done ? "✓ " : "") + t.title,
-      detail: `${fmt12(t.time)} · TASK`,
-      color: "var(--hot)",
+      detail: `${fmt12(t.time)} · ${isClient ? "CLIENT WORK" : "TASK"}`,
+      // Task = blue, client work = yellow/gold.
+      color: isClient ? "var(--warm)" : "var(--cool)",
       done: t.done,
     });
   }
@@ -95,7 +97,8 @@ export function DayTimeline() {
       minutes: s.getHours() * 60 + s.getMinutes(),
       title: e.title,
       detail: `${fmtTime12(s)} – ${fmtTime12(new Date(e.end))} · CALENDAR`,
-      color: "var(--cool)",
+      // Calendar invite / meeting = red.
+      color: "var(--hot)",
     });
   }
   notches.sort((a, b) => a.minutes - b.minutes);
@@ -179,7 +182,7 @@ export function DayTimeline() {
             className={`tl-notch ${n.done || (nowMin !== null && n.minutes < nowMin) ? "past" : ""}`}
             style={{ left: `${n.p}%`, marginLeft: n.offset }}
           >
-            <span className="bar" style={{ background: n.color }} />
+            <span className="bar" style={{ background: n.color, boxShadow: `0 0 6px ${n.color}` }} />
             <span className={`tl-tip ${n.p < 8 ? "edge-left" : n.p > 92 ? "edge-right" : ""}`}>
               <span style={{ display: "block" }}>{n.title}</span>
               <span className="faint" style={{ fontFamily: "var(--mono)", fontSize: 9.5, letterSpacing: "0.08em" }}>
@@ -209,11 +212,11 @@ export function DayTimeline() {
         </div>
       )}
 
-      <div className="row" style={{ gap: 12, marginTop: 10, fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.1em" }}>
-        <span style={{ color: "var(--hot)" }}>■ TASKS</span>
-        <span style={{ color: "var(--cool)" }}>■ CALENDAR</span>
+      <div className="row" style={{ gap: 12, marginTop: 10, fontFamily: "var(--mono)", fontSize: 9, letterSpacing: "0.1em", flexWrap: "wrap" }}>
+        <span style={{ color: "var(--cool)" }}>■ TASK</span>
+        <span style={{ color: "var(--hot)" }}>■ CALENDAR</span>
         <span style={{ color: "var(--warm)" }}>■ CLIENT WORK</span>
-        <span style={{ color: "var(--accent)" }}>| NOW</span>
+        <span style={{ color: "#5fd48a" }}>| NOW</span>
       </div>
     </Panel>
   );

@@ -11,6 +11,16 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.25",
+    date: "2026-07-21",
+    title: "Readable task cards + color-coded timeline",
+    notes: [
+      "Long task titles no longer stretch the page — they wrap, and only the first ~7 words show as the headline with the full text as a description underneath (add your own description too).",
+      "Fixed a mobile bug where cards could push the page wider than the screen, causing a sideways scroll.",
+      "Today · Timeline is now color-coded: tasks are blue, calendar invites / meetings are red, client work is yellow, and the live “now” line is green — with a matching legend.",
+    ],
+  },
+  {
     version: "v2.1.24",
     date: "2026-07-20",
     title: "PIN lock screen",

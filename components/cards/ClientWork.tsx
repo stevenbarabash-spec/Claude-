@@ -71,15 +71,15 @@ export function ClientWork() {
               </div>
               <div className="stack" style={{ gap: 0 }}>
                 {g.rows.map((r, i) => (
-                  <div key={i} className="spread" style={{ padding: "7px 0", borderBottom: "1px solid var(--border-soft)" }}>
-                    <div>
-                      <div style={{ fontSize: 13 }}>{r.title}</div>
-                      <div className="faint" style={{ fontSize: 10.5, marginTop: 2, fontFamily: "var(--mono)" }}>
+                  <div key={i} className="spread" style={{ padding: "7px 0", borderBottom: "1px solid var(--border-soft)", gap: 8, alignItems: "flex-start" }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div style={{ fontSize: 13, overflowWrap: "anywhere", lineHeight: 1.4 }}>{r.title}</div>
+                      <div className="faint" style={{ fontSize: 10.5, marginTop: 2, fontFamily: "var(--mono)", overflowWrap: "anywhere" }}>
                         {r.project.toUpperCase()}
                         {r.kind === "overdue" && r.due ? ` · DUE ${r.due}` : ""}
                       </div>
                     </div>
-                    {chip(r.kind)}
+                    <span style={{ flexShrink: 0 }}>{chip(r.kind)}</span>
                   </div>
                 ))}
               </div>

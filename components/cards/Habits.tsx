@@ -173,7 +173,7 @@ export function Habits() {
               ))}
             </div>
           </div>
-          <div className="grid-2" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
+          <div className="grid-2" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
             {defs.map((h) => (
               <div key={h.id} className={`habit ${done.includes(h.id) ? "done" : ""}`} onClick={() => toggle(h.id)}>
                 <span className="box">{done.includes(h.id) ? "✓" : ""}</span>

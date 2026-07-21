@@ -284,7 +284,7 @@ export default function ClientsPage() {
       )}
 
       {/* ── Main grid ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 16, alignItems: "start" }}>
+      <div className="clients-grid" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", gap: 16, alignItems: "start" }}>
         {/* Projects column */}
         <div className="stack" style={{ gap: 14 }}>
           <div className="label">Projects</div>
@@ -552,6 +552,9 @@ function ProjectCard({
                   style={{
                     fontSize: 12.5,
                     flex: 1,
+                    minWidth: 0,
+                    overflowWrap: "anywhere",
+                    lineHeight: 1.4,
                     textDecoration: t.done ? "line-through" : "none",
                     color: t.done ? "var(--text-faint)" : "var(--text)",
                   }}

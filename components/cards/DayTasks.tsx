@@ -22,6 +22,16 @@ function nowHHMM(): string {
 
 const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
 
+// Split a task into a short title line (~first 7 words) + a fuller description.
+// An explicit description wins; otherwise long titles auto-split so the card
+// stays scannable and never stretches the page.
+function titleParts(t: { title: string; description?: string }): { head: string; body: string | null } {
+  if (t.description && t.description.trim()) return { head: t.title, body: t.description.trim() };
+  const words = t.title.trim().split(/\s+/);
+  if (words.length <= 7) return { head: t.title, body: null };
+  return { head: words.slice(0, 7).join(" ") + " …", body: t.title };
+}
+
 export function DayTasks() {
   const [tasks, setTasks] = useState<DayTask[] | null>(null);
   const [title, setTitle] = useState("");
@@ -301,29 +311,33 @@ export function DayTasks() {
               >
                 <div
                   className="row"
-                  style={{ cursor: "pointer", minWidth: 0, alignItems: "flex-start" }}
+                  style={{ cursor: "pointer", minWidth: 0, flex: 1, alignItems: "flex-start" }}
                   onClick={() => toggle(t)}
                   title={t.done ? "Mark as not done" : "Mark done"}
                 >
-                  <span className={`habit ${t.done ? "done" : ""}`} style={{ padding: 0, border: "none", background: "none", marginTop: 1 }}>
+                  <span className={`habit ${t.done ? "done" : ""}`} style={{ padding: 0, border: "none", background: "none", marginTop: 1, flexShrink: 0 }}>
                     <span className="box">{t.done ? "✓" : ""}</span>
                   </span>
-                  <span style={{ minWidth: 0 }}>
+                  <span style={{ minWidth: 0, flex: 1 }}>
                     <span
                       style={{
                         fontSize: 13,
                         textDecoration: t.done ? "line-through" : "none",
                         color: t.done ? "var(--text-faint)" : undefined,
                         display: "block",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
+                        overflowWrap: "anywhere",
+                        lineHeight: 1.4,
                       }}
                     >
-                      {t.title}
+                      {titleParts(t).head}
                     </span>
+                    {titleParts(t).body && !t.done && (
+                      <span className="faint" style={{ fontSize: 11, display: "block", marginTop: 2, lineHeight: 1.45, overflowWrap: "anywhere" }}>
+                        {titleParts(t).body}
+                      </span>
+                    )}
                     {span && (
-                      <span className="num" style={{ fontSize: 10, color: "var(--accent)", opacity: 0.8 }}>{span}</span>
+                      <span className="num" style={{ fontSize: 10, color: "var(--accent)", opacity: 0.8, display: "block", marginTop: 2 }}>{span}</span>
                     )}
                   </span>
                 </div>
