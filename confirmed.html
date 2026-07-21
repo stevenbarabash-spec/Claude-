@@ -5,6 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>You're Confirmed · InteliGel® by Green Evolution Technologies</title>
 <meta name="robots" content="noindex, nofollow">
+<script>
+/* FRAME-BUSTER: when the GHL calendar redirects to this page, it lands inside the
+   booking iframe on the landing page. Detect that and promote this page to the full
+   window so the confirmation shows full-screen. Preserves any ?first_name= param. */
+(function () {
+  try {
+    if (window.top && window.top !== window.self) {
+      window.top.location.replace(window.location.href);
+    }
+  } catch (e) {
+    try { window.top.location.href = window.location.href; } catch (_) {}
+  }
+})();
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap');
 
