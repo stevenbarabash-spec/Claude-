@@ -25,21 +25,21 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+html { overflow-x: hidden; -webkit-text-size-adjust: 100%; background-color: #0B1F12 !important; }
 body {
   font-family: var(--f-body);
-  background: var(--canvas);
-  color: var(--bone);
+  background-color: #0B1F12 !important;
+  color: #EDE8DB;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 /* Full-page wrapper carries the background + text color so the page renders
    correctly even when embedded in a container that overrides <body>. */
 .page {
-  background:
+  background-color: #0B1F12 !important;
+  background-image:
     radial-gradient(1200px 600px at 50% -10%, rgba(184,147,12,0.10), transparent 60%),
     linear-gradient(180deg, #0B1F12 0%, #081A0F 100%);
-  background-color: #0B1F12;
   color: #EDE8DB;
   min-height: 100vh;
   display: flex;
