@@ -11,6 +11,16 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.26",
+    date: "2026-07-23",
+    title: "Next Up stops repeating itself",
+    notes: [
+      "Once you add something to today (＋ today) or start working on it, it drops out of Next Up and the next-highest item takes its place — no more the same tasks looping back every time you refresh.",
+      "Fixed duplicate day-tasks: pulling the same client/CRM task in twice, or finishing one you'd already added to today, now updates the single row instead of stacking copies.",
+      "Client work due today keeps feeding Next Up from the one client board, so nothing shows up in two places at once.",
+    ],
+  },
+  {
     version: "v2.1.25",
     date: "2026-07-21",
     title: "Readable task cards + color-coded timeline",

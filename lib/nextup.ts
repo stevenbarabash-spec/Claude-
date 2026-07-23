@@ -9,6 +9,7 @@ import { config } from "./config";
 import { localDateKey, localTime } from "./dates";
 import { getStore } from "./store";
 import type { DayTask, Urgency } from "./types";
+import { listWorking } from "./working";
 
 export interface NextItem {
   id: string;
@@ -56,11 +57,20 @@ export async function collectCandidates(): Promise<{ today: string; nowHHMM: str
   const today = localDateKey();
   const nowHHMM = localTime();
 
-  const [projects, tasks, log] = await Promise.all([
+  const [projects, tasks, log, working] = await Promise.all([
     listClientProjects(),
     store.listTasks(false),
     store.getLog(today),
+    listWorking(),
   ]);
+
+  // Work already spoken for: pulled onto today's list (the copy carries the
+  // source id as its ref) or already in Currently Working On. These must NOT be
+  // suggested again — Next Up should always show the next un-picked batch.
+  const dayTasks: DayTask[] = log?.notes.day_tasks ?? [];
+  const spokenFor = new Set<string>();
+  for (const t of dayTasks) if (t.ref) spokenFor.add(t.ref); // "client:<id>" / "crm:<id>"
+  for (const w of working) spokenFor.add(w.key); // "client:<id>" / "crm:<id>" / "day:<id>"
 
   const items: NextItem[] = [];
 
@@ -69,6 +79,7 @@ export async function collectCandidates(): Promise<{ today: string; nowHHMM: str
     if (p.status === "done") continue;
     for (const t of p.tasks) {
       if (t.done) continue;
+      if (spokenFor.has(`client:${t.id}`)) continue; // already on today / in progress
       const dd = scoreDue(t.due, today);
       const noDue = t.due ? 0 : 14; // active client work matters even without a date
       items.push({
@@ -89,6 +100,7 @@ export async function collectCandidates(): Promise<{ today: string; nowHHMM: str
 
   // CRM tasks
   for (const t of tasks) {
+    if (spokenFor.has(`crm:${t.id}`)) continue; // already on today / in progress
     const dd = scoreDue(t.due_date, today);
     const base = dd.score || URGENCY_BASE[t.urgency];
     items.push({
@@ -105,10 +117,13 @@ export async function collectCandidates(): Promise<{ today: string; nowHHMM: str
     });
   }
 
-  // Today's day-tasks (all implicitly due today; a passed time bumps them)
-  const dayTasks: DayTask[] = log?.notes.day_tasks ?? [];
+  // Today's day-tasks (all implicitly due today; a passed time bumps them).
+  // Skip copies pulled from the client board / CRM (they carry a ref and are
+  // already counted above) and anything currently being worked on.
   for (const t of dayTasks) {
     if (t.done) continue;
+    if (t.ref) continue; // pulled copy — represented by its source, don't double-list
+    if (spokenFor.has(`day:${t.id}`)) continue; // in Currently Working On
     const past = t.time !== null && t.time < nowHHMM;
     items.push({
       id: `day:${t.id}`,

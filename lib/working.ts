@@ -148,19 +148,31 @@ export async function completeWorking(key: string): Promise<{ items: WorkingItem
 }
 
 // Drop a completed entry into today's Tasks so the day shows what got done,
-// with the start and finish times.
+// with the start and finish times. If the task was already pulled onto today
+// (same source ref), mark that existing row done instead of adding a duplicate.
 async function logToToday(today: string, item: WorkingItem, startedAt: string | undefined, finishedAt: string): Promise<void> {
   const store = getStore();
   const log = await store.getLog(today);
   const tasks: DayTask[] = log?.notes.day_tasks ?? [];
-  tasks.push({
-    id: crypto.randomUUID(),
-    title: item.who ? `${item.title} · ${item.who}` : item.title,
-    time: null,
-    done: true,
-    startedAt,
-    finishedAt,
-    fromWork: true,
-  });
+  const ref = item.key; // "client:<id>" / "crm:<id>" — matches the ＋today copy
+  const title = item.who ? `${item.title} · ${item.who}` : item.title;
+  const existing = tasks.find((t) => t.ref === ref);
+  if (existing) {
+    existing.done = true;
+    existing.startedAt = startedAt;
+    existing.finishedAt = finishedAt;
+    existing.fromWork = true;
+  } else {
+    tasks.push({
+      id: crypto.randomUUID(),
+      title,
+      time: null,
+      done: true,
+      startedAt,
+      finishedAt,
+      fromWork: true,
+      ref,
+    });
+  }
   await store.mergeLogNotes(today, { day_tasks: tasks });
 }
