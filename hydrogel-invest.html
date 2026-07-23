@@ -125,7 +125,10 @@ nav.scrolled {
 }
 .nav-inner { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 .nav-logo img { height: 64px; display: block; }
-.nav-logo { margin-left: -32px; }
+.nav-logo { margin-left: 0; display: flex; align-items: center; gap: 13px; text-decoration: none; }
+.brand-symbol { height: 50px; width: auto; display: block; flex-shrink: 0; }
+.nav-wordmark { font-family: var(--f-display); font-weight: 600; font-size: 1.12rem; line-height: 1.02; color: var(--bone); letter-spacing: 0.01em; white-space: nowrap; }
+.nav-wordmark small { display: block; font-family: var(--f-body); font-weight: 600; font-size: 0.54rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-light); margin-top: 3px; }
 .nav-links { display: flex; align-items: center; gap: 36px; margin-left: 48px; }
 .nav-links a { font-family: var(--f-body); font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(237,232,219,0.75); text-decoration: none; transition: color 0.2s; position: relative; padding-bottom: 2px; }
 .nav-links a::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 1px; background: var(--gold); transform: scaleX(0); transition: transform 0.25s cubic-bezier(0.4,0,0.2,1); }
@@ -852,6 +855,9 @@ nav.scrolled {
 
   /* ---- NAV / LOGO ---- */
   .nav-logo img { height: 52px; }
+  .brand-symbol { height: 40px; }
+  .nav-wordmark { font-size: 0.92rem; }
+  .nav-wordmark small { font-size: 0.48rem; letter-spacing: 0.18em; }
 
   /* ---- FLOATING PILL ---- */
   .float-cta { bottom: 80px; right: 12px; padding: 11px 18px; font-size: 0.7rem; }
@@ -1055,6 +1061,9 @@ nav.scrolled {
     -webkit-tap-highlight-color: transparent;
   }
   .mob-logo img { height: 40px; display: block; }
+  .mob-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+  .mob-logo .brand-symbol { height: 34px; }
+  .mob-wordmark { font-family: var(--f-display); font-weight: 600; font-size: 0.95rem; color: var(--bone); line-height: 1; white-space: nowrap; }
 
   /* pulsing green live dot — same keyframe as ticker */
   .mob-live-dot {
@@ -1105,6 +1114,17 @@ nav.scrolled {
   .mobile-logo-hero img {
     width: min(68vw, 260px);
     filter: brightness(0) invert(1) drop-shadow(0 4px 20px rgba(0,0,0,0.5));
+  }
+  .mobile-logo-hero .hero-symbol {
+    width: min(30vw, 116px); height: auto;
+    filter: drop-shadow(0 4px 20px rgba(0,0,0,0.55));
+  }
+  .hero-wordmark {
+    font-family: var(--f-display); font-weight: 600;
+    font-size: clamp(1.5rem, 7vw, 2.1rem); line-height: 1.05;
+    color: #fff; text-align: center;
+    text-shadow: 0 3px 18px rgba(0,0,0,0.55);
+    letter-spacing: 0.01em;
   }
   .mobile-logo-pill {
     display: none;
@@ -1226,8 +1246,16 @@ nav.scrolled {
 <nav>
   <div class="container">
     <div class="nav-inner">
-      <a class="nav-logo" href="#">
-        <img src="https://assets.cdn.filesafe.space/IUFCbHtG5zmLcNxfm2Ke/media/6a580007514abedffed6d81c.png" alt="InteliGel">
+      <a class="nav-logo" href="#" aria-label="Green Evolution Technologies">
+        <svg class="brand-symbol" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+          <path d="M48 26 H55 V68" stroke="#4EBDD0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M72 26 H65 V68" stroke="#4EBDD0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="60" cy="90" r="29" stroke="#4EBDD0" stroke-width="6"/>
+          <path d="M60 130 V84" stroke="#7FA968" stroke-width="6" stroke-linecap="round"/>
+          <path d="M60 86 C58 72 50 68 43 71 C45 83 53 89 60 86 Z" fill="#7FA968"/>
+          <path d="M60 92 C65 83 73 82 79 85 C76 94 67 97 60 92 Z" fill="#9BCD6C"/>
+        </svg>
+        <span class="nav-wordmark">Green Evolution<small>Technologies</small></span>
       </a>
       <div class="nav-links">
         <a href="#problem">Problem</a>
@@ -1253,8 +1281,16 @@ nav.scrolled {
 
 <!-- MOBILE TOP BAR -->
 <header class="mobile-top-bar">
-  <a class="mob-logo" href="#">
-    <img src="https://assets.cdn.filesafe.space/IUFCbHtG5zmLcNxfm2Ke/media/6a580007514abedffed6d81c.png" alt="InteliGel">
+  <a class="mob-logo" href="#" aria-label="Green Evolution Technologies">
+    <svg class="brand-symbol" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M48 26 H55 V68" stroke="#4EBDD0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M72 26 H65 V68" stroke="#4EBDD0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="60" cy="90" r="29" stroke="#4EBDD0" stroke-width="6"/>
+      <path d="M60 130 V84" stroke="#7FA968" stroke-width="6" stroke-linecap="round"/>
+      <path d="M60 86 C58 72 50 68 43 71 C45 83 53 89 60 86 Z" fill="#7FA968"/>
+      <path d="M60 92 C65 83 73 82 79 85 C76 94 67 97 60 92 Z" fill="#9BCD6C"/>
+    </svg>
+    <span class="mob-wordmark">Green Evolution</span>
   </a>
   <a href="#invest" class="mob-nav-cta">
     <span class="mob-live-dot"></span>
@@ -1276,7 +1312,15 @@ nav.scrolled {
 
   <!-- Mobile: big centered logo over video -->
   <div class="mobile-logo-hero">
-    <img src="https://assets.cdn.filesafe.space/23VKgJnmLd1PjIogt8Q4/media/68fcb146e579f9846b78dd04.png" alt="InteliGel by Green Evolution Technologies">
+    <svg class="brand-symbol hero-symbol" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Green Evolution Technologies">
+      <path d="M48 26 H55 V68" stroke="#4EBDD0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M72 26 H65 V68" stroke="#4EBDD0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="60" cy="90" r="29" stroke="#4EBDD0" stroke-width="6"/>
+      <path d="M60 130 V84" stroke="#7FA968" stroke-width="6" stroke-linecap="round"/>
+      <path d="M60 86 C58 72 50 68 43 71 C45 83 53 89 60 86 Z" fill="#7FA968"/>
+      <path d="M60 92 C65 83 73 82 79 85 C76 94 67 97 60 92 Z" fill="#9BCD6C"/>
+    </svg>
+    <span class="hero-wordmark">Green Evolution<br>Technologies</span>
     <span class="mobile-logo-pill">Reg D 506(c) · Investor Overview</span>
   </div>
 
