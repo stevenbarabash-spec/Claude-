@@ -119,3 +119,23 @@ glassy treatment. See the GDG Global Header build for the full
 implementation details and the specific bugs that had to be solved to
 make `position: fixed`/`sticky` work reliably inside a page-builder's
 (GoHighLevel's) nested wrapper divs.
+
+## Deliverable artifacts: checklists & reference sheets are click-to-copy
+
+Standing preference (set by Steve): ANY checklist, reference sheet, or
+"work through these one by one" artifact I build MUST make every URL / value
+click-to-copy. Clicking the value copies it to the clipboard instantly and
+flashes a small ✓ "Copied" confirmation — the user should never have to
+manually select and copy text out of one of these sheets.
+
+Pattern that works inside the sandboxed Artifact iframe:
+- Make the copyable value (e.g. a `<code>` element) `cursor: pointer` with a
+  subtle hover background so it reads as clickable.
+- On click: copy via `navigator.clipboard.writeText(...)`, and ALWAYS include a
+  `document.execCommand('copy')` textarea fallback (the clipboard API is often
+  blocked in the iframe, so the fallback is what actually fires).
+- Flash a `✓ Copied` flag next to the value for ~1.3s.
+- If the row ALSO toggles a done/checked state on click, the copy handler on the
+  value must `e.stopPropagation()` so copying doesn't also toggle the row.
+- Keep the tap-to-check-off + `localStorage` progress pattern for these sheets so
+  the user can work through them and not lose their place.
