@@ -11,6 +11,14 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.29",
+    date: "2026-07-24",
+    title: "Fullscreen on the lock screen",
+    notes: [
+      "The lock screen now has a Fullscreen button in the bottom-right corner — tap it to run the glowing PIN screen edge-to-edge (kiosk-style), and tap again to exit.",
+    ],
+  },
+  {
     version: "v2.1.28",
     date: "2026-07-24",
     title: "Lock button, brighter PIN screen, more themes",

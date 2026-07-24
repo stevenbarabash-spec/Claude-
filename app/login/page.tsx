@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { FullscreenButton } from "@/components/FullscreenButton";
 import { MatrixRain } from "@/components/MatrixRain";
 
 export default function Login() {
@@ -55,6 +56,7 @@ export default function Login() {
           {busy ? "…" : "Unlock"}
         </button>
       </form>
+      <FullscreenButton />
     </div>
   );
 }

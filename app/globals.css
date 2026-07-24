@@ -672,6 +672,17 @@ textarea.input { resize: vertical; min-height: 68px; line-height: 1.5; }
   border: 1px solid var(--accent);
   box-shadow: 0 0 40px var(--accent-dim), 0 20px 60px rgba(0, 0, 0, 0.55);
 }
+.fullscreen-btn {
+  position: fixed; right: 20px; bottom: 20px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px; border-radius: 10px;
+  border: 1px solid var(--border); background: rgba(6, 12, 10, 0.72);
+  backdrop-filter: blur(8px);
+  color: var(--text-dim); font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+  transition: all 0.15s;
+}
+.fullscreen-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 14px var(--accent-dim); }
 
 /* ── Day timeline ─────────────────────────────────────── */
 .tl { position: relative; height: 78px; }
