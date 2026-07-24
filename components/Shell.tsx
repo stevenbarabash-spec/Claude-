@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { config } from "@/lib/config";
 import { ImminentBanner } from "./ImminentBanner";
 import { JarvisPanel } from "./jarvis/JarvisPanel";
+import { LockButton } from "./LockButton";
 import { MatrixRain } from "./MatrixRain";
 import { SettingsMenu } from "./SettingsMenu";
 
@@ -49,6 +50,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <span className="dot" />
           {config.brand} <span className="ver">// {config.version}</span>
         </Link>
+        <LockButton />
         <div className="rail-tabs">
           {TABS.map((t) => (
             <Link key={t.href} href={t.href} className={`rail-tab ${pathname === t.href ? "active" : ""}`}>

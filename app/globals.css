@@ -18,6 +18,7 @@
   --warm-dim: rgba(224, 194, 111, 0.12);
   --cool: #6fa9e0;
   --cool-dim: rgba(111, 169, 224, 0.12);
+  --rain-bg: 6, 9, 7; /* matrix-rain canvas base (R,G,B) — themes may relight it */
   --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
   --serif: Georgia, "Times New Roman", serif;
   --sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -85,6 +86,65 @@ body {
   --accent-dim: rgba(207, 214, 218, 0.14); --glow: rgba(207, 214, 218, 0.05);
   --panel: rgba(255, 255, 255, 0.03); --panel-solid: #101315;
   --border: rgba(255, 255, 255, 0.1); --border-soft: rgba(255, 255, 255, 0.06);
+}
+:root[data-theme="royal"] {
+  --bg: #05070f; --bg-raise: #0a0f1e;
+  --accent: #4463ff; --accent-rgb: 68, 99, 255;
+  --accent-dim: rgba(68, 99, 255, 0.18); --glow: rgba(68, 99, 255, 0.09);
+  --panel: rgba(68, 99, 255, 0.06); --panel-solid: #0b1226;
+  --border: rgba(68, 99, 255, 0.18); --border-soft: rgba(68, 99, 255, 0.10);
+  --rain-bg: 5, 7, 15;
+}
+:root[data-theme="electric"] {
+  --bg: #030a10; --bg-raise: #06131c;
+  --accent: #16b6ff; --accent-rgb: 22, 182, 255;
+  --accent-dim: rgba(22, 182, 255, 0.18); --glow: rgba(22, 182, 255, 0.09);
+  --panel: rgba(22, 182, 255, 0.05); --panel-solid: #08161f;
+  --border: rgba(22, 182, 255, 0.17); --border-soft: rgba(22, 182, 255, 0.10);
+  --rain-bg: 3, 10, 16;
+}
+:root[data-theme="ice"] {
+  --bg: #070b0f; --bg-raise: #0c1218;
+  --accent: #9cc9e8; --accent-rgb: 156, 201, 232;
+  --accent-dim: rgba(156, 201, 232, 0.16); --glow: rgba(156, 201, 232, 0.06);
+  --panel: rgba(156, 201, 232, 0.05); --panel-solid: #0e151b;
+  --border: rgba(156, 201, 232, 0.15); --border-soft: rgba(156, 201, 232, 0.09);
+  --rain-bg: 7, 11, 15;
+}
+:root[data-theme="teal"] {
+  --bg: #040b0a; --bg-raise: #081513;
+  --accent: #3fd2b3; --accent-rgb: 63, 210, 179;
+  --accent-dim: rgba(63, 210, 179, 0.16); --glow: rgba(63, 210, 179, 0.07);
+  --panel: rgba(63, 210, 179, 0.05); --panel-solid: #0a1917;
+  --border: rgba(63, 210, 179, 0.16); --border-soft: rgba(63, 210, 179, 0.09);
+  --rain-bg: 4, 11, 10;
+}
+:root[data-theme="magenta"] {
+  --bg: #0d060b; --bg-raise: #170b13;
+  --accent: #f06fce; --accent-rgb: 240, 111, 206;
+  --accent-dim: rgba(240, 111, 206, 0.16); --glow: rgba(240, 111, 206, 0.08);
+  --panel: rgba(240, 111, 206, 0.05); --panel-solid: #1a0d16;
+  --border: rgba(240, 111, 206, 0.16); --border-soft: rgba(240, 111, 206, 0.09);
+  --rain-bg: 13, 6, 11;
+}
+/* True black — OLED-dark with a cool-white accent and white rain. */
+:root[data-theme="black"] {
+  --bg: #000000; --bg-raise: #070707;
+  --accent: #e3e9ec; --accent-rgb: 227, 233, 236;
+  --accent-dim: rgba(227, 233, 236, 0.12); --glow: rgba(227, 233, 236, 0.04);
+  --panel: rgba(255, 255, 255, 0.022); --panel-solid: #080808;
+  --border: rgba(255, 255, 255, 0.09); --border-soft: rgba(255, 255, 255, 0.05);
+  --rain-bg: 0, 0, 0;
+}
+/* Light theme — dark ink on near-white, blue accent, light rain. */
+:root[data-theme="white"] {
+  --bg: #eef1f5; --bg-raise: #f7f9fc;
+  --panel: rgba(20, 30, 45, 0.03); --panel-solid: #ffffff;
+  --border: rgba(20, 30, 45, 0.13); --border-soft: rgba(20, 30, 45, 0.07);
+  --text: #1a2230; --text-dim: #56606f; --text-faint: #949cab;
+  --accent: #2f6bff; --accent-rgb: 47, 107, 255;
+  --accent-dim: rgba(47, 107, 255, 0.12); --glow: rgba(47, 107, 255, 0.10);
+  --rain-bg: 234, 238, 244;
 }
 
 /* ── Imminent alert bar ───────────────────────────────── */
@@ -187,6 +247,7 @@ body {
 .swatch {
   width: 26px; height: 26px; border-radius: 50%;
   cursor: pointer; border: 2px solid transparent;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
   transition: transform 0.12s;
 }
 .swatch:hover { transform: scale(1.12); }
@@ -240,6 +301,16 @@ input, textarea, select { font: inherit; color: var(--text); }
   box-shadow: 0 0 8px var(--accent);
 }
 .rail-brand .ver { color: var(--text-faint); letter-spacing: 0.1em; }
+.rail-lock {
+  flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 8px;
+  border: 1px solid var(--border-soft); background: transparent;
+  font-size: 14px; line-height: 1; cursor: pointer;
+  color: var(--text-dim); transition: all 0.15s;
+}
+.rail-lock:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 10px var(--accent-dim); }
+.rail-lock:disabled { opacity: 0.5; cursor: default; }
 .rail-tabs { display: flex; gap: 4px; flex: 1; justify-content: center; min-width: 0; overflow-x: auto; scrollbar-width: none; }
 .rail-tabs::-webkit-scrollbar { display: none; }
 .rail-brand, .rail-meta { flex-shrink: 0; }
@@ -592,6 +663,14 @@ textarea.input { resize: vertical; min-height: 68px; line-height: 1.5; }
   z-index: -1;
   pointer-events: none;
   opacity: 0.5;
+}
+/* PIN / lock screen: bright, prominent, glowing rain behind the panel. */
+.matrix-rain-intense { opacity: 0.95; z-index: 0; }
+.login-panel {
+  background: rgba(6, 12, 10, 0.72);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 40px var(--accent-dim), 0 20px 60px rgba(0, 0, 0, 0.55);
 }
 
 /* ── Day timeline ─────────────────────────────────────── */

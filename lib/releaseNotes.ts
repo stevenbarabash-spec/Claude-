@@ -11,6 +11,16 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.28",
+    date: "2026-07-24",
+    title: "Lock button, brighter PIN screen, more themes",
+    notes: [
+      "Added a 🔒 lock button right next to the WARROOM home brand — one tap clears your session and drops straight to the PIN screen when you step away.",
+      "The PIN screen now runs the matrix rain full-strength: bright, glowing numbers cascade down and flare like falling fireworks behind a frosted-glass unlock panel.",
+      "Seven new color themes: Royal Blue, Electric Blue, Ice Blue, Teal, Magenta, plus a true Black (OLED) and a light White theme — the whole dashboard, glow, and rain recolor to match.",
+    ],
+  },
+  {
     version: "v2.1.27",
     date: "2026-07-24",
     title: "Priority flags on tasks",

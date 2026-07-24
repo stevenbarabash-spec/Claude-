@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { MatrixRain } from "@/components/MatrixRain";
 
 export default function Login() {
   const [pin, setPin] = useState("");
@@ -24,8 +25,13 @@ export default function Login() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center" }}>
-      <form className="panel" style={{ width: 320, padding: 30, textAlign: "center" }} onSubmit={submit}>
+    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", position: "relative" }}>
+      <MatrixRain intense />
+      <form
+        className="panel login-panel"
+        style={{ width: 320, padding: 30, textAlign: "center", position: "relative", zIndex: 1 }}
+        onSubmit={submit}
+      >
         <div className="rail-brand" style={{ marginBottom: 8, justifyContent: "center" }}>
           <span className="dot" />
           WARROOM <span className="ver">// LIFE OS</span>

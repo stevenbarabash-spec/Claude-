@@ -12,11 +12,18 @@ interface Theme {
 const THEMES: Theme[] = [
   { id: "", label: "Matrix Green", swatch: "#6fe0ae" },
   { id: "blue", label: "Blue", swatch: "#6fa9e0" },
+  { id: "royal", label: "Royal Blue", swatch: "#4463ff" },
+  { id: "electric", label: "Electric Blue", swatch: "#16b6ff" },
+  { id: "ice", label: "Ice Blue", swatch: "#9cc9e8" },
   { id: "cyan", label: "Cyan", swatch: "#5fd7e0" },
+  { id: "teal", label: "Teal", swatch: "#3fd2b3" },
   { id: "purple", label: "Purple", swatch: "#b58cf0" },
+  { id: "magenta", label: "Magenta", swatch: "#f06fce" },
   { id: "amber", label: "Amber", swatch: "#e0b34f" },
   { id: "red", label: "Red", swatch: "#ef6f6f" },
   { id: "mono", label: "Mono", swatch: "#cfd6da" },
+  { id: "black", label: "Black", swatch: "#111417" },
+  { id: "white", label: "White", swatch: "#f2f5f8" },
 ];
 
 export function applyTheme(id: string) {
