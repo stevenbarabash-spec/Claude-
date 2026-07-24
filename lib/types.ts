@@ -149,10 +149,13 @@ export interface ClientProject {
 
 // Quick daily to-dos with an optional clock time ("BYTOX — send draft @ 3 PM").
 // They live on the day's log, so each day starts with a fresh list.
+export type Priority = "low" | "medium" | "high";
+
 export interface DayTask {
   id: string;
   title: string;
   description?: string; // optional fuller detail shown under the title
+  priority?: Priority; // optional flag — high/medium/low, shown as a colored flag
   time: string | null; // HH:MM (24h) or null = anytime today
   done: boolean;
   startedAt?: string; // ISO — set when finished via Currently Working On

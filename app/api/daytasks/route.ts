@@ -5,7 +5,9 @@ import { setClientTaskDoneById } from "@/lib/clientProjects";
 import { recordHistory } from "@/lib/history";
 import { carryForwardInto, materializeForDay } from "@/lib/routines";
 import { getStore } from "@/lib/store";
-import type { DayTask } from "@/lib/types";
+import type { DayTask, Priority } from "@/lib/types";
+
+const PRIORITIES: Priority[] = ["low", "medium", "high"];
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_RE = /^\d{2}:\d{2}$/;
@@ -61,7 +63,7 @@ export async function PATCH(req: Request) {
   const body = (await req.json()) as {
     date?: string;
     id?: string;
-    patch?: { title?: string; time?: string | null; done?: boolean };
+    patch?: { title?: string; time?: string | null; done?: boolean; priority?: Priority | null };
   };
   const date = body.date ?? "";
   if (!DATE_RE.test(date) || !body.id) {
@@ -76,6 +78,11 @@ export async function PATCH(req: Request) {
   if (typeof patch.title === "string" && patch.title.trim()) task.title = patch.title.trim();
   if ("time" in patch) task.time = patch.time && TIME_RE.test(patch.time) ? patch.time : null;
   if (typeof patch.done === "boolean") task.done = patch.done;
+  // Priority flag: a valid level sets it; null / anything else clears it.
+  if ("priority" in patch) {
+    if (patch.priority && PRIORITIES.includes(patch.priority)) task.priority = patch.priority;
+    else delete task.priority;
+  }
   tasks.sort((a, b) => (a.time ?? "99:99").localeCompare(b.time ?? "99:99"));
   await getStore().mergeLogNotes(date, { day_tasks: tasks });
   await recordHistory({

@@ -4,8 +4,18 @@
 // Timed entries also show up as notches on the day timeline.
 import { useEffect, useRef, useState } from "react";
 import { api, clientDateKey, debounce, fmt12, fmtTime12 } from "@/lib/client";
-import type { DayTask, Routine } from "@/lib/types";
+import type { DayTask, Priority, Routine } from "@/lib/types";
 import { Panel } from "../Panel";
+
+// Priority flag styling. High jumps out (red), medium is amber, low is muted;
+// no priority shows a faint hollow flag you can tap to set one.
+const PRIORITY_CYCLE: (Priority | undefined)[] = [undefined, "low", "medium", "high"];
+function priorityMeta(p?: Priority): { glyph: string; color: string; label: string } {
+  if (p === "high") return { glyph: "⚑", color: "var(--hot)", label: "High priority" };
+  if (p === "medium") return { glyph: "⚑", color: "var(--warm)", label: "Medium priority" };
+  if (p === "low") return { glyph: "⚑", color: "var(--cool)", label: "Low priority" };
+  return { glyph: "⚐", color: "var(--text-faint)", label: "No priority — tap to flag" };
+}
 
 interface SearchHit {
   key: string;
@@ -152,6 +162,20 @@ export function DayTasks() {
     const r = await api<{ tasks: DayTask[] }>("/api/daytasks", {
       method: "PATCH",
       body: JSON.stringify({ date: today, id: task.id, patch: { done: !task.done } }),
+    }).catch(() => null);
+    if (r) {
+      setTasks(r.tasks);
+      changed();
+    }
+  }
+
+  // Tap the flag to cycle priority: none → low → medium → high → none.
+  async function cyclePriority(task: DayTask) {
+    const idx = PRIORITY_CYCLE.indexOf(task.priority);
+    const next = PRIORITY_CYCLE[(idx + 1) % PRIORITY_CYCLE.length];
+    const r = await api<{ tasks: DayTask[] }>("/api/daytasks", {
+      method: "PATCH",
+      body: JSON.stringify({ date: today, id: task.id, patch: { priority: next ?? null } }),
     }).catch(() => null);
     if (r) {
       setTasks(r.tasks);
@@ -342,6 +366,25 @@ export function DayTasks() {
                   </span>
                 </div>
                 <div className="row" style={{ flexShrink: 0 }}>
+                  {!t.done && (
+                    <button
+                      onClick={() => cyclePriority(t)}
+                      title={priorityMeta(t.priority).label}
+                      aria-label={priorityMeta(t.priority).label}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        color: priorityMeta(t.priority).color,
+                        fontSize: 15,
+                        lineHeight: 1,
+                        padding: "1px 3px",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {priorityMeta(t.priority).glyph}
+                    </button>
+                  )}
                   {t.fromWork && t.done && <span className="chip ok">done</span>}
                   {t.carriedFrom && !t.done && (
                     <span

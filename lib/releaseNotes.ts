@@ -11,6 +11,15 @@ export interface Release {
 
 export const RELEASE_NOTES: Release[] = [
   {
+    version: "v2.1.27",
+    date: "2026-07-24",
+    title: "Priority flags on tasks",
+    notes: [
+      "Every task in Tasks · Today now has a little flag — tap it to cycle through low, medium, and high priority (tap again to clear).",
+      "The flag is color-coded so you can see importance at a glance: high is red, medium is amber, low is blue, and unset is a faint hollow flag.",
+    ],
+  },
+  {
     version: "v2.1.26",
     date: "2026-07-23",
     title: "Next Up stops repeating itself",
